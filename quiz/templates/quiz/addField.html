@@ -1,0 +1,90 @@
+{% load static %}
+{% load quiz_index %}
+    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+    <style>
+        .ul-addField2 {
+            font-family: DM Sans; 
+            text-align: left;
+            padding: 20px;
+            border: 2px solid coral;
+            background-color: peachpuff;
+            border-radius: 20px;
+            list-style-position: inside;
+            width: 37%
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            padding: 10px;
+            justify-content: center;
+            margin-left: -2%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id %}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
+                <span style="font-style: italic;">Dashboard</span>
+                <span> Admin</span></a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>            
+        </ul>
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Tambah Bidang Kerjaya Baharu</h2>
+        <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+            <span><a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
+            <span style="color: gray;">Baharu</span>
+        </h3>
+
+        <ul class="ul-addField2">
+            Format nama bidang kerjaya yang diterima adalah seperti berikut:
+                <li>Setiap perkataan mesti bermula dengan Huruf Besar, contoh:
+                    <ul>
+                        <li>Fesyen & Kecantikan</li>
+                        <li>Seni Bina</li>
+                    </ul>
+                <li>Mestilah ditulis dalam Bahasa Malaysia</li>
+        </ul>
+
+        <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
+        <form action="{% url 'quiz:add-field' user_id %}" class="AddFieldForm" method="post">
+            {% csrf_token %}
+            <p>{{ form.name.label_tag }} {{ form.name }}</p>
+            <p>{{ form.image.label_tag }}</p>
+            <div>
+                {% for choice in form.image.field.choices %}
+                    <span style="padding: 10px;"></span>
+                    {% ifequal forloop.counter|divisibleby:"4" True %}    
+                        <input type="radio" name="image" value="{{ choice.0 }}">
+                        <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                        </div>
+                        <div>
+                    {% endifequal %}      
+                    {% ifequal forloop.counter|divisibleby:"4" False %}   
+                        <input type="radio" name="image" value="{{ choice.0 }}">
+                        <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                    {% endifequal %}
+                {% endfor %}
+                </div>
+            <button class="btn2 field-for-addField" type="submit">Simpan</button>
+            <button class="btn2 cancel-for-addField">
+                <a class="a-cancel-for-addField" href="{% url 'quiz:show-field' user_id %}">Batal</a>
+            </button>
+        </form>
+    </center>
+</body>
+</html>
+

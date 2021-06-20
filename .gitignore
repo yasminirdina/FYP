@@ -1,0 +1,8 @@
+/.idea
+/.vscode
+/db.sqlite3
+/futurecruise
+/Include
+/Lib
+/manage.py
+/pyvenv.cfg

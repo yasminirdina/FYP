@@ -1,0 +1,65 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboardIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise:{{ title }}</title>
+</head>
+<body>
+<center>
+    <ul class="ul-navbar">
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></li>
+        {% if user_type == "pelajar" %}
+                <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+        {% endif %}
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
+        <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard user_type user_id %}">
+            <span style="font-style: italic;">Dashboard </span>
+            <span>{{ dashboardNav }}</span></a></li>
+        <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+        <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
+    </ul>
+    <h1>
+        <span style="font-style: italic;">Future Cruise</span>
+        :{{ title }}
+    </h1>
+    <h2>{{ subtitle }}</h2>
+    <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
+    {% if user_type == 'pelajar' %}
+        <form action="{% url 'dashboard:edit-profile' user_type user_id %}" class="EditProfileStudentForm" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+            {{ form.as_p }}
+            <button class="btn edit-for-editProfile" type="submit">Simpan</button>
+            <button class="btn back-to-showProfile3">
+                <a class="a-back-for-editProfile" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Batal</a>
+            </button>
+        </form>
+    {% elif user_type == 'penjaga' %}
+        <form action="{% url 'dashboard:edit-profile' user_type user_id %}" class="EditProfileParentForm" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+            {{ form.as_p }}
+            <button class="btn edit-for-editProfile" type="submit">Simpan</button>
+            <button class="btn back-to-showProfile3">
+                <a class="a-back-for-editProfile" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Batal</a>
+            </button>
+        </form>
+    {% elif user_type == 'guru' %}
+        <form action="{% url 'dashboard:edit-profile' user_type user_id %}" class="EditProfileTeacherForm" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+            {{ form.as_p }}
+            <button class="btn edit-for-editProfile" type="submit">Simpan</button>
+            <button class="btn back-to-showProfile3">
+                <a class="a-back-for-editProfile" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Batal</a>
+            </button>
+        </form>
+    {% endif %}
+</center>
+
+</body>
+</html>

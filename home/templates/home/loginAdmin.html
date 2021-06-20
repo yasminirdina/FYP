@@ -1,0 +1,33 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Log Masuk Admin</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+<center><h1>Log Masuk Admin</h1>
+    <p style="font-style: italic; color: crimson;">{{ response }}</p>
+    <form action="{% url 'home:login-admin' %}" class="LoginFormAdmin" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn3 login-for-loginAdmin" type="submit">Log Masuk</button>
+        <button class="btn3 index-for-loginAdmin">
+            <a class="a-cancel-for-loginAdmin" href="{% url 'home:index' %}">Batal</a>
+        </button>
+    </form>
+</center>
+
+</body>
+</html>
+

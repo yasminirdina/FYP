@@ -1,0 +1,173 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboardIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise:{{ title }}</title>
+</head>
+<body>
+    <center>
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></li>
+            {% if user_type == "pelajar" %}
+                <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            {% endif %}
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard user_type user_id %}">
+                <span style="font-style: italic;">Dashboard </span>
+                <span>{{ dashboardNav }}</span></a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
+        </ul>
+        <h1>
+            <span style="font-style: italic;">Future Cruise</span>
+            :{{ title }}
+        </h1>
+        <h2>{{ response }}</h2>
+        <p>
+            {% if user_type == "pelajar" %}
+                <h3>Maklumat Privasi Utama</h3>
+                <p style="font-style: italic; color: green;">{{ successMessage }}</p>
+                <ul class="ul-showProfile">
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Panggilan: </span>
+                        <span>{{ username }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Alamat Emel: </span>
+                        <span>{{ userDetail.email }}</span></li>
+                </ul>
+                <button class="btn change-pass">
+                    <a class="a-password-for-showProfile" href="{% url 'dashboard:change-pass' user_type user_id %}">Tukar Kata Laluan</a>
+                </button>
+                <h3>Biodata Pelajar</h3>
+                <p style="font-style: italic; color: green;">{{ successMessage }}</p>
+                <ul class='ul-showProfile'>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Penuh: </span>
+                        <span>{{ userDetail.name }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Tahun: </span>
+                        <span>{{ userDetail.year }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Kelas: </span>
+                        <span>{{ userDetail.studentClass.className }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Guru Kelas: </span>
+                        <a class="li-a-showProfile" href="">{{ userDetail.studentClass.teacherID.name }}</a></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Bidang Kerjaya yang Diminati: </span>
+                        <span>{{ userDetail.interest }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Penjaga: </span>
+                        {% if userDetail.parentID.name != 'NA' %}
+                            <a class="li-a-showProfile" href="">{{ userDetail.parentID.name }}</a></li>
+                        {% else %}
+                            <span style="color: crimson; font-style: italic;">Nama penjaga anda tidak didaftar di dalam sistem.</span></li>
+                        {% endif %}
+                </ul>
+                <button class="btn edit-profile">
+                    <a class="a-edit-for-showProfile" href="{% url 'dashboard:edit-profile' user_type user_id %}">Kemaskini Biodata</a>
+                </button>
+            {% elif user_type == "penjaga" %}
+                <h3>Maklumat Privasi Utama</h3>
+                <ul class="ul-showProfile">
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Panggilan: </span>
+                        <span>{{ username }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Alamat Emel: </span>
+                        <span>{{ userDetail.email }}</span></li>
+                </ul>
+                <button class="btn change-pass">
+                    <a class="a-password-for-showProfile" href="{% url 'dashboard:change-pass' user_type user_id %}">Tukar Kata Laluan</a>
+                </button>
+                <h3>Biodata Ibu Bapa/Penjaga</h3>
+                <ul class="ul-showProfile">
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Penuh: </span>
+                        <span>{{ userDetail.name }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Gelaran: </span>
+                        <span>{{ userDetail.salutation }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Umur: </span>
+                        <span>{{ userDetail.age }} tahun</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Pekerjaan: </span>
+                        <span>{{ userDetail.job }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama anak yang bersekolah di SMK Damansara Damai 1: </span>
+                        {% for student in studentDetail %}
+                            <li>--> <a class="li-a-showProfile" href="">{{ student.name }}</a></li>
+                        {% endfor %}
+                    </li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Hubungan dengan pelajar: </span>
+                        <span>{{ userDetail.relation }}</span></li>
+                </ul>
+                <button class="btn edit-profile">
+                    <a class="a-edit-for-showProfile" href="{% url 'dashboard:edit-profile' user_type user_id %}">Kemaskini Biodata</a>
+                </button>
+            {% elif user_type == "guru" %}
+                <h3>Maklumat Privasi Utama</h3>
+                <ul class="ul-showProfile">
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Panggilan: </span>
+                        <span>{{ username }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Alamat Emel: </span>
+                        <span>{{ userDetail.email }}</span></li>
+                </ul>
+                <button class="btn change-pass">
+                    <a class="a-password-for-showProfile" href="{% url 'dashboard:change-pass' user_type user_id %}">Tukar Kata Laluan</a>
+                </button>
+                <h3>Biodata Guru</h3>
+                <ul class="ul-showProfile">
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Nama Penuh: </span>
+                        <span>{{ userDetail.name }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Gelaran: </span>
+                        <span>{{ userDetail.salutation }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Jawatan di Sekolah: </span>
+                        <span>{{ userDetail.role }}</span></li>
+                    <li class="li-showProfile">
+                        <span style="font-weight: bold;">Tahun Semasa: </span>
+                        <span>{{ userDetail.year }}</span></li>
+
+                    {% if userDetail.role == "Guru Kelas" %}
+                        <li class="li-showProfile">
+                            <span style="font-weight: bold;">Kelas: </span>
+                            <span>{{ userDetail.homeroomClass }}</span></li>
+                        <li class="li-showProfile">
+                            <span style="font-weight: bold;">Nama pelajar di dalam kelas  {{ userDetail.homeroomClass }}:</span>
+                        {% for student in studentDetail %}
+                            <li>--> <a class="li-a-showProfile" href="">{{ student.name }}</a></li>
+                        {% empty %}
+                        <li class="li-showProfile" style="color: crimson; font-style: italic;">Tiada pelajar berdaftar di kelas ini.</li>
+                        {% endfor %}
+                        </li>
+                    {% endif %}
+                </ul>
+                <button class="btn edit-profile">
+                    <a class="a-edit-for-showProfile" href="{% url 'dashboard:edit-profile' user_type user_id %}">Kemaskini Biodata</a>
+                </button>
+            {% else %} <p>Tiada maklumat untuk dipaparkan.</p>
+            {% endif %}
+        
+            <p>    
+                <button class="btn back-to-dashboard">
+                    <a class="a-back-for-showProfile" href="{% url 'dashboard:index-nonadmin' user_type user_id %}">Kembali ke 
+                        <span style="font-style: italic;">Dashboard</span>
+                        {{ dashboardNav }}</a>
+                </button>
+            </p>
+        </p>
+    </center>
+
+</body>
+</html>

@@ -1,0 +1,24 @@
+ul {
+    list-style-type: none;
+    font-family: "DM Sans";
+}
+
+li {
+    font-family: "DM Sans";
+}
+
+.btn {
+    border: none;
+    background-color: inherit;
+    padding: 14px 28px;
+    font-size: 1.25vw;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    }
+    
+/* On mouse-over */
+.btn:hover{
+    background: #eee;
+    }

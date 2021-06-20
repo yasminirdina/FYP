@@ -1,0 +1,253 @@
+@viewport {
+    width: device-width;
+    height: device-height;
+    zoom: 1;
+  }  
+
+body {
+    font-family: "DM Sans";
+    position:relative;
+    margin: 0;
+}
+
+h1 {
+font-size: 40px;
+line-height: 1.25em;
+}
+
+h2 {
+font-size: 30px;
+}
+
+.h2a {
+    color: purple;
+}
+
+h3 {
+    font-size: 16px;
+}
+
+.ul-navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: palevioletred;
+    border-bottom-right-radius: 1vw;
+    border-bottom-left-radius: 1vw;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 100%;
+} 
+
+.ul-showProfile {
+    list-style-type: none;
+    background-color: white;
+    padding-left: 0vw;
+    font-size: 16px;
+}
+
+.li-navbar{
+    float: left;
+  }
+  
+.li-showProfile {
+    float: none;
+}
+
+.li-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+  }
+
+.li-a-showProfile{
+    text-decoration: none;
+}
+
+.li-a-showProfile:hover{
+    color: thistle;
+    font-weight: bold;
+}
+
+.li-a-navbar:hover:not(.active) {
+    background-color: grey;
+    border-radius: 10px;
+  }
+
+.active{
+    background-color: coral;
+    border-radius: 10px;
+  }
+
+.logout {
+    float: right;
+    background-color: crimson;
+    border-radius: 10px;
+  }
+
+.username {
+    float: right;
+    font-style: italic;
+  }
+
+p {
+    font-size: 16px;
+  }
+
+/* form fields */
+.currentpass, .newpass, .newpassconfirm, .name, .year, .studentclass, .interest, .parentid, .salutation, .age, .job, .relation, .role, .homeroomClass {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+}
+
+.btn {
+border: none;
+background-color: inherit;
+padding: 14px 28px;
+font-size: 16px;
+font-family: "DM Sans";
+font-weight: bold;
+cursor: pointer;
+display: inline-block;
+}
+
+/* On mouse-over */
+.btn:hover{
+background: #eee;
+}
+
+.settings {color: purple;}
+.bookmark {color: purple;}
+.report {color: purple;}
+.chat {color: purple;}
+.suggestion {color: purple;}
+.test {color: purple;}
+.blog {color: purple;}
+.quiz {color: purple;}
+.search {color: purple;}
+.logout {color: crimson;}
+.chat-admin {color: purple;}
+.suggestion-admin {color: purple;}
+.change-pass {color: palevioletred;}
+.edit-profile {color: palevioletred;}
+.back-to-dashboard {color: purple;}
+.save-for-changePassword {color: coral;}
+.back-to-showProfile {color: purple;}
+.back-to-showProfile2 {color: purple;}
+.edit-for-editProfile {color: coral;}
+.back-to-showProfile3 {color: purple;}
+
+/* hyperlink style */
+.a-settings-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-bookmark-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-report-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+    
+.a-chat-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-suggestion-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-test-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-blog-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+    
+.a-quiz-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-search-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-logout-for-dashboardIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-chat-for-dashboardIndexAdmin {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-suggestion-for-dashboardIndexAdmin {
+    text-decoration: none;
+    color: inherit;
+    }
+
+/* showProfile.html hyperlink style*/
+.a-password-for-showProfile {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-edit-for-showProfile {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-back-for-showProfile {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* changePassword.html */
+.password-for-changePassword {
+    font-family: DM Sans; 
+    text-align: left;
+    padding: 20px;
+    border: 2px solid coral;
+    background-color: peachpuff;
+    border-radius: 20px;
+    list-style-position: inside;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.a-back-for-showProfile {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-back-for-successUpdate {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* editProfile.html */
+.a-back-for-editProfile {
+    text-decoration: none;
+    color: inherit;
+}

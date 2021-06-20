@@ -1,0 +1,43 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboardIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Dashboard Admin</title>
+</head>
+<body>
+    <center>
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard user_id %}">
+                <span style="font-style: italic;">Dashboard </span>
+                <span>Admin</span></a></li>
+            <!--
+                <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+                <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>
+            -->
+        </ul>
+        <h1>
+            <span style="font-style: italic;">Future Cruise</span>
+            :
+            <span style="font-style: italic;">Dashboard </span>
+            <span>Admin</span>
+        </h1>
+        <h2 style="color: crimson;">AMARAN!</h2>
+        <h2 style="font-style: italic; color: coral;">{{ response }}</h2>
+        <p>Sila tunggu sebentar...</p>
+        <script>
+            function redirect(){
+               window.location.href = history.back();
+            }
+        
+            setTimeout(redirect, 5000);
+        </script>
+    </center>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Daftar Akaun</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+<center><h1>Daftar Akaun</h1>
+    <ul class="password">
+        Format kata laluan yang diterima adalah mesti mengandungi PALING KURANG SATU(1):
+            <li>Huruf besar: A, B, C, hingga Z</li>
+            <li>Huruf kecil: a, b, c, hingga z</li>
+            <li>Angka: 0, 1, 2, hingga 9</li>
+            <li>Aksara khas: !, @, # dan lain-lain</li>
+    </ul>
+    <p style="font-style: italic; color: crimson;">{{ response }}</p>
+    <form action="{% url 'home:sign-up' %}" class="SignUpForm" method="post">
+        {% csrf_token %}
+        {{ form.media.js }}
+        {{ form.as_p }}
+        <button class="btn6 signUp-for-signUp" type="submit">Daftar Akaun</button>
+        <button class="btn6 index-for-signUp">
+            <a class="a-index-for-signUp" href="{% url 'home:index' %}">Batal</a>
+        </button>
+    </form>
+</center>
+
+</body>
+</html>

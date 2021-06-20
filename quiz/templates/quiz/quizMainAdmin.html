@@ -1,0 +1,33 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/quizMain.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya</title>
+</head>
+<body>
+    <center>
+        <ul>
+            <li><a href="{% url test user_id %}">Ujian Kerjaya</a></li>
+            <li><a href="{% url blog user_id%}">Blog Berita</a></li>
+            <li><a class="active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li><a href="{% url search user_id %}">Carian Maklumat</a></li>
+            <li><a href="{% url dashboard user_id %}">
+                <span style="font-style: italic;">Dashboard</span>
+                <span> Admin</span></a></li>
+            <li class="logout"><a href="{% url logout user_id %}">Log Keluar</a></li>
+            <li class="username"><a href="{% url dashboard user_id %}">ftrcrsadmin</a></li>
+        </ul>
+        <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
+        <h2>Statistik semasa Kandungan Soalan Kuiz</h2>
+
+        <p style="font-style: italic;">(Simple cards to be put here.)</p>
+
+        <button class="btn question-settings">
+            <a class ="a-settings-for-quizMainAdmin" href="{% url 'quiz:show-field' user_id %}">Kemaskini Kandungan Kuiz</a>
+        </button>
+    </center>
+</body>
+</html>

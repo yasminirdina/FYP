@@ -1,0 +1,335 @@
+body {
+    border-radius: 1em;
+    padding: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    margin-left: -0%;
+    transform: translate(-50%, -50%) 
+}
+
+h1 {
+font-family: "DM Sans";
+font-size: 40px;
+}
+
+h2 {
+font-family: "DM Sans";
+font-size: 30px;
+}
+
+.h2a {
+font-family: "DM Sans";
+font-size: 30px;
+color: purple;
+}
+
+h3 {
+font-family: "DM Sans";
+font-size: 16px;
+font-weight: bold;
+font-style: italic;
+}
+
+/*
+div {
+    background: rgba(237,178,249,0.5);
+    color: white;
+    border-radius: 10px;
+    padding: 5px 50px;
+    width: 100%;
+    margin-right: -50%;
+    margin-left: -50.5%;
+    margin-bottom: 20px;
+}
+*/
+
+/*
+.div1 {
+    background: white;
+    color: black;
+    border-radius: 10px;
+    padding: 5px 50px;
+    width: 100%;
+    margin-right: -50%;
+    margin-left: -50.5%;
+    margin-bottom: 20px;
+}*/
+
+/* div for "kolaborasi..." */
+div {
+    font-family: "DM Sans";
+    font-size: 16px;
+    background: rgba(245,245,245,0.5);
+    color: black;
+    border-radius: 10px;
+    width: fit-content;
+    padding-left: 15px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-align: center;
+    margin-right: -50%;
+    margin-left: -50.5%;
+    margin-top: 30px;
+}
+
+p {
+font-family: "DM Sans";
+}
+
+/* form fields */
+.username, .password-field, .usertype, .email, .newPass, .newPassConfirm {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+}
+
+.btn {
+border: none;
+border-radius: 30px;
+background-color: rgba(150,86,150);
+padding: 14px 28px;
+font-size: 16px;
+font-family: "DM Sans";
+font-weight: bold;
+cursor: pointer;
+display: inline-block;
+}
+
+/* On mouse-over */
+.btn:hover{
+    background: #eee;
+    color: purple;
+}
+
+.login {
+    color: white;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+.signup {
+    color: white;
+}
+
+.confirm {
+    color: white;
+    background-color: tomato;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+
+.cancel {
+    color: white;
+}
+
+.btn2 {
+    border: none;
+    background-color: rgba(150,86,150);
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    }
+    
+/* On mouse-over */
+.btn2:hover{
+background: #eee;
+color: purple;
+}
+    
+.login-Admin-for-loginIndex {
+    color: white;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+.login-NonAdmin-for-loginIndex {
+    color: white;
+}
+
+.btn3 {
+    border: none;
+    background-color: rgba(150,86,150);
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    }
+    
+/* On mouse-over */
+.btn3:hover{
+background: #eee;
+color: purple;
+}
+    
+.login-for-loginAdmin {
+    color: white;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+.index-for-loginAdmin {color: white;}
+
+.btn4 {
+    border: none;
+    background-color: rgba(150,86,150);
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    }
+    
+/* On mouse-over */
+.btn4:hover{
+background: #eee;
+color: purple
+}
+    
+.login-for-loginNonAdmin {
+    color: white;
+    margin-left: -0.5%;
+}
+.reset-for-loginNonAdmin {
+    background-color: tomato;
+    color: white;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+.index-for-loginNonAdmin {color: white;}
+
+.btn5 {
+    border: none;
+    background-color: rgba(150,86,150);
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    }
+    
+/* On mouse-over */
+.btn5:hover{
+background: #eee;
+color: purple;
+}
+    
+.save-for-resetPassword {
+    color: white;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+.login-for-resetPassword {color: white;}
+
+.btn6 {
+    border: none;
+    background-color: rgba(150,86,150);
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    }
+    
+/* On mouse-over */
+.btn6:hover{
+background: #eee;
+color: purple;
+}
+
+.signUp-for-signUp {
+    color: white;
+    margin-left: -0.5%;
+    margin-right: 10px;
+}
+.index-for-signUp {color: white}
+
+/* hyperlink style */
+.a-fb {
+    text-decoration: none;
+    color: purple;
+}
+
+.a-fb:hover {
+    font-weight: bold;
+    color: palevioletred;
+    font-style: normal;
+}
+
+.a-admin-for-loginIndex {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-nonadmin-for-loginIndex {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-login-for-homeIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-signup-for-homeIndex {
+    text-decoration: none;
+    color: inherit;
+    }
+    
+.a-cancel-for-loginAdmin {
+    text-decoration: none;
+    color: inherit;
+}   
+
+.a-reset-for-loginNonAdmin {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-index-for-loginNonAdmin {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-for-resetPassword {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-index-for-signUp {
+    text-decoration: none;
+    color: inherit;
+    }
+
+.a-confirm-for-logoutConfirm {
+    text-decoration: none;
+    color: inherit;
+    }
+
+/* unordered list style */    
+.password {
+    font-family: DM Sans; 
+    text-align: left;
+    padding: 20px;
+    border: 2px solid coral;
+    background-color: peachpuff;
+    border-radius: 20px;
+    list-style-position: inside;
+}

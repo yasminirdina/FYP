@@ -1,0 +1,34 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Log Keluar</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>
+            <span style="font-style: italic;">Future Cruise</span>
+            <span>: Log Keluar</span>
+        </h1>
+        <h2>
+            <span class="h2a" style="font-style: italic;">{{ username }}</span>
+            <span>, anda ingin teruskan log keluar?</span>
+        </h2>
+            <button class="btn confirm">
+                <a class="a-confirm-for-logoutConfirm" href="{% url 'dashboard:logging-out' user_id %}">Ya</a>
+            </button>
+            <button class="btn cancel" type="button" onclick="javascript:history.back()">Kembali</button>
+    </center>
+</body>
+</html>

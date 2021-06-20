@@ -1,0 +1,486 @@
+@viewport {
+  width: device-width;
+  height: device-height;
+  zoom: 1;
+} 
+
+body {
+  font-family: "DM Sans";
+  position: relative;
+  margin: 0;
+}
+
+h1 {
+  font-size: 40px;
+  line-height: 1.25em;
+}
+
+h2 {
+font-size: 30px;
+}
+
+.h2a {
+  color: purple;
+}
+
+h3 {
+  font-size: 16px;
+}
+
+.ul-navbar {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: palevioletred;
+  border-bottom-right-radius: 1vw;
+  border-bottom-left-radius: 1vw;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  width: 100%;
+} 
+
+/* ul and li in showAvatar.html, editAvatar.html, showField.html*/
+.ul-showAvatar {
+  list-style-type: none;
+  background-color: white;
+  padding-left: 0vw;
+  font-size: 16px;
+}
+
+.li-navbar{
+  float: left;
+}
+
+.li-showAvatar {
+  float: none;
+}
+
+.li-a-navbar{
+  display: block;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  padding: 1vw 1.25vw;
+  text-decoration: none;
+}
+
+.li-a-showAvatar:hover{
+  color: thistle;
+  font-weight: bold;
+}
+
+.li-a-navbar:hover:not(.active) {
+  background-color: grey;
+  border-radius: 10px;
+}
+
+.active{
+  background-color: coral;
+  border-radius: 10px;
+}
+
+.logout {
+  float: right;
+  background-color: crimson;
+  border-radius: 10px;
+}
+
+.username {
+  float: right;
+  font-style: italic;
+}
+
+/*ul and li for showField.html*/
+.ul-showField {
+  list-style-type: none;
+  background-color: white;
+  padding-left: 0vw;
+  font-size: 16px;
+}
+
+.li-field{
+  float: none;
+}
+
+/*ul and li for addField.html & changeIcon.html*/
+.ul-addField, .ul-changeIcon {
+  list-style-type: none;
+  background-color: white;
+  padding-left: 0vw;
+  font-size: 16px;
+}
+
+.li-addField {
+  float: none;
+  padding-left: 0vw;
+}
+
+.ul-addField2 {
+  font-family: DM Sans; 
+  text-align: left;
+  padding: 20px;
+  border: 2px solid coral;
+  background-color: peachpuff;
+  border-radius: 20px;
+  list-style-position: inside;
+}
+
+p{
+    font-size: 16px;
+}
+
+/*div for image grid
+.div-changeicon {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding: 10px;
+  justify-content: center;
+}*/
+
+/* input */
+#search_box {
+  font-size: 16px;
+  font-family: "DM Sans";
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+#difficulty {
+  font-size: 16px;
+  font-family: "DM Sans";
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+input:focus::placeholder {color: transparent}
+
+/* form fields */
+.avatarid, .workplace, .avatargender, .imageurl, .name {
+  font-size: 16px;
+  font-family: "DM Sans";
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  padding: 3px;
+}
+
+.image {
+  list-style-type: none;
+  padding-left: 0vw;
+  display:inline;
+  font-size: 16px;
+  font-family: "DM Sans";
+}
+
+.btn2 {
+  border: none;
+  background-color: inherit;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-family: "DM Sans";
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+}  
+
+/*On mouse-over*/
+.btn2:hover{
+  background: #eee;
+  border-radius: 10px;
+}
+
+.avatar-for-showAvatar {color: purple;}
+.main-for-showAvatar {color: purple;}
+
+.avatar-for-editAvatar {color: coral;}
+.main-for-editAvatar {color: purple;}
+
+.back-to-showAvatar {color: purple;}
+
+.field-for-showField {color: coral;}
+.main-for-showField {color: purple;}
+.submit-for-showField {
+  color: purple;
+  padding: 7px 10px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+.clear-for-showField {
+  color: crimson;
+  padding: 7px 10px;
+  margin: 5px;
+}
+
+.field-for-addField {color: coral;}
+.cancel-for-addField {color: purple;}
+
+.icon-for-changeIcon {color: coral;}
+.cancel-for-changeIcon {color: purple;}
+
+.submit1-for-showQuestion {
+  color: purple;
+  padding: 7px 10px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+.clear1-for-showQuestion {
+  color: crimson;
+  padding: 7px 10px;
+  margin: 5px;
+}
+
+.submit2-for-showQuestion {
+  color: purple;
+  padding: 7px 10px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+.clear2-for-showQuestion {
+  color: crimson;
+  padding: 7px 10px;
+  margin: 5px;
+}
+
+.add-for-showQuestion{color: coral;}
+.back-for-showQuestion{color: purple;}
+
+.btn3 {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 16px;
+  font-family: "DM Sans";
+  font-weight: bold;
+  display: inline-block;
+}
+
+.btn3.change:hover{
+  color: gray;
+  background-color: whitesmoke;
+}
+
+.status {
+  cursor: pointer;
+  color: white;
+}
+
+.question {
+  cursor: pointer;
+  color: white;
+  background-color: gray
+}
+
+.edit-icon {
+  cursor: pointer;
+  color: white;
+  background-color: gray
+}
+
+.edit-for-showQuestion {
+  cursor: pointer;
+  color: white;
+  background-color: gray
+}
+
+/* hyperlink style */
+.a-for-showAvatar {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-for-editAvatar {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-back-for-successUpdate {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hyperlinks showField.html */
+.a-field-for-showField {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-main-for-showField {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-question-for-showField {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-clear-for-showField {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-icon-for-showField {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hyperlink addField.html */
+.a-cancel-for-addField {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hyperlink changeIcon.html */
+.a-cancel-for-changeIcon {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hyperlink showQuestion.html */
+.a-main-for-showQuestion {color: purple;}
+
+.a-back1-for-showQuestion {color: purple;}
+
+.a-add-for-showQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-back2-for-showQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-clear1-for-showQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-clear1-for-showQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-question-for-showQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
+.a-main-for-showQuestion:hover {color: coral;}
+.a-back1-for-showQuestion:hover {color: coral;}
+
+/* div */
+.div-field {
+  display: block;
+  padding: 0;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  border-radius: 2vw;
+  /* max-height: 70vw; not sure */
+  overflow-x:auto;
+  /* not sure
+  overflow-y: auto;
+  background:
+    linear-gradient(white 30%, rgba(255,255,255,0)),
+    linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  background-size: 100% 4em, 100% 4em, 100% 1.4em, 100% 1.4em;
+  background-attachment: local, local, scroll, scroll;*/
+}
+
+.div-question {
+  display: block;
+  padding: 0;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  border-radius: 2vw;
+  overflow-x:auto;
+}
+
+/* table */
+table {
+  border: 1px solid whitesmoke;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border-radius: 10px;
+  font-size: 16px;
+  margin: 10px;
+  overflow: hidden;
+}
+
+.sortable th.show:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+  content: " \25B4\25BE"; 
+}
+
+th {
+  border-collapse: collapse;
+  padding: 20px;
+  text-align: center;
+  background-color: palevioletred;
+  color: white;
+}
+
+/* not sure
+th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+th[scope=row] {
+  min-width: 40vw;
+}
+*/
+
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+tr:nth-child(even) {
+  background-color: #eee;
+}
+
+tr:nth-child(odd) {
+  background-color: #fff;
+}
+
+tr:hover {
+  background-color: lightsteelblue;
+  cursor: pointer;
+}
+
+/* Scrolling wrapper 
+div[tabindex="0"][role="region"] {
+  overflow: auto;
+}
+
+div[tabindex="0"][role="region"]:focus {
+  box-shadow: 0 0 .5em rgba(0,0,0,.5);
+  outline: .1em solid rgba(0,0,0,.1);
+}
+
+div[tabindex="0"][role="region"] table {
+  margin: 0;
+}
+
+div[tabindex="0"][role="region"].colheaders {
+  background:
+    linear-gradient(white 30%, rgba(255,255,255,0)),
+    linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+  background-repeat: no-repeat;
+  background-color: #fff;
+  background-size: 100% 4em, 100% 4em, 100% 1.4em, 100% 1.4em;
+  background-attachment: local, local, scroll, scroll;
+}*/

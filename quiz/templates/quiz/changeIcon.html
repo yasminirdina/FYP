@@ -1,0 +1,70 @@
+{% load static %}
+{% load quiz_index %}
+    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+    <style>
+        div {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            padding: 10px;
+            justify-content: center;
+            margin-left: -2%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id %}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
+                <span style="font-style: italic;">Dashboard</span>
+                <span> Admin</span></a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>            
+        </ul>
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Tukar Ikon Bidang Kerjaya</h2>
+        <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+            <span><a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
+            <span style="color: gray;">{{ currentGameFieldName }}</span>
+        </h3>
+
+        <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
+        <form action="{% url 'quiz:change-icon' user_id field_id %}" class="ChangeIconForm" method="post">
+            {% csrf_token %}
+            <!--<ul class="ul-changeIcon"></ul>-->
+                Pilih ikon untuk bidang {{ currentGameFieldName }}: <p></p>
+                <div>
+                {% for choice in form.image.field.choices %}
+                    <span style="padding: 10px;"></span>
+                    {% ifequal forloop.counter|divisibleby:"4" True %}    
+                        <input type="radio" name="image" value="{{ choice.0 }}">
+                        <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                        </div>
+                        <div>
+                    {% endifequal %}      
+                    {% ifequal forloop.counter|divisibleby:"4" False %}   
+                        <input type="radio" name="image" value="{{ choice.0 }}">
+                        <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                    {% endifequal %}
+                {% endfor %}
+                </div>
+            </ul>
+            <p></p>
+            <button class="btn2 icon-for-changeIcon" type="submit">Simpan</button>
+            <button class="btn2 cancel-for-changeIcon">
+                <a class="a-cancel-for-changeIcon" href="{% url 'quiz:show-field' user_id %}">Batal</a>
+            </button>
+        </form>
+    </center>
+</body>
+</html>

@@ -1,0 +1,44 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboardIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Dashboard Admin</title>
+</head>
+<body>
+    <center>
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test admin_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog admin_id%}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz admin_id %}">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search admin_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard admin_id %}">
+                <span style="font-style: italic;">Dashboard </span>
+                <span>Admin</span></a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout admin_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard admin_id %}">ftrcrsadmin</a></li>
+        </ul>
+        <h1>
+            <span style="font-style: italic;">Future Cruise</span>
+            :
+            <span style="font-style: italic;">Dashboard </span>
+            <span>Admin</span>
+        </h1>
+        <!--
+        <h2>
+            {{ response }}
+            <span style="font-style: italic;">Dashboard </span>
+            <span>Admin</span>
+        </h2>
+        -->
+            <button class="btn chat-admin">
+                <a class="a-chat-for-dashboardIndexAdmin" href="{% url 'dashboard:chat-admin' admin_id %}">Ruang Bual Kaunseling</a>
+            </button>
+            <button class="btn suggestion-admin">
+                <a class="a-suggestion-for-dashboardIndexAdmin" href="{% url 'dashboard:suggestions-admin' admin_id %}">Cadangan Penambahbaikan</a>
+            </button>
+    </center>
+</body>
+</html>

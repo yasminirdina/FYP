@@ -1,0 +1,61 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/avatar.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Avatar</title>
+    <style>
+        div {
+            display: flex;
+            align-items: center;
+            flex-direction: row;
+            padding: 10px;
+            justify-content: center;
+            margin-left: -2%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id %}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">
+                <span style="font-style: italic;">Dashboard</span>
+                <span>{{ dashboardNav }}</span>
+            </a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>            
+        </ul>
+        <h1>Tetapan Avatar</h1>
+        <h2>
+            <span class="h2a" style="font-style: italic;">{{ username }}</span>
+            <span>, avatar terkini anda adalah seperti berikut:</span>
+        </h2>
+        <p>
+            <ul class="ul-showAvatar">
+                <li>
+                    <span style="padding-left: 5px;">
+                        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+                    </span>
+                </li>
+                <li><span style="font-weight: bold;">Nama Kerjaya: </span>{{ currentAvatarDetailsObject.avatarID }}</li>
+                <li><span style="font-weight: bold;">Tempat Kerja: </span>{{ currentAvatarDetailsObject.workplace }}</li>
+                <li><span style="font-weight: bold;">Jantina: </span>{{ currentAvatarDetailsObject.avatarGender }}</li>
+            </ul>
+            
+            <button class="btn2 avatar-for-ShowAvatar">
+                <a class="a-for-showAvatar" href="{% url 'quiz:edit-avatar' user_id %}">Kemaskini Avatar</a>
+            </button>
+            <button class="btn2 main-for-showAvatar">
+                <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali ke Halaman Utama Kuiz</a>
+            </button>
+        </p>
+    </center>
+
+</body>
+</html>

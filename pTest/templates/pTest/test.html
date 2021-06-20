@@ -1,0 +1,28 @@
+{% extends "pTest/base.html" %}
+
+{% block title %}FutureCruise: Ujian Kerjaya{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Ujian Kerjaya</h3>
+            </div>
+
+            <ul class="list-group">
+                {% for pTest in pTests %}
+                <li class="list-group-item">
+                    <strong>{{ pTest.question }}</strong>
+                    <span class="pull-right">
+                        <a href="{% url 'pTest:choice' pTest.id %}" class="btn btn-info btn-xs">Vote</a> &nbsp;
+                        <a href="{% url 'pTest:result' pTest.id %}" class="btn btn-default btn-xs">View Results</a> &nbsp;
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

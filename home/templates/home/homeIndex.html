@@ -1,0 +1,45 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Halaman Utama</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>
+            <span style="font-style:italic;">Future Cruise</span>
+            <span>: Portal Web Penerokaan Kerjaya</span>
+        </h1>
+
+        <p style="font-style: italic; font-weight: bold; color: purple;">
+            "He who fails to plan is planning to fail."
+        </p>
+        <p style="margin-bottom: 30px;">- Winston Churchill</p>
+
+        <button class="btn login">
+            <a class="a-login-for-homeIndex" href="{% url 'home:login' %}">Log Masuk</a>
+        </button>
+        <button class="btn signup">
+            <a class="a-signup-for-homeIndex", href="{% url 'home:sign-up' %}">Daftar</a>
+        </button>
+        <p></p>
+        <div>
+            <img src="{% static 'images/homepage/3-smkdd1_logo.png' %}" width="50px" height="50px">
+            <span style="text-align: center; font-style: italic;">Hasil kolaborasi bersama 
+                <a class="a-fb" href="https://www.facebook.com/smkdd1/">SMK Damansara Damai 1</a>
+            </span>
+        </div>
+    </center>
+</body>
+</html>
