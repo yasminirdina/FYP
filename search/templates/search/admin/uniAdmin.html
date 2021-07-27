@@ -1,0 +1,15 @@
+{% extends "search/base.html" %}
+{% block navbar %}
+    <ul class="ul-navbar">
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">Blog Berita</a></li>
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+        <li class="li-navbar"><a class="li-a-navbar active" href="{% url search user_id %}">Carian Maklumat</a></li>
+        <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">Papan Pemuka Admin</a></li>
+        <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+        <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>
+    </ul>
+{% endblock %}
+{% block header %} Carian Mengikut Universiti {% endblock %}
+{% block content %}
+{% endblock %}

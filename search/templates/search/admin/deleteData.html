@@ -1,0 +1,23 @@
+{% extends "search/adminbase.html" %}
+{% block header %} Cipta Rekod Baru {% endblock %}
+{% block content %}
+<!-- <center> -->
+<div class="container-form-search">
+    <p class="p-delete">Adakah anda mahu padam "{{data}}"?</p>
+    <center>
+    <form method="POST">
+        {% csrf_token %}
+        <a class="btn-delete-cancel" href="{% url 'search:all-admin' user_id %}">Batal</a>
+        <button class="btn-delete" type="submit" onclick="myFunction()"> Ya </button>
+        <!-- <input type="submit" name="ya"> -->
+        <!-- window.location.replace("{% url 'search:all-admin' user_id %}") -->
+    </form>
+    </center>
+    <script>
+        function myFunction() {
+        location.replace("{% url 'search:index-admin' user_id %}")
+        }
+    </script>
+</div>
+<!-- </center> -->
+{% endblock %}

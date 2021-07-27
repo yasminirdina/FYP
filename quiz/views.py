@@ -20,7 +20,7 @@ def quizMainAdmin(request, user_id):
         urlTest = 'dashboard:index-admin'
         urlBlog = 'blog:index-admin'
         urlQuiz = 'quiz:index-admin'
-        urlSearch = 'dashboard:index-admin'
+        urlSearch = 'search:index-admin'
         urlDashboard = 'dashboard:index-admin'
         urlLogout = 'dashboard:logout-confirm'
         context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
@@ -62,7 +62,7 @@ def quizMain(request, user_id):
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'dashboard:index-nonadmin'
+    urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     dashboardNav = ' Pelajar'
@@ -171,7 +171,7 @@ def editAvatar(request, user_id):
         form = AvatarForm(request.POST, initial={'avatarID': avatarID, 'workplace': workplace, 'avatarGender': avatarGender,
         'imageURL': imageURL})
         if form.is_valid():
-            #currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
+            currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
             currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
             #currentPlayerAvatarID = currentPlayerRecord.avatarID.avatarID.id
             #currentAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.get(id=currentPlayerAvatarID)
@@ -463,6 +463,6 @@ def play(request, user_id):
     #check logged in or not
     if currentUserDetail.isActive == False:
         return redirect('home:login')
-        
+
     response = "%s, "
     return HttpResponse(response % user_id)

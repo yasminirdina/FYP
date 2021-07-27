@@ -1,0 +1,40 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/quizMain.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya</title>
+</head>
+<body>
+    <center>
+        <ul>
+            <li><a href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
+            <li><a href="{% url blog user_type user_id%}">Blog Berita</a></li>
+            <li><a class="active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li><a href="{% url search user_type user_id %}">Carian Maklumat</a></li>
+            <li><a href="{% url dashboard user_type user_id %}">{{ dashboardNav }}</a></li>
+            <li class="logout"><a href="{% url logout user_id %}">Log Keluar</a></li>
+            <li class="username"><a href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
+        </ul>
+        <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
+        <h2 style="font-style: italic">
+            <span>Hai,</span>
+            <span class="h2a">{{ username }}</span>
+            <span>!</span>
+        </h2>
+
+        <p>
+            {{ response }}
+        </p>
+
+        <button class="btn avatar">
+            <a href="{% url 'quiz:show-avatar' user_id %}">Tetapan Avatar</a>
+        </button>
+        <button class="btn play">
+            <a href="{% url 'quiz:play' user_id %}">Mula Kuiz</a>
+        </button>
+    </center>
+</body>
+</html>

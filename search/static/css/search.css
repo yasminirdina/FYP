@@ -11,25 +11,19 @@ body {
 }
 
 h1 {
-font-size: 40px;
-line-height: 1.25em;
-}
-
-/* search bar */
-.input-group{
-  width: 100%;
+  font-size: 40px;
+  line-height: 1.5em;
 }
 
 h2 {
-font-size: 30px;
+  font-size: 30px;
+  line-height: 1em;
 }
 
-.h2a {
-  color: purple;
-}
-
-h3 {
-  font-size: 16px;
+p{
+  text-align: center;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .ul-navbar {
@@ -46,19 +40,8 @@ h3 {
   width: 100%;
 } 
 
-.ul-showProfile {
-  list-style-type: none;
-  background-color: white;
-  padding-left: 0vw;
-  font-size: 16px;
-}
-
 .li-navbar{
   float: left;
-}
-
-.li-showProfile {
-  float: none;
 }
 
 .li-a-navbar{
@@ -69,15 +52,6 @@ h3 {
   text-align: center;
   padding: 1vw 1.25vw;
   text-decoration: none;
-}
-
-.li-a-showProfile{
-  text-decoration: none;
-}
-
-.li-a-showProfile:hover{
-  color: thistle;
-  font-weight: bold;
 }
 
 .li-a-navbar:hover:not(.active) {
@@ -101,28 +75,11 @@ h3 {
   font-style: italic;
 }
 
-.ul-data{
-  list-style-type: none;
-}
-
-p {
-  font-size: 16px;
-}
-
-/* form fields */
-.currentpass, .newpass, .newpassconfirm, .name, .year, .studentclass, .interest, .parentid, .salutation, .age, .job, .relation, .role, .homeroomClass {
-  font-size: 16px;
-  font-family: "DM Sans";
-  border-radius: 10px;
-  border: 1px solid lightgray;
-  padding: 3px;
-}
-
-.btn {
+.btn{
 border: none;
-background-color: inherit;
-padding: 14px 28px;
-font-size: 16px;
+background-color: coral;
+padding: 30px 30px;
+font-size: 18px;
 font-family: "DM Sans";
 font-weight: bold;
 cursor: pointer;
@@ -131,7 +88,35 @@ display: inline-block;
 
 /* On mouse-over */
 .btn:hover{
-background: #eee;
+background: rgb(255, 103, 47);
+}
+
+.btn-search {
+  background-color: coral;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: center;
+}
+
+.btn-search:hover {
+  background-color: rgb(255, 103, 47);
+}
+
+.btn-create {
+  background-color: coral;
+  padding: 5px;
+  margin: 0px 50px 30px 50px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: center;
+}
+
+.btn-a-create {
+  color: white;
 }
 
 .settings {color: purple;}
@@ -144,127 +129,112 @@ background: #eee;
 .quiz {color: purple;}
 .search {color: purple;}
 .logout {color: crimson;}
-.confirm {color: coral;}
-.cancel {color: purple;}
-.chat-admin {color: purple;}
-.suggestion-admin {color: purple;}
-.change-pass {color: palevioletred;}
-.edit-profile {color: palevioletred;}
-.back-to-dashboard {color: purple;}
-.save-for-changePassword {color: coral;}
-.back-to-showProfile {color: purple;}
-.back-to-showProfile2 {color: purple;}
-.edit-for-editProfile {color: coral;}
-.back-to-showProfile3 {color: purple;}
 
 /* hyperlink style */
-.a-settings-for-dashboardIndex {
+.a-search-main {
   text-decoration: none;
-  color: inherit;
+  color: rgb(255, 255, 255);
 }
 
-.a-bookmark-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
+.container-search-main{
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 50px 50px;
+  padding-left: 10px;
+  padding: 30px;
 }
 
-.a-report-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
-  }
-  
-.a-chat-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
-  }
-
-.a-suggestion-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
+.container-search{
+  display: inline-grid;
+  text-align: center;
 }
 
-.a-test-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
+.container-form-allsearch{
+  border: 1px;
+  box-sizing: border-box;
 }
 
-.a-blog-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
-  }
-  
-.a-quiz-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
-  }
-
-.a-search-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
-  }
-
-.a-logout-for-dashboardIndex {
-  text-decoration: none;
-  color: inherit;
-  }
-
-.a-chat-for-dashboardIndexAdmin {
-  text-decoration: none;
-  color: inherit;
-  }
-
-.a-suggestion-for-dashboardIndexAdmin {
-  text-decoration: none;
-  color: inherit;
-  }
-
-.a-confirm-for-logoutConfirm {
-  text-decoration: none;
-  color: inherit;
+input[type=search], select, textarea {
+  width: 100%; /* Full width */
+  padding: 12px; /* Some padding */ 
+  border: 1px; /* Gray border */
+  border-radius: 4px; /* Rounded borders */
+  box-sizing: border-box; /* Make sure that padding and width stays in place */
+  margin-top: 6px; /* Add a top margin */
+  margin-bottom: 16px; /* Bottom margin */
+  resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
 }
 
-/* showProfile.html hyperlink style*/
-.a-password-for-showProfile {
+/* Add a background color and some padding around the form */
+.container-form-search {
+  border-radius: 10px;
+  background-color: rgb(255, 211, 195);
+  padding: 20px 40px 20px 40px;
+  margin: 10px 200px 50px 200px;
+}
+
+.row {
+  /* background-color: rgb(255, 211, 195); */
+  border: 1px solid rgb(196, 196, 196);
+  padding: 30px;
+  margin: 10px 50px 10px 50px;
+}
+
+.ul-data{
+  list-style-type: none;
+}
+
+.li-a-course{
+  font-family: "DM Sans";
+  display: block;
+  color: rgb(150, 2, 150);
+  font-size: 25px;
+  font-weight: bold;
+  /* text-align: center; */
+  padding: 10px 10px 20px 0px;
   text-decoration: none;
-  color: inherit;
 }
 
-.a-edit-for-showProfile {
+.li-a-uni{
+  font-family: "DM Sans";
+  color: rgb(255, 103, 47);
+  font-size: 18px;
+  /* text-align: center; */
+  padding: 10px;
   text-decoration: none;
-  color: inherit;
 }
 
-.a-back-for-showProfile {
-  text-decoration: none;
-  color: inherit;
+.table{
+  width: 100%;
 }
 
-/* changePassword.html */
-.password-for-changePassword {
-  font-family: DM Sans; 
-  text-align: left;
-  padding: 20px;
-  border: 2px solid coral;
-  background-color: peachpuff;
-  border-radius: 20px;
-  list-style-position: inside;
-  margin-left: 50px;
-  margin-right: 50px;
+.btn-update{
+  background-color: coral;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: center;
 }
 
-.a-back-for-showProfile {
-  text-decoration: none;
-  color: inherit;
+.btn-a-update{
+  color:white;
 }
 
-.a-back-for-successUpdate {
-  text-decoration: none;
-  color: inherit;
+.btn-delete{
+  background-color: rgb(202, 56, 56);
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: center;
 }
 
-/* editProfile.html */
-.a-back-for-editProfile {
-  text-decoration: none;
-  color: inherit;
+.btn-a-delete{
+  color:white;
 }
 
+.btn-delete-cancel{
+  color: crimson;
+  padding-right: 10px;
+}

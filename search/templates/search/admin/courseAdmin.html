@@ -1,0 +1,81 @@
+{% extends "search/adminbase.html" %}
+{% block header %} Carian Mengikut Kursus {% endblock %}
+{% block content %}
+<center>
+<form method="GET" action=".">
+    <!-- uni search  -->
+    <div class="form-row">
+        <!-- form group -->
+        <div class="form-group col-12">
+            <!-- input group -->
+            <div class="input-group">
+                <label for="inputUni">Universiti : </label>
+                <input class="form-control py-2 border-right-0 border" type="search" name="uni_contains" placeholder="Nama Universiti" />
+                <span class="input-goup-append">
+                    <div class="input-group-text bg-transparent">
+                        <!-- putting search icon -->
+                        <i class="fa fa-search"></i> 
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+    <!-- course search -->
+    <div class="form-row">
+        <!-- form group -->
+        <div class="form-group col-12">
+            <!-- input group -->
+            <div class="input-group">
+                <label for="inputCourse">Kursus : </label>
+                <input class="form-control py-2 border-right-0 border" type="search" name="course_contains" placeholder="Nama Kursus" />
+                <span class="input-goup-append">
+                    <div class="input-group-text bg-transparent">
+                        <!-- putting search icon -->
+                        <i class="fa fa-search"></i> 
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <!-- form group -->
+        <div class="form-group col-12">
+            <!-- input group -->
+            <div class="input-group">
+                <label for="inputUniCourse">Universiti atau Kursus : </label>
+                <input class="form-control py-2 border-right-0 border" type="search" name="uniorcourse_contains" placeholder="Nama Universiti/Kursus" />
+                <span class="input-goup-append">
+                    <div class="input-group-text bg-transparent">
+                        <!-- putting search icon -->
+                        <i class="fa fa-search"></i> 
+                    </div>
+                </span>
+            </div>
+        </div>
+    </div>
+<button type="submit" class="btn btn-primary">Cari</button>
+</form>
+</center>
+<hr />
+<div class="row">
+        {% for course in allCourse %}
+            <ul class="ul-data">
+            <li>{{ course.course }}</li>
+            {% for courseuni in allBridge %}
+                {% if course.id == courseuni.course.id %}
+                    {% for uni in allUni %}
+                        {% if uni.id == courseuni.university.id %}
+                            <ul>
+                                <li class="li-data">{{uni.uni}} </li>
+                                <!-- <li class="li-data">Kerjaya : {{ jobs.job }}</li> -->
+                            </ul>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %} 
+            </ul>
+            <hr />   
+        {% endfor %}
+</div>
+</main><!-- container -->
+{% endblock %}

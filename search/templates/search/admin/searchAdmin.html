@@ -1,0 +1,27 @@
+{% extends "search/adminbase.html" %}
+{% block content %}
+<center>
+    <div class="container-search-main">
+        <div class="container-search">
+            <button class="btn">
+                <span><a class="a-search-main" href="{% url 'search:uni-admin' user_id %}">Cari Mengikut Universiti</a></span>
+            </button>
+        </div>
+        <div class="container-search">
+            <button class="btn">
+                <span><a class="a-search-main" href="{% url 'search:course-admin' user_id %}">Cari Mengikut Kursus</a></span>
+            </button>
+        </div>
+        <div class="container-search">
+            <button class="btn">
+                <span><a class="a-search-main" href="{% url 'search:jobs-admin' user_id %}">Cari Mengikut Bidang Kerjaya</a></span>
+            </button>
+        </div>
+        <div class="container-search">
+            <button class="btn">
+                <span><a class="a-search-main" href="{% url 'search:all-admin' user_id %}">Cari Semua Rekod</a></span>
+            </button>
+        </div>
+    </div>
+</center>
+{% endblock %}

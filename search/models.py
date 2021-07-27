@@ -18,7 +18,7 @@ class Bridge(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.university, self.course
+        return self.university, self.course.course
 
 class Jobs(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)

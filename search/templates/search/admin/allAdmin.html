@@ -1,0 +1,104 @@
+{% extends "search/adminbase.html" %}
+{% block header %} Cari Semua Rekod {% endblock %}
+{% block content %}
+<div class="container-form-search">
+    <form method="GET" action=".">
+        <!-- uni search  -->
+        <label for="inputUni">Universiti</label>
+        <input class="form-control py-2 border-right-0 border" type="search" name="uni_contains" placeholder="Nama Universiti" />
+        <span class="input-goup-append">
+            <div class="input-group-text bg-transparent">
+                <!-- putting search icon -->
+                <i class="fa fa-search"></i> 
+            </div>
+        </span>
+                
+        <!-- course search -->
+        <label for="inputCourse">Kursus</label>
+        <input class="form-control py-2 border-right-0 border" type="search" name="course_contains" placeholder="Nama Kursus" />
+        <span class="input-goup-append">
+            <div class="input-group-text bg-transparent">
+                <!-- putting search icon -->
+                <i class="fa fa-search"></i> 
+            </div>
+        </span>
+                
+        <!-- form group -->
+        <label for="inputUniCourse">Kerjaya</label><br>
+        <input class="form-unicourse" type="search" name="jobs_contains" placeholder="Nama Kerjaya" />
+        <span class="input-goup-append">
+            <div class="input-group-text bg-transparent">
+                <!-- putting search icon -->
+                <i class="fa fa-search"></i> 
+            </div>
+        </span>
+                
+        <button type="submit" class="btn btn-search">Cari</button>
+    
+    </form>
+</div>
+<center>
+<button type="submit" class="btn btn-create"><a class="btn btn-a-create" href="{% url 'search:createData-admin' user_id %}">Cipta Rekod Baru</a></button>
+</center>
+<!-- <div class="row"> -->
+    {% for course in allCourse %}
+        {% for courseuni in allBridge %}
+            {% if course.id == courseuni.course.id %}
+                {% for uni in allUni %}
+                    {% if uni.id == courseuni.university.id %}
+                    <div class="row">
+                    <table class="table table-all">
+                    <!-- <ul class="ul-data"> -->
+                        <tr>
+                            <td>
+                                <ul class="ul-data">
+                                    <li class="li-course"><a class="li-a-course" href="#">{{ course.course}}</a></li>
+                                    <li hrfclass="li-uni"><b>Ditawarkan oleh:</b><a class="li-a-uni" href="#">{{ uni.uni }}</a></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <button class="btn-update"><a class="btn-a-update" href="{% url 'search:updateData-admin' user_id courseuni.id%}">Kemas Kini</a></button>
+                                <button class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteData-admin' user_id courseuni.id%}">Padam</a></button>
+                            </td>
+                        </tr>
+                            <!-- <li hrfclass="li-uni"><a class="li-a-uni" href="#">{{ uni.uni }}</a></li> -->
+                            <!-- <li class="li-course">{{ course.course}}</li> -->
+                        <!-- </ul> -->
+                    </table>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}    
+    {% endfor %}
+    {% for course in allCourse %}
+        {% for jobs in allJobs %}
+            {% if course.id == jobs.course.id %}
+                <div class="row">
+                <table class="table table-all">
+                    <tr>
+                        <td>
+                            <ul class="ul-data">
+                                <li class="li-course"><a class="li-a-course" href="#">{{ jobs.job }}</a></li>
+                                <!-- <li hrfclass="li-uni"><b>Kursus:</b></li> -->
+                                <!-- <ul class="ul-data"> -->
+                                    <!-- <li hrfclass="li-uni"><a class="li-a-uni" href="#">{{ uni.uni }}</a></li> -->
+                                <li class="li-uni"><b>Kursus:</b><a class="li-a-uni" href="#">{{ course.course }}</a></li>
+                                <!-- </ul> -->
+                                <!-- <hr /> -->
+                            <!-- </div> -->
+                            </ul>
+                        </td>
+                        <td>
+                            <button class="btn-update"><a class="btn-a-update" href="">Kemas Kini</a></button>
+                            <button class="btn-delete"><a class="btn-a-delete" href="">Padam</a></button>
+                        </td>
+                    </tr>
+                </table>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+<!-- </div> -->
+</main><!-- container -->
+{% endblock %}

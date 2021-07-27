@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>FutureCruise: Pencarian Maklumat</title>
+
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
+    <!-- <script src="https://kit.fontawesome.com/6e871/9d54.js" crossorigin="anonymous"></script> -->
+</head>
+<body>
+    <center>    
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url search user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
+                <span style="font-style: italic;">Dashboard</span>
+                <span> Admin</span></a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>
+        </ul>
+
+    <h1>Carian Maklumat</h1>
+    
+    <h2>{% block header %}{% endblock %}</h2>
+    </center>
+    
+    {% block content %}
+    {% endblock %}
+
+</body>
+</html>

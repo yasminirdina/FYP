@@ -17,6 +17,7 @@ def dashboardMain(request, user_type, user_id):
         #context = {'login_warn': login_warn}
         #return render(request, 'home/loginIndex.html', context)
 
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
     username = userRecord.username
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
@@ -39,7 +40,7 @@ def dashboardMain(request, user_type, user_id):
         context = {'dashboardNav': dashboardNav, 'user_type': user_type, 'user_id': user_id, 'username': username,
         'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout, 'profile': urlProfile,
         'bookmark': urlBookmark, 'report': urlReport, 'chat': urlChat, 'suggestion': urlSuggestion} 
-        return render(request, 'dashboard/dashboardIndex.html', context)
+        return render(request, 'dashboard\dashboardIndex.html', context)
     elif user_type == "penjaga" and 'P' in user_id:
         dashboardNav = " Penjaga"
         urlProfile = 'dashboard:profile-settings-nonadmin'
@@ -91,7 +92,7 @@ def dashboardMainAdmin(request, user_id):
     urlTest = 'dashboard:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     if user_id == 'A1': #betul ni admin, render dashboard index admin
@@ -159,7 +160,7 @@ def showProfileNonAdmin(request, user_type, user_id):
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'search:index-nonadmin'
+    urlSearch = 'dashboard:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     #if user_id is admin
@@ -236,7 +237,7 @@ def changePassword(request, user_type, user_id):
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'search:index-nonadmin'
+    urlSearch = 'dashboard:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     subtitle = "Tukar Kata Laluan" #h2 tag
@@ -345,7 +346,7 @@ def editProfile(request, user_type, user_id):
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'search:index-nonadmin'
+    urlSearch = 'dashboard:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     subtitle = "Kemaskini Profil" #h2 tag
@@ -709,7 +710,7 @@ def showSuggestionsAdmin(request, user_id):
     #check logged in or not
     if currentUserDetail.isActive == False:
         return redirect('home:login')
-        
+
     response = "Cadangan Penambahbaikan Kandungan Portal oleh Pengguna"
     return HttpResponse(response)
 

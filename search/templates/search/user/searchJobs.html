@@ -1,0 +1,66 @@
+{% extends "search/userbase.html" %}
+
+{% block header %} Carian Mengikut Bidang Kerjaya {% endblock %}
+{% block content %}
+<div class="container-form-search">
+    <form method="GET" action=".">
+        <!-- job search -->
+        <label for="inputUni">Kerjaya</label><br>
+        <input class="form-job" type="search" name="jobs_contains" placeholder="Nama Kerjaya" />
+        <span class="input-goup-append">
+            <div class="input-group-text bg-transparent">
+                <!-- putting search icon -->
+                <i class="fa fa-search"></i> 
+            </div>
+        </span>
+
+        <!-- course search -->
+        <label for="inputCourse">Kursus</label><br>
+        <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
+        <span class="input-goup-append">
+            <div class="input-group-text bg-transparent">
+                <!-- putting search icon -->
+                <i class="fa fa-search"></i> 
+            </div>
+        </span>
+
+        <button type="submit" class="btn btn-search">Cari</button>
+
+    </form>
+</div>
+<!-- {% for course in allCourse %}
+    {% for courseuni in allBridge %}
+        {% if course.id == courseuni.course.id %}
+            {% for uni in allUni %}
+                {% if uni.id == courseuni.university.id %}
+                <div class="row">
+                    <ul class="ul-data">
+                        <li class="li-course"><a class="li-a-course" href="#">{{ course.course}}</a></li>
+                        <li hrfclass="li-uni"><b>Ditawarkan oleh:</b><a class="li-a-uni" href="#">{{ uni.uni }}</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endfor %}    
+{% endfor %} -->
+{% for course in allCourse %}
+    {% for jobs in allJobs %}
+        {% if course.id == jobs.course.id %}
+            <!-- <div class="row"> -->
+            <div class="row">
+                <ul class="ul-data">
+                <li class="li-course"><a class="li-a-course" href="#">{{ jobs.job }}</a></li>
+                <!-- <li hrfclass="li-uni"><b>Kursus:</b></li> -->
+                <!-- <ul class="ul-data"> -->
+                    <!-- <li hrfclass="li-uni"><a class="li-a-uni" href="#">{{ uni.uni }}</a></li> -->
+                    <li class="li-uni"><b>Kursus:</b><a class="li-a-uni" href="#">{{ course.course }}</a></li>
+                <!-- </ul> -->
+                <!-- <hr /> -->
+            <!-- </div> -->
+                </ul>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endfor %}
+{% endblock %}
