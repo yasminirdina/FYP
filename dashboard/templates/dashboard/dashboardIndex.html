@@ -15,7 +15,7 @@
             {% if user_type == "pelajar" %}
                 <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
             {% endif %}
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
             <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard user_type user_id %}">
                 <span style="font-style: italic;">Dashboard </span>
                 <span>{{ dashboardNav }}</span></a></li>

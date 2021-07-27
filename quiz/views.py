@@ -10,6 +10,12 @@ from .forms import AvatarForm, AddFieldForm, ChangeIconForm
 
 # Create your views here.
 def quizMainAdmin(request, user_id):
+    currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserRecord.isActive == False:
+        return redirect('home:login')
+
     if user_id == 'A1':
         urlTest = 'dashboard:index-admin'
         urlBlog = 'blog:index-admin'
@@ -37,7 +43,6 @@ def quizMainAdmin(request, user_id):
         urlSearch = 'dashboard:index-nonadmin'
         urlDashboard = 'dashboard:index-nonadmin'
         urlLogout = 'dashboard:logout-confirm'
-        currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
         username = currentUserRecord.username
         title = "Future Cruise: Permainan Kuiz Penerokaan Kerjaya"
         response = "Anda tidak dibenarkan untuk mengakses halaman ini."
@@ -48,6 +53,12 @@ def quizMainAdmin(request, user_id):
         #return HttpResponse(response)
 
 def quizMain(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
@@ -104,7 +115,13 @@ def quizMain(request, user_id):
     return render(request, 'quiz/quizMainNonAdmin.html', context)
 
 def showAvatar(request, user_id):
-    currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    #currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
     currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
@@ -124,7 +141,13 @@ def showAvatar(request, user_id):
     return render(request, 'quiz/showAvatar.html', context)
 
 def editAvatar(request, user_id):
-    allAvatarDetailsList = quiz.models.AvatarGenderImageFinal.objects.values().order_by('id')
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    #allAvatarDetailsList = quiz.models.AvatarGenderImageFinal.objects.values().order_by('id')
     currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
     currentPlayerUsername = currentPlayerRecord.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecord.avatarID
@@ -148,7 +171,7 @@ def editAvatar(request, user_id):
         form = AvatarForm(request.POST, initial={'avatarID': avatarID, 'workplace': workplace, 'avatarGender': avatarGender,
         'imageURL': imageURL})
         if form.is_valid():
-            currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
+            #currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
             currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
             #currentPlayerAvatarID = currentPlayerRecord.avatarID.avatarID.id
             #currentAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.get(id=currentPlayerAvatarID)
@@ -200,6 +223,12 @@ def get_imageURL(request, avatarGender):
 """
 
 def showField(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     if user_id == 'A1':
         urlTest = 'dashboard:index-admin'
         urlBlog = 'blog:index-admin'
@@ -278,6 +307,12 @@ def showField(request, user_id):
         return render(request, 'quiz/noAccessError.html', context)
 
 def addField(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     urlTest = 'dashboard:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
@@ -326,6 +361,12 @@ def addField(request, user_id):
     return render(request, 'quiz/addField.html', context)
 
 def changeIcon(request, user_id, field_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     urlTest = 'dashboard:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
@@ -363,6 +404,12 @@ def changeIcon(request, user_id, field_id):
     return render(request, 'quiz/changeIcon.html', context)
 
 def showQuestion(request, user_id, field_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     urlTest = 'dashboard:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
@@ -393,11 +440,29 @@ def showQuestion(request, user_id, field_id):
     return render(request, 'quiz/showQuestion.html', context)
 
 def addQuestion(request, user_id, field_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     return HttpResponse("Add new question for a field.") 
 
 def editQuestion(request, user_id, field_id, question_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     return HttpResponse("Edit an existing question for a field.")   
 
 def play(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+        
     response = "%s, "
     return HttpResponse(response % user_id)

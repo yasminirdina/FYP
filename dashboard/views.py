@@ -9,6 +9,14 @@ import string, re
 def dashboardMain(request, user_type, user_id):
     #response = "Hai! Anda berada di "
     userRecord = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+        #login_warn =  "Sila log masuk terlebih dahulu."
+        #context = {'login_warn': login_warn}
+        #return render(request, 'home/loginIndex.html', context)
+
     username = userRecord.username
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
@@ -31,7 +39,7 @@ def dashboardMain(request, user_type, user_id):
         context = {'dashboardNav': dashboardNav, 'user_type': user_type, 'user_id': user_id, 'username': username,
         'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout, 'profile': urlProfile,
         'bookmark': urlBookmark, 'report': urlReport, 'chat': urlChat, 'suggestion': urlSuggestion} 
-        return render(request, 'dashboard\dashboardIndex.html', context)
+        return render(request, 'dashboard/dashboardIndex.html', context)
     elif user_type == "penjaga" and 'P' in user_id:
         dashboardNav = " Penjaga"
         urlProfile = 'dashboard:profile-settings-nonadmin'
@@ -74,6 +82,12 @@ def dashboardMain(request, user_type, user_id):
         return render(request, 'dashboard\dashboardIndexNonAdminError.html', context)
 
 def dashboardMainAdmin(request, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
     urlTest = 'dashboard:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
@@ -136,6 +150,11 @@ def showProfileAdmin(request, user_id):
 #test try cuba untuk guna multiple user group, diff render html
 def showProfileNonAdmin(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
     username = userRecord.username
     urlTest = 'dashboard:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
@@ -207,6 +226,11 @@ def changePassword(request, user_type, user_id):
     
     filledList = {}
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     username = currentUserDetail.username
     #urls for navbar
     urlTest = 'dashboard:index-nonadmin'
@@ -311,6 +335,11 @@ def changePassword(request, user_type, user_id):
 def editProfile(request, user_type, user_id):
     filledList = {}
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     username = currentUserDetail.username
     #urls for navbar
     urlTest = 'dashboard:index-nonadmin'
@@ -632,25 +661,55 @@ def editProfile(request, user_type, user_id):
 
 #bookmarks
 def showBookmarks(request, user_type, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     response = "Penanda Pengguna %s"
     return HttpResponse(response % user_id)
 
 #reports
 def showReports(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     response = "Laporan Visual Pengguna %s"
     return HttpResponse(response % user_id)
 
 #chat
 def showChat(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     response = "Ruang Mesej Pengguna %s bersama Guru Kaunseling"
     return HttpResponse(response % user_id)
 
 #suggestions
 def showSuggestionsNonAdmin(request, user_type, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
     response = "%s, kongsikan cadangan penambahbaikan kandungan portal!"
     return HttpResponse(response % user_id)
 
 def showSuggestionsAdmin(request, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+        
     response = "Cadangan Penambahbaikan Kandungan Portal oleh Pengguna"
     return HttpResponse(response)
 
