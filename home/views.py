@@ -494,11 +494,6 @@ def resetPassword(request):
         context = {'response': response, 'form': form, 'isFirstPage': isFirstPage}
         return render(request, 'home/resetPassword.html', context)
 
-    """def errorMessage2(request, form, response):
-        #redirect to refreshed form with error message on top
-        context = {'response': response, 'form': form}
-        return render(request, 'home/resetPassword2.html', context)"""
-
     def checkChar(firstPass):
         cntUpper = 0
         cntLower = 0
@@ -580,7 +575,6 @@ def resetPassword(request):
             currentTimeDeserialized = datetime.strptime(currentTime.replace("\"",""), '%Y-%m-%dT%H:%M:%S.%f')
             diff = currentTimeDeserialized - startTimeDeserialized
             total_seconds = diff.total_seconds()
-            #diff_encoded = json.dumps(diff, cls=DateTimeEncoder)
             
             #while otp does not expire yet (less/equal to 3 mins)
             while total_seconds <= 30:
@@ -589,7 +583,6 @@ def resetPassword(request):
                     C_form = ResetPasswordFormC()
                     isFirstPage = False
                     context = {'form': C_form, 'isFirstPage': isFirstPage}
-                    #return render(request, 'home/resetPassword2.html', context)
                     return render(request, 'home/resetPassword.html', context)
                 #if otp do not match, refresh B_form again but with same OTP
                 else:
