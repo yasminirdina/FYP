@@ -1,11 +1,19 @@
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib import messages
-from .forms import LoginFormAdmin, LoginFormNonAdmin, ResetPasswordForm, SignUpForm
-import dashboard.models
-import string
-import re
+from .forms import LoginFormAdmin, LoginFormNonAdmin, ResetPasswordFormA, ResetPasswordFormB, ResetPasswordFormC, SignUpForm
+from django.core.mail import send_mail
+from django.core.serializers.json import DjangoJSONEncoder
+import dashboard.models, string, re, random, json
+
+class DateTimeEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, datetime):
+            return o.isoformat()
+
+        return json.JSONEncoder.default(self, o)
 
 # Create your views here.
 def futureCruiseMain(request):
@@ -360,7 +368,8 @@ def loginNonAdmin(request):
         
     def errorMessagePassword(request, form):
         #redirect to refreshed form with error message on top
-        response = "Kata laluan yang anda masukkan adalah tidak tepat."
+        remainingTry = str(3 - request.session['countWrong'])
+        response = "Kata laluan yang anda masukkan adalah tidak tepat. Baki cubaan yang tinggal: " + remainingTry + " kali."
         context = {'response': response, 'form': form}
         return render(request, 'home/loginNonAdmin.html', context)
             
@@ -370,11 +379,12 @@ def loginNonAdmin(request):
         context = {'response': response, 'form': form}
         return render(request, 'home/loginNonAdmin.html', context)
             
+    initial={'countWrong': request.session.setdefault('countWrong', 0), 'afterFailedLoginMsg': request.session.get('afterFailedLoginMsg', "")}
+
     if request.method == 'POST':
-        form = LoginFormNonAdmin(request.POST)
+        form = LoginFormNonAdmin(request.POST, initial=initial)
         if form.is_valid():
             filledList = form.cleaned_data
-            #2nd way
             #if a student
             if filledList['userType'] == 'Student':
                 #if entered email is in email column in Student table
@@ -383,14 +393,18 @@ def loginNonAdmin(request):
                     StudentRecord = getCurrentUserTypeRecord(filledList)
                     #if entered password = the Student record's password
                     if filledList['password'] == StudentRecord.password:
+                        request.session['countWrong'] = 0
                         UserRecord = getUserRecord(StudentRecord)
-                        #response = "Anda berjaya log masuk! Nama pelajar: %s. Status pelajar: Online"
-                        #context = {'response': response % StudentRecord.name, 'user_id': UserRecord.ID}
-                        #return redirect('dashboard:index', UserRecord.ID)
                         return redirect('dashboard:index-nonadmin', 'pelajar', UserRecord.ID)
                     #entered password not match with Student record's password
                     else:
-                        return errorMessagePassword(request, form)
+                        request.session['countWrong'] += 1
+                        if request.session['countWrong'] <= 2:
+                            return errorMessagePassword(request, form)
+                        else:
+                            #request.session['countWrong'] = 0
+                            request.session['afterFailedLoginMsg'] = "Anda telah memasukkan kata laluan yang salah sebanyak 3 kali. Sila kemaskini kata laluan anda."
+                            return redirect('home:reset-pass')
                 #entered email does not exist in email column in Student table
                 else:
                     form = LoginFormNonAdmin()
@@ -403,14 +417,18 @@ def loginNonAdmin(request):
                     ParentRecord = getCurrentUserTypeRecord(filledList)
                     #if entered password = the Parent record's password
                     if filledList['password'] == ParentRecord.password:
+                        request.session['countWrong'] = 0
                         UserRecord = getUserRecord(ParentRecord)
-                        #response = "Anda berjaya log masuk! Nama penjaga: %s. Status penjaga: Online"
-                        #context = {'response': response % ParentRecord.name, 'user_id': UserRecord.ID}
-                        #return redirect('dashboard:index', UserRecord.ID)
                         return redirect('dashboard:index-nonadmin', 'penjaga', UserRecord.ID)
                     #entered password not match with Parent record's password
                     else:
-                        return errorMessagePassword(request, form)
+                        request.session['countWrong'] += 1
+                        if request.session['countWrong'] <= 2:
+                            return errorMessagePassword(request, form)
+                        else:
+                            #request.session['countWrong'] = 0
+                            request.session['afterFailedLoginMsg'] = "Anda telah memasukkan kata laluan yang salah sebanyak 3 kali. Sila kemaskini kata laluan anda."
+                            return redirect('home:reset-pass')
                 #entered email does not exist in email column in Parent table
                 else:
                     form = LoginFormNonAdmin()
@@ -423,14 +441,18 @@ def loginNonAdmin(request):
                     TeacherRecord = getCurrentUserTypeRecord(filledList)
                     #if entered password = the Teacher record's password
                     if filledList['password'] == TeacherRecord.password:
+                        request.session['countWrong'] = 0
                         UserRecord = getUserRecord(TeacherRecord)
-                        #response = "Anda berjaya log masuk! Nama guru: %s. Status guru: Online"
-                        #context = {'response': response % TeacherRecord.name, 'user_id': UserRecord.ID}
-                        #return redirect('dashboard:index', UserRecord.ID)
                         return redirect('dashboard:index-nonadmin', 'guru', UserRecord.ID)
                     #entered password not match with Teacher record's password
                     else:
-                        return errorMessagePassword(request, form)
+                        request.session['countWrong'] += 1
+                        if request.session['countWrong'] <= 2:
+                            return errorMessagePassword(request, form)
+                        else:
+                            #request.session['countWrong'] = 0
+                            request.session['afterFailedLoginMsg'] = "Anda telah memasukkan kata laluan yang salah sebanyak 3 kali. Sila kemaskini kata laluan anda."
+                            return redirect('home:reset-pass')
                 #entered email does not exist in email column in Teacher table
                 else:
                     form = LoginFormNonAdmin()
@@ -438,6 +460,7 @@ def loginNonAdmin(request):
             #else: #no matching password and email for any of the non-admin users
             #    return HttpResponse("Form not valid.") #nanti ganti dengan redirect to page error(?)
     else:
+        request.session['countWrong'] = 0
         form = LoginFormNonAdmin()
 
     return render(request, 'home/loginNonAdmin.html', {'form': form})
@@ -466,10 +489,15 @@ def resetPassword(request):
             emailList = list(dashboard.models.Teacher.objects.values_list('email', flat=True))
             return emailList
             
-    def errorMessage(request, form, response):
+    def errorMessage(request, form, response, isFirstPage):
+        #redirect to refreshed form with error message on top
+        context = {'response': response, 'form': form, 'isFirstPage': isFirstPage}
+        return render(request, 'home/resetPassword.html', context)
+
+    """def errorMessage2(request, form, response):
         #redirect to refreshed form with error message on top
         context = {'response': response, 'form': form}
-        return render(request, 'home/resetPassword.html', context)
+        return render(request, 'home/resetPassword2.html', context)"""
 
     def checkChar(firstPass):
         cntUpper = 0
@@ -491,50 +519,163 @@ def resetPassword(request):
         else:
             return False
 
+    initialA={'userType': request.session.get('userType', None), 'email': request.session.get('email', None),
+    'afterFailedLoginMsg': request.session.get('afterFailedLoginMsg', ""), 'countWrong': request.session.get('countWrong', 0)}
+    initialB={'OTP': request.session.get('OTP', None), 'startTime': request.session.get('startTime', json.dumps(datetime.now(), cls=DateTimeEncoder))}
+
     if request.method == 'POST':
-        form = ResetPasswordForm(request.POST)
-        if form.is_valid():
-            filledList = form.cleaned_data
-            #if a student
-            if filledList['userType'] == 'Student':
-                #if entered email not exist in Student table, return empty form with error message
-                if filledList['email'] not in getEmailList(filledList):
-                    form = ResetPasswordForm()
-                    response = "Maklumat yang anda masukkan adalah tidak tepat."
-                    return errorMessage(request, form, response)
-                #if entered email exist in Student table,
+        A_form = ResetPasswordFormA(request.POST, initial=initialA)
+        B_form = ResetPasswordFormB(request.POST, initial=initialB)
+        C_form = ResetPasswordFormC(request.POST)
+        if A_form.is_valid():
+            filledList = A_form.cleaned_data
+            #if entered email not exist in Student/Parent/Teacher table, return empty form with error message
+            if filledList['email'] not in getEmailList(filledList):
+                #render empty form A with error message
+                A_form = ResetPasswordFormA()
+                response = "Maklumat yang anda masukkan adalah tidak tepat."
+                isFirstPage = True
+                return errorMessage(request, A_form, response, isFirstPage)
+            #if entered email exist in Student/Parent/Teacher table, redirect to page saying to enter OTP sent to email
+            else:
+                #generate random OTP
+                randomOTP = str(random.randint(100000, 999999))
+                request.session['userType'] = filledList['userType']
+                request.session['email'] = filledList['email']
+                request.session['OTP'] = randomOTP
+                currentName = ""
+
+                if filledList['userType'] == 'Student':
+                    currentName = dashboard.models.Student.objects.get(email=filledList['email']).name
+                elif filledList['userType'] == 'Parent':
+                    currentName = dashboard.models.Parent.objects.get(email=filledList['email']).name
+                elif filledList['userType'] == 'Teacher':
+                    currentName = dashboard.models.Teacher.objects.get(email=filledList['email']).name
+
+                #send email with OTP to entered email
+                send_mail(
+                    '[no-reply] Future Cruise: Kemaskini Kata Laluan',
+                    'Hai ' + currentName + '. Berikut merupakan nombor pin OTP untuk reset kata laluan anda. ' +
+                    'OTP: ' + randomOTP +
+                    '. Sila abaikan emel ini jika anda tidak berhasrat untuk menukar kata laluan anda.',
+                    'ddalgihwa304@gmail.com',
+                    [request.session['email']],
+                    fail_silently=False,
+                )
+                #start time
+                request.session['startTime'] = json.dumps(datetime.now(), cls=DateTimeEncoder)
+                B_form = ResetPasswordFormB()
+                context = {'currentEmail' : filledList['email'], 'form': B_form}
+                return render(request, 'home/enterOTP.html', context)
+
+        if B_form.is_valid():
+            #current time
+            currentTime = json.dumps(datetime.now(), cls=DateTimeEncoder)
+            startTime = request.session['startTime']
+            currentUserType = request.session['userType']
+            currentEmail = request.session['email']
+            currentOTP = request.session['OTP']
+            filledList = B_form.cleaned_data
+            startTimeDeserialized = datetime.strptime(startTime.replace("\"",""), '%Y-%m-%dT%H:%M:%S.%f')
+            currentTimeDeserialized = datetime.strptime(currentTime.replace("\"",""), '%Y-%m-%dT%H:%M:%S.%f')
+            diff = currentTimeDeserialized - startTimeDeserialized
+            total_seconds = diff.total_seconds()
+            #diff_encoded = json.dumps(diff, cls=DateTimeEncoder)
+            
+            #while otp does not expire yet (less/equal to 3 mins)
+            while total_seconds <= 30:
+                #if otp matches, generate C_form
+                if filledList['OTP'] == currentOTP:
+                    C_form = ResetPasswordFormC()
+                    isFirstPage = False
+                    context = {'form': C_form, 'isFirstPage': isFirstPage}
+                    #return render(request, 'home/resetPassword2.html', context)
+                    return render(request, 'home/resetPassword.html', context)
+                #if otp do not match, refresh B_form again but with same OTP
                 else:
-                    #if first and second entered password is the same
-                    if filledList['newPass'] == filledList['newPassConfirm']:
-                        #if entered password length is 10
-                        if len(filledList['newPass']) == 10:
-                            #if has at least 1 upper, lower, special and number characters
-                            if checkChar(filledList['newPass']) == True:
-                                #update password in Student record for the entered email
-                                StudentRecord = dashboard.models.Student.objects.get(email=filledList['email'])
-                                StudentRecord.password = filledList['newPassConfirm']
-                                StudentRecord.save()   
-                                #redirect to intermediary page which displays success message (not Django message)
-                                #and after 3 seconds redirect to home:login-nonadmin   
-                                return render(request, 'home/redirSuccess.html')
-                            #if either has no upper/lower/special/number characters
-                            else:
-                                response = "Kata laluan mestilah mengandungi huruf besar, huruf kecil, angka dan aksara khas."
-                                return errorMessage(request, form, response)
-                        #if entered password length is not 10
-                        else:
-                            response = "Kata laluan anda terlalu pendek."
-                            return errorMessage(request, form, response)
-                    #if first and second entered password do not match
-                    else:          
-                        #display error passwords do not match
-                        response = "Sila pastikan kedua-dua kata laluan adalah sama."
-                        return errorMessage(request, form, response)
-            #if a parent
+                    error = "Nombor pin OTP tidak tepat."
+                    B_form = ResetPasswordFormB()
+                    context = {'error': error, 'currentEmail' : currentEmail, 'form': B_form}
+                    return render(request, 'home/enterOTP.html', context)
+            #if otp expired, generate B_form from awal (new OTP, send email, render template)
+            #generate random OTP
+            randomOTP = str(random.randint(100000, 999999))
+            request.session['OTP'] = randomOTP
+            currentName = ""
+
+            if currentUserType == 'Student':
+                currentName = dashboard.models.Student.objects.get(email=currentEmail).name
+            elif currentUserType == 'Parent':
+                currentName = dashboard.models.Parent.objects.get(email=currentEmail).name
+            elif currentUserType == 'Teacher':
+                currentName = dashboard.models.Teacher.objects.get(email=currentEmail).name
+
+            #send email with OTP to entered email
+            send_mail(
+                '[no-reply] Future Cruise: Kemaskini Kata Laluan',
+                'Hai ' + currentName + '. Berikut merupakan nombor pin OTP untuk reset kata laluan anda. ' +
+                'OTP: ' + randomOTP +
+                '. Nombor pin OTP ini akan luput dalam 3 minit. Sila abaikan emel ini jika anda tidak berhasrat untuk menukar kata laluan anda.',
+                'ddalgihwa304@gmail.com',
+                [currentEmail],
+                fail_silently=False,
+            )
+            #start time
+            expired = "Nombor pin OTP telah luput."
+            request.session['startTime'] = json.dumps(datetime.now(), cls=DateTimeEncoder)
+            B_form = ResetPasswordFormB()
+            context = {'expired': expired, 'currentEmail' : currentEmail, 'form': B_form}
+            return render(request, 'home/enterOTP.html', context)
+
+        if C_form.is_valid():
+            currentUserType = request.session['userType']
+            currentEmail = request.session['email']
+            filledList = C_form.cleaned_data
+            #if first and second entered password is the same
+            if filledList['newPass'] == filledList['newPassConfirm']:
+                #if entered password length is 10
+                if len(filledList['newPass']) == 10:
+                    #if has at least 1 upper, lower, special and number characters
+                    if checkChar(filledList['newPass']) == True:
+                        if currentUserType == 'Student':
+                            #update password in Student record for the entered email
+                            StudentRecord = dashboard.models.Student.objects.get(email=currentEmail)
+                            StudentRecord.password = filledList['newPassConfirm']
+                            StudentRecord.save()
+                        elif currentUserType == 'Parent':
+                            #update password in Parent record for the entered email
+                            ParentRecord = dashboard.models.Parent.objects.get(email=currentEmail)
+                            ParentRecord.password = filledList['newPassConfirm']
+                            ParentRecord.save() 
+                        elif currentUserType == 'Teacher':
+                            #update password in Teacher record for the entered email
+                            TeacherRecord = dashboard.models.Teacher.objects.get(email=currentEmail)
+                            TeacherRecord.password = filledList['newPassConfirm']
+                            TeacherRecord.save()   
+                        #redirect to intermediary page which displays success message (not Django message)
+                        #and after 3 seconds redirect to home:login-nonadmin   
+                        return render(request, 'home/redirSuccess.html')
+                    #if either has no upper/lower/special/number characters
+                    else:
+                        response = "Kata laluan mestilah mengandungi huruf besar, huruf kecil, angka dan aksara khas."
+                        isFirstPage = False
+                        return errorMessage(request, C_form, response, isFirstPage)
+                #if entered password length is not 10
+                else:
+                    response = "Kata laluan anda terlalu pendek."
+                    isFirstPage = False
+                    return errorMessage(request, C_form, response, isFirstPage)
+            #if first and second entered password do not match
+            else:          
+                #display error passwords do not match
+                response = "Sila pastikan kedua-dua kata laluan adalah sama."
+                isFirstPage = False
+                return errorMessage(request, C_form, response, isFirstPage)
+            """#if a parent
             elif filledList['userType'] == 'Parent':
                 #if entered email not exist in Parent table, return empty form with error message
                 if filledList['email'] not in getEmailList(filledList):
-                    form = ResetPasswordForm()
+                    form = ResetPasswordFormA()
                     response = "Maklumat yang anda masukkan adalah tidak tepat."
                     return errorMessage(request, form, response)
                 #if entered email exist in Parent table,
@@ -569,7 +710,7 @@ def resetPassword(request):
             elif filledList['userType'] == 'Teacher':
                 #if entered email not exist in Teacher table, return empty form with error message
                 if filledList['email'] not in getEmailList(filledList):
-                    form = ResetPasswordForm()
+                    form = ResetPasswordFormA()
                     response = "Maklumat yang anda masukkan adalah tidak tepat."
                     return errorMessage(request, form, response)
                 #if entered email exist in Teacher table,
@@ -599,8 +740,16 @@ def resetPassword(request):
                     else:          
                         #display error passwords do not match
                         response = "Sila pastikan kedua-dua kata laluan adalah sama."
-                        return errorMessage(request, form, response)                          
+                        return errorMessage(request, form, response)            
+    """
     else: 
-        form = ResetPasswordForm()
+        #if countwrong NOT 3 (user tekan terus button reset pass OR cuba 1/2 kali masuk pass dkt login page pastu tekan button reset pass)
+        if request.session['countWrong'] < 3:
+            #set balik message to empty
+            request.session['afterFailedLoginMsg'] = ""
+        #untuk countwrong 3, message kat page reset pass akan jadi yg "...salah 3 kali..."
+        isFirstPage = True
+        form = ResetPasswordFormA()
+        context = {'form': form, 'afterFailedLoginMsg': request.session['afterFailedLoginMsg'], 'isFirstPage': isFirstPage}
 
-    return render(request, 'home/resetPassword.html', {'form': form})
+    return render(request, 'home/resetPassword.html', context)

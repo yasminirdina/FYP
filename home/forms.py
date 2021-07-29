@@ -44,13 +44,23 @@ class LoginFormNonAdmin(forms.Form):
     email.widget.attrs.update({'class' : 'email'})
     password.widget.attrs.update({'class' : 'password-field'})
 
-class ResetPasswordForm(forms.Form):
+class ResetPasswordFormA(forms.Form):
     userType = forms.CharField(label="Log masuk sebagai", widget=forms.Select(choices=NONADMIN_LOGIN_CHOICES), required=True)
     email = forms.EmailField(label="Sila masukkan alamat emel", max_length=254, required=True)
-    newPass =  forms.CharField(label="Sila masukkan kata laluan baharu", widget=forms.PasswordInput, max_length=10, required=True)
-    newPassConfirm =  forms.CharField(label="Sila masukkan kata laluan baharu sekali lagi", widget=forms.PasswordInput, max_length=10, required=True)
+    #newPass =  forms.CharField(label="Sila masukkan kata laluan baharu", widget=forms.PasswordInput, max_length=10, required=True)
+    #newPassConfirm =  forms.CharField(label="Sila masukkan kata laluan baharu sekali lagi", widget=forms.PasswordInput, max_length=10, required=True)
     userType.widget.attrs.update({'class' : 'usertype'})
     email.widget.attrs.update({'class' : 'email'})
+    #newPass.widget.attrs.update({'class' : 'newPass'})
+    #newPassConfirm.widget.attrs.update({'class' : 'newPassConfirm'})
+
+class ResetPasswordFormB(forms.Form):
+    OTP = forms.CharField(label="", max_length=6, required=True)
+    OTP.widget.attrs.update({'class' : 'OTP'})
+
+class ResetPasswordFormC(forms.Form):
+    newPass =  forms.CharField(label="Sila masukkan kata laluan baharu", widget=forms.PasswordInput, max_length=10, required=True)
+    newPassConfirm =  forms.CharField(label="Sila masukkan kata laluan baharu sekali lagi", widget=forms.PasswordInput, max_length=10, required=True)
     newPass.widget.attrs.update({'class' : 'newPass'})
     newPassConfirm.widget.attrs.update({'class' : 'newPassConfirm'})
 

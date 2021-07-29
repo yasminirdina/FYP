@@ -1,0 +1,45 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+<!--<img src="{% static 'home/list-style-image-1.png' %}" alt="Tick Bullet">-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Log Masuk Pengguna - Kemaskini Kata Laluan</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+<center><h1>Kemaskini Kata Laluan</h1>
+    {% if expired %}
+        <p>{{ expired }} Sila masukkan nombor pin OTP baharu yang dihantar ke alamat emel 
+            <span style="font-weight: bold;">{{ currentEmail }}</span>
+        .</p>
+    {% else %}
+        <p>Sila masukkan nombor pin OTP yang dihantar ke alamat emel 
+            <span style="font-weight: bold;">{{ currentEmail }}</span>
+        .</p>
+    {% endif %}
+
+    <p style="font-style: italic; color: crimson;">{{ error }}</p>
+
+    <form action="{% url 'home:reset-pass' %}" class="EnterOTP" method="post">
+        {% csrf_token %}
+        {{ form.media.js }}
+        {{ form.as_p }}
+        <button class="btn5 save-for-resetPassword" type="submit">Seterusnya</button>
+        <button class="btn5 login-for-resetPassword">
+            <a class="a-for-resetPassword" href="{% url 'home:login-nonadmin' %}">Batal</a>
+        </button>
+    </form>
+</center>
+
+</body>
+</html>
