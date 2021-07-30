@@ -1,45 +1,15 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+{% extends "home/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Log Masuk</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-</head>
-<body>
-    <center>
-        <h1>
-            <span style="font-style:italic;">Future Cruise</span>
-            <span>: Log Masuk</span>
-        </h1>
+{% block header %}
+    <span style="font-style:italic;">Future Cruise</span>
+    <span>: Log Masuk</span>
+{% endblock %}
 
-        <button class="btn2 login-Admin-for-loginIndex">
-            <a class="a-admin-for-loginIndex" href="{% url 'home:login-admin' %}">Log Masuk Admin</a>
-        </button>
-        <button class="btn2 login-NonAdmin-for-loginIndex">
-            <a class="a-nonadmin-for-loginIndex" href="{% url 'home:login-nonadmin' %}">Log Masuk Pengguna</a>
-        </button>
-        </button>
-
-        <!--
-        <p></p>
-        
-        <div class="div2">
-            <img src="{% static 'images/homepage/3-smkdd1_logo.png' %}" width="50px" height="50px">
-            <span style="text-align: center; font-style: italic;">Hasil kolaborasi bersama 
-                <a class="a-fb" href="https://www.facebook.com/smkdd1/">SMK Damansara Damai 1</a>
-            </span>
-        </div>
-        -->
-    </center>
-</body>
-</html>
+{% block content %}
+    <button class="btn2 login-Admin-for-loginIndex">
+        <a class="a-admin-for-loginIndex" href="{% url 'home:login-admin' %}">Log Masuk Admin</a>
+    </button>
+    <button class="btn2 login-NonAdmin-for-loginIndex">
+        <a class="a-nonadmin-for-loginIndex" href="{% url 'home:login-nonadmin' %}">Log Masuk Pengguna</a>
+    </button>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Future Cruise: Halaman Utama</title>
+    <style>
+        body {
+            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>{% block header %}{% endblock %}</h1>
+        <h2 style='font-style: italic;'>{% block header2 %}{% endblock %}</h2>
+
+        {% block content %}{% endblock %}
+    </center>
+</body>
+</html>

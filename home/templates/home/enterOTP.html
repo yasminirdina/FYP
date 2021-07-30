@@ -1,23 +1,10 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
-<!--<img src="{% static 'home/list-style-image-1.png' %}" alt="Tick Bullet">-->
+{% extends "home/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Log Masuk Pengguna - Kemaskini Kata Laluan</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-</head>
-<body>
-<center><h1>Kemaskini Kata Laluan</h1>
+{% block header %}
+    Kemaskini Kata Laluan
+{% endblock %}
+
+{% block content %}
     {% if expired %}
         <p>{{ expired }} Sila masukkan nombor pin OTP baharu yang dihantar ke alamat emel 
             <span style="font-weight: bold;">{{ currentEmail }}</span>
@@ -39,7 +26,4 @@
             <a class="a-for-resetPassword" href="{% url 'home:login-nonadmin' %}">Batal</a>
         </button>
     </form>
-</center>
-
-</body>
-</html>
+{% endblock %}

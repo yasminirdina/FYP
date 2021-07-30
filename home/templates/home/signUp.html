@@ -1,22 +1,10 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+{% extends "home/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Daftar Akaun</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-</head>
-<body>
-<center><h1>Daftar Akaun</h1>
+{% block header %}
+    Daftar Akaun
+{% endblock %}
+
+{% block content %}
     <ul class="password">
         Format kata laluan yang diterima adalah mesti mengandungi PALING KURANG SATU(1):
             <li>Huruf besar: A, B, C, hingga Z</li>
@@ -34,7 +22,4 @@
             <a class="a-index-for-signUp" href="{% url 'home:index' %}">Batal</a>
         </button>
     </form>
-</center>
-
-</body>
-</html>
+{% endblock %}

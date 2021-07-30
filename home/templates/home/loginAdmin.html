@@ -1,23 +1,12 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+{% extends "home/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Log Masuk Admin</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-</head>
-<body>
-<center><h1>Log Masuk Admin</h1>
+{% block header %}
+    Log Masuk Admin
+{% endblock %}
+
+{% block content %}
     <p style="font-style: italic; color: crimson;">{{ response }}</p>
+
     <form action="{% url 'home:login-admin' %}" class="LoginFormAdmin" method="post">
         {% csrf_token %}
         {{ form.as_p }}
@@ -26,8 +15,4 @@
             <a class="a-cancel-for-loginAdmin" href="{% url 'home:index' %}">Batal</a>
         </button>
     </form>
-</center>
-
-</body>
-</html>
-
+{% endblock %}

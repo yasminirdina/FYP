@@ -1,23 +1,14 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+{% extends "home/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Log Masuk Pengguna - Kemaskini Kata Laluan Berjaya</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-</head>
-<body>
-<center><h1>Kemaskini Kata Laluan Berjaya</h1>
-    <h2 style='font-style: italic;'>Sila tunggu sebentar... Ke halaman log masuk dalam 3, 2, 1...</h2>
+{% block header %}
+    Kemaskini Kata Laluan Berjaya
+{% endblock %}
+
+{% block header2 %}
+    Sila tunggu sebentar... Ke halaman log masuk dalam 3, 2, 1...
+{% endblock %}
+
+{% block content %}
     <script>
         function redirect(){
            window.location.href = "/halaman-utama/log-masuk/bukan-admin/";
@@ -25,7 +16,4 @@
     
         setTimeout(redirect, 3000);
     </script>
-</center>
-
-</body>
-</html>
+{% endblock %}
