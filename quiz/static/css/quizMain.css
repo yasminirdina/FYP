@@ -92,6 +92,7 @@ p{
 /* On mouse-over */
 .btn:hover{
   background: #eee;
+  border-radius: 10px;
 }
 
 .avatar {color: purple;}

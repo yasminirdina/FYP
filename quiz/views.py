@@ -193,7 +193,7 @@ def editAvatar(request, user_id):
             #return redirect('quiz:show-avatar', student_id)
             return render(request, 'quiz/successUpdate.html', context)
     else:
-        currentPlayerAvatarID = currentPlayerRecord.avatarID.avatarID.id
+        currentPlayerAvatarID = currentPlayerRecord.avatarID.id
         currentAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.get(id=currentPlayerAvatarID)
         avatarID = currentAvatarDetails.avatarID.id
         workplace = currentAvatarDetails.workplace.id
