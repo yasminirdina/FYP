@@ -158,7 +158,7 @@ class GameQuestion(models.Model):
     imageURL = models.URLField(max_length=200, default="NA")
     points = models.IntegerField()
     difficulty = models.CharField(max_length=10)
-    careerMention = models.CharField(max_length=100)
+    #careerMention = models.CharField(max_length=100)
     timeLimit = models.CharField(max_length=30)
     lastEdited = models.DateTimeField(auto_now=True, null=True)
 
@@ -178,7 +178,7 @@ class GameAnswer(models.Model):
 class GameHint(models.Model):
     #default id
     questionID = models.ForeignKey(GameQuestion, on_delete=models.CASCADE)
-    imageURL = models.URLField(max_length=200, default="NA")
+    #imageURL = models.URLField(max_length=200, default="NA")
     hintText = models.CharField(max_length=500)
     value = models.IntegerField()
 

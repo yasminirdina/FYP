@@ -420,6 +420,8 @@ def showQuestion(request, user_id, field_id):
     currentGameFieldRecord = allGameFields.get(id=field_id)
     currentGameFieldName = currentGameFieldRecord.name
     gameQuestions = quiz.models.GameQuestion.objects.filter(fieldID=currentGameFieldRecord).order_by('id')
+    allGameQuesAns = quiz.models.GameAnswer.objects.order_by('id')
+    allGameQuesHint = quiz.models.GameHint.objects.order_by('id')
 
     if request.method == 'GET': # If the form is submitted / refresh page
         search_text = request.GET.get('kotak_carian', None)
@@ -436,7 +438,7 @@ def showQuestion(request, user_id, field_id):
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
     'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName,
     'gameQuestions': gameQuestions, 'search_text': search_text, 'filter_selected': filter_selected,
-    'gameQuestionsCount': gameQuestions.count()}
+    'gameQuestionsCount': gameQuestions.count(), 'allGameQuesAns': allGameQuesAns, 'allGameQuesHint': allGameQuesHint}
     return render(request, 'quiz/showQuestion.html', context)
 
 def addQuestion(request, user_id, field_id):

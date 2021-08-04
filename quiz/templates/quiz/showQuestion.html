@@ -94,7 +94,8 @@
                             <th>Tahap Kesukaran</th>
                             <th>Markah</th>
                             <th>Had Masa Menjawab</th>
-                            <th>Tag Kerjaya</th>
+                            <th>Pilihan Jawapan</th>
+                            <th>Petunjuk</th>
                             <th class="show">Tarikh Kemaskini Terkini</th>
                             <th>Kemaskini</th>
                         </tr>
@@ -102,13 +103,30 @@
                     <tbody>
                         {% for question in gameQuestions %}
                             <tr>
-                                <td>{{ question.questionText }}</td>
-                                <td>{{ question.difficulty }}</td>
-                                <td>{{ question.points }}</td>
-                                <td>{{ question.timeLimit }} saat</td>
-                                <td>{{ question.careerMention }}</td>
-                                <td>{{ question.lastEdited|date:"d/m/Y, h:i a" }}</td>
-                                <td>
+                                <td style="vertical-align: top; text-align: left;">{{ question.questionText }}</td>
+                                <td style="vertical-align: top;">{{ question.difficulty }}</td>
+                                <td style="vertical-align: top;">{{ question.points }}</td>
+                                <td style="vertical-align: top;">{{ question.timeLimit }} saat</td>
+                                <td style="vertical-align: top;">
+                                    <ol style="text-align: left;">
+                                        {% for answer in allGameQuesAns %}
+                                            {% if answer.questionID_id == question.id %}
+                                                    <li>{{ answer.answerText }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ol>
+                                </td>
+                                <td style="vertical-align: top; text-align: center;">
+                                    {% for hint in allGameQuesHint %}
+                                        {% if hint.questionID_id == question.id %}
+                                            Ya
+                                        {% else %}
+                                            Tiada
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td style="vertical-align: top;">{{ question.lastEdited|date:"d/m/Y, h:i a" }}</td>
+                                <td style="vertical-align: top;">
                                     <button class="btn3 edit-for-showQuestion">
                                         <a class="a-question-for-showQuestion" href="{% url 'quiz:edit-question' user_id field_id question.id %}">
                                             Kemaskini Soalan
@@ -125,14 +143,12 @@
                             <th>Tahap Kesukaran</th>
                             <th>Markah</th>
                             <th>Had Masa Menjawab</th>
-                            <th>Tag Kerjaya</th>
                             <th>Tarikh Kemaskini Terkini</th>
                             <th>Kemaskini</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
