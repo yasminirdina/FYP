@@ -1,12 +1,14 @@
+from datetime import datetime
 import dashboard.models
 import quiz.models
 import json
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-#from django.urls import reverse_lazy
-#from django.views.generic import ListView, UpdateView
-from .forms import AvatarForm, AddFieldForm, ChangeIconForm
+from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm
+from django.forms import formset_factory, BaseFormSet
+from django.db import IntegrityError, transaction
+from django.contrib import messages
 
 # Create your views here.
 def quizMainAdmin(request, user_id):
@@ -243,15 +245,28 @@ def showField(request, user_id):
             search_text = request.GET.get('kotak_carian', None)
             #if admin cari kerjaya (submit form search)
             if search_text is not None:
-                gameFields = quiz.models.GameField.objects.filter(name__icontains=search_text)
+                gameFields = quiz.models.GameField.objects.filter(name__icontains=search_text).order_by('name')
                 #if bidang yg dicari ada dalam GameField table
                 if gameFields.exists():
-                    fieldIDList = [gameFields.first().id]
-                    fieldIDinQuesValueList = list(quiz.models.GameQuestion.objects.values_list('fieldID', flat=True))
-                    fieldQuesCountList = [0]
+                    fieldIDList = list(gameFields.values_list('id', flat=True).order_by('name'))
+                    fieldIDinQuesValueList = list(quiz.models.GameQuestion.objects.values_list('fieldID', flat=True).order_by('id'))
+
+                    fieldQuesCountList = []
+                    for i in range(len(fieldIDList)):
+                        fieldQuesCountList.append(0)
+
                     for id in fieldIDinQuesValueList:
-                        if id == gameFields.first().id:
-                            fieldQuesCountList[0] += 1
+                        for j in range(len(fieldIDList)):
+                            if id == fieldIDList[j]:
+                                fieldQuesCountList[j] += 1
+                                break
+                    
+                    #fieldIDList = [gameFields.first().id]
+                    #fieldIDinQuesValueList = list(quiz.models.GameQuestion.objects.values_list('fieldID', flat=True))
+                    #fieldQuesCountList = [0]
+                    #for id in fieldIDinQuesValueList:
+                    #    if id == gameFields.first().id:
+                    #        fieldQuesCountList[0] += 1
                 else:
                     context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
                     'dashboard': urlDashboard, 'logout': urlLogout, 'showquestion': urlShowQuestion, 'changeicon': urlChangeIcon,
@@ -264,13 +279,13 @@ def showField(request, user_id):
                 fieldIDinQuesValueList = list(quiz.models.GameQuestion.objects.values_list('fieldID', flat=True).order_by('id'))
 
                 fieldQuesCountList = []
-                for i in range(len(fieldIDList)):
+                for k in range(len(fieldIDList)):
                     fieldQuesCountList.append(0)
 
                 for id in fieldIDinQuesValueList:
-                    for j in range(len(fieldIDList)):
-                        if id == fieldIDList[j]:
-                            fieldQuesCountList[j] += 1
+                    for m in range(len(fieldIDList)):
+                        if id == fieldIDList[m]:
+                            fieldQuesCountList[m] += 1
                             break
 
         lengthFQCL = len(fieldQuesCountList)
@@ -421,7 +436,7 @@ def showQuestion(request, user_id, field_id):
     currentGameFieldName = currentGameFieldRecord.name
     gameQuestions = quiz.models.GameQuestion.objects.filter(fieldID=currentGameFieldRecord).order_by('id')
     allGameQuesAns = quiz.models.GameAnswer.objects.order_by('id')
-    allGameQuesHint = quiz.models.GameHint.objects.order_by('id')
+    allGameHintQuesIDList = quiz.models.GameHint.objects.order_by('id').values_list('questionID_id', flat=True)
 
     if request.method == 'GET': # If the form is submitted / refresh page
         search_text = request.GET.get('kotak_carian', None)
@@ -438,7 +453,7 @@ def showQuestion(request, user_id, field_id):
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
     'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName,
     'gameQuestions': gameQuestions, 'search_text': search_text, 'filter_selected': filter_selected,
-    'gameQuestionsCount': gameQuestions.count(), 'allGameQuesAns': allGameQuesAns, 'allGameQuesHint': allGameQuesHint}
+    'gameQuestionsCount': gameQuestions.count(), 'allGameQuesAns': allGameQuesAns, 'allGameHintQuesIDList': allGameHintQuesIDList}
     return render(request, 'quiz/showQuestion.html', context)
 
 def addQuestion(request, user_id, field_id):
@@ -448,7 +463,122 @@ def addQuestion(request, user_id, field_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    return HttpResponse("Add new question for a field.") 
+    urlTest = 'dashboard:index-admin'
+    urlBlog = 'blog:index-admin'
+    urlQuiz = 'quiz:index-admin'
+    urlSearch = 'dashboard:index-admin'
+    urlDashboard = 'dashboard:index-admin'
+    urlLogout = 'dashboard:logout-confirm'
+    allGameFields = quiz.models.GameField.objects.all()
+    currentGameFieldRecord = allGameFields.get(id=field_id)
+    currentGameFieldName = currentGameFieldRecord.name
+
+    answerFormSet = formset_factory(AddAnswerForm, extra=2, min_num=2, max_num=4, validate_min=True) 
+    hintFormSet = formset_factory(AddHintForm, extra=3, max_num=3)
+    errormsg = ""
+
+    if request.method == 'POST':
+        questionForm = AddQuestionForm(request.POST, request.FILES)
+        answer_formset = answerFormSet(request.POST, prefix='answer', error_messages={'too_few_forms': 'Sila isi paling kurang 2 pilihan jawapan.'})
+        hint_formset = hintFormSet(request.POST, request.FILES, prefix='hint')
+        if questionForm.is_valid() and answer_formset.is_valid() and hint_formset.is_valid():
+            #ADD QUESTION
+            filledListQues = questionForm.cleaned_data
+            questionText = filledListQues['questionText']
+            questionImage = filledListQues['questionImage']
+            #if questionImage:
+            #    return HttpResponse("ada")
+            difficulty = filledListQues['difficulty']
+            lastEdited = datetime.now
+            points = 0
+            timeLimit = 0
+            if difficulty == 'Mudah':
+                points = 6
+                timeLimit = 10
+            elif difficulty == 'Sederhana':
+                points = 8
+                timeLimit = 20
+            else:
+                points = 10
+                timeLimit = 30
+            quiz.models.GameQuestion.objects.create(fieldID_id=field_id, questionText=questionText,
+            questionImage=questionImage, difficulty=difficulty, points=points, timeLimit=timeLimit, lastEdited=lastEdited)
+
+            latestQuestionRecord = quiz.models.GameQuestion.objects.order_by('-id').first()
+
+            #ADD ANSWER
+            new_ans = []
+
+            for answer_form in answer_formset:
+                answerText = answer_form.cleaned_data.get('answerText')
+                isCorrect = answer_form.cleaned_data.get('isCorrect')
+
+                if answerText:
+                    if isCorrect == 'on':
+                        isCorrect == True
+                    else:
+                        isCorrect == False
+                    new_ans.append(quiz.models.GameAnswer(questionID_id=latestQuestionRecord.id,
+                    answerText=answerText, isCorrect=isCorrect))
+
+            #ADD HINT 
+            new_hints = []
+
+            for hint_form in hint_formset:
+                #return HttpResponse(hint_formset)
+                hintText = hint_form.cleaned_data.get('hintText')
+                hintImage = hint_form.cleaned_data.get('hintImage')
+                """ if hintImage:
+                    return HttpResponse("ada") """
+                value = hint_form.cleaned_data.get('value')
+
+                if hintText and value:
+                    #return HttpResponse(hintImage)
+                    new_hints.append(quiz.models.GameHint(questionID_id=latestQuestionRecord.id,
+                    hintText=hintText, hintImage=hintImage, value=value))
+
+            try:
+                with transaction.atomic():
+                    #Replace the old with the new
+                    #UserLink.objects.filter(user=user).delete()
+                    quiz.models.GameAnswer.objects.bulk_create(new_ans)
+                    quiz.models.GameHint.objects.bulk_create(new_hints)
+                    latestQuestionRecord.lastEdited = datetime.now
+                    latestQuestionRecord.save()
+                    currentGameFieldRecord.lastEdited = latestQuestionRecord.lastEdited
+                    allGameQuesCurrField = quiz.models.GameQuestion.objects.filter(fieldID_id=field_id)
+                    if allGameQuesCurrField.count() >= 10 and currentGameFieldRecord.show == False:
+                        currentGameFieldRecord.show = True
+                    currentGameFieldRecord.save()
+
+                    # And notify our users that it worked
+                    return redirect('quiz:show-question', user_id, field_id)
+                    #return HttpResponse("Question, answers and hints added. latestQuestionRecord: " + str(latestQuestionRecord) 
+                    #+ ". new_ans: " + str(new_ans) + ". new_hints: " + str(new_hints)) #test
+
+            except IntegrityError: #If the transaction failed
+                return HttpResponse("Question, answers and hints failed to be added.") #test
+        #not valid
+        else:
+            if (questionForm.is_valid() == False) or (questionForm.non_field_errors()):
+                errormsg += str(questionForm.non_field_errors())
+            if (answer_formset.is_valid() == False) or (answer_formset.non_form_errors()):
+                for dict in answer_formset.non_form_errors():
+                    if "Please submit at least" in dict:
+                        errormsg += str("Sila isi minimum " + str(answerFormSet.min_num) + " pilihan jawapan.")
+                    else:
+                        errormsg += str(dict)
+            if (hint_formset.is_valid() == False) or (hint_formset.non_form_errors()):
+                errormsg += str(hint_formset.non_form_errors())
+    else:
+        questionForm = AddQuestionForm()
+        answer_formset = answerFormSet(prefix='answer')
+        hint_formset = hintFormSet(prefix='hint')
+
+    context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
+    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
+    'answer_formset': answer_formset, 'hint_formset': hint_formset, 'errormsg': errormsg}
+    return render(request, 'quiz/addQuestion.html', context) 
 
 def editQuestion(request, user_id, field_id, question_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)

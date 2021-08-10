@@ -16,11 +16,39 @@ ICON_CHOICES = []
 for i in range(len(imageURLList)):
     ICON_CHOICES.append((imageURLList[i], imageNameList[i]))
 
+DIFFICULTY_CHOICES = [
+    ('Mudah', 'Mudah'),
+    ('Sederhana', 'Sederhana'),
+    ('Sukar', 'Sukar')
+]
+
 class AddFieldForm(forms.Form):
     name = forms.CharField(label="Nama bidang kerjaya baharu:", max_length=50, required=True)
     image = forms.ChoiceField(label="Pilih ikon:", choices=ICON_CHOICES, required=True)
     name.widget.attrs.update({'class' : 'name'})
     image.widget.attrs.update({'class' : 'image'})
+
+class AddQuestionForm(forms.Form):
+    questionText = forms.CharField(label="Teks soalan:", max_length=500, widget=forms.Textarea(attrs={"rows":8}), required=True)
+    difficulty = forms.ChoiceField(label="Pilih tahap kesukaran:", choices=DIFFICULTY_CHOICES, required=True)
+    questionImage = forms.ImageField(label="Pilih gambar sokongan bagi soalan ini:", required=False)
+    questionText.widget.attrs.update({'class' : 'questionText'})
+    questionImage.widget.attrs.update({'class' : 'questionImage'})
+    difficulty.widget.attrs.update({'class' : 'difficulty'})
+
+class AddAnswerForm(forms.Form):
+    answerText = forms.CharField(label="Teks jawapan:", max_length=500, widget=forms.Textarea(attrs={"rows":3}), required=True)
+    isCorrect = forms.BooleanField(label="Tandakan kotak ini jika jawapan ini adalah jawapan yang betul:", required=False)
+    answerText.widget.attrs.update({'class' : 'answerText'})
+    isCorrect.widget.attrs.update({'class' : 'isCorrect'})
+
+class AddHintForm(forms.Form):
+    hintText = forms.CharField(label="Teks petunjuk:", max_length=500, widget=forms.Textarea(attrs={"rows":3}), required=True)
+    value = forms.IntegerField(label="Nilai petunjuk:", min_value=3, max_value=7, initial=3, required=True)
+    hintImage = forms.ImageField(label="Pilih gambar sokongan bagi petunjuk ini:", required=False)
+    hintText.widget.attrs.update({'class' : 'hintText'})
+    hintImage.widget.attrs.update({'class' : 'hintImage'})
+    value.widget.attrs.update({'class' : 'value'})
 
 class ChangeIconForm(forms.Form):
     image = forms.ChoiceField(label="Pilih ikon baharu:", choices=ICON_CHOICES, required=True)

@@ -155,7 +155,8 @@ class GameQuestion(models.Model):
     #default id
     fieldID = models.ForeignKey(GameField, on_delete=models.CASCADE)
     questionText = models.CharField(max_length=500)
-    imageURL = models.URLField(max_length=200, default="NA")
+    #imageURL = models.URLField(max_length=200, default="NA")
+    questionImage = models.ImageField(upload_to='images/admin_questions', blank=True)
     points = models.IntegerField()
     difficulty = models.CharField(max_length=10)
     #careerMention = models.CharField(max_length=100)
@@ -169,18 +170,19 @@ class GameAnswer(models.Model):
     #default id
     questionID = models.ForeignKey(GameQuestion, on_delete=models.CASCADE)
     answerText = models.CharField(max_length=500)
-    imageURL = models.URLField(max_length=200, default="NA")
+    #imageURL = models.URLField(max_length=200, default="NA")
     isCorrect = models.BooleanField()
 
     def __str__(self):
-        return "GameAnswer: " + self.answerText + ", QuestionID: " + self.questionID.id
+        return "GameAnswer: " + self.answerText + ", QuestionID: " + str(self.questionID.id)
 
 class GameHint(models.Model):
     #default id
     questionID = models.ForeignKey(GameQuestion, on_delete=models.CASCADE)
     #imageURL = models.URLField(max_length=200, default="NA")
+    hintImage = models.ImageField(upload_to='images/admin_hints', blank=True)
     hintText = models.CharField(max_length=500)
     value = models.IntegerField()
 
     def __str__(self):
-        return "GameHint: " + self.hintText + ", QuestionID: " + self.questionID.id
+        return "GameHint: " + self.hintText + ", QuestionID: " + str(self.questionID.id)

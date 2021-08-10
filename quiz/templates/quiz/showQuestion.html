@@ -5,9 +5,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="{% static 'js/sorttable.js' %}"></script>
+    <!-- <script src="{% static 'js/sorttable.js' %}"></script> -->
     <meta charset="UTF-8">
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.9.1/jquery.tablesorter.min.js"></script>
+    <script>
+        $(function() {
+            // add new widget called indexFirstColumn
+            $.tablesorter.addWidget({
+                // give the widget a id
+                id: "indexFirstColumn",
+                // format is called when the on init and when a sorting has finished
+                format: function(table) {               
+                    // loop all tr elements and set the value for the first column  
+                    $(table).find("tr td:first-child").each(function(index){
+                        $(this).text(index+1);
+                    })                                  
+                }
+            });
+
+            $("#quesTable thead th:eq(0)").data("sorter", false);
+            $("#quesTable thead th:eq(2)").data("sorter", false);
+            $("#quesTable thead th:eq(5)").data("sorter", false);
+            $("#quesTable thead th:eq(6)").data("sorter", false);
+            $("#quesTable thead th:eq(7)").data("sorter", false);
+            $("#quesTable thead th:eq(9)").data("sorter", false);
+
+            $("#quesTable").tablesorter({
+                widgets: ['zebra','indexFirstColumn'],
+                cssAsc: 'up',
+                cssDesc: 'down',
+                dateFormat : "ddmmyyyy", // set the default date format
+
+                // or to change the format for specific columns, add the dateFormat to the headers option:
+                headers: {
+                    2: { sorter: "shortDate"}, // set day first format; set using class names
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <center>
@@ -85,28 +122,42 @@
             </p>
         {% endif %}
 
+        <div class="div-quesTips">
+            <span style="font-weight: bold;">TIPS: </span>
+            <span>Anda boleh menyusun rekod-rekod soalan berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
+        </div>
+
         <div class="div-question">
-            <table class="sortable">
+            <!-- <table class="sortable"> -->
+            <table id="quesTable" class="tablesorter">
                 {% if gameQuestions %}
                     <thead>
                         <tr>
-                            <th>Soalan</th>
+                            <th>No.</th>
+                            <th class="sortable">Soalan</th>
                             <th>Tahap Kesukaran</th>
-                            <th>Markah</th>
-                            <th>Had Masa Menjawab</th>
+                            <th class="sortable">Markah</th>
+                            <th class="sortable">Had Masa Menjawab</th>
+                            <th>Gambar Sokongan</th>
                             <th>Pilihan Jawapan</th>
                             <th>Petunjuk</th>
-                            <th class="show">Tarikh Kemaskini Terkini</th>
+                            <th class="sortable">Tarikh Kemaskini Terkini</th>
                             <th>Kemaskini</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for question in gameQuestions %}
                             <tr>
+                                <td style="vertical-align: top;">{{ question.id }}</td>
                                 <td style="vertical-align: top; text-align: left;">{{ question.questionText }}</td>
                                 <td style="vertical-align: top;">{{ question.difficulty }}</td>
                                 <td style="vertical-align: top;">{{ question.points }}</td>
                                 <td style="vertical-align: top;">{{ question.timeLimit }} saat</td>
+                                <td style="vertical-align: top;">
+                                    {% if question.questionImage %}
+                                        <img src="{{ question.questionImage.url}}" width="50px" height="50px">
+                                    {% endif %}
+                                    </td>
                                 <td style="vertical-align: top;">
                                     <ol style="text-align: left;">
                                         {% for answer in allGameQuesAns %}
@@ -117,15 +168,20 @@
                                     </ol>
                                 </td>
                                 <td style="vertical-align: top; text-align: center;">
-                                    {% for hint in allGameQuesHint %}
+                                    {% if question.id in allGameHintQuesIDList %}
+                                        Ya
+                                    {% else %}
+                                        Tidak
+                                    {% endif %}
+                                    <!-- {% for hint in allGameQuesHint %}
                                         {% if hint.questionID_id == question.id %}
                                             Ya
                                         {% else %}
                                             Tiada
                                         {% endif %}
-                                    {% endfor %}
+                                    {% endfor %} -->
                                 </td>
-                                <td style="vertical-align: top;">{{ question.lastEdited|date:"d/m/Y, h:i a" }}</td>
+                                <td style="vertical-align: top;">{{ question.lastEdited|date:"d/m/Y, h:i A" }}</td>
                                 <td style="vertical-align: top;">
                                     <button class="btn3 edit-for-showQuestion">
                                         <a class="a-question-for-showQuestion" href="{% url 'quiz:edit-question' user_id field_id question.id %}">
@@ -143,12 +199,16 @@
                             <th>Tahap Kesukaran</th>
                             <th>Markah</th>
                             <th>Had Masa Menjawab</th>
+                            <th>Pilihan Jawapan</th>
+                            <th>Petunjuk</th>
                             <th>Tarikh Kemaskini Terkini</th>
                             <th>Kemaskini</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <td></td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>

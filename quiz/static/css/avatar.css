@@ -94,31 +94,21 @@ h3 {
 }
 
 /*ul and li for showField.html*/
-.ul-showField {
-  list-style-type: none;
-  background-color: white;
-  padding-left: 0vw;
-  font-size: 16px;
-}
-
-.li-field{
-  float: none;
-}
 
 /*ul and li for addField.html & changeIcon.html*/
-.ul-addField, .ul-changeIcon {
+/* .ul-addField, .ul-changeIcon {
   list-style-type: none;
   background-color: white;
   padding-left: 0vw;
   font-size: 16px;
-}
+} */
 
-.li-addField {
+/* .li-addField {
   float: none;
   padding-left: 0vw;
-}
+} */
 
-.ul-addField2 {
+/* .ul-addField2 {
   font-family: DM Sans; 
   text-align: left;
   padding: 20px;
@@ -126,7 +116,8 @@ h3 {
   background-color: peachpuff;
   border-radius: 20px;
   list-style-position: inside;
-}
+  width:37%;
+} */
 
 p{
     font-size: 16px;
@@ -161,7 +152,7 @@ p{
 input:focus::placeholder {color: transparent}
 
 /* form fields */
-.avatarid, .workplace, .avatargender, .imageurl, .name {
+.avatarid, .workplace, .avatargender, .imageurl, .name, .difficulty, .isCorrect, .value {
   font-size: 16px;
   font-family: "DM Sans";
   border-radius: 10px;
@@ -175,6 +166,33 @@ input:focus::placeholder {color: transparent}
   display:inline;
   font-size: 16px;
   font-family: "DM Sans";
+}
+
+.questionText {
+  font-size: 16px;
+  font-family: "DM Sans";
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  padding: 3px;
+  width: 40vw;
+}
+
+.answerText {
+  font-size: 16px;
+  font-family: "DM Sans";
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  padding: 3px;
+  width: 56vw;
+}
+
+.hintText {
+  font-size: 16px;
+  font-family: "DM Sans";
+  border-radius: 10px;
+  border: 1px solid lightgray;
+  padding: 3px;
+  width: 42vw;
 }
 
 .btn2 {
@@ -248,6 +266,9 @@ input:focus::placeholder {color: transparent}
 
 .add-for-showQuestion{color: coral;}
 .back-for-showQuestion{color: purple;}
+
+.question-for-addQuestion {color: coral;}
+.cancel-for-addQuestion {color: purple;}
 
 .btn3 {
   border: none;
@@ -374,7 +395,33 @@ input:focus::placeholder {color: transparent}
 .a-main-for-showQuestion:hover {color: coral;}
 .a-back1-for-showQuestion:hover {color: coral;}
 
+/* hyperlink addQuestion.html */
+.a-cancel-for-addQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* div */
+.div-fieldTips {
+  font-family: DM Sans; 
+  text-align: left;
+  padding: 10px;
+  border: 2px solid coral;
+  background-color: peachpuff;
+  border-radius: 20px;
+  width: 75vw;
+}
+
+.div-quesTips {
+  font-family: DM Sans; 
+  text-align: left;
+  padding: 10px;
+  border: 2px solid coral;
+  background-color: peachpuff;
+  border-radius: 20px;
+  width: 85vw;
+}
+
 .div-field {
   display: block;
   padding: 0;
@@ -405,6 +452,16 @@ input:focus::placeholder {color: transparent}
   overflow-x:auto;
 }
 
+.div-question2 {
+  display: block;
+  padding: 0;
+  margin-left: 10vw;
+  margin-right: 10vw;
+  border-radius: 2vw;
+  overflow-x:auto;
+  background-color:burlywood;
+}
+
 /* table */
 table {
   border: 1px solid whitesmoke;
@@ -416,8 +473,22 @@ table {
   overflow: hidden;
 }
 
-.sortable th.show:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
+/* .sortable th.show:not(.sorttable_sorted):not(.sorttable_sorted_reverse):not(.sorttable_nosort):after { 
   content: " \25B4\25BE"; 
+} */
+
+.sortable {
+  background-repeat: no-repeat;
+  background-position: right 0.5vw center;
+  background-image: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIUnC2nKLnT4or00PvyrQwrPzUZshQAOw==);
+}
+
+#fieldTable thead th.up, #quesTable thead th.up {
+  background-image: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIRnC2nKLnT4or00Puy3rx7VQAAOw==);
+}
+
+#fieldTable thead th.down, #quesTable thead th.down {
+  background-image: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIPnI+py+0/hJzz0IruwjsVADs=);
 }
 
 th {
@@ -427,19 +498,6 @@ th {
   background-color: palevioletred;
   color: white;
 }
-
-/* not sure
-th {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 0;
-  z-index: 2;
-}
-
-th[scope=row] {
-  min-width: 40vw;
-}
-*/
 
 td {
   padding: 10px;
@@ -458,6 +516,19 @@ tr:hover {
   background-color: lightsteelblue;
   cursor: pointer;
 }
+
+/* not sure
+th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+th[scope=row] {
+  min-width: 40vw;
+}
+*/
 
 /* Scrolling wrapper 
 div[tabindex="0"][role="region"] {

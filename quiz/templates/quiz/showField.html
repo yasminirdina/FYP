@@ -5,9 +5,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="{% static 'js/sorttable.js' %}"></script>
+    <!-- <script src="{% static 'js/sorttable.js' %}"></script> -->
+    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script> -->
     <meta charset="UTF-8">
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.9.1/jquery.tablesorter.min.js"></script>
+    <script>
+        $(function() {
+            $("#fieldTable thead th:eq(3)").data("sorter", false);
+            $("#fieldTable thead th:eq(4)").data("sorter", false);
+
+            $("#fieldTable").tablesorter({
+                cssAsc: 'up',
+                cssDesc: 'down',
+                dateFormat : "ddmmyyyy", // set the default date format
+
+                // or to change the format for specific columns, add the dateFormat to the headers option:
+                headers: {
+                    2: { sorter: "shortDate" }, // set day first format; set using class names
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <center>
@@ -44,14 +66,20 @@
             </p>
         {% endif %}
 
+        <div class="div-fieldTips">
+            <span style="font-weight: bold;">TIPS: </span>
+            <span>Anda boleh menyusun rekod-rekod kerjaya berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
+        </div>
+
         <div class="div-field">
-            <table class="sortable">
+            <!-- <table class="sortable"> -->
+            <table id="fieldTable" class="tablesorter">
                 {% if gameFields %}
                     <thead>
                         <tr>
-                            <th colspan="3" style="padding-right: 0px; padding-left: 0px;">Nama Bidang</th>
-                            <th class="show">Bilangan Soalan</th>
-                            <th class="show">Tarikh Kemaskini Terkini</th>
+                            <th class="sortable" colspan="3" style="padding-right: 0px; padding-left: 0px;">Nama Bidang</th>
+                            <th class="sortable">Bilangan Soalan</th>
+                            <th class="sortable">Tarikh Kemaskini Terkini</th>
                             <th>Dipapar dalam Kuiz</th>
                             <th>Soalan</th>
                         </tr>
@@ -62,12 +90,14 @@
                                 <td><button class="btn3 edit-icon"><a class="a-icon-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
                                 <td style="padding-right: 0px;"><img src="{% static 'images/quiz_field/' %}{{ field.imageURL.imageURL }}" width="50px" height="50px"></td>
                                 <td style="padding-left: 20px; padding-right: 0px; text-align: left;">{{ field.name }}</td>
-                                {% if lengthFQCL > 1 %}
-                                    <td>{{ fieldQuesCountList|index:forloop.counter0 }}</td>
-                                {% else %}
+                                <!--{% if lengthFQCL > 1 %}-->
+                                <td>{{ fieldQuesCountList|index:forloop.counter0 }}</td>
+                                <!--{% else %}
                                     <td>{{ fieldQuesCountList|index:0 }}</td>
-                                {% endif %}
-                                <td>{{ field.lastEdited|date:"d/m/Y, h:i a" }}</td>
+                                    <td>0</td>
+                                {% endif %}-->
+                                <!--<td sorttable_customkey="field.lastEdited">{{ field.lastEdited|date:"d/m/Y, h:i a" }}</td>-->
+                                <td>{{ field.lastEdited|date:"d/m/Y, h:i A" }}</td>
                                 <td>
                                     {% if field.show == True %}
                                         <button class="btn3 status" style="background-color: green;">Ya</button>
@@ -118,7 +148,6 @@
                 <span>, serta pemilik asal ikon-ikon tersebut.</span>
             </p>
         </div>
-
         <p></p>
     </center>
 </body>
