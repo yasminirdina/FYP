@@ -19,7 +19,9 @@
             list-style-position: inside;
             width: 69.5vw;
         }
-/*         #custom-button, #custom-button2 {
+        
+        /* Method 1: */
+        /* #custom-button, #custom-button2 {
         background: rgba(222, 184, 135, 0);
         border-radius: 10px;
         cursor: pointer;
@@ -35,7 +37,46 @@
         }
         #custom-text {
             display: inline;
-        }  */
+        }  */ 
+
+        /* Method 3 */
+        #id_questionImageName, #id_hintImageName0, #id_hintImageName1, #id_hintImageName2 {
+            font-size: 16px;
+            font-family: "DM Sans";
+            border-radius: 10px;
+            border: 1px solid lightgray;
+            padding: 3px;
+            width: 13vw;
+        }
+
+        .imageUpload {
+            position: relative;
+            overflow: hidden;
+            margin: 10px;
+        }
+
+        .imageUpload input.questionImage, .imageUpload input.hintImage {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+        .upload-for-addQuestion {
+            background-color: palevioletred;
+            color: white;
+            padding: 0.5vw 1vw;
+            width: 11vw;
+        }
+
+        .upload-for-addQuestion:hover {
+            color: purple;
+        }
 
 /*         .questionImage, .hintImage{
             background: #f7f7f7; 
@@ -146,8 +187,6 @@
                 </li>
         </ul>
 
-        <p style="color: crimson; font-style: italic;">{{ errormsg }}</p>
-
         <form action="{% url 'quiz:add-question' user_id field_id %}" method="post" enctype='multipart/form-data'>
             {% csrf_token %}
 
@@ -156,6 +195,7 @@
                     Soalan
                 </p>
             </div>
+            <p style="color: crimson; font-style: italic;">{{ errormsg1 }}</p>
             <table style="width: 72.5vw;">
                 <thead>
                     <tr>
@@ -167,16 +207,44 @@
                 <tbody>
                     <tr>
                         <td>{{ questionForm.questionText }}</td>
-                        <!-- <td> -->
-                            <!-- <input type="file" hidden="hidden" name="questionImage" accept="image/*" id="id_questionImage">
-                            <button type="button" id="custom-button"><i class="{{ questionForm.questionImage.field.widget.attrs.class }}">Muat naik gambar</i></button> -->
-                            <!-- <label for="choose-file" class="{{ questionForm.questionImage.field.widget.attrs.class }}" id="choose-file-label">
+                        <td>
+                            <!--
+                                Method 1:
+                                Problem: cannot display chosen file name.
+                                Can edit the style follow button biasa.
+                            -->
+                            <!-- <input type="file" hidden="hidden" name="{{ questionForm.questionImage.html_name }}" accept="image/*" id="{{ questionForm.questionImage.id_for_label }}">
+                            <button type="button" id="custom-button"><i class="questionImage">Muat naik gambar</i></button>
+                            <p></p> 
+                            <span id="custom-text">
+                                {% if questionForm.questionImage.value %}
+                                    {{ questionForm.questionImage.value }}
+                                {% else %}
+                                    Tiada gambar dipilih
+                                {% endif %}
+                            </span> -->
+
+                            <!--
+                                Method 2:
+                            -->
+                            <!-- <label for="{{ questionForm.questionImage.id_for_label }}" id="questionImage-label">
                                 Muat naik gambar
                             </label>
-                            <input name="questionImage" type="file" id="choose-file" 
-                                accept="image/*" style="display: none;"/>-->
-                        <!-- </td> -->
-                        <td>{{ questionForm.questionImage }}</td>
+                            <input name="{{ questionForm.questionImage.html_name }}" class="questionImage" type="file" id="{{ questionForm.questionImage.id_for_label }}" 
+                                accept="image/*" style="display: none;"/> -->
+
+                            <!--
+                                Method 3:
+                            -->
+
+                            <input id="id_questionImageName" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                            <div class="imageUpload btn2 upload-for-addQuestion">
+                                <span>Muat naik gambar</span>
+                                <input name="{{ questionForm.questionImage.html_name }}" id="{{ questionForm.questionImage.id_for_label }}"
+                                type="file" accept="image/*" class="questionImage" />
+                            </div>
+                        </td>
+                        <!--<td>{{ questionForm.questionImage }}</td>-->
                         <td>{{ questionForm.difficulty }}</td>
                     </tr>
                 </tbody>
@@ -187,6 +255,8 @@
                     Jawapan
                 </p>
             </div>
+            <p style="color: crimson; font-style: italic;">{{ errormsg2 }}</p>
+            <p style="color: crimson; font-style: italic;">{{ errormsg3 }}</p>
             {{ answer_formset.management_form }}
             <table style="width: 72.5vw;">
                 <thead>
@@ -210,6 +280,8 @@
                     Petunjuk
                 </p>
             </div>
+            <p style="color: crimson; font-style: italic;">{{ errormsg4 }}</p>
+            <p style="color: crimson; font-style: italic;">{{ errormsg5 }}</p>
             {{ hint_formset.management_form }}
             <table style="width: 72.5vw;">
                 <thead>
@@ -232,7 +304,21 @@
                             <input name="hintImage" type="file" id="choose-file2" 
                                 accept="image/*" style="display: none;"/> -->
                         <!-- </td> -->
-                        <td>{{ form.hintImage }}</td>
+                        <td>
+                            <!--{{ form.hintImage }}-->
+                            {% if forloop.counter0 == 0 %}
+                                <input id="id_hintImageName0" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                            {% elif forloop.counter0 == 1 %}
+                                <input id="id_hintImageName1" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                            {% elif forloop.counter0 == 2 %}
+                                <input id="id_hintImageName2" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                            {% endif %}
+                            <div class="imageUpload btn2 upload-for-addQuestion">
+                                <span>Muat naik gambar</span>
+                                <input name="{{ form.hintImage.html_name }}" id="{{ form.hintImage.id_for_label }}"
+                                type="file" accept="image/*" class="hintImage" />
+                            </div>
+                        </td>
                         <td>{{ form.value }}</td>
                     </tr>
                     {% endfor %}
@@ -246,7 +332,32 @@
             </button>
         </form>
 
-        <script>
+        <script type="text/javascript">
+            /* Method 1 */
+            /* const realFileBtn = document.getElementById("id_questionImage");
+            const customBtn = document.getElementById("custom-button");
+
+            customBtn.addEventListener("click", function() {
+                realFileBtn.click();
+            }); */
+
+            /* Method 3 */
+            document.getElementById("id_questionImage").onchange = function () {
+                document.getElementById("id_questionImageName").value = this.files[0].name;
+            };
+
+            document.getElementById("id_hint-0-hintImage").onchange = function () {
+                document.getElementById("id_hintImageName0").value = this.files[0].name;
+            };
+
+            document.getElementById("id_hint-1-hintImage").onchange = function () {
+                document.getElementById("id_hintImageName1").value = this.files[0].name;
+            };
+
+            document.getElementById("id_hint-2-hintImage").onchange = function () {
+                document.getElementById("id_hintImageName2").value = this.files[0].name;
+            };
+
 /*             const realFileBtn = document.getElementById("id_questionImage");
             const customBtn = document.getElementById("custom-button");
             const realFileBtn2 = document.getElementById("id_hintImage");
@@ -274,6 +385,7 @@
                 }); 
             }); */
         </script>
+
     <!-- Include formset plugin - including jQuery dependency -->
     <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="{% static 'js/jquery.formset.js' %}"></script>

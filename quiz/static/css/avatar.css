@@ -198,6 +198,7 @@ input:focus::placeholder {color: transparent}
 .btn2 {
   border: none;
   background-color: inherit;
+  border-radius: 10px;
   padding: 14px 28px;
   font-size: 16px;
   font-family: "DM Sans";
@@ -267,8 +268,15 @@ input:focus::placeholder {color: transparent}
 .add-for-showQuestion{color: coral;}
 .back-for-showQuestion{color: purple;}
 
+/* .upload-for-addQuestion {
+  background-color: palevioletred;
+  color: white;
+} */
 .question-for-addQuestion {color: coral;}
 .cancel-for-addQuestion {color: purple;}
+
+.question-for-editQuestion {color: coral;}
+.cancel-for-editQuestion {color: purple;}
 
 .btn3 {
   border: none;
@@ -397,6 +405,12 @@ input:focus::placeholder {color: transparent}
 
 /* hyperlink addQuestion.html */
 .a-cancel-for-addQuestion {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* hyperlink editQuestion.html */
+.a-cancel-for-editQuestion {
   text-decoration: none;
   color: inherit;
 }

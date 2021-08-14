@@ -5,8 +5,8 @@ import json
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm
-from django.forms import formset_factory, BaseFormSet
+from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm, CustomAnswerFormSet, CustomAnswerInlineFormSet, CustomHintFormSet, EditQuestionForm
+from django.forms import formset_factory, inlineformset_factory
 from django.db import IntegrityError, transaction
 from django.contrib import messages
 
@@ -473,9 +473,9 @@ def addQuestion(request, user_id, field_id):
     currentGameFieldRecord = allGameFields.get(id=field_id)
     currentGameFieldName = currentGameFieldRecord.name
 
-    answerFormSet = formset_factory(AddAnswerForm, extra=2, min_num=2, max_num=4, validate_min=True) 
-    hintFormSet = formset_factory(AddHintForm, extra=3, max_num=3)
-    errormsg = ""
+    answerFormSet = formset_factory(AddAnswerForm, formset=CustomAnswerFormSet, extra=2, min_num=2, max_num=4, validate_min=True) 
+    hintFormSet = formset_factory(AddHintForm, formset=CustomHintFormSet, extra=3, max_num=3)
+    errormsg1, errormsg2, errormsg3, errormsg4, errormsg5 = "", "", "", "", ""
 
     if request.method == 'POST':
         questionForm = AddQuestionForm(request.POST, request.FILES)
@@ -486,8 +486,6 @@ def addQuestion(request, user_id, field_id):
             filledListQues = questionForm.cleaned_data
             questionText = filledListQues['questionText']
             questionImage = filledListQues['questionImage']
-            #if questionImage:
-            #    return HttpResponse("ada")
             difficulty = filledListQues['difficulty']
             lastEdited = datetime.now
             points = 0
@@ -525,22 +523,16 @@ def addQuestion(request, user_id, field_id):
             new_hints = []
 
             for hint_form in hint_formset:
-                #return HttpResponse(hint_formset)
                 hintText = hint_form.cleaned_data.get('hintText')
                 hintImage = hint_form.cleaned_data.get('hintImage')
-                """ if hintImage:
-                    return HttpResponse("ada") """
                 value = hint_form.cleaned_data.get('value')
 
                 if hintText and value:
-                    #return HttpResponse(hintImage)
                     new_hints.append(quiz.models.GameHint(questionID_id=latestQuestionRecord.id,
                     hintText=hintText, hintImage=hintImage, value=value))
 
             try:
                 with transaction.atomic():
-                    #Replace the old with the new
-                    #UserLink.objects.filter(user=user).delete()
                     quiz.models.GameAnswer.objects.bulk_create(new_ans)
                     quiz.models.GameHint.objects.bulk_create(new_hints)
                     latestQuestionRecord.lastEdited = datetime.now
@@ -553,23 +545,50 @@ def addQuestion(request, user_id, field_id):
 
                     # And notify our users that it worked
                     return redirect('quiz:show-question', user_id, field_id)
-                    #return HttpResponse("Question, answers and hints added. latestQuestionRecord: " + str(latestQuestionRecord) 
-                    #+ ". new_ans: " + str(new_ans) + ". new_hints: " + str(new_hints)) #test
 
             except IntegrityError: #If the transaction failed
                 return HttpResponse("Question, answers and hints failed to be added.") #test
         #not valid
         else:
             if (questionForm.is_valid() == False) or (questionForm.non_field_errors()):
-                errormsg += str(questionForm.non_field_errors())
+                errormsg1 += str(questionForm.non_field_errors())
+                #memang cannot make it appear different error message if no questionText entered (dia keluar yg popup kat field tu)
+
             if (answer_formset.is_valid() == False) or (answer_formset.non_form_errors()):
                 for dict in answer_formset.non_form_errors():
+                    #(1) if admin submit one non-empty answer only, either iscorrect ticked or not (others empty + not ticked correct)
+                    #or submit one empty answer with iscorrect ticked
+                    #means not enough answers/not reach minimum
                     if "Please submit at least" in dict:
-                        errormsg += str("Sila isi minimum " + str(answerFormSet.min_num) + " pilihan jawapan.")
+                        errormsg2 += str("(1) Sila isi minimum " + str(answerFormSet.min_num) + " pilihan jawapan.")
                     else:
-                        errormsg += str(dict)
+                        errormsg2 += str(dict)
+
+                answerRequiredDict = {'answerText': ['This field is required.']}
+
+                for dict in answer_formset.errors:
+                    #(2) if admin tick iscorrect at empty answer (means nak add but no text), for total answer to be added >= minimum
+                    #(1) & (2) display if add minimum but both empty + one ticked iscorrect
+                    #break: for (1) & (2) do not display repeating required error
+                    if answerRequiredDict == dict:
+                        errormsg3 += "(2) Teks jawapan yang hendak ditambah mestilah diisi dan tidak dibiarkan kosong."
+                        break
+
             if (hint_formset.is_valid() == False) or (hint_formset.non_form_errors()):
-                errormsg += str(hint_formset.non_form_errors())
+                #errormsg4 += str(hint_formset.non_form_errors())
+                for dict in hint_formset.non_form_errors():
+                        #(3): from forms.py customhintformset, error for same hinttext
+                        errormsg4 += str(dict)
+
+                hintRequiredDict = {'hintText': ['This field is required.']}
+                valueRequiredDict = {'value':['This field is required.']}
+                hintValueRequiredDict = {'hintText': ['This field is required.'], 'value': ['This field is required.']}
+                for dict in hint_formset.errors:
+                    #(1) if the hint is in DB (ada kotak "Buang?" kat hujung) but admin padam text and/or value dia and submit (maybe sbb nak delete), means mcm tak isi
+                    # or if admin add new hint (only automatically indicated if got uploaded image) but its text and/or value is empty
+                    if hintRequiredDict == dict or valueRequiredDict == dict or hintValueRequiredDict == dict:
+                        errormsg5 += "(1) Teks dan nilai petunjuk yang hendak ditambah mestilah diisi dan tidak dibiarkan kosong."
+                        break
     else:
         questionForm = AddQuestionForm()
         answer_formset = answerFormSet(prefix='answer')
@@ -577,7 +596,8 @@ def addQuestion(request, user_id, field_id):
 
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
     'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
-    'answer_formset': answer_formset, 'hint_formset': hint_formset, 'errormsg': errormsg}
+    'answer_formset': answer_formset, 'hint_formset': hint_formset, 'errormsg1': errormsg1, 'errormsg2': errormsg2,
+    'errormsg3': errormsg3, 'errormsg4': errormsg4, 'errormsg5': errormsg5}
     return render(request, 'quiz/addQuestion.html', context) 
 
 def editQuestion(request, user_id, field_id, question_id):
@@ -587,7 +607,170 @@ def editQuestion(request, user_id, field_id, question_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    return HttpResponse("Edit an existing question for a field.")   
+    urlTest = 'dashboard:index-admin'
+    urlBlog = 'blog:index-admin'
+    urlQuiz = 'quiz:index-admin'
+    urlSearch = 'dashboard:index-admin'
+    urlDashboard = 'dashboard:index-admin'
+    urlLogout = 'dashboard:logout-confirm'
+    allGameFields = quiz.models.GameField.objects.all()
+
+    currentGameFieldRecord = allGameFields.get(id=field_id)
+    currentGameFieldName = currentGameFieldRecord.name
+    currentGameQuestionRecord = quiz.models.GameQuestion.objects.get(id=question_id)
+    questionText = currentGameQuestionRecord.questionText
+    questionImage = currentGameQuestionRecord.questionImage
+    difficulty = currentGameQuestionRecord.difficulty
+
+    currentGameAnswerRecords = quiz.models.GameAnswer.objects.filter(questionID_id=question_id)
+    cnt_old_ans = currentGameAnswerRecords.count()
+    extra_ans = 0
+
+    if cnt_old_ans < 4:
+        extra_ans = 4 - cnt_old_ans
+
+    currentGameHintRecords = quiz.models.GameHint.objects.filter(questionID_id=question_id)
+    cnt_old_hint = currentGameHintRecords.count()
+    extra_hint = 0
+
+    if cnt_old_hint < 3:
+        extra_hint = 3 - cnt_old_hint
+
+    answerInlineFormSet = inlineformset_factory(quiz.models.GameQuestion, quiz.models.GameAnswer, formset=CustomAnswerInlineFormSet, extra=extra_ans, min_num=2, max_num=4, validate_min=True, fields=('answerText', 'isCorrect',), can_delete=True)
+    hintInlineFormSet = inlineformset_factory(quiz.models.GameQuestion, quiz.models.GameHint, extra=extra_hint, max_num=3, fields=('hintText', 'hintImage', 'value',), can_delete=True)
+    errormsg1, errormsg2, errormsg3, errormsg4, errormsg5, errormsg6 = "", "", "", "", "", ""
+
+    if request.method == "POST":
+        questionForm = EditQuestionForm(request.POST, request.FILES, initial={'questionText': questionText, 'questionImage': questionImage, 'difficulty': difficulty})
+        answer_inlineformset = answerInlineFormSet(request.POST, instance=currentGameQuestionRecord, prefix='answer')
+        hint_inlineformset = hintInlineFormSet(request.POST, request.FILES, instance=currentGameQuestionRecord, prefix='hint')
+
+        if questionForm.is_valid() and answer_inlineformset.is_valid() and hint_inlineformset.is_valid():
+            #EDIT QUESTION
+            difficulty = questionForm.cleaned_data.get('difficulty')
+            currentGameQuestionRecord.questionText = questionForm.cleaned_data.get('questionText')
+            
+            questionImage = questionForm.cleaned_data.get('questionImage')
+            if questionImage == False:
+                currentGameQuestionRecord.questionImage = None
+            else:
+                currentGameQuestionRecord.questionImage = questionImage
+            
+            if currentGameQuestionRecord.difficulty != difficulty:
+                if difficulty == 'Mudah':
+                    currentGameQuestionRecord.points = 6
+                    currentGameQuestionRecord.timeLimit = 10
+                elif difficulty == 'Sederhana':
+                    currentGameQuestionRecord.points = 8
+                    currentGameQuestionRecord.timeLimit = 20
+                else:
+                    currentGameQuestionRecord.points = 10
+                    currentGameQuestionRecord.timeLimit = 30
+            currentGameQuestionRecord.difficulty = difficulty
+
+            #EDIT ANSWER
+            for answer_form in answer_inlineformset:
+                answerText = answer_form.cleaned_data.get('answerText')
+                isDeleted = answer_form.cleaned_data.get('DELETE')
+                #answer_form.save()
+
+                if answerText is not None:
+                    if isDeleted == True:
+                        currentGameAnswerRecords.get(answerText=answerText).delete()
+                    else:
+                        answer_form.save()
+
+            #EDIT HINTS
+            for hint_form in hint_inlineformset:
+                hintText = hint_form.cleaned_data.get('hintText')
+                #hintImage = hint_form.cleaned_data.get('hintImage')
+                value = hint_form.cleaned_data.get('value')
+                isDeleted = hint_form.cleaned_data.get('DELETE')
+
+                if hintText and value:
+                    if isDeleted == True:
+                        currentGameHintRecords.get(hintText=hintText).delete()
+                    else:
+                        hint_form.save()
+
+            currentGameQuestionRecord.lastEdited = datetime.now
+            currentGameQuestionRecord.save()
+            currentGameFieldRecord.lastEdited = currentGameQuestionRecord.lastEdited
+            allGameQuesCurrField = quiz.models.GameQuestion.objects.filter(fieldID_id=field_id)
+            if allGameQuesCurrField.count() >= 10 and currentGameFieldRecord.show == False:
+                currentGameFieldRecord.show = True
+            currentGameFieldRecord.save()
+            
+            return redirect('quiz:show-question', user_id, field_id)
+        #not valid
+        else:
+            if (questionForm.is_valid() == False) or (questionForm.non_field_errors()):
+                errormsg1 += str(questionForm.non_field_errors())
+
+                for dict in questionForm.errors.as_data():
+                    if 'questionText' == dict:
+                        for errors in questionForm.errors['questionText'].as_data():
+                            #questionForm.errors['questionText'].as_data() = [ValidationError(['This field is required.']), ....if got more]
+                            for error in errors:
+                                #errors (a list of errors for questionText field) = ['This field is required',...if ada more error for this field/item]
+                                #(1) if the current question text is erased by admin, so it detects no value
+                                if 'This field is required.' == error:
+                                    #error (only error message) = 'This field is required.'
+                                    errormsg2 += "(1) Teks soalan tidak boleh dibiarkan kosong."
+
+            if (answer_inlineformset.is_valid() == False) or (answer_inlineformset.non_form_errors()):
+                for dict in answer_inlineformset.non_form_errors():
+                    #(1) if admin nak tick "Buang?" dekat jawapan (tak kira kosong or not) but tu dah minimum jawapan needed,
+                    #means tak cukup jawapan
+                    if "Please submit at least" in dict:
+                        errormsg3 += str("(1) Jumlah minimum pilihan jawapan yang perlu adalah " + str(answerInlineFormSet.min_num) + ".")
+                    else:
+                        errormsg3 += str(dict)
+                
+                #TO-DO--- [13/8]: whatever this is, try sampai boleh keluar error "jika anda...", not hard-coded.. get the error from dict juga
+                answerRequiredDict = {'answerText': ['This field is required.']}
+
+                for dict in answer_inlineformset.errors:
+                    #(2) if the answer is in DB (ada kotak "Buang?" kat hujung) but admin padam text dia and submit sbb nak delete, means mcm tak isi
+                    # or if admin add new answer (indicated by iscorrect ticked) but its empty
+                    if answerRequiredDict == dict:
+                        errormsg4 += "(2) Teks jawapan sedia ada (mempunyai kotak \"Buang?\") tidak boleh dibiarkan kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan. Ruangan teks jawapan juga tidak boleh dibiarkan kosong jika anda ingin menambah jawapan baharu (tiada kotak \"Buang?\")."
+                    
+                    #both (3 - from forms.py) & (2) error appear if jawapan ada 2/minimum (satu kosong),
+                    #tapi admin tick delete dekat jawapan yg tak kosong, tapi jawapan satu lg kosong
+
+                    #HARDCODED
+                    #if answerRequiredDict == dict:
+                    #    errormsg += "Teks jawapan pada baris yang mempunyai kotak \"Buang?\" di hujung kanan hendaklah diisi dan tidak dibiar kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan."
+                
+                """ for error in answer_inlineformset.errors['answerText'].as_data():
+                    for e in error:
+                        if "required" in e:
+                            errormsg += "Teks jawapan pada baris yang mempunyai kotak \"Buang?\" di hujung kanan hendaklah diisi dan tidak dibiar kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan."
+                """
+            if (hint_inlineformset.is_valid() == False) or (hint_inlineformset.non_form_errors()):
+                errormsg5 += str(hint_inlineformset.non_form_errors())
+
+                hintRequiredDict = {'hintText': ['This field is required.']}
+                valueRequiredDict = {'value':['This field is required.']}
+                hintValueRequiredDict = {'hintText': ['This field is required.'], 'value': ['This field is required.']}
+                for dict in hint_inlineformset.errors:
+                    #(1) if the hint is in DB (ada kotak "Buang?" kat hujung) but admin padam text and/or value dia and submit (maybe sbb nak delete), means mcm tak isi
+                    # or if admin add new hint (only automatically indicated if got uploaded image) but its text and/or value is empty
+                    if hintRequiredDict == dict or valueRequiredDict == dict or hintValueRequiredDict == dict:
+                        errormsg6 += "(1) Teks dan nilai petunjuk sedia ada (mempunyai kotak \"Buang?\") tidak boleh dibiarkan kosong. Jika anda ingin memadam mana-mana petunjuk yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks atau nilai petunjuk. Ruangan teks dan nilai petunjuk juga tidak boleh dibiarkan kosong jika anda ingin menambah petunjuk baharu (tiada kotak \"Buang?\")."
+                        break
+    else:
+        questionForm = EditQuestionForm(initial={'questionText': questionText, 'questionImage': questionImage, 'difficulty': difficulty})
+        answer_inlineformset = answerInlineFormSet(instance=currentGameQuestionRecord, prefix='answer')
+        hint_inlineformset = hintInlineFormSet(instance=currentGameQuestionRecord, prefix='hint')
+
+    context = {'user_id': user_id, 'field_id': field_id, 'question_id': question_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
+    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
+    'answer_inlineformset': answer_inlineformset, 'hint_inlineformset': hint_inlineformset,
+    'errormsg1': errormsg1, 'errormsg2': errormsg2,'errormsg3': errormsg3, 'errormsg4': errormsg4,
+    'errormsg5': errormsg5, 'errormsg6': errormsg6}
+    return render(request, 'quiz/editQuestion.html', context)  
 
 def play(request, user_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)

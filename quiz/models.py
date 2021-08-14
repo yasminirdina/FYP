@@ -171,7 +171,7 @@ class GameAnswer(models.Model):
     questionID = models.ForeignKey(GameQuestion, on_delete=models.CASCADE)
     answerText = models.CharField(max_length=500)
     #imageURL = models.URLField(max_length=200, default="NA")
-    isCorrect = models.BooleanField()
+    isCorrect = models.BooleanField(default=False)
 
     def __str__(self):
         return "GameAnswer: " + self.answerText + ", QuestionID: " + str(self.questionID.id)
