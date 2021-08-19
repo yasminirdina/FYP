@@ -3,6 +3,7 @@ from django import forms
 from . import models
 from django.utils.translation import ugettext_lazy as _
 from django.forms import BaseFormSet, BaseInlineFormSet
+from django.forms.widgets import ClearableFileInput
 
 #get all objects (image records) in ImageField table
 allFieldImage = quiz.models.ImageField.objects.all().order_by('id')
@@ -36,23 +37,21 @@ class AddQuestionForm(forms.Form):
             if 'required' in field.error_messages:
                 field.error_messages['required'] = 'Teks soalan tidak boleh dibiarkan kosong.' """
 
-    questionText = forms.CharField(label="Teks soalan:", max_length=500, widget=forms.Textarea(attrs={"rows":8}), required=True)
+    questionText = forms.CharField(label="Teks soalan:", max_length=1500, widget=forms.Textarea(attrs={"rows":8}), required=True)
     difficulty = forms.ChoiceField(label="Pilih tahap kesukaran:", choices=DIFFICULTY_CHOICES, required=True)
     questionImage = forms.ImageField(label="Pilih gambar sokongan bagi soalan ini:", required=False)
     questionText.widget.attrs.update({'class' : 'questionText'})
     questionImage.widget.attrs.update({'class' : 'questionImage'})
     difficulty.widget.attrs.update({'class' : 'difficulty'})
 
-    #questionText.error_messages['required'] = _('Teks soalan tidak boleh dibiarkan kosong.')
-
 class AddAnswerForm(forms.Form):
-    answerText = forms.CharField(label="Teks jawapan:", max_length=500, widget=forms.Textarea(attrs={"rows":3}), required=True)
+    answerText = forms.CharField(label="Teks jawapan:", max_length=1500, widget=forms.Textarea(attrs={"rows":3}), required=True)
     isCorrect = forms.BooleanField(label="Tandakan kotak ini jika jawapan ini adalah jawapan yang betul:", required=False)
     answerText.widget.attrs.update({'class' : 'answerText'})
     isCorrect.widget.attrs.update({'class' : 'isCorrect'})
 
 class AddHintForm(forms.Form):
-    hintText = forms.CharField(label="Teks petunjuk:", max_length=500, widget=forms.Textarea(attrs={"rows":3}), required=True)
+    hintText = forms.CharField(label="Teks petunjuk:", max_length=1500, widget=forms.Textarea(attrs={"rows":3}), required=True)
     value = forms.IntegerField(label="Nilai petunjuk:", min_value=3, max_value=7, initial=3, required=True)
     hintImage = forms.ImageField(label="Pilih gambar sokongan bagi petunjuk ini:", required=False)
     hintText.widget.attrs.update({'class' : 'hintText'})
@@ -124,6 +123,10 @@ class CustomHintFormSet(BaseFormSet):
                         '(3) Semua teks petunjuk mestilah unik dan tiada yang sama.',
                         code='duplicate_hints'
                     )
+                    
+class CustomImageFieldWidget(ClearableFileInput):
+    """ template_with_clear = '<label for="%(id_questionImageClear)s">Padam gambar</label>' """
+    template_name = 'widgets/customclearablefileinput.html'
 
 class EditQuestionForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -139,6 +142,9 @@ class EditQuestionForm(forms.ModelForm):
             'questionText': _('Kemaskini teks soalan'),
             'questionImage': _('Kemaskini gambar sokongan'),
             'difficulty': _('Kemaskini tahap kesukaran soalan'),
+        }
+        widgets = {
+            'questionImage': CustomImageFieldWidget,
         }
 
 class CustomAnswerInlineFormSet(BaseInlineFormSet):
@@ -196,6 +202,20 @@ class CustomAnswerInlineFormSet(BaseInlineFormSet):
                 code='too_few_forms'
             )
 
+class EditHintForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['hintText'].widget.attrs.update({'class' : 'hintText'})
+        self.fields['hintImage'].widget.attrs.update({'class' : 'hintImage'})
+        self.fields['value'].widget.attrs.update({'class' : 'value'})
+
+    class Meta:
+        model = quiz.models.GameHint
+        fields = ['hintText', 'hintImage', 'value']
+        widgets = {
+            'hintImage': CustomImageFieldWidget,
+        }
+
 class CustomHintInlineFormSet(BaseInlineFormSet):
     def clean(self):
         super().clean()
@@ -211,10 +231,10 @@ class CustomHintInlineFormSet(BaseInlineFormSet):
                     duplicatesText = True
                 hints.append(hintText)
 
-                #(2) if got same hint text (among existing or among existing+new, excluding none/empty) 
+                #(3) if got same hint text (among existing or among existing+new, excluding none/empty) 
                 if duplicatesText == True:
                     raise forms.ValidationError(
-                        '(2) Semua teks petunjuk mestilah unik dan tiada yang sama.',
+                        '(3) Semua teks petunjuk mestilah unik dan tiada yang sama.',
                         code='duplicate_hints'
                     )
 

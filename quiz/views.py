@@ -5,7 +5,7 @@ import json
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm, CustomAnswerFormSet, CustomAnswerInlineFormSet, CustomHintFormSet, EditQuestionForm
+from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm, CustomAnswerFormSet, CustomAnswerInlineFormSet, CustomHintFormSet, EditQuestionForm, EditHintForm
 from django.forms import formset_factory, inlineformset_factory
 from django.db import IntegrityError, transaction
 from django.contrib import messages
@@ -637,8 +637,8 @@ def editQuestion(request, user_id, field_id, question_id):
         extra_hint = 3 - cnt_old_hint
 
     answerInlineFormSet = inlineformset_factory(quiz.models.GameQuestion, quiz.models.GameAnswer, formset=CustomAnswerInlineFormSet, extra=extra_ans, min_num=2, max_num=4, validate_min=True, fields=('answerText', 'isCorrect',), can_delete=True)
-    hintInlineFormSet = inlineformset_factory(quiz.models.GameQuestion, quiz.models.GameHint, extra=extra_hint, max_num=3, fields=('hintText', 'hintImage', 'value',), can_delete=True)
-    errormsg1, errormsg2, errormsg3, errormsg4, errormsg5, errormsg6 = "", "", "", "", "", ""
+    hintInlineFormSet = inlineformset_factory(quiz.models.GameQuestion, quiz.models.GameHint, form=EditHintForm, extra=extra_hint, max_num=3, fields=('hintText', 'hintImage', 'value',), can_delete=True)
+    errormsg1, errormsg2, errormsg3, errormsg4, errormsg5, errormsg6, errormsg7, errormsg8 = "", "", "", "", "", "", "", ""
 
     if request.method == "POST":
         questionForm = EditQuestionForm(request.POST, request.FILES, initial={'questionText': questionText, 'questionImage': questionImage, 'difficulty': difficulty})
@@ -672,7 +672,6 @@ def editQuestion(request, user_id, field_id, question_id):
             for answer_form in answer_inlineformset:
                 answerText = answer_form.cleaned_data.get('answerText')
                 isDeleted = answer_form.cleaned_data.get('DELETE')
-                #answer_form.save()
 
                 if answerText is not None:
                     if isDeleted == True:
@@ -683,7 +682,6 @@ def editQuestion(request, user_id, field_id, question_id):
             #EDIT HINTS
             for hint_form in hint_inlineformset:
                 hintText = hint_form.cleaned_data.get('hintText')
-                #hintImage = hint_form.cleaned_data.get('hintImage')
                 value = hint_form.cleaned_data.get('value')
                 isDeleted = hint_form.cleaned_data.get('DELETE')
 
@@ -717,48 +715,49 @@ def editQuestion(request, user_id, field_id, question_id):
                                 if 'This field is required.' == error:
                                     #error (only error message) = 'This field is required.'
                                     errormsg2 += "(1) Teks soalan tidak boleh dibiarkan kosong."
+                    elif 'questionImage' == dict:
+                        for errors in questionForm.errors['questionImage'].as_data():
+                            for error in errors:
+                                #(2) if admin tick "padam gambar" and also upload new question image, will raise error to do either one je
+                                if 'Please either submit a file or check the clear checkbox, not both.' == error:
+                                    errormsg3 += "(2) Anda hanya boleh memadam gambar atau memuat naik gambar baharu, dan bukan kedua-duanya."
 
             if (answer_inlineformset.is_valid() == False) or (answer_inlineformset.non_form_errors()):
                 for dict in answer_inlineformset.non_form_errors():
                     #(1) if admin nak tick "Buang?" dekat jawapan (tak kira kosong or not) but tu dah minimum jawapan needed,
                     #means tak cukup jawapan
                     if "Please submit at least" in dict:
-                        errormsg3 += str("(1) Jumlah minimum pilihan jawapan yang perlu adalah " + str(answerInlineFormSet.min_num) + ".")
+                        errormsg4 += str("(1) Jumlah minimum pilihan jawapan yang perlu adalah " + str(answerInlineFormSet.min_num) + ".")
                     else:
-                        errormsg3 += str(dict)
+                        errormsg4 += str(dict)
                 
-                #TO-DO--- [13/8]: whatever this is, try sampai boleh keluar error "jika anda...", not hard-coded.. get the error from dict juga
                 answerRequiredDict = {'answerText': ['This field is required.']}
 
                 for dict in answer_inlineformset.errors:
                     #(2) if the answer is in DB (ada kotak "Buang?" kat hujung) but admin padam text dia and submit sbb nak delete, means mcm tak isi
                     # or if admin add new answer (indicated by iscorrect ticked) but its empty
                     if answerRequiredDict == dict:
-                        errormsg4 += "(2) Teks jawapan sedia ada (mempunyai kotak \"Buang?\") tidak boleh dibiarkan kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan. Ruangan teks jawapan juga tidak boleh dibiarkan kosong jika anda ingin menambah jawapan baharu (tiada kotak \"Buang?\")."
+                        errormsg5 += "(2) Teks jawapan sedia ada (mempunyai kotak \"Buang?\") tidak boleh dibiarkan kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan. Ruangan teks jawapan juga tidak boleh dibiarkan kosong jika anda ingin menambah jawapan baharu (tiada kotak \"Buang?\")."
                     
                     #both (3 - from forms.py) & (2) error appear if jawapan ada 2/minimum (satu kosong),
                     #tapi admin tick delete dekat jawapan yg tak kosong, tapi jawapan satu lg kosong
 
-                    #HARDCODED
-                    #if answerRequiredDict == dict:
-                    #    errormsg += "Teks jawapan pada baris yang mempunyai kotak \"Buang?\" di hujung kanan hendaklah diisi dan tidak dibiar kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan."
-                
-                """ for error in answer_inlineformset.errors['answerText'].as_data():
-                    for e in error:
-                        if "required" in e:
-                            errormsg += "Teks jawapan pada baris yang mempunyai kotak \"Buang?\" di hujung kanan hendaklah diisi dan tidak dibiar kosong. Jika anda ingin memadam mana-mana jawapan yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks jawapan."
-                """
             if (hint_inlineformset.is_valid() == False) or (hint_inlineformset.non_form_errors()):
-                errormsg5 += str(hint_inlineformset.non_form_errors())
+                errormsg6 += str(hint_inlineformset.non_form_errors())
 
                 hintRequiredDict = {'hintText': ['This field is required.']}
                 valueRequiredDict = {'value':['This field is required.']}
                 hintValueRequiredDict = {'hintText': ['This field is required.'], 'value': ['This field is required.']}
+                clearOrUploadNewImageDict = {'hintImage': ['Please either submit a file or check the clear checkbox, not both.']}
                 for dict in hint_inlineformset.errors:
                     #(1) if the hint is in DB (ada kotak "Buang?" kat hujung) but admin padam text and/or value dia and submit (maybe sbb nak delete), means mcm tak isi
                     # or if admin add new hint (only automatically indicated if got uploaded image) but its text and/or value is empty
                     if hintRequiredDict == dict or valueRequiredDict == dict or hintValueRequiredDict == dict:
-                        errormsg6 += "(1) Teks dan nilai petunjuk sedia ada (mempunyai kotak \"Buang?\") tidak boleh dibiarkan kosong. Jika anda ingin memadam mana-mana petunjuk yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks atau nilai petunjuk. Ruangan teks dan nilai petunjuk juga tidak boleh dibiarkan kosong jika anda ingin menambah petunjuk baharu (tiada kotak \"Buang?\")."
+                        errormsg7 += "(1) Teks dan nilai petunjuk sedia ada (mempunyai kotak \"Buang?\") tidak boleh dibiarkan kosong. Jika anda ingin memadam mana-mana petunjuk yang mempunyai kotak berkenaan, anda perlu menanda pada kotak tersebut dan bukan memadam teks atau nilai petunjuk. Ruangan teks dan nilai petunjuk juga tidak boleh dibiarkan kosong jika anda ingin menambah petunjuk baharu (tiada kotak \"Buang?\")."
+                        break
+                    #(2) if admin tick "padam gambar" and also upload new hint image, will raise error to do either one je
+                    elif clearOrUploadNewImageDict == dict:
+                        errormsg8 += "(2) Anda hanya boleh memadam gambar atau memuat naik gambar baharu, dan bukan kedua-duanya."
                         break
     else:
         questionForm = EditQuestionForm(initial={'questionText': questionText, 'questionImage': questionImage, 'difficulty': difficulty})
@@ -769,7 +768,7 @@ def editQuestion(request, user_id, field_id, question_id):
     'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
     'answer_inlineformset': answer_inlineformset, 'hint_inlineformset': hint_inlineformset,
     'errormsg1': errormsg1, 'errormsg2': errormsg2,'errormsg3': errormsg3, 'errormsg4': errormsg4,
-    'errormsg5': errormsg5, 'errormsg6': errormsg6}
+    'errormsg5': errormsg5, 'errormsg6': errormsg6, 'errormsg7': errormsg7, 'errormsg8': errormsg8}
     return render(request, 'quiz/editQuestion.html', context)  
 
 def play(request, user_id):

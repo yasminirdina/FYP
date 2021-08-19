@@ -42,6 +42,46 @@
             display: inline;
         }  */
 
+        /* Method 3 */
+        #id_questionImageName, #id_hintImageName0, #id_hintImageName1, #id_hintImageName2 {
+            font-size: 16px;
+            font-family: "DM Sans";
+            border-radius: 10px;
+            border: 1px solid lightgray;
+            padding: 3px;
+            width: 13vw;
+        }
+
+        .imageUpload {
+            position: relative;
+            overflow: hidden;
+            margin-top: 10px;
+            margin-bottom: 0px;
+        }
+
+        .imageUpload input.questionImage, .imageUpload input.hintImage {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+        .upload-for-editQuestion {
+            background-color: palevioletred;
+            color: white;
+            padding: 0.5vw 1vw;
+            width: 11vw;
+        }
+
+        .upload-for-editQuestion:hover {
+            color: purple;
+        }
+
 /*         .questionImage, .hintImage{
             background: #f7f7f7; 
             padding: 8px;
@@ -53,22 +93,22 @@
             cursor: pointer;
         } */
 
-        input.questionImage::-webkit-file-upload-button, .hintImage::-webkit-file-upload-button {
-            background: #f7f7f7; 
-            padding: 8px;
-            border: 1px solid #e3e3e3; 
-            border-radius: 5px; 
-            border: 1px solid #ccc; 
-            display: inline-block;
+        /* default upload button */
+/*         input.questionImage::-webkit-file-upload-button, .hintImage::-webkit-file-upload-button {
+            background: palevioletred; 
+            border: none; 
+            border-radius: 10px; 
             padding: 6px 12px;
             cursor: pointer;
             font-family: "DM Sans";
             font-size: 16px;
+            font-weight: bold;
+            color: white;
         }
 
         input.questionImage::-webkit-file-upload-button:hover, .hintImage::-webkit-file-upload-button:hover{
-            background: grey; 
-            color: white;
+            background: #e3e3e3; 
+            color: purple;
             font-weight: bold;
         }
 
@@ -76,7 +116,7 @@
             font-family: "DM Sans";
             font-size: 16px;
             width: 16.5vw;
-        }
+        } */
     </style>
 </head>
 <body>
@@ -136,9 +176,15 @@
                     </ul>
                 </li>
                 <li>
-                    <span>Anda hanya boleh memuat naik </span>
+                    <span>Bagi setiap soalan dan/atau petunjuk, anda hanya boleh memadam gambar </span>
+                    <span style="font-weight: bold;"> ATAU </span>
+                    <span>memuat naik gambar baharu, dan</span>
+                    <span style="font-weight: bold;"> BUKAN kedua-duanya.</span>
+                </li>
+                <li>
+                    <span>Bagi setiap soalan dan/atau petunjuk, anda hanya boleh memuat naik</span>
                     <span style="font-weight: bold;"> SATU </span>
-                    <span>sahaja gambar sokongan bagi setiap soalan dan/atau petunjuk.</span>
+                    <span>sahaja gambar sokongan.</span>
                 </li>
                 <li>
                     <span>Anda hanya boleh menanda </span>
@@ -166,6 +212,7 @@
             </div>
             <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg1 }}</p>
             <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg2 }}</p>
+            <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg3 }}</p>
             <table style="width: 72.5vw;">
                 <thead>
                     <tr>
@@ -177,9 +224,13 @@
                 <tbody>
                     <tr>
                         <td>
-                            <textarea rows="8" id= "id_questionText" name="questionText" class="questionText" maxlength="500">{{ questionForm.questionText.value }}</textarea>
+                            {% if questionForm.questionImage.value %}
+                                <textarea rows="12" id= "id_questionText" name="questionText" class="questionText" maxlength="1500" style="width: 43vw;">{{ questionForm.questionText.value }}</textarea>
+                            {% else %}
+                                <textarea rows="8" id= "id_questionText" name="questionText" class="questionText" maxlength="1500" style="width: 44vw;">{{ questionForm.questionText.value }}</textarea>
+                            {% endif %}
                         </td>
-                        <td>{{ questionForm.questionImage }}</td>
+                        <td style="vertical-align: middle;">{{ questionForm.questionImage }}</td>
                         <td>
                             <select id="id_difficulty" name="difficulty" class="difficulty">
                                 {% if questionForm.difficulty.value == 'Mudah' %}
@@ -210,8 +261,8 @@
                     Jawapan
                 </p>
             </div>
-            <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg3 }}</p>
             <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg4 }}</p>
+            <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg5 }}</p>
             {{ answer_inlineformset.management_form }}
             <table style="width: 72.5vw;">
                 <thead>
@@ -226,16 +277,19 @@
                     <tr class="answer-inlineformset">
                         {{ form.id }}
                         <td>
-                            <!-- {{ form.answerText }} -->
                             {% if form.answerText.value != None %}
-                                <textarea rows="3" id= "{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="500" style="width: 49vw;">{{ form.answerText.value }}</textarea>
+                                <textarea rows="3" id="{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="1500" style="width: 49vw;">{{ form.answerText.value }}</textarea>
                             {% else %}
-                                <textarea rows="3" id= "{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="500" style="width: 49vw;"></textarea>
+                                <textarea rows="3" id="{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="1500" style="width: 49vw;"></textarea>
                             {% endif %}
                         </td>
                         <td>{{ form.isCorrect }}</td>
                         <td>
-                            {% if form.instance.pk %}{{ form.DELETE }}{% endif %}
+                            {% if form.instance.pk %}
+                                {{ form.DELETE }}
+                            {% else %}
+                                <span style="font-weight: bolder;">X</span>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
@@ -247,8 +301,9 @@
                     Petunjuk
                 </p>
             </div>
-            <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg5 }}</p>
             <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg6 }}</p>
+            <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg7 }}</p>
+            <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg8 }}</p>
             {{ hint_inlineformset.management_form }}
             <table style="width: 72.5vw;">
                 <thead>
@@ -266,9 +321,17 @@
                         
                         <td>
                             {% if form.hintText.value != None %}
-                                <textarea rows="3" id= "{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="500" style="width: 35vw;">{{ form.hintText.value }}</textarea>
+                                {% if form.hintImage.value %}
+                                    <textarea rows="12" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;">{{ form.hintText.value }}</textarea>
+                                {% else %}
+                                    <textarea rows="3" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;">{{ form.hintText.value }}</textarea>
+                                {% endif %}
                             {% else %}
-                                <textarea rows="3" id= "{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="500" style="width: 35vw;"></textarea>
+                                {% if form.hintImage.value %}
+                                    <textarea rows="12" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;"></textarea>
+                                {% else %}
+                                    <textarea rows="3" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;"></textarea>
+                                {% endif %}
                             {% endif %}
                         </td>
                         <td>{{ form.hintImage }}</td>

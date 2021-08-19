@@ -149,7 +149,7 @@
                         {% for question in gameQuestions %}
                             <tr>
                                 <td style="vertical-align: top;">{{ question.id }}</td>
-                                <td style="vertical-align: top; text-align: left; width: 10vw; overflow-wrap: inherit;">{{ question.questionText }}</td>
+                                <td style="vertical-align: top; text-align: left; width: 10vw; overflow-wrap: inherit;">{{ question.questionText|truncatewords:10 }}</td>
                                 <td style="vertical-align: top;">{{ question.difficulty }}</td>
                                 <td style="vertical-align: top;">{{ question.points }}</td>
                                 <td style="vertical-align: top;">{{ question.timeLimit }} saat</td>
@@ -162,7 +162,11 @@
                                     <ol style="text-align: left;">
                                         {% for answer in allGameQuesAns %}
                                             {% if answer.questionID_id == question.id %}
-                                                    <li>{{ answer.answerText }}</li>
+                                                {% if answer.isCorrect == True %}
+                                                    <li style="font-weight: bold; background-color: peachpuff; border-radius: 5px;">{{ answer.answerText|truncatechars:20 }}</li>
+                                                {% else %}
+                                                    <li>{{ answer.answerText|truncatechars:20 }}</li>
+                                                {% endif %}
                                             {% endif %}
                                         {% endfor %}
                                     </ol>

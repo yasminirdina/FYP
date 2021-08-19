@@ -154,7 +154,7 @@ class FieldPlayerSession(models.Model):
 class GameQuestion(models.Model):
     #default id
     fieldID = models.ForeignKey(GameField, on_delete=models.CASCADE)
-    questionText = models.CharField(max_length=500)
+    questionText = models.CharField(max_length=1500)
     #imageURL = models.URLField(max_length=200, default="NA")
     questionImage = models.ImageField(upload_to='images/admin_questions', blank=True)
     points = models.IntegerField()
@@ -169,7 +169,7 @@ class GameQuestion(models.Model):
 class GameAnswer(models.Model):
     #default id
     questionID = models.ForeignKey(GameQuestion, on_delete=models.CASCADE)
-    answerText = models.CharField(max_length=500)
+    answerText = models.CharField(max_length=1500)
     #imageURL = models.URLField(max_length=200, default="NA")
     isCorrect = models.BooleanField(default=False)
 
@@ -181,7 +181,7 @@ class GameHint(models.Model):
     questionID = models.ForeignKey(GameQuestion, on_delete=models.CASCADE)
     #imageURL = models.URLField(max_length=200, default="NA")
     hintImage = models.ImageField(upload_to='images/admin_hints', blank=True)
-    hintText = models.CharField(max_length=500)
+    hintText = models.CharField(max_length=1500)
     value = models.IntegerField()
 
     def __str__(self):

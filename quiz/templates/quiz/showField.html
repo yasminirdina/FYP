@@ -87,7 +87,7 @@
                     <tbody>
                         {% for field in gameFields %}
                             <tr>
-                                <td><button class="btn3 edit-icon"><a class="a-icon-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
+                                <td><button class="btn3 change edit-icon"><a class="a-icon-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
                                 <td style="padding-right: 0px;"><img src="{% static 'images/quiz_field/' %}{{ field.imageURL.imageURL }}" width="50px" height="50px"></td>
                                 <td style="padding-left: 20px; padding-right: 0px; text-align: left;">{{ field.name }}</td>
                                 <!--{% if lengthFQCL > 1 %}-->
