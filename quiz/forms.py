@@ -52,7 +52,7 @@ class AddAnswerForm(forms.Form):
 
 class AddHintForm(forms.Form):
     hintText = forms.CharField(label="Teks petunjuk:", max_length=1500, widget=forms.Textarea(attrs={"rows":3}), required=True)
-    value = forms.IntegerField(label="Nilai petunjuk:", min_value=3, max_value=7, initial=3, required=True)
+    value = forms.IntegerField(label="Nilai petunjuk:", min_value=3, max_value=5, initial=3, required=True)
     hintImage = forms.ImageField(label="Pilih gambar sokongan bagi petunjuk ini:", required=False)
     hintText.widget.attrs.update({'class' : 'hintText'})
     hintImage.widget.attrs.update({'class' : 'hintImage'})

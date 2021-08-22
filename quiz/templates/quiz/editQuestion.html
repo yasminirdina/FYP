@@ -337,9 +337,9 @@
                         <td>{{ form.hintImage }}</td>
                         <td>
                             {% if form.value.value %}
-                                <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="7" value="{{ form.value.value }}">
+                                <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="5" value="{{ form.value.value }}">
                             {% else %}
-                                <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="7">
+                                <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="5">
                             {% endif %}
                         </td>
                         <td>
