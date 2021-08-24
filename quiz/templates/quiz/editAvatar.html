@@ -1,38 +1,26 @@
+{% extends "quiz/baseNonAdmin.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Avatar</title>
-</head>
-<body>
-<center>
-    <ul class="ul-navbar">
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id %}">Blog Berita</a></li>
-        <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">
-            <span style="font-style: italic;">Dashboard</span>
-            <span>{{ dashboardNav }}</span>
-        </a></li>
-        <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-        <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>            
-    </ul>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/editAvatar.css' %}">
+{% endblock %}
+
+{% block header %}
     <h1>Tetapan Avatar</h1>
+{% endblock %}
+
+{% block content %}
     <form action="{% url 'quiz:edit-avatar' user_id %}" class="AvatarForm" method="post">
         {% csrf_token %}
         {{ form.media.js }}
         {{ form.as_p }}
-        <button class="btn2 avatar-for-editAvatar" type="submit">Simpan</button>
-        <button class="btn2 main-for-editAvatar">
+        <button class="btn avatar-for-editAvatar" type="submit">Simpan</button>
+        <button class="btn main-for-editAvatar">
             <a class="a-for-editAvatar" href="{% url 'quiz:index-student' user_id %}">Batal</a>
         </button>
     </form>
-</center>
-
-</body>
-</html>
-
+{% endblock %}

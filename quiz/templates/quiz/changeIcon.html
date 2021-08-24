@@ -1,4 +1,66 @@
+{% extends "quiz/baseAdmin.html" %}
 {% load static %}
+{% load quiz_index %}
+
+{% block title %}
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/changeIcon.css' %}">
+{% endblock %}
+
+{% block header %}
+    <h1>Tetapan Kandungan Kuiz</h1>
+    <h2>Tukar Ikon Bidang Kerjaya</h2>
+    <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+        <span><a class="a-back-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
+        <span style="color: gray;">{{ currentGameFieldName }}</span>
+    </h3>
+{% endblock %}
+
+{% block content %}
+    <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
+    <form action="{% url 'quiz:change-icon' user_id field_id %}" class="ChangeIconForm" method="post">
+        {% csrf_token %}
+        <!--<ul class="ul-changeIcon"></ul>-->
+            Pilih ikon untuk bidang {{ currentGameFieldName }}: <p></p>
+            <div>
+            {% for choice in form.image.field.choices %}
+                <span style="padding: 10px;"></span>
+                {% ifequal forloop.counter|divisibleby:"4" True %}    
+                    <input type="radio" name="image" value="{{ choice.0 }}">
+                    <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                    </div>
+                    <div>
+                {% endifequal %}      
+                {% ifequal forloop.counter|divisibleby:"4" False %}   
+                    <input type="radio" name="image" value="{{ choice.0 }}">
+                    <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                {% endifequal %}
+            {% endfor %}
+            </div>
+        </ul>
+        <p></p>
+        <button class="btn icon-for-changeIcon" type="submit">Simpan</button>
+        <button class="btn cancel-for-changeIcon">
+            <a class="a-cancel-for-changeIcon" href="{% url 'quiz:show-field' user_id %}">Batal</a>
+        </button>
+    </form>
+
+    <div class="div-icon">
+        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
+            <span> dan </span>
+            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
+            <span>, serta pemilik asal ikon-ikon tersebut.</span>
+        </p>
+    </div>
+
+    <p></p>
+{% endblock %}
+
+<!-- {% load static %}
 {% load quiz_index %}
     <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
@@ -41,7 +103,6 @@
         <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
         <form action="{% url 'quiz:change-icon' user_id field_id %}" class="ChangeIconForm" method="post">
             {% csrf_token %}
-            <!--<ul class="ul-changeIcon"></ul>-->
                 Pilih ikon untuk bidang {{ currentGameFieldName }}: <p></p>
                 <div>
                 {% for choice in form.image.field.choices %}
@@ -78,4 +139,4 @@
         <p></p>
     </center>
 </body>
-</html>
+</html> -->

@@ -125,7 +125,6 @@ class CustomHintFormSet(BaseFormSet):
                     )
                     
 class CustomImageFieldWidget(ClearableFileInput):
-    """ template_with_clear = '<label for="%(id_questionImageClear)s">Padam gambar</label>' """
     template_name = 'widgets/customclearablefileinput.html'
 
 class EditQuestionForm(forms.ModelForm):

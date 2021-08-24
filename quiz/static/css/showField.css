@@ -1,0 +1,175 @@
+/* button 1 - outside table */
+.btn {
+    border: none;
+    background-color: inherit;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background: #eee;
+    border-radius: 10px;
+}
+
+.field-for-showField {color: coral;}
+.main-for-showField {color: purple;}
+.submit-for-showField {
+  color: purple;
+  padding: 7px 10px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
+.clear-for-showField {
+  color: crimson;
+  padding: 7px 10px;
+  margin: 5px;
+}
+
+/* hyperlink path and button 1 */
+.a-main1-for-showField {color: purple;}
+
+.a-field-for-showField, .a-main2-for-showField, .a-clear-for-showField {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* button 2 - in table */
+.btn2 {
+    border: none;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    display: inline-block;
+  }
+  
+.btn2.change:hover{
+    color: gray;
+    background-color: whitesmoke;
+}
+
+.status {
+    cursor: pointer;
+    color: white;
+}
+  
+.question, .edit-icon {
+    cursor: pointer;
+    color: white;
+    background-color: gray
+}
+
+/* hyperlink button 2*/
+.a-question-for-showField, .a-icon-for-showField {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* input search */
+#search_box {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 5px;
+}
+  
+input:focus::placeholder {color: transparent}
+
+/* div */
+.div-fieldTips {
+    font-family: DM Sans; 
+    text-align: left;
+    padding: 10px;
+    border: 2px solid coral;
+    background-color: peachpuff;
+    border-radius: 20px;
+    width: 75vw;
+}
+
+.div-field {
+    display: block;
+    padding: 0;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    border-radius: 2vw;
+    /* max-height: 70vw; not sure */
+    overflow-x:auto;
+    /* not sure
+    overflow-y: auto;
+    background:
+      linear-gradient(white 30%, rgba(255,255,255,0)),
+      linear-gradient(rgba(255,255,255,0), white 70%) 0 100%,
+      radial-gradient(farthest-side at 50% 0, rgba(0,0,0,.2), rgba(0,0,0,0)),
+      radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,.2), rgba(0,0,0,0)) 0 100%;
+    background-repeat: no-repeat;
+    background-color: #fff;
+    background-size: 100% 4em, 100% 4em, 100% 1.4em, 100% 1.4em;
+    background-attachment: local, local, scroll, scroll;*/
+}
+
+.div-icon {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    width: fit-content;
+    margin: auto;
+    padding: 5px;
+}
+
+/* table */
+table {
+    border: 1px solid whitesmoke;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: 10px;
+    overflow: hidden;
+  }
+
+.sortable {
+    background-repeat: no-repeat;
+    background-position: right 0.5vw center;
+    background-image: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIUnC2nKLnT4or00PvyrQwrPzUZshQAOw==);
+}
+  
+#fieldTable thead th.up {
+    background-image: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIRnC2nKLnT4or00Puy3rx7VQAAOw==);
+}
+  
+#fieldTable thead th.down {
+    background-image: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIPnI+py+0/hJzz0IruwjsVADs=);
+}
+  
+th {
+    border-collapse: collapse;
+    padding: 20px;
+    text-align: center;
+    background-color: palevioletred;
+    color: white;
+}
+  
+td {
+    padding: 10px;
+    text-align: center;
+}
+  
+tr:nth-child(even) {
+    background-color: #eee;
+}
+  
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+  
+tr:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+}

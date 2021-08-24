@@ -19,7 +19,7 @@ def quizMainAdmin(request, user_id):
         return redirect('home:login')
 
     if user_id == 'A1':
-        urlTest = 'dashboard:index-admin'
+        urlTest = 'test:index-admin'
         urlBlog = 'blog:index-admin'
         urlQuiz = 'quiz:index-admin'
         urlSearch = 'search:index-admin'
@@ -39,10 +39,10 @@ def quizMainAdmin(request, user_id):
         elif 'T' in user_id:
             dashboardNav = " Guru"
             user_type = "guru"
-        urlTest = 'dashboard:index-nonadmin'
+        urlTest = 'test:index-nonadmin'
         urlBlog = 'blog:index-nonadmin'
         urlQuiz = 'quiz:index-student'
-        urlSearch = 'dashboard:index-nonadmin'
+        urlSearch = 'search:index-nonadmin'
         urlDashboard = 'dashboard:index-nonadmin'
         urlLogout = 'dashboard:logout-confirm'
         username = currentUserRecord.username
@@ -51,7 +51,7 @@ def quizMainAdmin(request, user_id):
         context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'response': response,
         'user_id': user_id, 'user_type': user_type, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
         'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
-        return render(request, 'quiz\noAccessError.html', context)
+        return render(request, 'quiz/noAccessError.html', context)
         #return HttpResponse(response)
 
 def quizMain(request, user_id):
@@ -61,7 +61,7 @@ def quizMain(request, user_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
@@ -127,10 +127,10 @@ def showAvatar(request, user_id):
     currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'dashboard:index-nonadmin'
+    urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     dashboardNav = ' Pelajar'
@@ -153,10 +153,10 @@ def editAvatar(request, user_id):
     currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
     currentPlayerUsername = currentPlayerRecord.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecord.avatarID
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'dashboard:index-nonadmin'
+    urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     dashboardNav = ' Pelajar'
@@ -232,10 +232,10 @@ def showField(request, user_id):
         return redirect('home:login')
 
     if user_id == 'A1':
-        urlTest = 'dashboard:index-admin'
+        urlTest = 'test:index-admin'
         urlBlog = 'blog:index-admin'
         urlQuiz = 'quiz:index-admin'
-        urlSearch = 'dashboard:index-admin'
+        urlSearch = 'search:index-admin'
         urlDashboard = 'dashboard:index-admin'
         urlLogout = 'dashboard:logout-confirm'
         urlShowQuestion = 'quiz:show-question'
@@ -306,10 +306,10 @@ def showField(request, user_id):
         elif 'T' in user_id:
             dashboardNav = " Guru"
             user_type = "guru"
-        urlTest = 'dashboard:index-nonadmin'
+        urlTest = 'test:index-nonadmin'
         urlBlog = 'blog:index-nonadmin'
         urlQuiz = 'quiz:index-student'
-        urlSearch = 'dashboard:index-nonadmin'
+        urlSearch = 'search:index-nonadmin'
         urlDashboard = 'dashboard:index-nonadmin'
         urlLogout = 'dashboard:logout-confirm'
         currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
@@ -328,10 +328,10 @@ def addField(request, user_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allImageField = quiz.models.ImageField.objects.all()
@@ -382,10 +382,10 @@ def changeIcon(request, user_id, field_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allGameFields = quiz.models.GameField.objects.all()
@@ -425,10 +425,10 @@ def showQuestion(request, user_id, field_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allGameFields = quiz.models.GameField.objects.all()
@@ -463,10 +463,10 @@ def addQuestion(request, user_id, field_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allGameFields = quiz.models.GameField.objects.all()
@@ -607,10 +607,10 @@ def editQuestion(request, user_id, field_id, question_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allGameFields = quiz.models.GameField.objects.all()

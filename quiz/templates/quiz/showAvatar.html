@@ -1,4 +1,54 @@
+{% extends "quiz/baseNonAdmin.html" %}
 {% load static %}
+
+{% block title %}
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Avatar</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/showAvatar.css' %}">
+{% endblock %}
+
+{% block header %}
+    <h1>Tetapan Avatar</h1>
+    <h2>
+        <span class="h2a" style="font-style: italic;">{{ username }}</span>
+        <span>, avatar terkini anda adalah seperti berikut:</span>
+    </h2>
+{% endblock %}
+
+{% block content %}
+    <p>
+        <ul class="ul-showAvatar">
+            <li>
+                <span style="padding-left: 5px;">
+                    <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+                </span>
+            </li>
+            <li><span style="font-weight: bold;">Nama Kerjaya: </span>{{ currentAvatarDetailsObject.avatarID }}</li>
+            <li><span style="font-weight: bold;">Tempat Kerja: </span>{{ currentAvatarDetailsObject.workplace }}</li>
+            <li><span style="font-weight: bold;">Jantina: </span>{{ currentAvatarDetailsObject.avatarGender }}</li>
+        </ul>
+        
+        <button class="btn avatar-for-ShowAvatar">
+            <a class="a-for-showAvatar" href="{% url 'quiz:edit-avatar' user_id %}">Kemaskini Avatar</a>
+        </button>
+        <button class="btn main-for-showAvatar">
+            <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali ke Halaman Utama Kuiz</a>
+        </button>
+    </p>
+
+    <div class="div-avatar">
+        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
+            <span> dan </span>
+            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
+            <span>, serta pemilik asal ikon-ikon tersebut.</span>
+        </p>
+    </div>
+{% endblock %}
+
+<!-- {% load static %}
 <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
 <!DOCTYPE html>
@@ -66,4 +116,4 @@
     </div>
     </center>
 </body>
-</html>
+</html> -->

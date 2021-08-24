@@ -1,32 +1,22 @@
+{% extends "quiz/baseNonAdmin.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/quizMain.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya</title>
-</head>
-<body>
-    <center>
-        <ul>
-            <li><a href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
-            <li><a href="{% url blog user_type user_id%}">Blog Berita</a></li>
-            <li><a class="active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li><a href="{% url search user_type user_id %}">Carian Maklumat</a></li>
-            <li><a href="{% url dashboard user_type user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span>{{ dashboardNav }}</span>
-            </a></li>
-            <li class="logout"><a href="{% url logout user_id %}">Log Keluar</a></li>
-            <li class="username"><a href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
-        </ul>
-        <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
-        <h2 style="color: crimson;">AMARAN!</h2>
-        <h2 style="font-style: italic; color: coral;">{{ response }}</h2>
-        <button class="btn back-to-dashboard">
-            <a class = "a-back-for-quizMainNonStudentError" href="{% url 'dashboard:index-nonadmin' user_type user_id %}">Kembali ke Profil</a>
-        </button>
-    </center>
-</body>
-</html>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/quizMainNonAdmin.css' %}">
+{% endblock %}
+
+{% block header %}
+    <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
+    <h2 style="color: crimson;">AMARAN!</h2>
+    <h2 style="font-style: italic; color: coral;">{{ response }}</h2>
+{% endblock %}
+
+{% block content %}
+    <button class="btn back-to-dashboard">
+        <a class = "a-back-for-quizMainNonStudentError" href="{% url 'dashboard:index-nonadmin' user_type user_id %}">Kembali ke Profil</a>
+    </button>
+{% endblock %}

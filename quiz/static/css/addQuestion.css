@@ -1,0 +1,153 @@
+/* ul addQuestion tips */
+.ul-addQuestion {
+    font-family: DM Sans; 
+    text-align: left;
+    padding: 20px;
+    border: 2px solid coral;
+    background-color: peachpuff;
+    border-radius: 20px;
+    list-style-position: inside;
+    width: 69.5vw;
+}
+
+/* button */
+.btn {
+    border: none;
+    background-color: inherit;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background: #eee;
+    border-radius: 10px;
+}
+
+.upload-for-addQuestion {
+    background-color: palevioletred;
+    color: white;
+    padding: 0.5vw 1vw;
+    width: 11vw;
+}
+
+.upload-for-addQuestion:hover {
+    color: purple;
+}
+
+.question-for-addQuestion {color: coral;}
+.cancel-for-addQuestion {color: purple;}
+
+/* hyperlinks - path & button */
+.a-main-for-addQuestion, .a-back-for-addQuestion {color: purple;}
+
+.a-cancel-for-addQuestion {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* form fields */
+.difficulty, .isCorrect, .value {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+}
+
+.questionText {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+    width: 40vw;
+}
+
+.answerText {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+    width: 56vw;
+}
+
+.hintText {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+    width: 42vw;
+}
+
+#id_questionImageName, #id_hintImageName0, #id_hintImageName1, #id_hintImageName2 {
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+    width: 13vw;
+}
+
+.imageUpload {
+    position: relative;
+    overflow: hidden;
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+
+.imageUpload input.questionImage, .imageUpload input.hintImage {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+/* table */
+table {
+    border: 1px solid whitesmoke;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: 10px;
+    font-size: 16px;
+    margin: 10px;
+    overflow: hidden;
+}
+  
+th {
+    border-collapse: collapse;
+    padding: 20px;
+    text-align: center;
+    background-color: palevioletred;
+    color: white;
+}
+  
+td {
+    padding: 10px;
+    text-align: center;
+}
+  
+tr:nth-child(even) {
+    background-color: #eee;
+}
+  
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+  
+tr:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+}

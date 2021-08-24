@@ -1,0 +1,47 @@
+/* unordered list */
+.ul-showAvatar {
+    list-style-type: none;
+    background-color: white;
+    padding-left: 0vw;
+    font-size: 16px;
+}
+
+/* button */
+.btn {
+    border: none;
+    background-color: inherit;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background: #eee;
+    border-radius: 10px;
+}
+  
+.avatar-for-showAvatar, .main-for-showAvatar {color: purple;}
+
+/* hyperlink */
+.a-for-showAvatar {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* div credit */
+div-avatar {
+    background-color: rgba(0, 0, 0, 0.2);
+    /* display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center; */
+    border-radius: 10px;
+    width: fit-content;
+    margin: auto;
+    padding: 5px;
+}

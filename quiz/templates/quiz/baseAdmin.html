@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--<title>FutureCruise: Ujian Kerjaya</title>-->
+    {% block title %}{% endblock %}
+
+    {% block js1 %}{% endblock %}
+
+    <link rel="stylesheet" href="{% static 'css/baseQuiz.css' %}">
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <center>    
+        <ul class="ul-navbar">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id%}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
+                <span style="font-style: italic;">Dashboard</span>
+                <span> Admin</span></a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>
+        </ul>
+        
+        {% block header %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block js2 %}{% endblock %}
+    </center>
+</body>
+</html>

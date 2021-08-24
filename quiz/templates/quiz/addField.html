@@ -1,4 +1,75 @@
+{% extends "quiz/baseAdmin.html" %}
 {% load static %}
+{% load quiz_index %}
+
+{% block title %}
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/addField.css' %}">
+{% endblock %}
+
+{% block header %}
+    <h1>Tetapan Kandungan Kuiz</h1>
+    <h2>Tambah Bidang Kerjaya Baharu</h2>
+    <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+        <span><a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
+        <span style="color: gray;">Baharu</span>
+    </h3>
+{% endblock %}
+
+{% block content %}
+    <ul class="ul-addField">
+        Format nama bidang kerjaya yang diterima adalah seperti berikut:
+            <li>Setiap perkataan mesti bermula dengan Huruf Besar, contoh:
+                <ul>
+                    <li>Fesyen & Kecantikan</li>
+                    <li>Seni Bina</li>
+                </ul>
+            <li>Mestilah ditulis dalam Bahasa Malaysia</li>
+    </ul>
+
+    <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
+    <form action="{% url 'quiz:add-field' user_id %}" class="AddFieldForm" method="post">
+        {% csrf_token %}
+        <p>{{ form.name.label_tag }} {{ form.name }}</p>
+        <p>{{ form.image.label_tag }}</p>
+        <div>
+            {% for choice in form.image.field.choices %}
+                <span style="padding: 10px;"></span>
+                {% ifequal forloop.counter|divisibleby:"4" True %}    
+                    <input type="radio" name="image" value="{{ choice.0 }}">
+                    <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                    </div>
+                    <div>
+                {% endifequal %}      
+                {% ifequal forloop.counter|divisibleby:"4" False %}   
+                    <input type="radio" name="image" value="{{ choice.0 }}">
+                    <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
+                {% endifequal %}
+            {% endfor %}
+        </div>
+        <p></p>
+        <button class="btn field-for-addField" type="submit">Simpan</button>
+        <button class="btn cancel-for-addField">
+            <a class="a-cancel-for-addField" href="{% url 'quiz:show-field' user_id %}">Batal</a>
+        </button>
+    </form>
+
+    <div class="div-icon">
+        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
+            <span> dan </span>
+            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
+            <span>, serta pemilik asal ikon-ikon tersebut.</span>
+        </p>
+    </div>
+
+    <p></p>
+{% endblock %}
+
+<!-- {% load static %}
 {% load quiz_index %}
     <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
@@ -97,5 +168,4 @@
         <p></p>
     </center>
 </body>
-</html>
-
+</html> -->

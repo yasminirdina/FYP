@@ -1,0 +1,83 @@
+@viewport {
+    width: device-width;
+    height: device-height;
+    zoom: 1;
+} 
+  
+body {
+    font-family: "DM Sans";
+    position: relative;
+    margin: 0;
+}
+  
+h1 {
+    font-size: 40px;
+    line-height: 1.25em;
+}
+  
+h2 {
+  font-size: 30px;
+}
+  
+/* italic player username */
+.h2a {
+    color: purple;
+}
+  
+h3 {
+    font-size: 16px;
+}
+  
+/* navbar */
+.ul-navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: palevioletred;
+    border-bottom-right-radius: 1vw;
+    border-bottom-left-radius: 1vw;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 100%;
+} 
+  
+.li-navbar{
+    float: left;
+}
+  
+.li-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+}
+  
+.li-a-navbar:hover:not(.active) {
+    background-color: grey;
+    border-radius: 10px;
+}
+  
+.active{
+    background-color: coral;
+    border-radius: 10px;
+}
+  
+.logout {
+    float: right;
+    background-color: crimson;
+    border-radius: 10px;
+}
+  
+.username {
+    float: right;
+    font-style: italic;
+}
+
+p{
+    font-size: 16px;
+}

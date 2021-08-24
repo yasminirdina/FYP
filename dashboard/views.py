@@ -19,7 +19,7 @@ def dashboardMain(request, user_type, user_id):
 
     userRecord = dashboard.models.User.objects.get(ID=user_id)
     username = userRecord.username
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
@@ -89,7 +89,7 @@ def dashboardMainAdmin(request, user_id):
     if userRecord.isActive == False:
         return redirect('home:login')
 
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index-admin'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
@@ -157,10 +157,10 @@ def showProfileNonAdmin(request, user_type, user_id):
         return redirect('home:login')
 
     username = userRecord.username
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'dashboard:index-nonadmin'
+    urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     #if user_id is admin
@@ -234,10 +234,10 @@ def changePassword(request, user_type, user_id):
 
     username = currentUserDetail.username
     #urls for navbar
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'dashboard:index-nonadmin'
+    urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     subtitle = "Tukar Kata Laluan" #h2 tag
@@ -343,10 +343,10 @@ def editProfile(request, user_type, user_id):
 
     username = currentUserDetail.username
     #urls for navbar
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
-    urlSearch = 'dashboard:index-nonadmin'
+    urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     subtitle = "Kemaskini Profil" #h2 tag

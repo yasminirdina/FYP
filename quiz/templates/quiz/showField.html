@@ -1,16 +1,12 @@
+{% extends "quiz/baseAdmin.html" %}
 {% load static %}
 {% load quiz_index %}
-    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- <script src="{% static 'js/sorttable.js' %}"></script> -->
-    <!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js">
-    </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script> -->
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+{% endblock %}
+
+{% block js1 %}
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.9.1/jquery.tablesorter.min.js"></script>
     <script>
@@ -30,126 +26,119 @@
             });
         });
     </script>
-</head>
-<body>
-    <center>
-        <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id %}">Blog Berita</a></li>
-            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span> Admin</span></a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>            
-        </ul>
-        <h1>Tetapan Kandungan Kuiz</h1>
-        <h2>Senarai Bidang Kerjaya</h2>
-        <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
-            <span style="color: gray;">Bidang Kerjaya</span>
-        </h3>
-        <p></p>
-        <form type="get" action="."> 
-            {% if search_text %}
-                <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..." value="{{ search_text }}">
-            {% else %}
-                <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Bidang..."> 
-            {% endif %}
-            <button class="btn2 submit-for-showField" type="submit" >Cari</button> 
-            <button class="btn2 clear-for-showField"><a class="a-clear-for-showField" href="{% url 'quiz:show-field' user_id %}">Padam Carian</a></button>
-        </form>
+{% endblock %}
 
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/showField.css' %}">
+{% endblock %}
+
+{% block header %}
+    <h1>Tetapan Kandungan Kuiz</h1>
+    <h2>Senarai Bidang Kerjaya</h2>
+    <h3><a class="a-main1-for-showField" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+        <span style="color: gray;">Bidang Kerjaya</span>
+    </h3>
+{% endblock %}
+
+{% block content %}
+    <p></p>
+    <form type="get" action="."> 
         {% if search_text %}
-            <p>
-                Keputusan carian bagi kerjaya "{{ search_text }}": {{ gameFieldsCount }}
-            </p>
+            <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..." value="{{ search_text }}">
+        {% else %}
+            <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Bidang..."> 
         {% endif %}
+        <button class="btn submit-for-showField" type="submit" >Cari</button> 
+        <button class="btn clear-for-showField"><a class="a-clear-for-showField" href="{% url 'quiz:show-field' user_id %}">Padam Carian</a></button>
+    </form>
 
-        <div class="div-fieldTips">
-            <span style="font-weight: bold;">TIPS: </span>
-            <span>Anda boleh menyusun rekod-rekod kerjaya berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
-        </div>
-
-        <div class="div-field">
-            <!-- <table class="sortable"> -->
-            <table id="fieldTable" class="tablesorter">
-                {% if gameFields %}
-                    <thead>
-                        <tr>
-                            <th class="sortable" colspan="3" style="padding-right: 0px; padding-left: 0px;">Nama Bidang</th>
-                            <th class="sortable">Bilangan Soalan</th>
-                            <th class="sortable">Tarikh Kemaskini Terkini</th>
-                            <th>Dipapar dalam Kuiz</th>
-                            <th>Soalan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for field in gameFields %}
-                            <tr>
-                                <td><button class="btn3 change edit-icon"><a class="a-icon-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
-                                <td style="padding-right: 0px;"><img src="{% static 'images/quiz_field/' %}{{ field.imageURL.imageURL }}" width="50px" height="50px"></td>
-                                <td style="padding-left: 20px; padding-right: 0px; text-align: left;">{{ field.name }}</td>
-                                <!--{% if lengthFQCL > 1 %}-->
-                                <td>{{ fieldQuesCountList|index:forloop.counter0 }}</td>
-                                <!--{% else %}
-                                    <td>{{ fieldQuesCountList|index:0 }}</td>
-                                    <td>0</td>
-                                {% endif %}-->
-                                <!--<td sorttable_customkey="field.lastEdited">{{ field.lastEdited|date:"d/m/Y, h:i a" }}</td>-->
-                                <td>{{ field.lastEdited|date:"d/m/Y, h:i A" }}</td>
-                                <td>
-                                    {% if field.show == True %}
-                                        <button class="btn3 status" style="background-color: green;">Ya</button>
-                                    {% else %}
-                                        <button class="btn3 status" style="background-color: crimson">Tidak</button></td>
-                                    {% endif %}
-                                <td><button class="btn3 change question"><a class="a-question-for-showField" href="{% url showquestion user_id field.id %}">Lihat Soalan</a></button></td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                {% else %}
-                    <thead>
-                        <tr>
-                            <th>Nama Bidang</th>
-                            <th>Bilangan Soalan</th>
-                            <th>Tarikh Kemaskini Terkini</th>
-                            <th>Dipapar dalam Kuiz</th>
-                            <th>Soalan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                {% endif %}
-            </table>
-        </div>
-
+    {% if search_text %}
         <p>
-            <button class="btn2 field-for-showField">
-                <a class="a-field-for-showField" href="{% url 'quiz:add-field' user_id %}">Tambah Bidang Kerjaya Baharu</a>
-            </button>
-            <button class="btn2 main-for-showField">
-                <a class="a-main-for-showField" href="{% url 'quiz:index-admin' user_id %}">Kembali ke Halaman Utama Kuiz</a>
-            </button>
+            Keputusan carian bagi kerjaya "{{ search_text }}": {{ gameFieldsCount }}
         </p>
+    {% endif %}
 
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: fit-content; margin: auto; padding: 5px;">
-            <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
-                <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
-                <span> dan </span>
-                <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
-                <span>, serta pemilik asal ikon-ikon tersebut.</span>
-            </p>
-        </div>
-        <p></p>
-    </center>
-</body>
-</html>
+    <div class="div-fieldTips">
+        <span style="font-weight: bold;">TIPS: </span>
+        <span>Anda boleh menyusun rekod-rekod kerjaya berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
+    </div>
 
+    <div class="div-field">
+        <!-- <table class="sortable"> -->
+        <table id="fieldTable" class="tablesorter">
+            {% if gameFields %}
+                <thead>
+                    <tr>
+                        <th class="sortable" colspan="3" style="padding-right: 0px; padding-left: 0px;">Nama Bidang</th>
+                        <th class="sortable">Bilangan Soalan</th>
+                        <th class="sortable">Tarikh Kemaskini Terkini</th>
+                        <th>Dipapar dalam Kuiz</th>
+                        <th>Soalan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for field in gameFields %}
+                        <tr>
+                            <td><button class="btn2 change edit-icon"><a class="a-icon-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
+                            <td style="padding-right: 0px;"><img src="{% static 'images/quiz_field/' %}{{ field.imageURL.imageURL }}" width="50px" height="50px"></td>
+                            <td style="padding-left: 20px; padding-right: 0px; text-align: left;">{{ field.name }}</td>
+                            <!--{% if lengthFQCL > 1 %}-->
+                            <td>{{ fieldQuesCountList|index:forloop.counter0 }}</td>
+                            <!--{% else %}
+                                <td>{{ fieldQuesCountList|index:0 }}</td>
+                                <td>0</td>
+                            {% endif %}-->
+                            <!--<td sorttable_customkey="field.lastEdited">{{ field.lastEdited|date:"d/m/Y, h:i a" }}</td>-->
+                            <td>{{ field.lastEdited|date:"d/m/Y, h:i A" }}</td>
+                            <td>
+                                {% if field.show == True %}
+                                    <button class="btn2 status" style="background-color: green;">Ya</button>
+                                {% else %}
+                                    <button class="btn2 status" style="background-color: crimson">Tidak</button></td>
+                                {% endif %}
+                            <td><button class="btn2 change question"><a class="a-question-for-showField" href="{% url showquestion user_id field.id %}">Lihat Soalan</a></button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% else %}
+                <thead>
+                    <tr>
+                        <th>Nama Bidang</th>
+                        <th>Bilangan Soalan</th>
+                        <th>Tarikh Kemaskini Terkini</th>
+                        <th>Dipapar dalam Kuiz</th>
+                        <th>Soalan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            {% endif %}
+        </table>
+    </div>
+
+    <p>
+        <button class="btn field-for-showField">
+            <a class="a-field-for-showField" href="{% url 'quiz:add-field' user_id %}">Tambah Bidang Kerjaya Baharu</a>
+        </button>
+        <button class="btn main-for-showField">
+            <a class="a-main2-for-showField" href="{% url 'quiz:index-admin' user_id %}">Kembali ke Halaman Utama Kuiz</a>
+        </button>
+    </p>
+
+    <div class="div-icon">
+        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
+            <span> dan </span>
+            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
+            <span>, serta pemilik asal ikon-ikon tersebut.</span>
+        </p>
+    </div>
+    <p></p>
+{% endblock %}

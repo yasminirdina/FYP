@@ -1,407 +1,204 @@
+{% extends "quiz/baseAdmin.html" %}
 {% load static %}
 {% load quiz_index %}
-    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
-    <style>
-        .ul-addQuestion {
-            font-family: DM Sans; 
-            text-align: left;
-            padding: 20px;
-            border: 2px solid coral;
-            background-color: peachpuff;
-            border-radius: 20px;
-            list-style-position: inside;
-            width: 69.5vw;
-        }
-        
-        /* Method 1: */
-        /* #custom-button, #custom-button2 {
-        background: rgba(222, 184, 135, 0);
-        border-radius: 10px;
-        cursor: pointer;
-        border: 0px;
+{% endblock %}
 
-        }
-        #custom-button:hover, #custom-button2:hover {
-            background: rgba(13, 177, 40, 0.226);
-            border-radius: 10px;
-            cursor: pointer;
-            border: 0px;
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/addQuestion.css' %}">
+{% endblock %}
 
-        }
-        #custom-text {
-            display: inline;
-        }  */ 
+{% block header %}
+    <h1>Tetapan Kandungan Kuiz</h1>
+    <h2>Tambah Soalan Kuiz Baharu</h2>
+    <h3><a class="a-main-for-addQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
+        <a class="a-back-for-addQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
+        <a class="a-back-for-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">{{ currentGameFieldName }}</a> > 
+        <span style="color: gray;">Soalan Baharu</span>
+    </h3>
+{% endblock %}
 
-        /* Method 3 */
-        #id_questionImageName, #id_hintImageName0, #id_hintImageName1, #id_hintImageName2 {
-            font-size: 16px;
-            font-family: "DM Sans";
-            border-radius: 10px;
-            border: 1px solid lightgray;
-            padding: 3px;
-            width: 13vw;
-        }
+{% block content %}
+    <p></p>
 
-        .imageUpload {
-            position: relative;
-            overflow: hidden;
-            margin-top: 10px;
-            margin-bottom: 0px;
-        }
+    <ul class="ul-addQuestion">
+        <span style="font-weight: bolder;">PERINGATAN</span>
+            <li>
+                <span style="text-decoration: underline;">Panjang setiap teks</span>
+                <span>: Tidak melebihi 500 karakter</span>
+            </li>
+            <li>
+                <span style="text-decoration: underline;">Bilangan minimum dan maksimum bagi</span>
+                <span>:</span>
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Jawapan</span>
+                        <span>: 2 hingga 4</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: bold;">Petunjuk</span>
+                        <span>: 0 hingga 3</span>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <span style="text-decoration: underline;">Pilihan bagi</span>
+                <span>:</span>
+                <ul>
+                    <li>
+                        <span style="font-weight: bold;">Tahap Kesukaran Soalan</span>
+                        <span>: Mudah, Sederhana, Sukar</span>
+                    </li>
+                    <li>
+                        <span style="font-weight: bold;">Nilai Petunjuk</span>
+                        <span>: 3 hingga 7</span>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <span>Anda hanya boleh memuat naik </span>
+                <span style="font-weight: bold;"> SATU </span>
+                <span>sahaja gambar sokongan bagi setiap soalan dan/atau petunjuk.</span>
+            </li>
+            <li>
+                <span>Anda hanya boleh menanda </span>
+                <span style="font-weight: bold;"> SATU </span>
+                <span>sahaja jawapan yang betul</span>
+            </li>
+            <li>
+                Nilai petunjuk menunjukkan nilai yang pemain/pelajar perlu tukarkan dengan jumlah mata terkumpul mereka
+                untuk menggunakan petunjuk berkenaan
+            </li>
+    </ul>
 
-        .imageUpload input.questionImage, .imageUpload input.hintImage {
-            position: absolute;
-            top: 0;
-            right: 0;
-            margin: 0;
-            padding: 0;
-            font-size: 16px;
-            cursor: pointer;
-            opacity: 0;
-            filter: alpha(opacity=0);
-        }
+    <form action="{% url 'quiz:add-question' user_id field_id %}" method="post" enctype='multipart/form-data'>
+        {% csrf_token %}
 
-        .upload-for-addQuestion {
-            background-color: palevioletred;
-            color: white;
-            padding: 0.5vw 1vw;
-            width: 11vw;
-        }
+        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
+            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
+                Soalan
+            </p>
+        </div>
+        <p style="color: crimson; font-style: italic;">{{ errormsg1 }}</p>
+        <table style="width: 72.5vw;">
+            <thead>
+                <tr>
+                    <th>Teks Soalan</th>
+                    <th>Gambar Sokongan</th>
+                    <th>Tahap Kesukaran</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ questionForm.questionText }}</td>
+                    <td>
+                        <!--
+                            Method 3:
+                        -->
+                        <input id="id_questionImageName" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                        <div class="imageUpload btn upload-for-addQuestion">
+                            <span>Muat naik gambar</span>
+                            <input name="{{ questionForm.questionImage.html_name }}" id="{{ questionForm.questionImage.id_for_label }}"
+                            type="file" accept="image/*" class="questionImage" />
+                        </div>
+                    </td>
+                    <td>{{ questionForm.difficulty }}</td>
+                </tr>
+            </tbody>
+        </table>
 
-        .upload-for-addQuestion:hover {
-            color: purple;
-        }
+        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;" >
+            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
+                Jawapan
+            </p>
+        </div>
+        <p style="color: crimson; font-style: italic;">{{ errormsg2 }}</p>
+        <p style="color: crimson; font-style: italic;">{{ errormsg3 }}</p>
+        {{ answer_formset.management_form }}
+        <table style="width: 72.5vw;">
+            <thead>
+                <tr>
+                    <th>Teks Jawapan</th>
+                    <th>Jawapan yang Betul?</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in answer_formset %}
+                <tr class="answer-formset">
+                    <td>{{ form.answerText }}</td>
+                    <td>{{ form.isCorrect }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-/*         .questionImage, .hintImage{
-            background: #f7f7f7; 
-            padding: 8px;
-            border: 1px solid #e3e3e3; 
-            border-radius: 5px; 
-            border: 1px solid #ccc; 
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-        } */
+        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
+            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
+                Petunjuk
+            </p>
+        </div>
+        <p style="color: crimson; font-style: italic;">{{ errormsg4 }}</p>
+        <p style="color: crimson; font-style: italic;">{{ errormsg5 }}</p>
+        {{ hint_formset.management_form }}
+        <table style="width: 72.5vw;">
+            <thead>
+                <tr>
+                    <th>Teks Petunjuk</th>
+                    <th>Gambar Sokongan</th>
+                    <th>Nilai Petunjuk</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in hint_formset %}
+                <tr class="hint-formset">
+                    <td>{{ form.hintText }}</td>
+                    <td>
+                        {% if forloop.counter0 == 0 %}
+                            <input id="id_hintImageName0" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                        {% elif forloop.counter0 == 1 %}
+                            <input id="id_hintImageName1" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                        {% elif forloop.counter0 == 2 %}
+                            <input id="id_hintImageName2" placeholder="Tiada gambar dipilih" disabled="disabled" />
+                        {% endif %}
+                        <div class="imageUpload btn upload-for-addQuestion">
+                            <span>Muat naik gambar</span>
+                            <input name="{{ form.hintImage.html_name }}" id="{{ form.hintImage.id_for_label }}"
+                            type="file" accept="image/*" class="hintImage" />
+                        </div>
+                    </td>
+                    <td>{{ form.value }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-        input.questionImage::-webkit-file-upload-button, .hintImage::-webkit-file-upload-button {
-            background: #f7f7f7; 
-            padding: 8px;
-            border: 1px solid #e3e3e3; 
-            border-radius: 5px; 
-            border: 1px solid #ccc; 
-            display: inline-block;
-            padding: 6px 12px;
-            cursor: pointer;
-            font-family: "DM Sans";
-            font-size: 16px;
-        }
-
-        input.questionImage::-webkit-file-upload-button:hover, .hintImage::-webkit-file-upload-button:hover{
-            background: grey; 
-            color: white;
-            font-weight: bold;
-        }
-
-        input.questionImage:last-child, .hintImage:last-child{
-            font-family: "DM Sans";
-            font-size: 16px;
-            width: 16.5vw;
-        }
-    </style>
-</head>
-<body>
-    <center>
-        <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id %}">Blog Berita</a></li>
-            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span> Admin</span></a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>            
-        </ul>
-        <h1>Tetapan Kandungan Kuiz</h1>
-        <h2>Tambah Soalan Kuiz Baharu</h2>
-        <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
-            <a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
-            <a class="a-back1-for-showQuestion" href="{% url 'quiz:show-question' user_id field_id %}">{{ currentGameFieldName }}</a> > 
-            <span style="color: gray;">Soalan Baharu</span>
-        </h3>
         <p></p>
+        <button class="btn question-for-addQuestion" type="submit">Simpan</button>
+        <button class="btn cancel-for-addQuestion">
+            <a class="a-cancel-for-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Batal</a>
+        </button>
+    </form>
+{% endblock %}
 
-        <ul class="ul-addQuestion">
-            <span style="font-weight: bolder;">PERINGATAN</span>
-                <li>
-                    <span style="text-decoration: underline;">Panjang setiap teks</span>
-                    <span>: Tidak melebihi 500 karakter</span>
-                </li>
-                <li>
-                    <span style="text-decoration: underline;">Bilangan minimum dan maksimum bagi</span>
-                    <span>:</span>
-                    <ul>
-                        <li>
-                            <span style="font-weight: bold;">Jawapan</span>
-                            <span>: 2 hingga 4</span>
-                        </li>
-                        <li>
-                            <span style="font-weight: bold;">Petunjuk</span>
-                            <span>: 0 hingga 3</span>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <span style="text-decoration: underline;">Pilihan bagi</span>
-                    <span>:</span>
-                    <ul>
-                        <li>
-                            <span style="font-weight: bold;">Tahap Kesukaran Soalan</span>
-                            <span>: Mudah, Sederhana, Sukar</span>
-                        </li>
-                        <li>
-                            <span style="font-weight: bold;">Nilai Petunjuk</span>
-                            <span>: 3 hingga 7</span>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <span>Anda hanya boleh memuat naik </span>
-                    <span style="font-weight: bold;"> SATU </span>
-                    <span>sahaja gambar sokongan bagi setiap soalan dan/atau petunjuk.</span>
-                </li>
-                <li>
-                    <span>Anda hanya boleh menanda </span>
-                    <span style="font-weight: bold;"> SATU </span>
-                    <span>sahaja jawapan yang betul</span>
-                </li>
-                <li>
-                    Nilai petunjuk menunjukkan nilai yang pemain/pelajar perlu tukarkan dengan jumlah mata terkumpul mereka
-                    untuk menggunakan petunjuk berkenaan
-                </li>
-        </ul>
+{% block js2 %}
+    <script type="text/javascript">
+        /* Method 3 */
+        document.getElementById("id_questionImage").onchange = function () {
+            document.getElementById("id_questionImageName").value = this.files[0].name;
+        };
 
-        <form action="{% url 'quiz:add-question' user_id field_id %}" method="post" enctype='multipart/form-data'>
-            {% csrf_token %}
+        document.getElementById("id_hint-0-hintImage").onchange = function () {
+            document.getElementById("id_hintImageName0").value = this.files[0].name;
+        };
 
-            <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
-                <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                    Soalan
-                </p>
-            </div>
-            <p style="color: crimson; font-style: italic;">{{ errormsg1 }}</p>
-            <table style="width: 72.5vw;">
-                <thead>
-                    <tr>
-                        <th>Teks Soalan</th>
-                        <th>Gambar Sokongan</th>
-                        <th>Tahap Kesukaran</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ questionForm.questionText }}</td>
-                        <td>
-                            <!--
-                                Method 1:
-                                Problem: cannot display chosen file name.
-                                Can edit the style follow button biasa.
-                            -->
-                            <!-- <input type="file" hidden="hidden" name="{{ questionForm.questionImage.html_name }}" accept="image/*" id="{{ questionForm.questionImage.id_for_label }}">
-                            <button type="button" id="custom-button"><i class="questionImage">Muat naik gambar</i></button>
-                            <p></p> 
-                            <span id="custom-text">
-                                {% if questionForm.questionImage.value %}
-                                    {{ questionForm.questionImage.value }}
-                                {% else %}
-                                    Tiada gambar dipilih
-                                {% endif %}
-                            </span> -->
+        document.getElementById("id_hint-1-hintImage").onchange = function () {
+            document.getElementById("id_hintImageName1").value = this.files[0].name;
+        };
 
-                            <!--
-                                Method 2:
-                            -->
-                            <!-- <label for="{{ questionForm.questionImage.id_for_label }}" id="questionImage-label">
-                                Muat naik gambar
-                            </label>
-                            <input name="{{ questionForm.questionImage.html_name }}" class="questionImage" type="file" id="{{ questionForm.questionImage.id_for_label }}" 
-                                accept="image/*" style="display: none;"/> -->
-
-                            <!--
-                                Method 3:
-                            -->
-
-                            <input id="id_questionImageName" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                            <div class="imageUpload btn2 upload-for-addQuestion">
-                                <span>Muat naik gambar</span>
-                                <input name="{{ questionForm.questionImage.html_name }}" id="{{ questionForm.questionImage.id_for_label }}"
-                                type="file" accept="image/*" class="questionImage" />
-                            </div>
-                        </td>
-                        <!--<td>{{ questionForm.questionImage }}</td>-->
-                        <td>{{ questionForm.difficulty }}</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;" >
-                <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                    Jawapan
-                </p>
-            </div>
-            <p style="color: crimson; font-style: italic;">{{ errormsg2 }}</p>
-            <p style="color: crimson; font-style: italic;">{{ errormsg3 }}</p>
-            {{ answer_formset.management_form }}
-            <table style="width: 72.5vw;">
-                <thead>
-                    <tr>
-                        <th>Teks Jawapan</th>
-                        <th>Jawapan yang Betul?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in answer_formset %}
-                    <tr class="answer-formset">
-                        <td>{{ form.answerText }}</td>
-                        <td>{{ form.isCorrect }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
-                <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                    Petunjuk
-                </p>
-            </div>
-            <p style="color: crimson; font-style: italic;">{{ errormsg4 }}</p>
-            <p style="color: crimson; font-style: italic;">{{ errormsg5 }}</p>
-            {{ hint_formset.management_form }}
-            <table style="width: 72.5vw;">
-                <thead>
-                    <tr>
-                        <th>Teks Petunjuk</th>
-                        <th>Gambar Sokongan</th>
-                        <th>Nilai Petunjuk</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in hint_formset %}
-                    <tr class="hint-formset">
-                        <td>{{ form.hintText }}</td>
-                        <!-- <td> -->
-                            <!-- <input type="file" hidden="hidden" name="hintImage" accept="image/*" id="id_hintImage">
-                            <button type="button" id="custom-button2"><i class="{{ form.hintImage.field.widget.attrs.class }}">Muat naik gambar</i></button> -->
-                            <!-- <label for="choose-file2" class="{{ form.hintImage.field.widget.attrs.class }}" id="choose-file2-label">
-                                Muat naik gambar
-                            </label>
-                            <input name="hintImage" type="file" id="choose-file2" 
-                                accept="image/*" style="display: none;"/> -->
-                        <!-- </td> -->
-                        <td>
-                            <!--{{ form.hintImage }}-->
-                            {% if forloop.counter0 == 0 %}
-                                <input id="id_hintImageName0" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                            {% elif forloop.counter0 == 1 %}
-                                <input id="id_hintImageName1" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                            {% elif forloop.counter0 == 2 %}
-                                <input id="id_hintImageName2" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                            {% endif %}
-                            <div class="imageUpload btn2 upload-for-addQuestion">
-                                <span>Muat naik gambar</span>
-                                <input name="{{ form.hintImage.html_name }}" id="{{ form.hintImage.id_for_label }}"
-                                type="file" accept="image/*" class="hintImage" />
-                            </div>
-                        </td>
-                        <td>{{ form.value }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <p></p>
-            <button class="btn2 question-for-addQuestion" type="submit">Simpan</button>
-            <button class="btn2 cancel-for-addQuestion">
-                <a class="a-cancel-for-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Batal</a>
-            </button>
-        </form>
-
-        <script type="text/javascript">
-            /* Method 1 */
-            /* const realFileBtn = document.getElementById("id_questionImage");
-            const customBtn = document.getElementById("custom-button");
-
-            customBtn.addEventListener("click", function() {
-                realFileBtn.click();
-            }); */
-
-            /* Method 3 */
-            document.getElementById("id_questionImage").onchange = function () {
-                document.getElementById("id_questionImageName").value = this.files[0].name;
-            };
-
-            document.getElementById("id_hint-0-hintImage").onchange = function () {
-                document.getElementById("id_hintImageName0").value = this.files[0].name;
-            };
-
-            document.getElementById("id_hint-1-hintImage").onchange = function () {
-                document.getElementById("id_hintImageName1").value = this.files[0].name;
-            };
-
-            document.getElementById("id_hint-2-hintImage").onchange = function () {
-                document.getElementById("id_hintImageName2").value = this.files[0].name;
-            };
-
-/*             const realFileBtn = document.getElementById("id_questionImage");
-            const customBtn = document.getElementById("custom-button");
-            const realFileBtn2 = document.getElementById("id_hintImage");
-            const customBtn2 = document.getElementById("custom-button2");
-
-            customBtn.addEventListener("click", function() {
-                realFileBtn.click();
-            });  
-
-            customBtn2.addEventListener("click", function() {
-                realFileBtn2.click();
-            }); */  
-
-/*             $(document).ready(function () {
-                $('#choose-file').change(function () {
-                    var i = $(this).prev('label').clone();
-                    var file = $('#choose-file')[0].files[0].name;
-                    $(this).prev('label').text(file);
-                }); 
-
-                $('#choose-file2').change(function () {
-                    var i = $(this).prev('label').clone();
-                    var file = $('#choose-file2')[0].files[0].name;
-                    $(this).prev('label').text(file);
-                }); 
-            }); */
-        </script>
-
-    <!-- Include formset plugin - including jQuery dependency -->
-    <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script src="{% static 'js/jquery.formset.js' %}"></script>
-    <script>
-        $('.answer-formset').formset({
-            addText: 'Tambah Soalan',
-            deleteText: 'Buang Soalan'
-        });
-         
-        $('.hint-formset').formset({
-            addText: 'Tambah Petunjuk',
-            deleteText: 'Buang Petunjuk'
-        }); 
-    </script> -->
-
-    </center>
-</body>
-</html>
+        document.getElementById("id_hint-2-hintImage").onchange = function () {
+            document.getElementById("id_hintImageName2").value = this.files[0].name;
+        };
+    </script>
+{% endblock %}

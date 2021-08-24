@@ -1,13 +1,12 @@
+{% extends "quiz/baseAdmin.html" %}
 {% load static %}
 {% load quiz_index %}
-    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <!-- <script src="{% static 'js/sorttable.js' %}"></script> -->
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
+{% endblock %}
+
+{% block js1 %}
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.9.1/jquery.tablesorter.min.js"></script>
     <script>
@@ -45,195 +44,180 @@
             });
         });
     </script>
-</head>
-<body>
-    <center>
-        <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id %}">Blog Berita</a></li>
-            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span> Admin</span></a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>            
-        </ul>
-        <h1>Tetapan Kandungan Kuiz</h1>
-        <h2>Senarai Soalan Kuiz</h2>
-        <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
-            <a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
-            <span style="color: gray;">{{ currentGameFieldName }}</span>
-        </h3>
-        <p></p>
-        <form type="get" action="."> 
-            {% if search_text %}
-                <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..." value="{{ search_text }}">
-            {% else %}
-                <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..."> 
-            {% endif %}
-            
-            <label for="difficulty" style="margin-left: 10px;">Pilih tahap kesukaran:</label>
-                <select name="difficulty" id="difficulty">
-                    {% if filter_selected == 'Mudah' %}
-                        <option value="Tiada">---------</option>
-                        <option value="Mudah" selected="selected">Mudah</option>
-                        <option value="Sederhana">Sederhana</option>
-                        <option value="Sukar">Sukar</option>
-                    {% elif filter_selected == 'Sederhana' %}
-                        <option value="Tiada">---------</option>
-                        <option value="Mudah">Mudah</option>
-                        <option value="Sederhana" selected="selected">Sederhana</option>
-                        <option value="Sukar">Sukar</option>
-                    {% elif filter_selected == 'Sukar' %}
-                        <option value="Tiada">---------</option>
-                        <option value="Mudah">Mudah</option>
-                        <option value="Sederhana">Sederhana</option>
-                        <option value="Sukar" selected="selected">Sukar</option>
-                    {% else %}
-                        <option value="Tiada">---------</option>
-                        <option value="Mudah">Mudah</option>
-                        <option value="Sederhana">Sederhana</option>
-                        <option value="Sukar">Sukar</option>
-                    {% endif %}
-                </select>
+{% endblock %}
 
-            <button class="btn2 submit1-for-showQuestion" type="submit" >Cari</button> 
-            <button class="btn2 clear1-for-showQuestion"><a class="a-clear1-for-showQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Padam Carian</a></button>
-        </form>
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/showQuestion.css' %}">
+{% endblock %}
 
-        {% if search_text and filter_selected %}
-            {% if filter_selected == 'Tiada' %}
-                <p>
-                    Keputusan carian soalan bagi kata kunci "{{ search_text }}": {{ gameQuestionsCount }}
-                </p>
-            {% else %}
-                <p>
-                    Keputusan carian soalan bagi kata kunci "{{ search_text }}" dan tahap kesukaran "{{ filter_selected }}": {{ gameQuestionsCount }}
-                </p>
-            {% endif %}
-        {% elif search_text %}   
+{% block header %}
+    <h1>Tetapan Kandungan Kuiz</h1>
+    <h2>Senarai Soalan Kuiz</h2>
+    <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
+        <a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
+        <span style="color: gray;">{{ currentGameFieldName }}</span>
+    </h3>
+{% endblock %}
+
+{% block content %}
+    <p></p>
+    <form type="get" action="."> 
+        {% if search_text %}
+            <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..." value="{{ search_text }}">
+        {% else %}
+            <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..."> 
+        {% endif %}
+        
+        <label for="difficulty" style="margin-left: 10px;">Pilih tahap kesukaran:</label>
+            <select name="difficulty" id="difficulty">
+                {% if filter_selected == 'Mudah' %}
+                    <option value="Tiada">---------</option>
+                    <option value="Mudah" selected="selected">Mudah</option>
+                    <option value="Sederhana">Sederhana</option>
+                    <option value="Sukar">Sukar</option>
+                {% elif filter_selected == 'Sederhana' %}
+                    <option value="Tiada">---------</option>
+                    <option value="Mudah">Mudah</option>
+                    <option value="Sederhana" selected="selected">Sederhana</option>
+                    <option value="Sukar">Sukar</option>
+                {% elif filter_selected == 'Sukar' %}
+                    <option value="Tiada">---------</option>
+                    <option value="Mudah">Mudah</option>
+                    <option value="Sederhana">Sederhana</option>
+                    <option value="Sukar" selected="selected">Sukar</option>
+                {% else %}
+                    <option value="Tiada">---------</option>
+                    <option value="Mudah">Mudah</option>
+                    <option value="Sederhana">Sederhana</option>
+                    <option value="Sukar">Sukar</option>
+                {% endif %}
+            </select>
+
+        <button class="btn submit1-for-showQuestion" type="submit" >Cari</button> 
+        <button class="btn clear1-for-showQuestion"><a class="a-clear1-for-showQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Padam Carian</a></button>
+    </form>
+
+    {% if search_text and filter_selected %}
+        {% if filter_selected == 'Tiada' %}
             <p>
                 Keputusan carian soalan bagi kata kunci "{{ search_text }}": {{ gameQuestionsCount }}
             </p>
-        {% elif filter_selected %}
+        {% else %}
             <p>
-                Keputusan carian soalan bagi tahap kesukaran "{{ filter_selected }}": {{ gameQuestionsCount }}
+                Keputusan carian soalan bagi kata kunci "{{ search_text }}" dan tahap kesukaran "{{ filter_selected }}": {{ gameQuestionsCount }}
             </p>
         {% endif %}
-
-        <div class="div-quesTips">
-            <span style="font-weight: bold;">TIPS: </span>
-            <span>Anda boleh menyusun rekod-rekod soalan berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
-        </div>
-
-        <div class="div-question">
-            <!-- <table class="sortable"> -->
-            <table id="quesTable" class="tablesorter">
-                {% if gameQuestions %}
-                    <thead>
-                        <tr>
-                            <th>No.</th>
-                            <th class="sortable">Soalan</th>
-                            <th>Tahap Kesukaran</th>
-                            <th class="sortable">Markah</th>
-                            <th class="sortable">Had Masa Menjawab</th>
-                            <th>Gambar Sokongan</th>
-                            <th>Pilihan Jawapan</th>
-                            <th>Petunjuk</th>
-                            <th class="sortable">Tarikh Kemaskini Terkini</th>
-                            <th>Kemaskini</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for question in gameQuestions %}
-                            <tr>
-                                <td style="vertical-align: top;">{{ question.id }}</td>
-                                <td style="vertical-align: top; text-align: left; width: 10vw; overflow-wrap: inherit;">{{ question.questionText|truncatewords:10 }}</td>
-                                <td style="vertical-align: top;">{{ question.difficulty }}</td>
-                                <td style="vertical-align: top;">{{ question.points }}</td>
-                                <td style="vertical-align: top;">{{ question.timeLimit }} saat</td>
-                                <td style="vertical-align: top;">
-                                    {% if question.questionImage %}
-                                        <img src="{{ question.questionImage.url}}" width="50px" height="50px">
-                                    {% endif %}
-                                    </td>
-                                <td style="vertical-align: top;">
-                                    <ol style="text-align: left;">
-                                        {% for answer in allGameQuesAns %}
-                                            {% if answer.questionID_id == question.id %}
-                                                {% if answer.isCorrect == True %}
-                                                    <li style="font-weight: bold; background-color: peachpuff; border-radius: 5px;">{{ answer.answerText|truncatechars:20 }}</li>
-                                                {% else %}
-                                                    <li>{{ answer.answerText|truncatechars:20 }}</li>
-                                                {% endif %}
-                                            {% endif %}
-                                        {% endfor %}
-                                    </ol>
-                                </td>
-                                <td style="vertical-align: top; text-align: center;">
-                                    {% if question.id in allGameHintQuesIDList %}
-                                        Ya
-                                    {% else %}
-                                        Tidak
-                                    {% endif %}
-                                    <!-- {% for hint in allGameQuesHint %}
-                                        {% if hint.questionID_id == question.id %}
-                                            Ya
-                                        {% else %}
-                                            Tiada
-                                        {% endif %}
-                                    {% endfor %} -->
-                                </td>
-                                <td style="vertical-align: top;">{{ question.lastEdited|date:"d/m/Y, h:i A" }}</td>
-                                <td style="vertical-align: top;">
-                                    <button class="btn3 edit-for-showQuestion">
-                                        <a class="a-question-for-showQuestion" href="{% url 'quiz:edit-question' user_id field_id question.id %}">
-                                            Kemaskini Soalan
-                                        </a>
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                {% else %}
-                    <thead>
-                        <tr>
-                            <th>Soalan</th>
-                            <th>Tahap Kesukaran</th>
-                            <th>Markah</th>
-                            <th>Had Masa Menjawab</th>
-                            <th>Pilihan Jawapan</th>
-                            <th>Petunjuk</th>
-                            <th>Tarikh Kemaskini Terkini</th>
-                            <th>Kemaskini</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                {% endif %}
-            </table>
-        </div>
-
+    {% elif search_text %}   
         <p>
-            <button class="btn2 add-for-showQuestion">
-                <a class="a-add-for-showQuestion" href="{% url 'quiz:add-question' user_id field_id %}">Tambah Soalan Baharu</a>
-            </button>
-            <button class="btn2 back-for-showQuestion">
-                <a class="a-back2-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Kembali</a>
-            </button>
+            Keputusan carian soalan bagi kata kunci "{{ search_text }}": {{ gameQuestionsCount }}
         </p>
-    </center>
-</body>
-</html>
+    {% elif filter_selected %}
+        <p>
+            Keputusan carian soalan bagi tahap kesukaran "{{ filter_selected }}": {{ gameQuestionsCount }}
+        </p>
+    {% endif %}
 
+    <div class="div-quesTips">
+        <span style="font-weight: bold;">TIPS: </span>
+        <span>Anda boleh menyusun rekod-rekod soalan berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
+    </div>
+
+    <div class="div-question">
+        <table id="quesTable" class="tablesorter">
+            {% if gameQuestions %}
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th class="sortable">Soalan</th>
+                        <th>Tahap Kesukaran</th>
+                        <th class="sortable">Markah</th>
+                        <th class="sortable">Had Masa Menjawab</th>
+                        <th>Gambar Sokongan</th>
+                        <th>Pilihan Jawapan</th>
+                        <th>Petunjuk</th>
+                        <th class="sortable">Tarikh Kemaskini Terkini</th>
+                        <th>Kemaskini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for question in gameQuestions %}
+                        <tr>
+                            <td style="vertical-align: top;">{{ question.id }}</td>
+                            <td style="vertical-align: top; text-align: left; width: 10vw; overflow-wrap: inherit;">{{ question.questionText|truncatewords:10 }}</td>
+                            <td style="vertical-align: top;">{{ question.difficulty }}</td>
+                            <td style="vertical-align: top;">{{ question.points }}</td>
+                            <td style="vertical-align: top;">{{ question.timeLimit }} saat</td>
+                            <td style="vertical-align: top;">
+                                {% if question.questionImage %}
+                                    <img src="{{ question.questionImage.url}}" width="50px" height="50px">
+                                {% endif %}
+                                </td>
+                            <td style="vertical-align: top;">
+                                <ol style="text-align: left; vertical-align: top; margin: 0px;">
+                                    {% for answer in allGameQuesAns %}
+                                        {% if answer.questionID_id == question.id %}
+                                            {% if answer.isCorrect == True %}
+                                                <li style="font-weight: bold; background-color: peachpuff; border-radius: 5px;">{{ answer.answerText|truncatechars:20 }}</li>
+                                            {% else %}
+                                                <li>{{ answer.answerText|truncatechars:20 }}</li>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ol>
+                            </td>
+                            <td style="vertical-align: top; text-align: center;">
+                                {% if question.id in allGameHintQuesIDList %}
+                                    Ya
+                                {% else %}
+                                    Tidak
+                                {% endif %}
+                            </td>
+                            <td style="vertical-align: top;">{{ question.lastEdited|date:"d/m/Y, h:i A" }}</td>
+                            <td style="vertical-align: top;">
+                                <button class="btn2 edit-for-showQuestion">
+                                    <a class="a-question-for-showQuestion" href="{% url 'quiz:edit-question' user_id field_id question.id %}">
+                                        Kemaskini Soalan
+                                    </a>
+                                </button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            {% else %}
+                <thead>
+                    <tr>
+                        <th>Soalan</th>
+                        <th>Tahap Kesukaran</th>
+                        <th>Markah</th>
+                        <th>Had Masa Menjawab</th>
+                        <th>Pilihan Jawapan</th>
+                        <th>Petunjuk</th>
+                        <th>Tarikh Kemaskini Terkini</th>
+                        <th>Kemaskini</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            {% endif %}
+        </table>
+    </div>
+
+    <p>
+        <button class="btn add-for-showQuestion">
+            <a class="a-add-for-showQuestion" href="{% url 'quiz:add-question' user_id field_id %}">Tambah Soalan Baharu</a>
+        </button>
+        <button class="btn back-for-showQuestion">
+            <a class="a-back2-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Kembali</a>
+        </button>
+    </p>
+{% endblock %}

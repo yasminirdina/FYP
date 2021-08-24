@@ -1,0 +1,36 @@
+/* button */
+.btn {
+    border: none;
+    background-color: inherit;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 16px;
+    font-family: "DM Sans";
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background: #eee;
+    border-radius: 10px;
+}
+
+.avatar-for-editAvatar {color: coral;}
+.main-for-editAvatar {color: purple;}
+
+/* hyperlink */
+.a-for-editAvatar {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* form fields */
+.avatarid, .workplace, .avatargender{
+    font-size: 16px;
+    font-family: "DM Sans";
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 3px;
+  }

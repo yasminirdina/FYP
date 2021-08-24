@@ -7,7 +7,7 @@
     {% if widget.name == 'questionImage' %}
         <span style="font-style: italic; font-size: 12px;">{{ widget.value.name|slice:"23:" }}</span>
     {% elif 'hintImage' in widget.name %}
-    <span style="font-style: italic; font-size: 12px;">{{ widget.value.name|slice:"19:" }}</span>
+        <span style="font-style: italic; font-size: 12px;">{{ widget.value.name|slice:"19:" }}</span>
     {% endif %}
 
     {% if not widget.required %}
@@ -42,7 +42,7 @@
 <br>
 
 {% if widget.value %}
-    <div class="imageUpload btn2 upload-for-editQuestion">
+    <div class="imageUpload btn upload-for-editQuestion">
         <span>Tukar gambar</span>
 
         {% if widget.name == 'questionImage' %}
@@ -56,7 +56,7 @@
         {% endif %}
     </div>
 {% else %}
-    <div class="imageUpload btn2 upload-for-editQuestion">
+    <div class="imageUpload btn upload-for-editQuestion">
         <span>Muat naik gambar</span>
 
         {% if widget.name == 'questionImage' %}
