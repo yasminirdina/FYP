@@ -5,28 +5,31 @@
     <meta charset="utf-8">
     <title>FutureCruise: Ujian Kerjaya</title>
 
-    <link rel="stylesheet" href="{% static 'css/pTest.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    {% block styles %}
+    {% endblock %}
+    
    
 </head>
 <body>
     <center>    
         <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar active" href="#">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="#">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar active" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">Blog Berita</a></li>
             {% if user_type == "pelajar" %}
-                <li class="li-navbar"><a class="li-a-navbar" href="#">Permainan Kuiz</a></li>
+                <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
             {% endif %}
-            <li class="li-navbar"><a class="li-a-navbar" href="#">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="#">
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">
                 <span style="font-style: italic;">Dashboard</span>
                 <span>{{ dashboardNav }}</span>
             </a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="#">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="#">{{ username }}</a></li>
+            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
+            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
         </ul>
     </center>
     
     {% block content %}{% endblock %}
-
+    {% block js %}{% endblock %}
 </body>
 </html>

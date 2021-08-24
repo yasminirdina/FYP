@@ -10,6 +10,7 @@ urlpatterns = [
 
     #student 
     path('<user_type>/<user_id>/', views.testMain, name='index-nonadmin'),
+    path('<user_type>/<user_id>/mula-ujian', views.testStart, name='test-nonadmin'),
 
     #student 
     # path('penjaga/<user_id>/', views.testNonadmin, name='index-nonadmin'),

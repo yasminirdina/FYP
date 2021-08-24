@@ -1,10 +1,15 @@
 {% extends "pTest/base.html" %}
+{% load static %}
+
+{% block styles %}   
+<link rel="stylesheet" href="{% static 'css/studentMain.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container">
     <div id="home" class="flex-column flex-center">
         <h1>Ketahui personaliti dan bidang kerjaya yang sesuai dengan anda!</h1>
-        <a href="/studentTest.html" class="btn">Mula</a>
+        <a href="{% url 'test:test-nonadmin' user_type user_id %}" class="btn">Mula</a>
         <a href="/studentResult.html" id="result-btn" class="btn">Keputusan Ujian</a>
     </div>
 </div>
