@@ -6,25 +6,37 @@
 {% endblock %}
 
 {% block styles %}   
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/quizMainNonAdmin.css' %}">
 {% endblock %}
 
-{% block header %}
-    <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
-    <h2 style="font-style: italic">
-        <span>Hai,</span>
-        <span class="h2a">{{ username }}</span>
-        <span>!</span>
-    </h2>
-{% endblock %}
-
 {% block content %}
-    <p>{{ response }}</p>
-
-    <button class="btn avatar">
-        <a class ="a-settings-for-quizMain" href="{% url 'quiz:show-avatar' user_id %}">Tetapan Avatar</a>
-    </button>
-    <button class="btn play">
-        <a class="a-play-for-quizMain" href="{% url 'quiz:play' user_id %}">Mula Kuiz</a>
-    </button>
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+    <div class="div-outer">
+        <div class="div-title">
+            <span class="wordWrap">
+                Permainan Kuiz Penerokaan Kerjaya
+            </span>
+        </div>
+        <div class="div-menu">
+            <div class="div-avatar">
+                <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                <span class="h2a-main-username">{{ username }}</span>
+            </div>
+            <br>
+            <button class="btn avatar">
+                <a class ="a-settings-for-quizMain" href="{% url 'quiz:show-avatar' user_id %}">Tetapan Avatar</a>
+            </button>
+            <br>
+            <button class="btn statistic">
+                <a class ="a-statistic-for-quizMain" href="">Statistik</a>
+            </button>
+            <br>
+            <button class="btn play">
+                <a class="a-play-for-quizMain" href="{% url 'quiz:choose-field' user_id %}">PILIH BIDANG</a>
+            </button>
+        </div>
+    </div>
 {% endblock %}

@@ -1,0 +1,683 @@
+{% extends "quiz/baseNonAdmin.html" %}
+{% load static %}
+{% load quiz_index %}
+
+{% block title %}
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Soalan {{ cnt_ques }}</title>
+{% endblock %}
+
+{% block js1 %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'css/quizPlay.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+    <div class="div-player">
+        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+        <span class="h2a-username" style="text-align: center;">{{ username }}</span>
+        <div class="div-totalScore">
+            <span class="span-title-totalScore">Jumlah Markah</span>
+            <span class="span-value-totalScore">{{ currentPlayerTotalScoreAllField }}</span>
+        </div>
+    </div>
+
+    <!-- <p style="display: none;">{{ isCorrect }}</p> -->
+
+    <div class="div-outer">
+        <div class="justify-center flex-column">
+            <!-- Test -->
+            <p>cnt_ques: {{ cnt_ques }}
+                <span>
+                    || quesID: {{ nextQuestionRecord.id }}
+                </span>
+            </p>
+            <p>questionsExceptAttendedIDs: {{ questionsExceptAttendedIDs }}</p>
+            <p>sessionList: {{ sessionList }}
+                <span>
+                    || cntQuesList: {{ cntQuesList }}
+                </span>
+            </p>
+            <p>hasSubmittedList: {{ hasSubmittedList }}
+                <span>
+                    || hasAnsweredList: {{ hasAnsweredList }}
+                </span>
+            </p>
+            <p>isCorrectList: {{ isCorrectList }}
+                <span>
+                    || hintsUsedList: {{ hintsUsedList }}
+               </span>
+            </p>
+            <p>isClicked: {{ isClicked }}</p>
+            <p>hasSubmitted: {{ hasSubmitted }}
+                <span>
+                    || hasAnswered: {{ hasAnswered }}
+                </span>
+            </p>
+            <p>isCorrect: {{ isCorrect }}
+                <span>
+                    || chosenAnswerText: {{ chosenAnswerText }}
+                </span>
+            </p>
+
+            <!-- head of display -->
+            <div id="hud">
+                <div class="hud-item">
+                    <p id="progressText" class="hud-prefix">
+                        Soalan {{ cnt_ques }} / 10
+                    </p>
+                    <h1 class="hud-main-text" id="progress">
+                        <div id="progressBar">
+                            <div id="progressBarFull"></div>
+                        </div>
+                    </h1>
+                </div>
+                {% if hasSubmitted == False %}
+                    <div class="hud-item">
+                        <p class="hud-prefix">
+                            Masa
+                        </p>
+                        <h1 class="hud-main-text" id="timer">
+                            <div class="div-bg-bar-timer-ques">
+                                <div class="div-bar-timer-ques"></div>
+                            </div>
+                        </h1>
+                    </div>
+
+                    <div class="hud-item">
+                        <p class="hud-prefix">
+                            Baki Petunjuk
+                        </p>
+                        <h1 class="hud-main-text cntHint-wrapper" id="hint-wrapper">
+                            {% include 'quiz/updateBalanceHint1.html' %}
+                        </h1>
+                    </div>
+                {% endif %}
+
+                <div class="hud-item">
+                    <p class="hud-prefix">
+                        Markah Semasa
+                    </p>
+                    {% if isCorrect == True %}
+                        <h1 class="hud-main-text score correct" id="score">
+                            {{ currentFieldPlayerSession.currentPointsEarned }}
+                        </h1>
+                    {% else %}
+                        <h1 class="hud-main-text score" id="score">
+                            {{ currentFieldPlayerSession.currentPointsEarned }}
+                        </h1>
+                    {% endif %}
+                </div>
+            </div>
+            
+            {% if nextQuestionRecord.questionImage %}
+                <div class="div-question with-image2">
+                    <img class="img-question" src="{{ nextQuestionRecord.questionImage.url }}">
+                    {% if questionTextOpt %}
+                        <h1 class="question with-image1" id="question">
+                            <span class="span-difficulty">
+                                {{ nextQuestionRecord.difficulty }}
+                            </span>
+                            {{ questionTextOnly }}
+                            <p></p>
+                            {% for opt in questionTextOpt %}
+                                {{ opt }}
+                                <br>
+                            {% endfor %}
+                            
+                        </h1>
+                    {% else %}
+                        <h1 class="question with-image1" id="question">
+                            <span class="span-difficulty">
+                                {{ nextQuestionRecord.difficulty }}
+                            </span>
+                            {{ nextQuestionRecord.questionText }}
+                        </h1>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="div-question">
+                    {% if questionTextOpt %}
+                        <h1 class="question" id="question">
+                            <span class="span-difficulty">
+                                {{ nextQuestionRecord.difficulty }}
+                            </span>
+                            {{ questionTextOnly }}
+                            <p></p>
+                            {% for opt in questionTextOpt %}
+                                {{ opt }}
+                                <br>
+                            {% endfor %}
+                        </h1>
+                    {% else %}
+                        <h1 class="question" id="question">
+                            <span class="span-difficulty">
+                                {{ nextQuestionRecord.difficulty }}
+                            </span>
+                            {{ nextQuestionRecord.questionText }}
+                        </h1>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <form action="{% url 'quiz:quiz-play' user_id field_id cnt_ques %}" class="PlayForm" method="post">
+                <div class="div-outer-choice">
+                    {% csrf_token %}
+                    {{ form.media.js }}
+
+                    <input type='hidden' id='isClicked' name='isClicked' value='False'/>
+
+                    {% for answer in form.answer_choices %}
+                        <!--
+                            [form is always submitted - either clicked "semak jawapan"/wait till habis masa]
+
+                            if user actually clicked "semak jawapan" to submit,
+                            >>  
+                                ajax request for nextBtn click event (later in this file) will:
+                                A. change isClicked in view to 'True'
+                                B. update timeTaken based on duration (width of bar-hint)
+                                C. return isClicked='True' (string) in json response,
+                                then we change value of hidden input isClicked above to the returned isClicked by ajax,
+                                then form is submitted and we got the hidden field value; filledList['isClicked']='True',
+                                after some processing for:
+                                A. filledList['isClicked']='True' - checking got answer chosen and whether its true or not
+                                B. filledList['isClicked']='False' - update timeTaken which we plus by timeLimit,
+                                we will render the page again, with updated isClicked for the post-submit page (value taken from filledList['isChecked']),
+                                therefore we can check now whether isClicked is 'True' or 'False' to display appropriate answer option color
+                                based on submit/answered/correct status (True/False) from view tadi
+                            >>    
+                                if filled answer is correct
+                                    if current answer value in current iteration is True, make it green
+                                    else, remain color of others
+                                else (not correct) - cases are click next but salah jawab / click next tanpa pilih answer
+                                    if ada answer chosen (user click on any option)
+                                        if current iteration's answer value is True, make it green
+                                        else (current one is False_1/False_2/False_3)
+                                            if current iteration's false answer label is same as user's chosen answer text, make it red
+                                            else remain color of the rest
+                                    else (click next without choose answer)
+                                        all red
+                                    
+                            elif user tak click "semak jawapan", so form auto submit with/without pilih answer after habis masa OR its default
+                                if default/initial load (no submit)
+                                    all original color
+                                else (auto submit)
+                                    all red
+                        -->
+                        {% if isClicked == 'True' %}
+                            {% if isCorrect == True %}
+                                {% if answer.data.value == 'True' %}
+                                    <div class="choice-container no-hover" style="background-color: rgb(41, 165, 41);">
+                                        <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                        {% if forloop.counter == 1 %}
+                                            <div class="choice-prefix">A</div>
+                                        {% elif forloop.counter == 2 %}
+                                            <div class="choice-prefix">B</div>
+                                        {% elif forloop.counter == 3 %}
+                                            <div class="choice-prefix">C</div>
+                                        {% elif forloop.counter == 4 %}
+                                            <div class="choice-prefix">D</div>
+                                        {% endif %}
+                                        <div class="choice-text">
+                                            <label for="{{ answer.id_for_label }}">A{{ answer.choice_label }}</label>
+                                        </div>
+                                    </div>
+                                {% elif 'False' in answer.data.value %}
+                                    <div class="choice-container no-hover">
+                                        <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                        {% if forloop.counter == 1 %}
+                                            <div class="choice-prefix">A</div>
+                                        {% elif forloop.counter == 2 %}
+                                            <div class="choice-prefix">B</div>
+                                        {% elif forloop.counter == 3 %}
+                                            <div class="choice-prefix">C</div>
+                                        {% elif forloop.counter == 4 %}
+                                            <div class="choice-prefix">D</div>
+                                        {% endif %}
+                                        <div class="choice-text">
+                                            <label for="{{ answer.id_for_label }}">A{{ answer.choice_label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% elif isCorrect == False %}
+                                {% if hasAnswered == True %}
+                                    {% if answer.data.value == 'True' %}
+                                        <div class="choice-container no-hover" style="background-color: rgb(41, 165, 41);">
+                                            <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answe_choices.id_for_label }}" disabled/>
+                                            {% if forloop.counter == 1 %}
+                                                <div class="choice-prefix">A</div>
+                                            {% elif forloop.counter == 2 %}
+                                                <div class="choice-prefix">B</div>
+                                            {% elif forloop.counter == 3 %}
+                                                <div class="choice-prefix">C</div>
+                                            {% elif forloop.counter == 4 %}
+                                                <div class="choice-prefix">D</div>
+                                            {% endif %}
+                                            <div class="choice-text">
+                                                <label for="{{ answer.id_for_label }}">B(pilih betul){{ answer.choice_label }}</label>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        {% if chosenAnswerText == answer.choice_label %}
+                                            <div class="choice-container no-hover" style="background-color: rgb(235, 43, 43);">
+                                                <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                                {% if forloop.counter == 1 %}
+                                                    <div class="choice-prefix">A</div>
+                                                {% elif forloop.counter == 2 %}
+                                                    <div class="choice-prefix">B</div>
+                                                {% elif forloop.counter == 3 %}
+                                                    <div class="choice-prefix">C</div>
+                                                {% elif forloop.counter == 4 %}
+                                                    <div class="choice-prefix">D</div>
+                                                {% endif %}
+                                                <div class="choice-text">
+                                                    <label for="{{ answer.id_for_label }}">C(pilih salah){{ answer.choice_label }}</label>
+                                                </div>
+                                            </div>
+                                        {% else %}
+                                            <div class="choice-container">
+                                                <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                                {% if forloop.counter == 1 %}
+                                                    <div class="choice-prefix">A</div>
+                                                {% elif forloop.counter == 2 %}
+                                                    <div class="choice-prefix">B</div>
+                                                {% elif forloop.counter == 3 %}
+                                                    <div class="choice-prefix">C</div>
+                                                {% elif forloop.counter == 4 %}
+                                                    <div class="choice-prefix">D</div>
+                                                {% endif %}
+                                                <div class="choice-text">
+                                                    <label for="{{ answer.id_for_label }}">C(others){{ answer.choice_label }}</label>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                <!-- tak pilih answer + clicked next -->
+                                {% else %}
+                                    <div class="choice-container no-hover" style="background-color: rgb(235, 43, 43);">
+                                        <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                        {% if forloop.counter == 1 %}
+                                            <div class="choice-prefix">A</div>
+                                        {% elif forloop.counter == 2 %}
+                                            <div class="choice-prefix">B</div>
+                                        {% elif forloop.counter == 3 %}
+                                            <div class="choice-prefix">C</div>
+                                        {% elif forloop.counter == 4 %}
+                                            <div class="choice-prefix">D</div>
+                                        {% endif %}
+                                        <div class="choice-text">
+                                            <label for="{{ answer.id_for_label }}">E{{ answer.choice_label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% elif isClicked == 'False' %}
+                            <!-- default (initial) bcs tak submit lagi and tak tekan click -->
+                            {% if hasSubmitted == False %}
+                                <div class="choice-container">
+                                    <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}"/>
+                                    {% if forloop.counter == 1 %}
+                                        <div class="choice-prefix">A</div>
+                                    {% elif forloop.counter == 2 %}
+                                        <div class="choice-prefix">B</div>
+                                    {% elif forloop.counter == 3 %}
+                                        <div class="choice-prefix">C</div>
+                                    {% elif forloop.counter == 4 %}
+                                        <div class="choice-prefix">D</div>
+                                    {% endif %}
+                                    <div class="choice-text">
+                                        <label for="{{ answer.id_for_label }}">D{{ answer.choice_label }}</label>
+                                    </div>
+                                </div>
+                            <!-- pilih answer/not + didnt clicked next (masa habis then auto submit) -->
+                            {% else %}
+                                <div class="choice-container no-hover" style="background-color: rgb(235, 43, 43);">
+                                    <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                    {% if forloop.counter == 1 %}
+                                        <div class="choice-prefix">A</div>
+                                    {% elif forloop.counter == 2 %}
+                                        <div class="choice-prefix">B</div>
+                                    {% elif forloop.counter == 3 %}
+                                        <div class="choice-prefix">C</div>
+                                    {% elif forloop.counter == 4 %}
+                                        <div class="choice-prefix">D</div>
+                                    {% endif %}
+                                    <div class="choice-text">
+                                        <label for="{{ answer.id_for_label }}">E{{ answer.choice_label }}</label>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="div-buttons">
+        <button class="btn quit">
+            Tamatkan Kuiz
+        </button>
+        {% if hasSubmitted == False %}
+            <div class="div-buttons-wrapper-hint" id="hint-button-wrapper">
+                {% include 'quiz/updateBalanceHint2.html' %}
+            </div>
+
+            <button class="btn next" id="btn-next">
+                Semak Jawapan
+            </button>
+        {% elif hasSubmitted == True %}
+            {% if cnt_ques < 10 %}
+                <button class="btn next2">
+                    <a class="a-for-quizPlay" href="{% url 'quiz:quiz-play' user_id field_id next_cnt_ques %}">Seterusnya</a>
+                </button>
+            {% elif cnt_ques == 10 %}
+                <button class="btn showResult">
+                    <a class="a-for-quizPlay" href="{% url 'quiz:quiz-result' user_id field_id %}">Lihat Keputusan</a>
+                </button>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="div-bg-modal">
+        <div class="div-modal-content">
+            <div class="div-modal-header">
+                Mesej
+            </div>
+            
+            Semua markah terkumpul untuk sesi ini tidak akan dikira.
+            Adakah anda pasti ingin tamatkan sesi kuiz ini?
+
+            <div class="div-quit-button">
+                <button class="btn quit-for-quizPlay">
+                    Ya
+                </button>
+                <button class="btn cancelQuit-for-quizPlay">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal2">
+        <div class="div-modal-content2">
+            <div class="div-modal-header">
+                Petunjuk
+            </div>
+
+            <div class="div-modal-content2-wrapper" id="modal2-wrapper">
+                {% include 'quiz/updateHint3.html' %}
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal3">
+        <div class="div-modal-content3">
+            <div class="div-modal-header">
+                Petunjuk
+            </div>
+            
+            <div class="div-modal-content3-wrapper" id="modal3-wrapper">
+                {% include 'quiz/updateHint4.html' %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        var cnt_ques = parseInt('{{ cnt_ques }}');
+        var isCorrect = '{{ isCorrect }}';
+        var user_id = '{{ user_id }}';
+        var field_id = '{{ field_id }}';
+        var hasAnswered = '{{ hasAnswered }}';
+        var hasSubmitted = '{{ hasSubmitted }}';
+        var timeLimit = parseInt('{{ nextQuestionRecord.timeLimit }}');
+    </script>
+    <script type="text/javascript">
+        const progressBarFull = document.querySelector('#progressBarFull')
+
+        const quitBtn = document.querySelector('.quit')
+        const modal1 =  document.querySelector('.div-bg-modal')
+        const confirmQuitBtn = document.querySelector('.quit-for-quizPlay')
+        const cancelQuitBtn = document.querySelector('.cancelQuit-for-quizPlay')
+
+        const hintBtn = document.querySelector('.hint')
+        const modal2 =  document.querySelector('.div-bg-modal2')
+        const useHintBtn = document.querySelector('.useHint-for-quizPlay')
+        const cancelHintBtn1 = document.querySelector('.cancelHint1-for-quizPlay')
+        const cancelHintBtn2 = document.querySelector('.cancelHint2-for-quizPlay')
+
+        const modal3 = document.querySelector('.div-bg-modal3')
+
+        const nextBtn = document.querySelector('.next')
+
+        const form = document.querySelector('.PlayForm')
+        
+        var i = 0;
+        var k = 0;
+        var m = 0;
+        var bar_ques = document.querySelector(".div-bar-timer-ques");
+        var width_ques = 0;
+        var id_ques = 0;
+        var clickedHint = false;
+        var clickedHint2 = false;
+        var doneViewHint = false;
+
+        progressBarFull.style.width = (cnt_ques/10) * 100 + "%";
+
+        if (hasSubmitted == 'False') {
+            if (m == 0) {
+                m = 1;
+                id_ques = setInterval(frame_ques, 1000);
+            }
+        }
+
+        function frame_ques() {
+            if (width_ques >= 100) {
+                clearInterval(id_ques);
+                m = 0;
+                /* if dah habis masa, since field answer_choices takde required=True, can submit je */
+                form.submit()
+                /* after this hasSubmitted will be True but hasAnswered will be False*/
+            } else {
+                if (clickedHint == true) {
+                    modal2.style.display = "flex";
+                    clearInterval(id_ques);
+                }
+                else {
+                    if (timeLimit == 10){
+                        width_ques += 10;
+                    }
+                    else if (timeLimit == 20){
+                        width_ques += 5;
+                    }
+                    else {
+                        width_ques += 3.33;
+                    }
+                    bar_ques.style.width = width_ques + "%";
+                }
+            }
+        }
+
+        quitBtn.addEventListener('click', () => {
+            clearInterval(id_ques);
+            modal1.style.display = "flex";
+        })
+
+        confirmQuitBtn.addEventListener('click', () => {
+            /* [KIV] delete session record OR add column status finish or not(?) */
+            window.location.href = "/papan-pemuka/pelajar/" + user_id + "/";
+        })
+
+        cancelQuitBtn.addEventListener('click', () => {
+            modal1.style.display = "none";
+            id_ques = setInterval(frame_ques, 1000);
+        })
+
+        $('#hint-button-wrapper').on('click', hintBtn, function(){
+            clickedHint = true;
+        });
+
+        $('#modal2-wrapper').on('click', '.useHint-for-quizPlay', function(){
+            clickedHint2 = true;
+
+            var bar_hint = document.querySelector('.div-bar-timer-hint');
+            alert(bar_hint.getAttribute("class")); //test
+            var width_hint = 0;
+            var id_hint = 0;
+
+            modal2.style.display = "none";
+            modal3.style.display = "flex";
+            if (i == 0) {
+                i = 1;
+                id_hint = setInterval(frame_hint, 1000);
+
+                function frame_hint() {
+                    if (width_hint >= 100) {
+                        clearInterval(id_hint);
+                        i = 0;
+                        modal3.style.display = "none";
+                        clickedHint = false;
+                        clickedHint2 = false;
+                        doneViewHint = true;
+
+                        update_hint();
+
+                        id_ques = setInterval(frame_ques, 1000);
+                    } else {
+                        width_hint += 10;
+                        bar_hint.style.width = width_hint + "%";
+                    }
+                }
+            }
+        // })
+        });
+
+        $('#modal2-wrapper').on('click', '.cancelHint1-for-quizPlay', function(){
+            modal2.style.display = "none";
+            clickedHint = false;
+            id_ques = setInterval(frame_ques, 1000);
+        //})
+        });
+
+        $('#modal2-wrapper').on('click', '.cancelHint2-for-quizPlay', function(){
+            modal2.style.display = "none";
+            clickedHint = false;
+            id_ques = setInterval(frame_ques, 1000);
+        // })
+        });
+
+        function update_hint() {
+            var cntHint = parseInt(document.querySelector('.p-cntHint').innerText) - 1;
+            var currSessionScoreText = document.querySelector('.score'); //in header
+            var currPlayerAllFieldScoreText = document.querySelector('.span-value-totalScore'); //in player navbar
+            var currentHintID = parseInt(document.querySelector('.p-randomHintID').innerText);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'quiz:quiz-play' user_id field_id cnt_ques %}",
+                data: {
+                    'cntHint': cntHint,
+                    'usedHintID': currentHintID,
+                    'requestType': 'updateBalanceHint_1'
+                },
+                type: 'POST',
+                success: function(result){
+                    alert('updateBalanceHint_1: cntHint updated');
+                    $("#hint-wrapper").html(result);
+                    //take the hidden points and total points values from updateBalanceHint1.html to replace the values displayed
+                    //in top navbar and header
+                    currSessionScoreText.innerText = document.querySelector('.p-points').innerText;
+                    currPlayerAllFieldScoreText.innerText = document.querySelector('.p-totalPoints').innerText;
+                },
+                error: function(response){
+                    alert("updateBalanceHint_1: cntHint NOT updated");
+                }
+            })
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'quiz:quiz-play' user_id field_id cnt_ques %}",
+                data: {
+                    'cntHint': cntHint,
+                    'requestType': 'updateBalanceHint_2'
+                },
+                type: 'POST',
+                success: function(result){
+                    alert('updateBalanceHint_2: cntHint updated');
+                    $("#hint-button-wrapper").html(result);
+                },
+                error: function(response){
+                    alert("updateBalanceHint_2: cntHint NOT updated");
+                }
+            })
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'quiz:quiz-play' user_id field_id cnt_ques %}",
+                data: {
+                    'cntHint': cntHint,
+                    'usedHintID': currentHintID,
+                    'requestType': 'updateHint_3'
+                },
+                type: 'POST',
+                success: function(result){
+                    alert('updateHint_3: cntHint, randomHint, currentFieldPlayerSession updated');
+                    $("#modal2-wrapper").html(result);
+                },
+                error: function(response){
+                    alert("updateHint_3: cntHint, randomHint,currentFieldPlayerSession NOT updated");
+                }
+            })
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'quiz:quiz-play' user_id field_id cnt_ques %}",
+                data: {
+                    'cntHint': cntHint,
+                    'usedHintID': currentHintID,
+                    'requestType': 'updateHint_4'
+                },
+                type: 'POST',
+                success: function(result){
+                    alert('updateHint_4: cntHint, randomHint updated');
+                    $("#modal3-wrapper").html(result);
+                },
+                error: function(response){
+                    alert("updateHint_4: cntHint, randomHint NOT updated");
+                }
+            })
+        }
+
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            clearInterval(id_ques);
+            alert("hi");
+            var endWidth = bar_ques.style.width.slice(0, -1);
+            alert(endWidth + ", type: " + typeof endWidth);
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'quiz:quiz-play' user_id field_id cnt_ques %}",
+                data: {
+                    'endWidth': endWidth,
+                    'timeLimit': timeLimit,
+                    'requestType': 'Next'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    alert("isClicked: " + result.isClicked + ", duration: " + result.duration);
+                    document.getElementById('isClicked').value = result.isClicked
+                    form.submit();
+                },
+                error: function(response){
+                    alert("no");
+                }
+            });
+        });
+    </script>
+{% endblock %}

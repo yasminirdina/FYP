@@ -5,6 +5,7 @@ from django.urls import reverse
 from smart_selects.db_fields import ChainedForeignKey
 import dashboard.models
 from django.templatetags.static import static
+from datetime import timedelta
 
 # Create your models here.
 
@@ -33,6 +34,7 @@ class AvatarGender(models.Model):
         #return "Avatar ID: " + str(self.avatarID.id) + ", Avatar Career: " + self.avatarID.careerName
         return self.avatarGender
 
+"""
 class ImageAvatar(models.Model):
     #default id
     name = models.CharField(max_length=50, default="Tiada Ikon")
@@ -44,6 +46,7 @@ class ImageAvatar(models.Model):
 
     def __str__(self):
         return self.imageURL
+"""
 
 class AvatarGenderImage(models.Model):
     #default id
@@ -135,21 +138,22 @@ class FieldPlayerSession(models.Model):
     #default id
     fieldPlayerID = models.ForeignKey(Player, on_delete=models.PROTECT)
     fieldID = models.ForeignKey(GameField, on_delete=models.PROTECT)
-    currentPointsEarned = models.IntegerField()
+    currentPointsEarned = models.IntegerField(default=0)
     dateLastPlayed = models.DateTimeField(auto_now=True)
     hintsUsedCount = models.IntegerField(default=0)
-    timeTaken = models.DurationField()
+    timeTaken = models.DurationField(default=timedelta)
+    #timeTaken = models.DurationField(default=timedelta(minutes=0).total_seconds())
     #Check this link for view code: https://laptrinhx.com/how-to-control-the-format-of-a-duration-field-in-django-2259871147/
     totalCorrect = models.IntegerField(default=0)
-    countHard = models.IntegerField()
+    countHard = models.IntegerField(default=0)
     countHardCorrect = models.IntegerField(default=0)
-    countMedium = models.IntegerField()
+    countMedium = models.IntegerField(default=0)
     countMediumCorrect = models.IntegerField(default=0)
-    countEasy = models.IntegerField()
+    countEasy = models.IntegerField(default=0)
     countEasyCorrect = models.IntegerField(default=0)
 
     def __str__(self):
-        return "Session ID: " + self.id + ", FieldPlayer ID: " + self.fieldPlayerID.playerID.ID.ID + ", Field ID: " + self.fieldID.id
+        return "Session ID: " + str(self.id) + ", FieldPlayer ID: " + str(self.fieldPlayerID.ID.ID.ID) + ", Field ID: " + str(self.fieldID.id)
 
 class GameQuestion(models.Model):
     #default id

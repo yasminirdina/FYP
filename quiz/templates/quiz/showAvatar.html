@@ -6,114 +6,58 @@
 {% endblock %}
 
 {% block styles %}   
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/showAvatar.css' %}">
 {% endblock %}
 
-{% block header %}
-    <h1>Tetapan Avatar</h1>
-    <h2>
-        <span class="h2a" style="font-style: italic;">{{ username }}</span>
-        <span>, avatar terkini anda adalah seperti berikut:</span>
-    </h2>
-{% endblock %}
-
 {% block content %}
-    <p>
-        <ul class="ul-showAvatar">
-            <li>
-                <span style="padding-left: 5px;">
-                    <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
-                </span>
-            </li>
-            <li><span style="font-weight: bold;">Nama Kerjaya: </span>{{ currentAvatarDetailsObject.avatarID }}</li>
-            <li><span style="font-weight: bold;">Tempat Kerja: </span>{{ currentAvatarDetailsObject.workplace }}</li>
-            <li><span style="font-weight: bold;">Jantina: </span>{{ currentAvatarDetailsObject.avatarGender }}</li>
-        </ul>
-        
-        <button class="btn avatar-for-ShowAvatar">
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+    <div class="div-player">
+        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+        <span class="h2a-username" style="text-align: center;">{{ username }}</span>
+    </div>
+
+    <h1 class="h1-title">Tetapan Avatar</h1>
+
+    <div class="div-outer">
+        <div class="div-icon">
+            <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+        </div>
+        <div class="div-labeldetails">
+            <div class="div-labeldetails-ind">
+                <button class="btn2-label">Nama Kerjaya</button>
+                <button class="btn2-details">{{ currentAvatarDetailsObject.avatarID }}</button>
+            </div>
+            <div class="div-labeldetails-ind">
+                <button class="btn2-label">Tempat Kerja</button>
+                <button class="btn2-details">{{ currentAvatarDetailsObject.workplace }}</button>
+            </div>
+            <div class="div-labeldetails-ind">
+                <button class="btn2-label">Jantina</button>
+                <button class="btn2-details">{{ currentAvatarDetailsObject.avatarGender }}</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="div-buttons">
+        <button class="btn">
             <a class="a-for-showAvatar" href="{% url 'quiz:edit-avatar' user_id %}">Kemaskini Avatar</a>
         </button>
-        <button class="btn main-for-showAvatar">
-            <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali ke Halaman Utama Kuiz</a>
+        <button class="btn back-for-showAvatar">
+            <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali</a>
         </button>
-    </p>
-
-    <div class="div-avatar">
-        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
-            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
-            <span> dan </span>
-            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
-            <span>, serta pemilik asal ikon-ikon tersebut.</span>
-        </p>
+    </div>
+    
+    <div class="div-credit">
+        <div class="div-credit-text">
+            <p>Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+                <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: rgb(130, 124, 225);">Pinclipart</a></span>
+                <span> dan </span>
+                <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: rgb(130, 124, 225);">ClipartMax</a></span>
+                <span>, serta pemilik asal ikon-ikon tersebut.</span>
+            </p>
+        </div>
     </div>
 {% endblock %}
-
-<!-- {% load static %}
-<link rel="stylesheet" href="{% static 'css/avatar.css' %}">
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Avatar</title>
-    <style>
-        div {
-            display: flex;
-            align-items: center;
-            flex-direction: row;
-            padding: 10px;
-            justify-content: center;
-            margin-left: -2%;
-        }
-    </style>
-</head>
-<body>
-    <center>
-        <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id %}">Blog Berita</a></li>
-            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span>{{ dashboardNav }}</span>
-            </a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>            
-        </ul>
-        <h1>Tetapan Avatar</h1>
-        <h2>
-            <span class="h2a" style="font-style: italic;">{{ username }}</span>
-            <span>, avatar terkini anda adalah seperti berikut:</span>
-        </h2>
-        <p>
-            <ul class="ul-showAvatar">
-                <li>
-                    <span style="padding-left: 5px;">
-                        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
-                    </span>
-                </li>
-                <li><span style="font-weight: bold;">Nama Kerjaya: </span>{{ currentAvatarDetailsObject.avatarID }}</li>
-                <li><span style="font-weight: bold;">Tempat Kerja: </span>{{ currentAvatarDetailsObject.workplace }}</li>
-                <li><span style="font-weight: bold;">Jantina: </span>{{ currentAvatarDetailsObject.avatarGender }}</li>
-            </ul>
-            
-            <button class="btn2 avatar-for-ShowAvatar">
-                <a class="a-for-showAvatar" href="{% url 'quiz:edit-avatar' user_id %}">Kemaskini Avatar</a>
-            </button>
-            <button class="btn2 main-for-showAvatar">
-                <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali ke Halaman Utama Kuiz</a>
-            </button>
-        </p>
-
-    <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: fit-content; margin: auto; padding: 5px;">
-        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
-            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
-            <span> dan </span>
-            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
-            <span>, serta pemilik asal ikon-ikon tersebut.</span>
-        </p>
-    </div>
-    </center>
-</body>
-</html> -->

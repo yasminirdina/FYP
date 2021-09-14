@@ -1,0 +1,489 @@
+/* h1 */
+h1 {
+    font-family: 'Poppins';
+    letter-spacing: 3px;
+    font-size: 2vw;
+    text-align: center;
+    color: white;
+    line-height: 1.5em;
+}
+
+.question{
+    /* background-color: rgb(255, 177, 177); */
+    font-family: 'Poppins';
+    font-size: 2vw;
+    letter-spacing: 1px;
+    line-height: 3vw;
+    width: 100%;
+}
+
+.with-image1{
+    text-align: left;
+    line-height: normal;
+}
+
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(130, 124, 225);
+    border-radius: 35px;
+    padding: 1vw 2vw;
+    font-size: 2vw;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    color: white;
+    /* width: 17vw; */
+    width: max-content;
+    min-width: 7rem;
+    min-height: 2rem;
+    text-align: center;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.next, .next2, .showResult{
+    background-color: rgb(52, 202, 152);
+}
+
+.quit-for-quizPlay, .useHint-for-quizPlay{
+    font-size: 1.1rem;
+}
+
+.cancelQuit-for-quizPlay, .cancelHint1-for-quizPlay, .cancelHint2-for-quizPlay{
+    font-size: 1.1rem;
+    background-color: rgb(52, 202, 152);
+}
+
+.next:hover, .next2:hover, .showResult:hover, .cancelQuit-for-quizPlay:hover, .cancelHint1-for-quizPlay:hover,.cancelHint2-for-quizPlay:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+}
+
+/*hyperlink*/
+.a-for-quizPlay{
+    text-decoration: none;
+    color: inherit;
+}
+
+/* image */
+.img-question{
+    max-width: 80%;
+    max-height: 80%;
+    align-self: center;
+    border: 5px solid white;
+    border-radius: 10px;
+}
+
+/* div */
+.div-totalScore {
+    position: absolute;
+    right: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    float: right;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: white;
+}
+
+.div-outer{
+    background-color: burlywood;
+    display: flex;
+    box-sizing: border-box;
+    width: 95%;
+    min-width: 95%;
+    margin: 0 2vw;
+    padding: 1vw 0;
+}
+
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+  
+.justify-center{
+    justify-content: center;
+}
+
+/* .div-timer-post{
+    display: none;
+    position: relative;
+    width: 100%;
+    padding: 1vw;
+}
+
+.div-bg-bar-timer-post {
+    position: relative;
+    width: 100%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: 2px solid rgb(114, 114, 114);
+    background-color: rgb(241, 236, 236);
+}
+  
+.div-bar-timer-post {
+    position: relative;
+    width: 0%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: none;
+    background-color: rgb(52, 202, 152);
+} */
+
+/* Heads of Display */
+#hud{
+    display: flex;
+    justify-content:space-between;
+    font-family: 'Poppins';
+    letter-spacing: 3px;
+}
+
+.hud-item{
+    align-items: center;
+    justify-items: center;
+    text-align: center;
+    /* text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: center; */
+}
+
+.hud-prefix {
+    text-align: center;
+    font-weight: bold;
+    font-size: 2vw;
+}
+
+.hud-main-text {
+    text-align: center;
+    font-size: 2vw;
+    font-weight: unset;
+    line-height: 3vw;
+}
+
+.div-bg-bar-timer-ques {
+    position: relative;
+    width: 15vw;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: 3px solid rgb(114, 114, 114);
+    border-radius: 50px;
+    background-color: rgb(241, 236, 236);
+    overflow: hidden;
+}
+  
+.div-bar-timer-ques {
+    position: relative;
+    width: 0%;
+    height: 100%;
+    border: none;
+    background-color: rgb(52, 202, 152);
+}
+
+/* .timer-text {
+    position: absolute;
+    width: 15vw;
+    height: 100%;
+    text-align: center;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    vertical-align: middle;
+    color: rgb(114, 114, 114);
+} */
+
+.score, .cntHint-wrapper, .cntHint-inner{
+    font-size: 3vw;
+    font-weight: bold;
+}
+
+/* KIV */
+@keyframes score-anim{
+    50% {
+        font-size: 3.5vw;
+        text-shadow: 1px 1px rgb(169, 163, 248), 0 0 1em rgb(169, 163, 248), 0 0 0.2em rgb(169, 163, 248);
+    }
+}
+
+.correct{
+    /* animation-name: score-anim;
+    animation-duration: 1s;
+    animation-iteration-count: 3; */
+    text-shadow: 1px 1px rgb(169, 163, 248), 0 0 1em rgb(169, 163, 248), 0 0 0.2em rgb(169, 163, 248);
+}
+
+#progressBar {
+    width: 95%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: 3px solid rgb(255, 255, 255);
+    border-radius: 50px;
+    overflow: hidden;
+}
+
+#progressBarFull {
+    height: 100%;
+    background: rgb(18, 93, 255);
+    width: 0%;
+}
+
+.div-question{
+    /* background-color: rgb(160, 160, 160); */
+    box-sizing: border-box;
+    width: 100%;
+    height: fit-content;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin: 1vw 0;
+    padding: 0;
+}
+
+.with-image2{
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+.div-outer-choice{
+    background-color: rgb(213, 248, 172);
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    box-sizing: border-box;
+    justify-content: center;
+    width: 100%;
+    gap: 1vw;
+}
+
+.choice-container {
+    display: grid;
+    /* grid-template-columns: 10% 90%; */
+    grid-template-columns: 10% 90%;
+    border-radius: 4px;
+    font-size: 2vw;
+    background: rgb(18, 93, 255);
+    box-sizing: border-box;
+    padding: 1vw;
+    min-height: 4vw;
+    position: relative;
+}
+
+.choice-container:hover {
+    cursor: pointer;
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(6, 103, 247,0.5);
+    transform: scale(1.02);
+    transform: transform 100ms;
+}
+
+.choice-container no-hover{
+    pointer-events: none;
+}
+
+.choice-prefix {
+    background-color: rgba(255, 170, 13, 0.781);
+    box-sizing: border-box;
+    padding: 1vw;
+    color: white;
+    font-size: 2vw;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.choice-text{
+    background-color: rgba(240, 43, 17, 0.575);
+    box-sizing: border-box;
+    text-align: left;
+    padding: 1vw;
+    width: 100%;
+    font-size: 2vw;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* .choice-text input[type="radio"]:empty{
+    display: none;
+    cursor: pointer;
+}
+
+.choice-text input[type="radio"]:empty ~ label{
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.choice-text input[type="radio"]:checked ~ label{
+    border: 3px solid black;
+    background-color: rgb(245, 118, 59);
+} */
+
+.choice-container input[type="radio"]:empty{
+    display: none;
+}
+
+.choice-container input[type="radio"]:empty ~ .choice-text label{
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.choice-container input[type="radio"]:checked ~ .choice-prefix, .choice-container input[type="radio"]:checked ~ .choice-text{
+    border: 3px solid black;
+    background-color: rgb(245, 118, 59);
+}
+
+.div-buttons{
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 100%;
+    margin: 2vw 0;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 1rem;
+}
+
+.div-buttons-wrapper-hint, .div-buttons-inner-hint{
+    width:max-content;
+    height: max-content;
+    position: relative;
+}
+
+.div-bg-modal, .div-bg-modal2, .div-bg-modal3, .div-bg-modal4{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* make it half transparent */
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+    display: none;  /* It will remain invisible until you open */
+    justify-content: center; /*center horizontally*/ 
+    align-items: center; /* center vertically */
+}
+
+.div-modal-content, .div-modal-content2, .div-modal-content3, .div-modal-content4{
+    width: 31vw;
+    height: max-content;
+    min-width: 25rem;
+    min-height: 9rem;
+    background-color: white;
+    border: none; 
+    border-radius: 15px;
+    padding: 0 1vw;
+    padding-right: 1.5vw;
+    position: relative;
+    margin: 6vw 0;
+    font-size: 1.1rem;
+    font-family: 'Poppins';
+    color: black;
+}
+
+.div-modal-header{
+    position: relative;
+    width: max-content;
+    height: 2vw;
+    min-height: 1.2rem;
+    padding: 1rem 0;
+    z-index: 1;
+    font-size: 1.1rem;
+    font-family: 'Poppins';
+    font-weight: bold;
+    /* background-color: rgb(121, 85, 118); */
+}
+
+.div-modal-content2-wrapper, div-modal-content2-inner, .div-modal-content3-wrapper, div-modal-content3-inner {
+    position: relative;
+    width: 100%;
+    height: max-content;
+}
+
+/* .div-close-1, .div-close-2{
+    position: absolute;
+    top: 0;
+    right: 13px;
+    font-size: 2rem;
+    font-family: 'Poppins';
+    color: black;
+    transform: rotate(45deg);
+    cursor: pointer;
+} */
+
+/* div buttons for modal 1, 2 */
+.div-quit-button, .div-hint-button{
+    position: relative;
+    width: max-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.div-outer-bg-bar {
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.div-bg-bar-timer-hint {
+    position: relative;
+    width: 90%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: 2px solid rgb(114, 114, 114);
+    border-radius: 15px;
+    background-color: rgb(241, 236, 236);
+    overflow: hidden;
+}
+  
+.div-bar-timer-hint {
+    position: relative;
+    width: 0%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(52, 202, 152);
+}
+
+/* span */
+.span-title-totalScore{
+    word-break: normal;
+}
+
+.span-value-totalScore{
+    font-size: 35px;
+}
+
+.span-difficulty
+{
+    color: black;
+    text-transform: uppercase;
+    font-size: 1vw;
+    font-style: italic;
+    background-color: rgb(18, 93, 255);
+    box-sizing: border-box;
+    height: 100%;
+    padding: 5px 10px;
+    border-radius: 50px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* ul-navbar */
+.ul-navbar{
+    position: unset;
+}

@@ -1,31 +1,58 @@
+/* italic player username */
+.h2a-main-username {
+    font-style: italic;
+    /* font-size: 35px; */
+    font-size: 2.5vw;
+    font-weight: bold;
+    letter-spacing: 3px;
+    /* color: rgb(68, 8, 64); */
+    color: white;
+}
+
 /* button */ 
 .btn {
     border: none;
-    background-color: inherit;
-    border-radius: 10px;
-    padding: 14px 28px;
-    font-size: 16px;
-    font-family: "DM Sans";
+    background-color: rgb(130, 124, 225);
+    border-radius: 35px;
+    /* padding: 14px 28px;
+    margin: 5px; */
+    padding: 1vw 2vw;
+    margin: 0.4vw;
+    font-size: 2vw;
+    font-family: 'Poppins';
     font-weight: bold;
+    letter-spacing: 3px;
     cursor: pointer;
     display: inline-block;
+    /* width: 350px; */
+    width: 24vw;
 }
   
 /* On mouse-over */
 .btn:hover{
-    background: #eee;
-    border-radius: 10px;
+    border-radius: 50px;
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    transition: transform 150ms;
+    transform: scale(1.03);
 }
 
 /* quizMainNonAdmin.html */
-.avatar, .play {color: purple;}
+.avatar, .statistic {color: white;}
+.play{
+    color: white;;
+    background-color: rgb(81, 194, 188);
+}
+
+.play:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(113, 226, 221, 0.658);
+}
 
 /* noAccessError.html */
-.back-to-dashboard {color: purple;}
+.back-to-dashboard {color: white;}
 
 /* hyperlinks */
 /* quizMainNonAdmin.html */
-.a-settings-for-quizMain, .a-play-for-quizMain {
+.a-settings-for-quizMain, .a-statistic-for-quizMain, .a-play-for-quizMain {
     text-decoration: none;
     color: inherit;
 }
@@ -34,4 +61,97 @@
 .a-back-for-quizMainNonStudentError {
     text-decoration: none;
     color: inherit;
-  }
+}
+
+/* img */
+.img-icon{
+    max-width: 6vw;
+    max-height: 6vw;
+    /* width: 10vw;
+    height: 10vw; */
+    /* width: 150px;
+    height: 150px; */
+}
+
+/* div */
+.div-outer{
+    /* background-color: green; */
+    /* margin: 6.5% 9%;
+    padding: 10px; */
+    margin: 4rem 12.5vw;
+    padding: 1rem;
+    padding-right: 0;
+    position: absolute;
+    /* width: 80%; */
+    width: 73vw;
+    height: 28.5vw;
+    min-width: 20rem;
+    min-height: 24rem;
+    align-items: center;
+    border-color: white;
+    display: grid;
+    /* grid-template-columns: repeat(2, 50%); */
+    grid-template-columns: repeat(2, auto);
+    gap: 3rem;
+}
+
+.div-title{
+    text-align: left;
+    letter-spacing: 0.5rem;
+    word-wrap: normal;
+    font-family: 'Poppins';
+    /* font-size: 4.3rem; */
+    font-size: 5.5vw;
+    font-weight: bolder;
+    line-height: 1.4em;
+    /* width: max-content;
+    padding: 0 70px; */
+    width: 35vw;
+    min-width: 15rem;
+    /* background-color: bisque; */
+    vertical-align: middle;
+}
+
+.div-title:hover{
+    text-shadow: 1px 1px rgb(169, 163, 248), 0 0 1em rgb(169, 163, 248), 0 0 0.2em rgb(169, 163, 248);
+}
+
+.div-menu{
+    /* background-color: cornflowerblue; */
+    margin: 0.5rem 0;
+    /* margin-top: 20px; 
+    margin-bottom: 10px; */
+    align-items: center;
+    vertical-align: middle;
+    width: 30vw;
+}
+
+.div-avatar{
+    display: grid;
+    /* grid-template-columns: 90px 205px; */
+    grid-template-columns: 7vw 12vw;
+    align-items: center;
+    background-color: rgb(245, 118, 59);
+    border-radius: 10px;
+    border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    border: solid rgba(255, 255, 255, 0.801);
+    border-width: 5px;
+    height: fit-content;
+    /* width: 315px;
+    padding-left: 25px;
+    padding-bottom: 5px;
+    padding-top: 5px; */
+    width: 22vw;
+    padding-left: 1vw;
+    padding-bottom: 0.1vw;
+    padding-top: 0.1vw;
+    margin-top: 2vw;
+}
+
+/* span */
+.wordWrap {
+    font-family: 'Poppins';
+    display: inline-block;
+    max-width: min-content;
+}

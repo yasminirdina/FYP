@@ -5,10 +5,13 @@ import json
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm, CustomAnswerFormSet, CustomAnswerInlineFormSet, CustomHintFormSet, EditQuestionForm, EditHintForm
+from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm, CustomAnswerFormSet, CustomAnswerInlineFormSet, CustomHintFormSet, EditQuestionForm, EditHintForm, ChooseFieldForm, PlayForm
 from django.forms import formset_factory, inlineformset_factory
 from django.db import IntegrityError, transaction
 from django.contrib import messages
+from random import randint
+from django.core.signals import request_finished
+from datetime import timedelta
 
 # Create your views here.
 def quizMainAdmin(request, user_id):
@@ -92,8 +95,6 @@ def quizMain(request, user_id):
         'user_id': user_id, 'user_type': user_type, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
         'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
         return render(request, 'quiz/noAccessError.html', context)"""
-    #else: #is a student
-    #response = ""
     request.session['student_id'] = user_id
 
     currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
@@ -105,15 +106,15 @@ def quizMain(request, user_id):
         currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
         currentPlayerUsername = currentPlayerRecord.ID.ID.username #give username from User model
     except quiz.models.Player.DoesNotExist:
-        p = quiz.models.Player(ID=currentStudentDetails) #Player.ID should be an instance of Student model with default avatar
-        p.save(force_insert=True)
-        currentPlayerUsername = p.ID.ID.username
+        currentPlayerRecord = quiz.models.Player(ID=currentStudentDetails) #Player.ID should be an instance of Student model with default avatar
+        currentPlayerRecord.save(force_insert=True)
+        currentPlayerUsername = currentPlayerRecord.ID.ID.username
 
+    currentAvatarDetailsObject = currentPlayerRecord.avatarID
     response = "Anda berada di muka utama permainan kuiz."
     context = {'dashboardNav': dashboardNav, 'response': response, 'username': currentPlayerUsername, 'user_type': user_type, 'user_id': user_id,
-    'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout}
-    #context = {'response': response, 'currentPlayerUsername': currentPlayerUsername, 'student_id': student_id}
-    #return HttpResponse(response % currentPlayerUsername)
+    'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
+    'currentAvatarDetailsObject': currentAvatarDetailsObject}
     return render(request, 'quiz/quizMainNonAdmin.html', context)
 
 def showAvatar(request, user_id):
@@ -161,6 +162,7 @@ def editAvatar(request, user_id):
     urlLogout = 'dashboard:logout-confirm'
     dashboardNav = ' Pelajar'
     user_type = 'pelajar'
+    isSubmitted = False
     #user_id = student_id
 
     if request.method == 'POST':
@@ -188,12 +190,13 @@ def editAvatar(request, user_id):
             currentPlayerRecord.save()
             #currentAvatarDetailsObject = currentPlayerRecord.avatarID
             title = "Future Cruise: Tetapan Avatar"
-            successMessage = "Avatar berjaya dikemaskini!"
-            context = {'title': title, 'dashboardNav': dashboardNav, 'username': currentPlayerUsername, 'successMessage': successMessage,
+            #successMessage = "Avatar berjaya dikemaskini!"
+            isSubmitted = True
+            context = {'title': title, 'dashboardNav': dashboardNav, 'username': currentPlayerUsername,
             'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
             'dashboard':urlDashboard, 'logout': urlLogout}
-            #return redirect('quiz:show-avatar', student_id)
-            return render(request, 'quiz/successUpdate.html', context)
+            #return redirect('quiz:show-avatar', user_id)
+            #return render(request, 'quiz/editAvatar.html', context)
     else:
         currentPlayerAvatarID = currentPlayerRecord.avatarID.id
         currentAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.get(id=currentPlayerAvatarID)
@@ -207,7 +210,7 @@ def editAvatar(request, user_id):
 
     context = {'dashboardNav': dashboardNav, 'username': currentPlayerUsername, 'currentAvatarDetailsObject': currentAvatarDetailsObject,
     'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard':urlDashboard, 'logout': urlLogout, 'form': form}
+    'dashboard':urlDashboard, 'logout': urlLogout, 'form': form, 'isSubmitted': isSubmitted}
     #return render(request, 'quiz/editAvatar.html', {'user_id': student_id, 'form': form, 'currentPlayerAvatar': currentPlayerRecord.avatarID})
     return render(request, 'quiz/editAvatar.html', context)
 
@@ -771,12 +774,535 @@ def editQuestion(request, user_id, field_id, question_id):
     'errormsg5': errormsg5, 'errormsg6': errormsg6, 'errormsg7': errormsg7, 'errormsg8': errormsg8}
     return render(request, 'quiz/editQuestion.html', context)  
 
-def play(request, user_id):
+def chooseField(request, user_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
 
     #check logged in or not
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    response = "%s, "
-    return HttpResponse(response % user_id)
+    currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
+    currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
+    currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index-nonadmin'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+    dashboardNav = ' Pelajar'
+    user_type = 'pelajar'
+
+    isFieldSelected = False
+    selectedFieldID = 0
+    #get all field records ordered by True > False and ascending name order
+    gameFields = quiz.models.GameField.objects.order_by('-show', 'name')
+    #get values_list of field name, also ordered by True > False and ascending name order
+    fieldNameList = list(gameFields.values_list('name', flat=True).order_by('-show', 'name'))
+    #get values_list of field show column, also ordered by True > False and ascending name order
+    fieldShowList = list(gameFields.values_list('show', flat=True).order_by('-show', 'name'))
+    #get all field image records
+    allFieldImage = quiz.models.ImageField.objects.all()
+    #instantiate list of field image URL
+    imageURLList = []
+
+    #append image URL into imageURLList following the order of gameFields
+    for field in gameFields:
+        for image in allFieldImage:
+            if field.imageURL_id == image.id:
+                imageURLList.append(image.imageURL)
+                break
+
+    if request.method == 'POST':
+        form = ChooseFieldForm(request.POST)
+        if form.is_valid():
+            filledList = form.cleaned_data
+            selectedFieldRecord = gameFields.get(name=filledList['name'])
+            selectedFieldID = selectedFieldRecord.id
+            isFieldSelected = True
+
+            context = {'dashboardNav': dashboardNav, 'username': currentPlayerUsername,
+            'currentAvatarDetailsObject': currentAvatarDetailsObject, 'gameFields': gameFields,
+            'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
+            'dashboard': urlDashboard, 'logout': urlLogout, 'form': form, 'isFieldSelected': isFieldSelected,
+            'selectedFieldID': selectedFieldID, 'imageURLList': imageURLList, 'fieldNameList': fieldNameList,
+            'fieldShowList': fieldShowList}
+            #return HttpResponse('dah pilih')
+            return render(request, 'quiz/chooseField.html', context)
+    else:
+        form = ChooseFieldForm()
+
+    context = {'dashboardNav': dashboardNav, 'username': currentPlayerUsername,
+    'currentAvatarDetailsObject': currentAvatarDetailsObject, 'gameFields': gameFields,
+    'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
+    'dashboard': urlDashboard, 'logout': urlLogout, 'form': form, 'isFieldSelected': isFieldSelected,
+    'selectedFieldID': selectedFieldID, 'imageURLList': imageURLList, 'fieldNameList': fieldNameList,
+    'fieldShowList': fieldShowList}
+    return render(request, 'quiz/chooseField.html', context)
+
+def getRandomQuestion(cnt_ques, allQuestionsPerField, questionsExceptAttended):
+    id_list = list(allQuestionsPerField.order_by('id').values_list('id', flat=True))
+    min_id = min(id_list)
+    max_id = max(id_list)
+
+    while True:
+        randomID = randint(min_id, max_id)
+        if cnt_ques == 1:
+            chosenQuestionRecord = allQuestionsPerField.filter(id=randomID).first()
+        else:
+            chosenQuestionRecord = questionsExceptAttended.filter(id=randomID).first()
+        
+        if chosenQuestionRecord:
+            return chosenQuestionRecord
+
+def getRandomHint(nextHintRecords):
+    id_list = list(nextHintRecords.order_by('id').values_list('id', flat=True))
+    min_id = min(id_list)
+    max_id = max(id_list)
+
+    while True:
+        randomID = randint(min_id, max_id)
+        chosenHintRecord = nextHintRecords.filter(id=randomID).first()
+
+        if chosenHintRecord:
+            return chosenHintRecord 
+
+def play(request, user_id, field_id, cnt_ques):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
+    currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
+    currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index-nonadmin'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+    dashboardNav = ' Pelajar'
+    user_type = 'pelajar'
+
+    currentFieldRecord = quiz.models.GameField.objects.get(id=field_id)
+
+    #[TEST] this one for test sementara je, biar dia guna the same record sbb tkmau create banyak2 record if refresh page play
+    """ currentFieldPlayerSession = quiz.models.FieldPlayerSession.objects.get_or_create(
+        fieldPlayerID_id=user_id,
+        fieldID_id=field_id
+    )[0]  """
+
+    # real one
+    allCurrFieldPlayerSession = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, fieldID_id=field_id).order_by('id')
+    cntFieldPlayerSession = allCurrFieldPlayerSession.count()
+
+    if cntFieldPlayerSession > 0:
+        #if cnt_ques = 1 for GET request je (initial load), bukannya create waktu refresh page after submit first ques gak
+        #note: if refresh page at first ques, still create a new record (redundancy? but the old one has default values)
+        if int(cnt_ques) == 1 and request.method != 'POST': 
+            currentFieldPlayerSession = quiz.models.FieldPlayerSession.objects.create(
+                fieldPlayerID_id=user_id,
+                fieldID_id=field_id
+            )
+        else:
+            currentFieldPlayerSession = allCurrFieldPlayerSession.last()
+    else:
+        currentFieldPlayerSession = quiz.models.FieldPlayerSession.objects.create(
+            fieldPlayerID_id=user_id,
+            fieldID_id=field_id
+        )
+
+    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id)
+    currentPlayerTotalScoreAllFieldList = list(currentPlayerAllFieldRecords.values_list('currentPointsEarned', flat=True))
+    currentPlayerTotalScoreAllField = 0
+    for score in currentPlayerTotalScoreAllFieldList:
+        currentPlayerTotalScoreAllField += score
+
+    allQuestionsPerField = quiz.models.GameQuestion.objects.filter(fieldID_id=field_id)
+    next_cnt_ques = str(int(cnt_ques) + 1)
+
+    """ del request.session['attendedQuestions']
+    del request.session['cntQuesList']
+    del request.session['user_id']
+    del request.session['field_id']
+    del request.session['cnt_ques']
+    del request.session['hasSubmittedList']
+    del request.session['hasAnsweredList']
+    del request.session['isCorrectList']
+    del request.session['hintsUsedList']
+    return HttpResponse("done") """
+
+    """ return HttpResponse(
+        "session list: " + str(request.session['attendedQuestions']) +
+        ", cntQuesList: " + str(request.session['cntQuesList']) +
+        ", hasSubmittedList: " + str(request.session['hasSubmittedList']) +
+        ", hasAnsweredList: " + str(request.session['hasAnsweredList']) +
+        ", isCorrectList: " + str(request.session['isCorrectList']) +
+        ", hintUsedList: " + str(request.session['hintsUsedList']) +
+        ", user_id req: " + str(request.session['user_id']) +
+        ", field_id req: " + str(request.session['field_id']) +
+        ", cnt_ques req: " + str(request.session['cnt_ques'])
+    ) """
+
+    #for first ques
+    #if baru load page first ques (initial) OR refresh page first ques time belum jawab
+    #   if the essential keys is a subset (exist) in current session keys
+    #   or if the essential keys do not exist...
+    #       give default values to request session keys to avoid guna attendedQuestions, cntQuesList yg sama as prev session
+    #       for the same user AND same field/diff field
+    #meaning whoever starts the quiz, no matter what field, will get default keys values initially
+    required_keys = frozenset(('attendedQuestions','cntQuesList','user_id','field_id','cnt_ques','hasSubmittedList',
+    'hasAnsweredList', 'isCorrectList', 'hintsUsedList'))
+
+    if cnt_ques == '1' and request.method == 'GET':
+        if required_keys <= request.session.keys():
+            request.session['attendedQuestions'] = []
+            request.session['cntQuesList'] = []
+            request.session['user_id'] = user_id #test
+            request.session['field_id'] = field_id #test
+            request.session['cnt_ques'] = cnt_ques #test
+            request.session['hasSubmittedList'] = [] #test
+            request.session['hasAnsweredList'] = [] #test
+            request.session['isCorrectList'] = [] #test
+            request.session['hintsUsedList'] = [] 
+        else:
+            request.session['attendedQuestions'] = []
+            request.session['cntQuesList'] = []
+            request.session['user_id'] = user_id
+            request.session['field_id'] = field_id
+            request.session['cnt_ques'] = cnt_ques
+            request.session['hasSubmittedList'] = []
+            request.session['hasAnsweredList'] = []
+            request.session['isCorrectList'] = []
+            request.session['hintsUsedList'] = []
+
+    attendedQuestionsIDsList = request.session['attendedQuestions']
+    questionsExceptAttended = allQuestionsPerField #for getRandomQuestion condition cnt_ques = 1
+    questionsExceptAttendedIDs = [] #[TEST] for display in template; if cnt_ques=1 - [], else - take from ifelse below
+
+    #if have more than one cnt_ques in list (not into the first ques)
+    if len(request.session['cntQuesList']) > 0:
+        #if current cnt_ques same as the latest cnt_ques in list ((GET) page refreshed by user OR (POST) after submit while displaying answers)
+        #display same ques
+        if cnt_ques == request.session['cntQuesList'][-1]:
+            nextQuestionRecord = quiz.models.GameQuestion.objects.get(id=request.session['attendedQuestions'][-1])
+        #if cnt_ques dah the next one, now not at page after submit, but moved on to new ques page
+        #fetch randomly new ques excluding prev question(s)
+        else:
+            request.session['cnt_ques'] = cnt_ques
+            request.session['cntQuesList'].append(cnt_ques)
+
+            questionsExceptAttended = allQuestionsPerField.exclude(id__in=attendedQuestionsIDsList).order_by('id')
+            questionsExceptAttendedIDs = list(questionsExceptAttended.values_list('id', flat=True).order_by('id')) #test
+            nextQuestionRecord = getRandomQuestion(cnt_ques, allQuestionsPerField, questionsExceptAttended)
+            request.session['attendedQuestions'].append(nextQuestionRecord.id)
+            attendedQuestionsIDsList = request.session['attendedQuestions']
+
+            #[KIV] delete request session after 10th ques
+            """ if cnt_ques == '10':
+                del request.session['attendedQuestions']
+                del request.session['cntQuesList'] """
+    #if no cnt_ques in list (this is first ques)
+    #fetch any random ques
+    else:
+        request.session['cnt_ques'] = cnt_ques
+        request.session['cntQuesList'].append(cnt_ques)
+
+        nextQuestionRecord = getRandomQuestion(cnt_ques, allQuestionsPerField, questionsExceptAttended)
+        request.session['attendedQuestions'].append(nextQuestionRecord.id)
+        attendedQuestionsIDsList = request.session['attendedQuestions']
+
+    questionText = nextQuestionRecord.questionText
+    indices = []
+    questionTextOpt = []
+    questionTextOnly = ""
+
+    if 'I.' in questionText:
+        indices.append(questionText.find('I.'))
+        indices.append(questionText.find('II.'))
+        indices.append(questionText.find('III.'))
+        indices.append(questionText.find('IV.'))
+    
+        questionTextOnly = questionText[:indices[0]]
+
+        for i in range(len(indices)):
+            if i != len(indices)-1:
+                questionTextOpt.append(questionText[indices[i]:indices[i+1]])
+            else:
+                questionTextOpt.append(questionText[indices[i]:])
+
+    nextAnswerRecords = quiz.models.GameAnswer.objects.filter(questionID_id=nextQuestionRecord.id).order_by('id')
+    ANSWER_CHOICES = []
+    for i in range(len(nextAnswerRecords)):
+        if nextAnswerRecords[i].isCorrect == True:
+            ANSWER_CHOICES.append((str(nextAnswerRecords[i].isCorrect), nextAnswerRecords[i].answerText))
+        else:
+            ANSWER_CHOICES.append((str(nextAnswerRecords[i].isCorrect) + '_' + str(i+1), nextAnswerRecords[i].answerText))
+
+    nextHintRecords = quiz.models.GameHint.objects.filter(questionID_id=nextQuestionRecord.id).order_by('id')
+    cntHint = nextHintRecords.count()
+    if cntHint > 0:
+        randomHint = getRandomHint(nextHintRecords)
+    else:
+        randomHint = None
+
+    isCorrect = False
+    isClicked = 'False'
+    hasSubmitted = False
+    hasAnswered = False
+    chosenAnswerText = ""
+
+    if request.method == 'POST':
+        if request.is_ajax():
+            if request.POST['requestType'] == 'Next':
+                isClicked = 'True'
+                currentFieldPlayerSession.dateLastPlayed = datetime.now
+                duration = 0
+                if request.POST['timeLimit'] == '10':
+                    duration = int(request.POST['endWidth'])/10
+                elif request.POST['timeLimit'] == '20':
+                    duration = int(request.POST['endWidth'])/5
+                elif request.POST['timeLimit'] == '30':
+                    duration = float(request.POST['endWidth'])/3.33
+                currentFieldPlayerSession.timeTaken = currentFieldPlayerSession.timeTaken + timedelta(seconds=duration)
+                currentFieldPlayerSession.save()
+
+                result = {
+                    'isClicked': isClicked,
+                    'duration': duration
+                    #test untuk tengok if for case pilih answer + click next, dia update duration ni je ke (BETUL),
+                    #or update +timeLimit sekali (SALAH)
+                }
+                return JsonResponse(result)
+            elif request.POST['requestType'] == 'updateBalanceHint_1':
+                cntHint = int(request.POST['cntHint'])
+            
+                currentFieldPlayerSession.hintsUsedCount += 1
+                currentFieldPlayerSession.currentPointsEarned -= nextHintRecords.get(id=int(request.POST['usedHintID'])).value
+                currentFieldPlayerSession.save()
+
+                currentPlayerTotalScoreAllField -= nextHintRecords.get(id=int(request.POST['usedHintID'])).value
+
+                context = {
+                    'cntHint': cntHint,
+                    'currentFieldPlayerSession': currentFieldPlayerSession,
+                    'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField
+                }
+                return render(request, 'quiz/updateBalanceHint1.html', context)
+            elif request.POST['requestType'] == 'updateBalanceHint_2':
+                cntHint = int(request.POST['cntHint'])
+
+                context = {
+                    'cntHint': cntHint
+                }
+                return render(request, 'quiz/updateBalanceHint2.html', context)
+            elif request.POST['requestType'] == 'updateHint_3':
+                cntHint = int(request.POST['cntHint'])
+                request.session['hintsUsedList'].append(int(request.POST['usedHintID']))
+                updatedHintRecords = nextHintRecords.exclude(id__in=request.session['hintsUsedList']).order_by('id')
+                if cntHint > 0:
+                    randomHint = getRandomHint(updatedHintRecords)
+
+                currentFieldPlayerSession = allCurrFieldPlayerSession.last()
+
+                context = {
+                    'cntHint': cntHint,
+                    'currentFieldPlayerSession': currentFieldPlayerSession,
+                    'randomHint': randomHint
+                }
+                return render(request, 'quiz/updateHint3.html', context)
+            elif request.POST['requestType'] == 'updateHint_4':
+                cntHint = int(request.POST['cntHint'])
+                #request.session['hintsUsedList'].append(int(request.POST['usedHintID']))
+                updatedHintRecords = nextHintRecords.exclude(id__in=request.session['hintsUsedList']).order_by('id')
+                if cntHint > 0:
+                    randomHint = getRandomHint(updatedHintRecords)
+
+                context = {
+                    'cntHint': cntHint,
+                    'randomHint': randomHint
+                }
+                return render(request, 'quiz/updateHint4.html', context)
+        else:
+            hasSubmitted = True
+            form = PlayForm(data=request.POST, answers=ANSWER_CHOICES)
+            if form.is_valid():
+                filledList = form.cleaned_data
+                difficulty = nextQuestionRecord.difficulty
+                
+                if filledList['isClicked'] == 'True':
+                    if filledList['answer_choices'] != "":
+                        hasAnswered = True
+                        #filledList['answer_choices'] is string, not Boolean
+
+                        for index, choice in enumerate(ANSWER_CHOICES):
+                            #choice[0] (value 'True'/'False_1'/'False_2'/'False_3') is string
+                            #choice[1] (questionText) is a string
+
+                            #since choice[0] and choice[1] are strings, and all the values (choice[0]) are unique,
+                            #we can just find match of choice[0] and the filled value
+                            #and assign choice[1] to chosenAnswerText right away
+                            if filledList['answer_choices'] == choice[0]:
+                                chosenAnswerText = choice[1]
+
+                        if filledList['answer_choices'] == 'True':
+                            isCorrect = True
+                            currentFieldPlayerSession.totalCorrect += 1
+
+                            if difficulty == 'Mudah':
+                                currentFieldPlayerSession.countEasy += 1
+                                currentFieldPlayerSession.countEasyCorrect += 1
+                                currentFieldPlayerSession.currentPointsEarned += 6
+                                currentPlayerTotalScoreAllField += 6
+                            elif difficulty == 'Sederhana':
+                                currentFieldPlayerSession.countMedium += 1
+                                currentFieldPlayerSession.countMediumCorrect += 1
+                                currentFieldPlayerSession.currentPointsEarned += 8
+                                currentPlayerTotalScoreAllField += 8
+                            elif difficulty == 'Sukar':
+                                currentFieldPlayerSession.countHard += 1
+                                currentFieldPlayerSession.countHardCorrect += 1
+                                currentFieldPlayerSession.currentPointsEarned += 10
+                                currentPlayerTotalScoreAllField += 10
+                #if didn't click "Semak Jawapan", no matter clicked on any answer/not, add timeLimit to timeTaken (consider never submit on time)
+                else:
+                    currentFieldPlayerSession.timeTaken = currentFieldPlayerSession.timeTaken + timedelta(seconds=int(nextQuestionRecord.timeLimit))
+
+                # if filledList['answer_choices'] is None, means time's up & tak jawab OR mmg tak jawab (tertekan next without click answer)
+                # so hasAnswered remains False
+                # but still save dateLastPlayed to current time
+                # or maybe change the name to "dateFinished"???
+                # note: everytime save() ni automatic yg dateLastPlayed updated to current time
+                currentFieldPlayerSession.save()
+
+                # TEST
+                request.session['hasSubmittedList'].append(hasSubmitted)
+                request.session['hasAnsweredList'].append(hasAnswered)
+                request.session['isCorrectList'].append(isCorrect)
+
+                context = {
+                    'dashboardNav': dashboardNav,
+                    'username': currentPlayerUsername,
+                    'currentAvatarDetailsObject': currentAvatarDetailsObject, 
+                    'user_type': user_type,
+                    'user_id': user_id,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard': urlDashboard,
+                    'logout': urlLogout,
+                    'form': form,
+                    'currentFieldPlayerSession': currentFieldPlayerSession,
+                    'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
+                    'nextQuestionRecord': nextQuestionRecord,
+                    'nextAnswerRecords': nextAnswerRecords,
+                    'nextHintRecords': nextHintRecords,
+                    'cnt_ques': int(cnt_ques),
+                    'isCorrect': isCorrect,
+                    'field_id': field_id,
+                    'questionTextOpt': questionTextOpt,
+                    'questionTextOnly': questionTextOnly,
+                    'chosenAnswerText': chosenAnswerText,
+                    'hasAnswered': hasAnswered,
+                    'hasSubmitted': hasSubmitted,
+                    'sessionList': str(request.session['attendedQuestions']), #test
+                    'cntQuesList': str(request.session['cntQuesList']), #test
+                    'next_cnt_ques': next_cnt_ques,
+                    'hasSubmittedList': str(request.session['hasSubmittedList']), #test
+                    'hasAnsweredList': str(request.session['hasAnsweredList']), #test
+                    'isCorrectList': str(request.session['isCorrectList']), #test
+                    'questionsExceptAttendedIDs': questionsExceptAttendedIDs, #test
+                    'cntHint': cntHint,
+                    'randomHint': randomHint,
+                    'hintsUsedList': str(request.session['hintsUsedList']), #test
+                    'isClicked': filledList['isClicked']
+                }
+                
+                return render(request, 'quiz/quizPlay.html', context)
+    else:
+        form = PlayForm(answers=ANSWER_CHOICES)
+
+    context = {
+        'dashboardNav': dashboardNav,
+        'username': currentPlayerUsername,
+        'currentAvatarDetailsObject': currentAvatarDetailsObject,
+        'user_type': user_type,
+        'user_id': user_id,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'form': form,
+        'currentFieldPlayerSession': currentFieldPlayerSession,
+        'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
+        'nextQuestionRecord': nextQuestionRecord,
+        'nextAnswerRecords': nextAnswerRecords,
+        'nextHintRecords': nextHintRecords,
+        'cnt_ques': int(cnt_ques),
+        'isCorrect': isCorrect,
+        'field_id': field_id,
+        'questionTextOpt': questionTextOpt,
+        'questionTextOnly': questionTextOnly,
+        'chosenAnswerText': chosenAnswerText,
+        'hasAnswered': hasAnswered,
+        'hasSubmitted': hasSubmitted,
+        'sessionList': str(request.session['attendedQuestions']), #test
+        'cntQuesList': str(request.session['cntQuesList']),#test
+        'next_cnt_ques': next_cnt_ques,
+        'hasSubmittedList': str(request.session['hasSubmittedList']), #test
+        'hasAnsweredList': str(request.session['hasAnsweredList']), #test
+        'isCorrectList': str(request.session['isCorrectList']), #test
+        'questionsExceptAttendedIDs': questionsExceptAttendedIDs, #test
+        'cntHint': cntHint,
+        'randomHint': randomHint,
+        'hintsUsedList': str(request.session['hintsUsedList']), #test
+        'isClicked': isClicked}
+
+    return render(request, 'quiz/quizPlay.html', context)
+
+def showResult(request, user_id, field_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
+    currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
+    currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index-nonadmin'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+    dashboardNav = ' Pelajar'
+    user_type = 'pelajar'
+
+    return HttpResponse("show result")
+
+#[KIV] delete request.session after navigate away from play page
+""" def check_url(sender, **kwargs):
+    #original_path = reverse('quiz:play', args=(request.session['user_id'], request.session['field_id'], request.session['cnt_ques'],))
+    original_path = '/pelajar/'+ request.session['user_id'] + '/mula/' + request.session['field_id'] + '/' + request.session['cnt_ques'] + '/'
+    return HttpResponse('not same path')
+    if HttpRequest.get_full_path(request) != original_path:
+        #request.session.flush()
+        return HttpResponse('not same path')
+        if 'attendedQuestions' in request.session and 'cntQuesList' in request.session:
+            del request.session['attendedQuestions']
+            del request.session['cntQuesList']
+            del request.session['user_id']
+            del request.session['field_id']
+            del request.session['cnt_ques']
+            del request.session['hasSubmittedList']
+            del request.session['hasAnsweredList']
+            del request.session['isCorrectList']
+            del request.session['hintsUsedList']
+            return HttpResponse('done delete')
+ """

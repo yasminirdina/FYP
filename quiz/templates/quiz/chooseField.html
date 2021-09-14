@@ -1,0 +1,136 @@
+{% extends "quiz/baseNonAdmin.html" %}
+{% load static %}
+{% load quiz_index %}
+
+{% block title %}
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Pilih Bidang Kerjaya</title>
+{% endblock %}
+
+{% block styles %}
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'css/chooseField.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+    <div class="div-player">
+        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+        <span class="h2a-username" style="text-align: center;">{{ username }}</span>
+    </div>
+
+    <h1 class="h1-title">Pilih Bidang Kerjaya</h1>
+
+    <p style="display: none;">{{ isFieldSelected }}</p>
+
+    <form action="{% url 'quiz:choose-field' user_id %}" class="ChooseFieldForm" method="post">
+        <div class="div-outer">
+            {% csrf_token %}
+            {{ form.media.js }}
+            {% for radio in form.name %}
+                <div class="div-choice">
+                    {% if fieldShowList|index:forloop.counter0 == True %}
+                        <input type="radio" name="name" value="{{ radio.data.value }}" id="{{ radio.id_for_label }}"/>
+                        <div class="div-img-label">
+                            <img class="img-field" src="{% static 'images/quiz_field/' %}{{ imageURLList|index:forloop.counter0 }}"> 
+                            <br>
+                            <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                        </div>
+                    {% else %}
+                        <input type="radio" name="name" value="{{ radio.data.value }}" id="{{ radio.id_for_label }}" disabled/>
+                        <div class="div-img-label" style="opacity: 0.6;">
+                            <img class="img-field no-hover" src="{% static 'images/quiz_field/' %}{{ imageURLList|index:forloop.counter0 }}"> 
+                            <br>
+                            <label class="no-hover" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                            <div class="div-coming-soon">
+                                AKAN DATANG
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+
+    <div class="div-buttons">
+        <button class="btn play">
+            &#128898; MULA
+        </button>
+        <button class="btn back-for-chooseField">
+            <a class="a-for-chooseField" href="{% url 'quiz:index-student' user_id %}">Kembali</a>
+        </button>
+    </div>
+
+    <div class="div-bg-modal">
+        <div class="div-modal-content">
+            <div class="div-modal-header">
+                Memulakan kuiz...
+            </div>
+
+            <div class="div-outer-bg-bar">
+                <div class="div-bg-bar">
+                    <div class="div-bar"></div>
+                </div>
+            </div>
+
+            <div class="div-cancel-button">
+                <button class="btn cancel-for-chooseField">Batal</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script>
+        var isSelect = '{{ isFieldSelected }}';
+        var user_id = '{{ user_id }}';
+        var selectedFieldID = '{{ selectedFieldID }}';
+    </script>
+    <script>
+        const playBtn = document.querySelector('.play')
+        const modal =  document.querySelector('.div-bg-modal')
+        const cancelBtn =  document.querySelector('.div-cancel-button')
+        const form = document.querySelector('.ChooseFieldForm')
+        var i = 0;
+        var cnt_ques = 1;
+
+        playBtn.addEventListener('click', () => {
+            form.submit();
+        })
+
+        cancelBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            if (i != 0) {
+                clearInterval(id);
+                i = 0;
+            }
+        })
+
+        if (isSelect === 'True'){
+            modal.style.display = 'flex';
+            if (i == 0) {
+                i = 1;
+                var elem = document.querySelector(".div-bar");
+                var width = 1;
+                var id = setInterval(frame, 50);
+                //frame();
+            }
+        }
+
+        function frame() {
+            if (width >= 100) {
+                clearInterval(id);
+                i = 0;
+                redirect();
+            } else {
+                width++;
+                elem.style.width = width + "%";
+            }
+        }
+
+        function redirect() {
+            window.location.href = "/kuiz/pelajar/" + user_id + "/mula/" + selectedFieldID + "/" + cnt_ques + "/";
+        }
+    </script>
+{% endblock %}

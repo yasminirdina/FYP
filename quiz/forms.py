@@ -4,6 +4,7 @@ from . import models
 from django.utils.translation import ugettext_lazy as _
 from django.forms import BaseFormSet, BaseInlineFormSet
 from django.forms.widgets import ClearableFileInput
+import quiz.views
 
 #get all objects (image records) in ImageField table
 allFieldImage = quiz.models.ImageField.objects.all().order_by('id')
@@ -263,3 +264,42 @@ class AvatarForm(forms.ModelForm):
             'workplace': _('Tempat kerja avatar anda'),
             'avatarGender': _('Pilih jantina avatar anda'),
         }
+
+#get all field records ordered by True > False and ascending name order
+gameFields = quiz.models.GameField.objects.order_by('-show', 'name')
+#get values_list of field name, also ordered by True > False and ascending name order
+fieldNameList = list(gameFields.values_list('name', flat=True).order_by('-show', 'name'))
+#get all field image records
+allFieldImage = quiz.models.ImageField.objects.all()
+#instantiate list of field image URL
+imageURLList = []
+
+#append image URL into imageURLList following the order of gameFields
+for field in gameFields:
+    for image in allFieldImage:
+        if field.imageURL_id == image.id:
+            imageURLList.append(image.imageURL)
+            break
+
+#instantiate FIELD_CHOICES
+FIELD_CHOICES = []
+
+#append field name and corresponding image URL into FIELD_CHOICES
+for i in range(len(fieldNameList)):
+    # FIELD_CHOICES.append((fieldNameList[i], imageURLList[i]))
+    FIELD_CHOICES.append((fieldNameList[i], fieldNameList[i]))
+
+class ChooseFieldForm(forms.Form):
+    name = forms.ChoiceField(label="Pilih bidang kerjaya:", widget=forms.RadioSelect, choices=FIELD_CHOICES, required=True)
+    name.widget.attrs.update({'class' : 'name'})
+
+class PlayForm(forms.Form):
+    isClicked = forms.CharField(widget=forms.HiddenInput(), max_length=5, required=False)
+    answer_choices = forms.ChoiceField(label="Pilih jawapan yang betul:", widget=forms.RadioSelect, choices=[], required=False)
+    answer_choices.widget.attrs.update({'class' : 'answer_choices'})
+
+    def __init__(self, answers=None, *args, **kwargs):
+        super(PlayForm, self).__init__(*args, **kwargs)
+        if answers:
+            # for answer in answers:
+            self.fields['answer_choices'].choices = answers

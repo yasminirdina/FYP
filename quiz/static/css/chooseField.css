@@ -1,0 +1,242 @@
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(130, 124, 225);
+    border-radius: 35px;
+    padding: 1vw 2vw;
+    font-size: 2vw;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    color: white;
+    width: 15vw;
+    min-width: 7rem;
+    min-height: 2rem;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.back-for-chooseField{
+    background-color: rgb(52, 202, 152);
+}
+
+.back-for-chooseField:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+}
+
+.cancel-for-chooseField{
+    width: 10vw;
+    font-size: 1.1rem;
+}
+
+/* hyperlink */
+.a-for-chooseField {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* image */
+.img-field{
+    max-width: 100%;
+    max-height: 100%;
+    width: 8.5vw;
+    height: 8.5vw;
+    padding: 0.5vw;
+}
+
+/* div */
+.div-outer{
+    display: grid;
+    grid-template-columns: repeat(3, 33.3%);
+    box-sizing: border-box;
+    width: 60%;
+    height: 50vw;
+    overflow-y: auto;
+    overflow-x: auto;
+    min-width: 30rem;
+    background-color: rgba(255, 255, 255, 0.384);
+    border-radius: 10px;
+    padding: 1vw;
+    padding-right: 3vw;
+    margin: 0 11vw;
+    position: relative;
+    align-items: center;
+    justify-items: center;
+    gap: 1vw;
+}
+
+.div-choice{
+    width: 100%;
+    height: 100%;
+    /* background-color: rgb(247, 21, 21); */
+    border-radius: 10px;
+}
+
+.div-img-label{
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+    background-color: rgb(130, 124, 225);
+    align-items: center;
+    justify-content: center;
+    padding: 0.5vw;
+}
+
+.div-img-label label{
+    position: relative;
+    width: 100%;
+    font-family: 'Poppins';
+    font-size: 1.1rem;
+    font-weight: normal;
+    word-break: break-all;
+}
+
+.div-choice input[type="radio"]:empty{
+    display: none;
+}
+
+.div-choice input[type="radio"]:empty ~ .div-img-label .img-field, .div-choice input[type="radio"]:empty ~ .div-img-label label{
+    position: relative;
+    line-height: 1.5rem;
+    cursor: pointer;
+    -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.div-choice input[type="radio"]:hover:not(:checked) ~ .div-img-label{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    transition: transform 150ms;
+    transform: scale(1.03);
+    /* top: 50.5%;
+    left: 50.5%;
+    -ms-transform: scale(1.03) translate(-48.75%, -48.75%);
+    transform: scale(1.03) translate(-48.75%, -48.75%); */
+}
+
+.div-choice input[type="radio"]:checked ~ .div-img-label{
+    border: 3px solid black;
+    background-color: rgb(245, 118, 59);
+}
+
+.div-coming-soon{
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    height: max-content;
+    top: 35%;
+    bottom: 35%;
+    left: 0;
+    padding: 1vw 0;
+    background-color: rgb(90, 90, 90);
+    font-family: 'Poppins';
+    font-size: 1.1rem;
+    font-weight: bolder;
+}
+
+.div-buttons{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    width: 31vw;
+    margin: 2vw 14vw;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 1rem;
+}
+
+.div-bg-modal{
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5); /* make it half transparent */
+    position: fixed;
+    top: 0px;
+    z-index: 1;
+    display: none;  /* It will remain invisible until you open */
+    justify-content: center; /*center horizontally*/ 
+    align-items: center; /* center vertically */
+}
+
+.div-modal-content{
+    width: 31vw;
+    height: max-content;
+    min-width: 25rem;
+    min-height: 9rem;
+    background-color: white;
+    border: none; 
+    border-radius: 15px;
+    padding: 0 1vw;
+    padding-right: 1.5vw;
+    position: relative;
+    margin: 6vw 0;
+    font-size: 1.1rem;
+    font-family: 'Poppins';
+    color: black;
+}
+
+.div-modal-header{
+    position: relative;
+    width: max-content;
+    height: 2vw;
+    min-height: 1.2rem;
+    padding: 1rem 0;
+    z-index: 1;
+    font-size: 1.1rem;
+    font-family: 'Poppins';
+    font-weight: bold;
+    /* background-color: rgb(121, 85, 118); */
+}
+
+.div-outer-bg-bar {
+    text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.div-bg-bar {
+    position: relative;
+    width: 90%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: 2px solid rgb(114, 114, 114);
+    border-radius: 15px;
+    background-color: rgb(241, 236, 236);
+}
+  
+.div-bar {
+    position: relative;
+    width: 0%;
+    height: 1.5rem;
+    min-height: 1.5rem;
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(52, 202, 152);
+}
+
+.div-cancel-button{
+    position: relative;
+    width: max-content;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+/* ul-navbar */
+.ul-navbar{
+    position: unset;
+}
+
+/* no hover for disabled (not shown) fields */
+.no-hover{
+    pointer-events: none;
+}

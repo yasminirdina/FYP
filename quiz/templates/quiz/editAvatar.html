@@ -5,22 +5,114 @@
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Avatar</title>
 {% endblock %}
 
-{% block styles %}   
+{% block styles %}
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
     <link rel="stylesheet" href="{% static 'css/editAvatar.css' %}">
 {% endblock %}
 
-{% block header %}
-    <h1>Tetapan Avatar</h1>
-{% endblock %}
-
 {% block content %}
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+    <div class="div-player">
+        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+        <span class="h2a-username" style="text-align: center;">{{ username }}</span>
+    </div>
+
+    <h1 class="h1-title">Tetapan Avatar</h1>
+
+    <p style="display: none;">{{ isSubmitted }}</p>
+
     <form action="{% url 'quiz:edit-avatar' user_id %}" class="AvatarForm" method="post">
-        {% csrf_token %}
-        {{ form.media.js }}
-        {{ form.as_p }}
-        <button class="btn avatar-for-editAvatar" type="submit">Simpan</button>
-        <button class="btn main-for-editAvatar">
+        <div class="div-outer">
+            {% csrf_token %}
+            {{ form.media.js }}
+            <table class="table-form">
+                {{ form }}
+            </table>
+        </div>
+    </form>
+
+    <div class="div-buttons">
+        <button class="btn confirm-for-editAvatar">Simpan</button>
+        <button class="btn cancel-for-editAvatar">
             <a class="a-for-editAvatar" href="{% url 'quiz:index-student' user_id %}">Batal</a>
         </button>
-    </form>
+    </div>
+
+    <div class="div-bg-modal-1">
+        <div class="div-modal-content-1">
+            <div class="div-modal-header">
+                Mesej
+            </div>
+
+            Adakah anda pasti ingin mengemaskini avatar anda?
+
+            <div class="div-submit-button">
+                <button class="btn submit-for-editAvatar" type="submit">Ya</button>
+                <button class="btn cancelSubmit-for-editAvatar">Tidak</button>
+            </div>
+
+            <div class="div-close-1"> + </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal-2">
+        <div class="div-modal-content-2">
+            <div class="div-modal-header">
+                Mesej
+            </div>
+
+            Avatar anda berjaya dikemaskini!
+
+            <div class="div-submit-button">
+                <button class="btn back-for-editAvatar">
+                    <a class="a-for-editAvatar" href="{% url 'quiz:index-student' user_id %}">Halaman Utama</a>
+                </button>
+            </div>
+
+            <div class="div-close-2"> + </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js2 %}
+    <script>
+        var submit = '{{ isSubmitted }}';
+    </script>
+    <script>
+        const openButton = document.querySelector('.confirm-for-editAvatar')
+        const modal1 =  document.querySelector('.div-bg-modal-1')
+        const closeBtn1 =  document.querySelector('.div-close-1')
+        const form = document.querySelector('.AvatarForm')
+        const submitBtn = document.querySelector('.submit-for-editAvatar')
+        const cancelSubmitBtn = document.querySelector('.cancelSubmit-for-editAvatar')
+        const modal2 = document.querySelector('.div-bg-modal-2')
+        const closeBtn2 =  document.querySelector('.div-close-2')
+
+        openButton.addEventListener('click', () => {
+            modal1.style.display = 'flex';
+        })
+
+        closeBtn1.addEventListener('click', () => {
+            modal1.style.display = 'none';
+        })
+
+        submitBtn.addEventListener('click', () => {
+            form.submit();
+        })
+
+        if (submit === 'True'){
+            modal2.style.display = 'flex';
+        }
+
+        closeBtn2.addEventListener('click', () => {
+            modal2.style.display = 'none';
+        })
+
+        cancelSubmitBtn.addEventListener('click', () => {
+            modal1.style.display = 'none';
+        })
+    </script>
 {% endblock %}

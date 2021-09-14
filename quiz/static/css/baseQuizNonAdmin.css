@@ -1,0 +1,80 @@
+/* :root{
+    background-color: rgb(91, 30, 87);
+} */
+
+/* animated background */
+.bg {
+    animation:slide 3s ease-in-out infinite alternate;
+    background-image: linear-gradient(-60deg, rgba(148, 46, 141, 0.712) 50%, rgba(230, 124, 221, 0.712) 50%);
+    bottom:0;
+    left:-50%;
+    opacity:.5;
+    position:fixed;
+    right:-50%;
+    top:0;
+    z-index:-1;
+}
+  
+.bg2 {
+    animation-direction:alternate-reverse;
+    animation-duration:4s;
+}
+  
+.bg3 {
+    animation-duration:5s;
+}
+
+@keyframes slide {
+    0% {
+      transform:translateX(-25%);
+    }
+    100% {
+      transform:translateX(25%);
+    }
+}
+
+body{
+    color: white;
+    background-color: rgb(91, 30, 87);
+}
+
+/* h1 */
+.h1-title{
+    font-family: 'Poppins';
+    font-size: 3rem;
+    letter-spacing: 5px;
+    text-shadow: 1px 1px rgb(169, 163, 248), 0 0 1em rgb(169, 163, 248), 0 0 0.2em rgb(169, 163, 248);
+    text-decoration: underline rgb(130, 124, 225);
+    text-underline-offset: 0.1em;
+}
+
+/* italic player username */
+.h2a-username {
+    font-family: 'Poppins';
+    font-style: italic;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: white;
+    vertical-align: middle;
+    text-align: center;
+    margin-left: 10px;
+}
+
+/* div */
+.div-player {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(121, 85, 118);
+    border-bottom-right-radius: 1vw;
+    border-bottom-left-radius: 1vw;
+    width: 100% - 5px;
+    top: 0;
+    padding: 5px 10px;
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    box-shadow: 0 0.4rem 1rem 0 rgb(211, 162, 206);
+    /* position: -webkit-sticky;
+    position: sticky; */
+}

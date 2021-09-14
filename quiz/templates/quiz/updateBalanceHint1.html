@@ -1,0 +1,11 @@
+<!-- <h1 class="hud-main-text cntHint-inner" id="hint-inner"> -->
+<p class="p-cntHint" style="display: none; color: black;">{{ cntHint }}</p>
+<p class="p-points" style="display: none; color: black;">{{ currentFieldPlayerSession.currentPointsEarned }}</p>
+<p class="p-totalPoints" style="display: none; color: black;">{{ currentPlayerTotalScoreAllField }}</p>
+
+{% if cntHint > 0 %}
+    {{ cntHint }}
+{% else %}
+    -
+{% endif %}
+<!-- </h1> -->

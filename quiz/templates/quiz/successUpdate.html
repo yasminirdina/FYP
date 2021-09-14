@@ -12,11 +12,14 @@
 {% block header %}
     <h1>{{ title }}</h1>
     <h2>{{ subtitle }}</h2>
-    <h3 style="font-style:italic; color: green;">{{ successMessage }}</h3>
+    <h3 style="font-style:italic; color: rgb(3, 91, 0); background-color: rgb(139, 219, 136);
+    width: fit-content; padding: 0.5vw; padding-left: 0.7vw; padding-right: 0.7vw; border-radius: 5px;">
+        {{ successMessage }}
+    </h3>
 {% endblock %}
 
 {% block content %}
-    <button class="btn back-to-showAvatar">
+    <button class="btn">
         <a class="a-back-for-successUpdate" href="{% url 'quiz:show-avatar' user_id %}">Kembali ke Tetapan Avatar</a>
     </button>
 {% endblock %}
