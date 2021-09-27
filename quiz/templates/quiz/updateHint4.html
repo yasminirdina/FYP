@@ -1,8 +1,7 @@
-<!-- <div class="div-modal-content3-inner" id="modal3-inner"> -->
 <p class="p-hintText">{{ randomHint.hintText }}</p>
 
 {% if randomHint.hintImage %}
-    <img class="img-hintImage" src="{{ randomHint.hintImage.url}}" width="50px" height="50px">
+    <img class="img-hintImage" src="{{ randomHint.hintImage.url }}" style="max-width: 100%; max-height: 60vh;">
 {% endif %}
 
 <div class="div-outer-bg-bar">
@@ -10,4 +9,3 @@
         <div class="div-bar-timer-hint"></div>
     </div>
 </div>
-<!-- </div> -->

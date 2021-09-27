@@ -17,10 +17,18 @@
     <div class="div-player">
         <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
         <span class="h2a-username" style="text-align: center;">{{ username }}</span>
+        <div class="div-music">
+            <audio controls loop="true" preload="auto" id="music" style="display: none;">
+                <source src="{% static 'audio/Goodnightmare.mp3' %}" type="audio/mp3">
+            </audio>
+            <button class="btn music" id="music-play">
+                <i style="font-size: 1.1rem" class="fas" id="music-icon"></i>
+            </button>
+        </div>
     </div>
 
     <h1 class="h1-title">Tetapan Avatar</h1>
-
+    
     <div class="div-outer">
         <div class="div-icon">
             <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
@@ -60,4 +68,106 @@
             </p>
         </div>
     </div>
+{% endblock %}
+
+{% block js2 %}
+    <script>
+        function setCookie(c_name,value,exdays) {
+            if (c_name == 'mainTimePlayed') {
+                var exdate=new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
+                document.cookie=c_name + "=" + c_value;
+            }
+            else if (c_name == 'mainMuted') {
+                var exdate=new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var c_value = escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
+                document.cookie=c_name + "=" + c_value;
+            }
+        }
+
+        function getCookie(c_name) {
+            var i,x,y,ARRcookies=document.cookie.split(";");
+            for (i=0;i<ARRcookies.length;i++) {
+                x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+                y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+                x=x.replace(/^\s+|\s+$/g,"");
+                if (x==c_name) {
+                    return unescape(y);
+                }
+            }
+        }
+
+        var song = document.getElementsByTagName('audio')[0];
+        var played = false;
+        var tillPlayed = getCookie('mainTimePlayed');
+        var isSongMuted = getCookie('mainMuted');
+        const musicBtn = document.getElementById('music-play')
+        const musicIcon = document.getElementsByClassName('fas')
+        song.volume = 0.2;
+
+        $(document).ready(function() {
+            if (isSongMuted) {
+                if (isSongMuted == 'false') {
+                    $('#music-icon').removeClass('fas');
+                    $('#music-icon').addClass('fas fa-volume-up');
+                }
+                else if (isSongMuted == 'true') {
+                    $('#music-icon').removeClass('fas');
+                    $('#music-icon').addClass('fas fa-volume-mute');
+                }
+            }
+            else {
+                $('#music-icon').removeClass('fas');
+                $('#music-icon').addClass('fas fa-volume-up');
+            }
+        });
+
+        musicBtn.addEventListener('click', () => {
+            // alert(song.muted);
+            if (song.muted == false) {
+                song.muted = true;
+                $('#music-icon').removeClass('fas fa-volume-up');
+                $('#music-icon').addClass('fas fa-volume-mute');
+            }
+            else if (song.muted == true) {
+                song.muted = false;
+                $('#music-icon').removeClass('fas fa-volume-mute');
+                $('#music-icon').addClass('fas fa-volume-up');
+            }
+        });
+
+        function update(){
+            if (!played){ //if played = true
+                if (tillPlayed){
+                    song.currentTime = tillPlayed;
+                    song.play();
+                    song.muted = (isSongMuted === 'true');
+                    played = true;
+                }
+                else {
+                    song.play();
+                    song.muted = (isSongMuted === 'true');
+                    played = true;
+                }
+            }
+            else { //if played = false
+                setCookie('mainTimePlayed', song.currentTime);
+                setCookie('mainMuted', song.muted);
+            }
+        }
+
+        setInterval(update, 1000); //0 for localhost & testing only
+
+        var audio  = new Audio('/static/audio/clickDown.mp3');
+        var audio2 = new Audio('/static/audio/clickUp.mp3');
+        audio.volume = 0.5;
+        audio2.volume = 0.5;
+    
+        $(":button").click(function() {
+            audio2.play();
+            audio.play();
+        });
+    </script>
 {% endblock %}

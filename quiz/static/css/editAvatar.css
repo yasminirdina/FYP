@@ -51,6 +51,23 @@
     font-size: 1.1rem;
 }
 
+.music {
+    /* font-size: 1.1rem;
+    vertical-align: middle;
+    width: fit-content;
+    min-width: 3rem;
+    min-height: 3.25rem; */
+    font-size: 1.1rem;
+    vertical-align: middle;
+    width: 3rem;
+    height: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
+    padding: 1vw;
+    line-height: 0;
+    border-radius: 35px;
+}
+
 /* hyperlink */
 .a-for-editAvatar {
     text-decoration: none;
@@ -63,10 +80,11 @@
     background-color: white;
     font-size: 1.1rem;
     font-family: 'Poppins';
-    border-top-left-radius: 25px;
+    border-radius: 25px 10px 10px 25px;
+    /* border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
     border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-right-radius: 10px; */
     border: 1px solid lightgray;
     padding: 1vw;
     margin-left: 1vw;
@@ -121,6 +139,14 @@ td{
 }
 
 /* div */
+.div-music {
+    position: absolute;
+    right: 1vw;
+    left: auto;
+    float: right;
+    color: white;
+}
+
 .div-outer{
     width: 51vw;
     height: max-content;

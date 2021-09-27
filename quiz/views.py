@@ -1,4 +1,5 @@
 from datetime import datetime
+from operator import itemgetter
 import dashboard.models
 import quiz.models
 import json
@@ -12,6 +13,7 @@ from django.contrib import messages
 from random import randint
 from django.core.signals import request_finished
 from datetime import timedelta
+from django.db.models import Sum
 
 # Create your views here.
 def quizMainAdmin(request, user_id):
@@ -450,7 +452,6 @@ def showQuestion(request, user_id, field_id):
             #if admin select filter difficulty selain value 'Tiada'
             if filter_selected != 'Tiada':
                 gameQuestions = gameQuestions.filter(difficulty=filter_selected)
-                #return HttpResponse(filter_selected + ", count: " + str(gameQuestions.count()))
             
     #if admin tak search soalan AND tak filter difficulty (refresh page = GET request)
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
@@ -847,7 +848,7 @@ def getRandomQuestion(cnt_ques, allQuestionsPerField, questionsExceptAttended):
 
     while True:
         randomID = randint(min_id, max_id)
-        if cnt_ques == 1:
+        if cnt_ques == '1':
             chosenQuestionRecord = allQuestionsPerField.filter(id=randomID).first()
         else:
             chosenQuestionRecord = questionsExceptAttended.filter(id=randomID).first()
@@ -867,7 +868,8 @@ def getRandomHint(nextHintRecords):
         if chosenHintRecord:
             return chosenHintRecord 
 
-def play(request, user_id, field_id, cnt_ques):
+# def play(request, user_id, field_id, cnt_ques):
+def play(request, user_id, field_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
 
     #check logged in or not
@@ -888,11 +890,25 @@ def play(request, user_id, field_id, cnt_ques):
 
     currentFieldRecord = quiz.models.GameField.objects.get(id=field_id)
 
-    #[TEST] this one for test sementara je, biar dia guna the same record sbb tkmau create banyak2 record if refresh page play
-    """ currentFieldPlayerSession = quiz.models.FieldPlayerSession.objects.get_or_create(
-        fieldPlayerID_id=user_id,
-        fieldID_id=field_id
-    )[0]  """
+    # AJAX:
+    #   if click "Seterusnya" and go through ajax request to this url with next cnt ques for new question
+    #   or
+    #       if go through form submit ajax request but taking in cnt_ques from quizPlay2.html (dynamic)
+    #       if click "Semak Jawapan" OR using hints
+    # NOT AJAX:
+    #   initial page reload (GET) ques 1
+    if request.is_ajax():
+        if request.method == 'GET': #when load (GET) ques 2 and above only
+            cnt_ques = request.GET.get('cnt_ques')
+        elif request.method == 'POST':
+            if 'requestType' not in request.POST: #after finished ajax request for when clicked "semak jawapan" (POST 1) = submit (POST 2)
+                print("???") #TEST
+                cnt_ques = request.POST['cnt_ques']
+            else: #for ajax post request Next and hint update stuffs
+                print("~~~") #TEST
+                cnt_ques = request.session['cnt_ques']
+    else:
+        cnt_ques = '1' #when load (GET) ques 1
 
     # real one
     allCurrFieldPlayerSession = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, fieldID_id=field_id).order_by('id')
@@ -901,7 +917,7 @@ def play(request, user_id, field_id, cnt_ques):
     if cntFieldPlayerSession > 0:
         #if cnt_ques = 1 for GET request je (initial load), bukannya create waktu refresh page after submit first ques gak
         #note: if refresh page at first ques, still create a new record (redundancy? but the old one has default values)
-        if int(cnt_ques) == 1 and request.method != 'POST': 
+        if cnt_ques == '1' and request.method != 'POST': 
             currentFieldPlayerSession = quiz.models.FieldPlayerSession.objects.create(
                 fieldPlayerID_id=user_id,
                 fieldID_id=field_id
@@ -914,7 +930,9 @@ def play(request, user_id, field_id, cnt_ques):
             fieldID_id=field_id
         )
 
-    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id)
+    currentPlayerAllFieldIDList = list(quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True).values_list('id', flat=True).order_by('id'))
+    currentPlayerAllFieldIDList.append(currentFieldPlayerSession.id)
+    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(id__in=currentPlayerAllFieldIDList)
     currentPlayerTotalScoreAllFieldList = list(currentPlayerAllFieldRecords.values_list('currentPointsEarned', flat=True))
     currentPlayerTotalScoreAllField = 0
     for score in currentPlayerTotalScoreAllFieldList:
@@ -953,6 +971,10 @@ def play(request, user_id, field_id, cnt_ques):
     #       give default values to request session keys to avoid guna attendedQuestions, cntQuesList yg sama as prev session
     #       for the same user AND same field/diff field
     #meaning whoever starts the quiz, no matter what field, will get default keys values initially
+    #note: opening two different tabs with same browsers with different/same user and/or field, will result in
+    #      both tabs having same request.session values (combined both tabs' actions)
+    #      bcs of cookies in browser.
+    #Solution: if ever want to play simultaneously on same device, need to open diff browsers bc different cookies
     required_keys = frozenset(('attendedQuestions','cntQuesList','user_id','field_id','cnt_ques','hasSubmittedList',
     'hasAnsweredList', 'isCorrectList', 'hintsUsedList'))
 
@@ -999,11 +1021,6 @@ def play(request, user_id, field_id, cnt_ques):
             nextQuestionRecord = getRandomQuestion(cnt_ques, allQuestionsPerField, questionsExceptAttended)
             request.session['attendedQuestions'].append(nextQuestionRecord.id)
             attendedQuestionsIDsList = request.session['attendedQuestions']
-
-            #[KIV] delete request session after 10th ques
-            """ if cnt_ques == '10':
-                del request.session['attendedQuestions']
-                del request.session['cntQuesList'] """
     #if no cnt_ques in list (this is first ques)
     #fetch any random ques
     else:
@@ -1055,7 +1072,7 @@ def play(request, user_id, field_id, cnt_ques):
     chosenAnswerText = ""
 
     if request.method == 'POST':
-        if request.is_ajax():
+        if 'requestType' in request.POST:
             if request.POST['requestType'] == 'Next':
                 isClicked = 'True'
                 currentFieldPlayerSession.dateLastPlayed = datetime.now
@@ -1115,7 +1132,6 @@ def play(request, user_id, field_id, cnt_ques):
                 return render(request, 'quiz/updateHint3.html', context)
             elif request.POST['requestType'] == 'updateHint_4':
                 cntHint = int(request.POST['cntHint'])
-                #request.session['hintsUsedList'].append(int(request.POST['usedHintID']))
                 updatedHintRecords = nextHintRecords.exclude(id__in=request.session['hintsUsedList']).order_by('id')
                 if cntHint > 0:
                     randomHint = getRandomHint(updatedHintRecords)
@@ -1125,13 +1141,26 @@ def play(request, user_id, field_id, cnt_ques):
                     'randomHint': randomHint
                 }
                 return render(request, 'quiz/updateHint4.html', context)
+            elif request.POST['requestType'] == 'updateStatusSessionRecord':
+                currentFieldPlayerSession.isFinish = True
+                currentFieldPlayerSession.save()
+
+                return HttpResponse("Success")
         else:
+            print("Hi")
             hasSubmitted = True
             form = PlayForm(data=request.POST, answers=ANSWER_CHOICES)
             if form.is_valid():
                 filledList = form.cleaned_data
                 difficulty = nextQuestionRecord.difficulty
                 
+                if difficulty == 'Mudah':
+                    currentFieldPlayerSession.countEasy += 1
+                elif difficulty == 'Sederhana':
+                    currentFieldPlayerSession.countMedium += 1
+                elif difficulty == 'Sukar':
+                    currentFieldPlayerSession.countHard += 1
+
                 if filledList['isClicked'] == 'True':
                     if filledList['answer_choices'] != "":
                         hasAnswered = True
@@ -1152,17 +1181,14 @@ def play(request, user_id, field_id, cnt_ques):
                             currentFieldPlayerSession.totalCorrect += 1
 
                             if difficulty == 'Mudah':
-                                currentFieldPlayerSession.countEasy += 1
                                 currentFieldPlayerSession.countEasyCorrect += 1
                                 currentFieldPlayerSession.currentPointsEarned += 6
                                 currentPlayerTotalScoreAllField += 6
                             elif difficulty == 'Sederhana':
-                                currentFieldPlayerSession.countMedium += 1
                                 currentFieldPlayerSession.countMediumCorrect += 1
                                 currentFieldPlayerSession.currentPointsEarned += 8
                                 currentPlayerTotalScoreAllField += 8
                             elif difficulty == 'Sukar':
-                                currentFieldPlayerSession.countHard += 1
                                 currentFieldPlayerSession.countHardCorrect += 1
                                 currentFieldPlayerSession.currentPointsEarned += 10
                                 currentPlayerTotalScoreAllField += 10
@@ -1183,17 +1209,7 @@ def play(request, user_id, field_id, cnt_ques):
                 request.session['isCorrectList'].append(isCorrect)
 
                 context = {
-                    'dashboardNav': dashboardNav,
-                    'username': currentPlayerUsername,
-                    'currentAvatarDetailsObject': currentAvatarDetailsObject, 
-                    'user_type': user_type,
                     'user_id': user_id,
-                    'test': urlTest,
-                    'blog': urlBlog,
-                    'quiz': urlQuiz,
-                    'search': urlSearch,
-                    'dashboard': urlDashboard,
-                    'logout': urlLogout,
                     'form': form,
                     'currentFieldPlayerSession': currentFieldPlayerSession,
                     'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
@@ -1220,50 +1236,80 @@ def play(request, user_id, field_id, cnt_ques):
                     'hintsUsedList': str(request.session['hintsUsedList']), #test
                     'isClicked': filledList['isClicked']
                 }
-                
-                return render(request, 'quiz/quizPlay.html', context)
+
+                return render(request, 'quiz/quizPlay2.html', context)
     else:
         form = PlayForm(answers=ANSWER_CHOICES)
-
-    context = {
-        'dashboardNav': dashboardNav,
-        'username': currentPlayerUsername,
-        'currentAvatarDetailsObject': currentAvatarDetailsObject,
-        'user_type': user_type,
-        'user_id': user_id,
-        'test': urlTest,
-        'blog': urlBlog,
-        'quiz': urlQuiz,
-        'search': urlSearch,
-        'dashboard': urlDashboard,
-        'logout': urlLogout,
-        'form': form,
-        'currentFieldPlayerSession': currentFieldPlayerSession,
-        'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
-        'nextQuestionRecord': nextQuestionRecord,
-        'nextAnswerRecords': nextAnswerRecords,
-        'nextHintRecords': nextHintRecords,
-        'cnt_ques': int(cnt_ques),
-        'isCorrect': isCorrect,
-        'field_id': field_id,
-        'questionTextOpt': questionTextOpt,
-        'questionTextOnly': questionTextOnly,
-        'chosenAnswerText': chosenAnswerText,
-        'hasAnswered': hasAnswered,
-        'hasSubmitted': hasSubmitted,
-        'sessionList': str(request.session['attendedQuestions']), #test
-        'cntQuesList': str(request.session['cntQuesList']),#test
-        'next_cnt_ques': next_cnt_ques,
-        'hasSubmittedList': str(request.session['hasSubmittedList']), #test
-        'hasAnsweredList': str(request.session['hasAnsweredList']), #test
-        'isCorrectList': str(request.session['isCorrectList']), #test
-        'questionsExceptAttendedIDs': questionsExceptAttendedIDs, #test
-        'cntHint': cntHint,
-        'randomHint': randomHint,
-        'hintsUsedList': str(request.session['hintsUsedList']), #test
-        'isClicked': isClicked}
-
-    return render(request, 'quiz/quizPlay.html', context)
+        if request.is_ajax():
+            context = {
+                'user_id': user_id,
+                'form': form,
+                'currentFieldPlayerSession': currentFieldPlayerSession,
+                'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
+                'nextQuestionRecord': nextQuestionRecord,
+                'nextAnswerRecords': nextAnswerRecords,
+                'nextHintRecords': nextHintRecords,
+                'cnt_ques': int(cnt_ques),
+                'isCorrect': isCorrect,
+                'field_id': field_id,
+                'questionTextOpt': questionTextOpt,
+                'questionTextOnly': questionTextOnly,
+                'chosenAnswerText': chosenAnswerText,
+                'hasAnswered': hasAnswered,
+                'hasSubmitted': hasSubmitted,
+                'sessionList': str(request.session['attendedQuestions']), #test
+                'cntQuesList': str(request.session['cntQuesList']),#test
+                'next_cnt_ques': next_cnt_ques,
+                'hasSubmittedList': str(request.session['hasSubmittedList']), #test
+                'hasAnsweredList': str(request.session['hasAnsweredList']), #test
+                'isCorrectList': str(request.session['isCorrectList']), #test
+                'questionsExceptAttendedIDs': questionsExceptAttendedIDs, #test
+                'cntHint': cntHint,
+                'randomHint': randomHint,
+                'hintsUsedList': str(request.session['hintsUsedList']), #test
+                'isClicked': isClicked
+            }
+            return render(request, 'quiz/quizPlay2.html', context)
+        else: 
+            context = {
+                'dashboardNav': dashboardNav,
+                'username': currentPlayerUsername,
+                'currentAvatarDetailsObject': currentAvatarDetailsObject,
+                'user_type': user_type,
+                'user_id': user_id,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard': urlDashboard,
+                'logout': urlLogout,
+                'form': form,
+                'currentFieldPlayerSession': currentFieldPlayerSession,
+                'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
+                'nextQuestionRecord': nextQuestionRecord,
+                'nextAnswerRecords': nextAnswerRecords,
+                'nextHintRecords': nextHintRecords,
+                'cnt_ques': int(cnt_ques),
+                'isCorrect': isCorrect,
+                'field_id': field_id,
+                'questionTextOpt': questionTextOpt,
+                'questionTextOnly': questionTextOnly,
+                'chosenAnswerText': chosenAnswerText,
+                'hasAnswered': hasAnswered,
+                'hasSubmitted': hasSubmitted,
+                'sessionList': str(request.session['attendedQuestions']), #test
+                'cntQuesList': str(request.session['cntQuesList']),#test
+                'next_cnt_ques': next_cnt_ques,
+                'hasSubmittedList': str(request.session['hasSubmittedList']), #test
+                'hasAnsweredList': str(request.session['hasAnsweredList']), #test
+                'isCorrectList': str(request.session['isCorrectList']), #test
+                'questionsExceptAttendedIDs': questionsExceptAttendedIDs, #test
+                'cntHint': cntHint,
+                'randomHint': randomHint,
+                'hintsUsedList': str(request.session['hintsUsedList']), #test
+                'isClicked': isClicked
+            }
+            return render(request, 'quiz/quizPlay.html', context)
 
 def showResult(request, user_id, field_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
@@ -1284,25 +1330,170 @@ def showResult(request, user_id, field_id):
     dashboardNav = ' Pelajar'
     user_type = 'pelajar'
 
-    return HttpResponse("show result")
+    currentFieldRecord = quiz.models.GameField.objects.get(id=field_id)
 
-#[KIV] delete request.session after navigate away from play page
-""" def check_url(sender, **kwargs):
-    #original_path = reverse('quiz:play', args=(request.session['user_id'], request.session['field_id'], request.session['cnt_ques'],))
-    original_path = '/pelajar/'+ request.session['user_id'] + '/mula/' + request.session['field_id'] + '/' + request.session['cnt_ques'] + '/'
-    return HttpResponse('not same path')
-    if HttpRequest.get_full_path(request) != original_path:
-        #request.session.flush()
-        return HttpResponse('not same path')
-        if 'attendedQuestions' in request.session and 'cntQuesList' in request.session:
-            del request.session['attendedQuestions']
-            del request.session['cntQuesList']
-            del request.session['user_id']
-            del request.session['field_id']
-            del request.session['cnt_ques']
-            del request.session['hasSubmittedList']
-            del request.session['hasAnsweredList']
-            del request.session['isCorrectList']
-            del request.session['hintsUsedList']
-            return HttpResponse('done delete')
- """
+    allCurrFieldPlayerSession = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, fieldID_id=field_id).order_by('id')
+    cntFieldPlayerSession = allCurrFieldPlayerSession.count()
+    currentFieldPlayerSession = allCurrFieldPlayerSession.last()
+
+    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
+    currentPlayerTotalScoreAllFieldList = list(currentPlayerAllFieldRecords.values_list('currentPointsEarned', flat=True))
+    currentPlayerTotalScoreAllField = 0
+    for score in currentPlayerTotalScoreAllFieldList:
+        currentPlayerTotalScoreAllField += score
+
+    points = []
+    points.append((currentFieldPlayerSession.countEasyCorrect)*6)
+    points.append((currentFieldPlayerSession.countEasy)*6)
+    points.append((currentFieldPlayerSession.countMediumCorrect)*8)
+    points.append((currentFieldPlayerSession.countMedium)*8)
+    points.append((currentFieldPlayerSession.countHardCorrect)*10)
+    points.append((currentFieldPlayerSession.countHard)*10)
+
+    fullScore = points[1] + points[3] + points[5]
+    if fullScore > 0:
+        percentageScore = round((currentFieldPlayerSession.currentPointsEarned/fullScore)*100, 2)
+    else:
+        percentageScore = 0
+
+    context = {
+        'dashboardNav': dashboardNav,
+        'username': currentPlayerUsername,
+        'currentAvatarDetailsObject': currentAvatarDetailsObject,
+        'user_type': user_type,
+        'user_id': user_id,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'field_id': field_id,
+        'currentFieldRecord': currentFieldRecord,
+        'points': points,
+        'fullScore': fullScore,
+        'percentageScore': percentageScore,
+        'currentFieldPlayerSession': currentFieldPlayerSession,
+        'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField
+    }
+
+    return render(request, 'quiz/showResult.html', context)
+
+def seeRanking(request, user_id, field_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
+    currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
+    currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index-nonadmin'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+    dashboardNav = ' Pelajar'
+    user_type = 'pelajar'
+
+    currentFieldRecord = quiz.models.GameField.objects.get(id=field_id)
+
+    allCurrFieldPlayerSession = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, fieldID_id=field_id).order_by('id')
+    cntFieldPlayerSession = allCurrFieldPlayerSession.count()
+    currentFieldPlayerSession = allCurrFieldPlayerSession.last()
+
+    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
+    currentPlayerTotalScoreAllFieldList = list(currentPlayerAllFieldRecords.values_list('currentPointsEarned', flat=True))
+    currentPlayerTotalScoreAllField = 0
+    for score in currentPlayerTotalScoreAllFieldList:
+        currentPlayerTotalScoreAllField += score
+
+    shownFields = quiz.models.GameField.objects.filter(show=True).order_by('name')
+    playerFieldRecords = []
+    indPlayer = []
+    playerScoreDict = {}
+    allPlayerRecords = []
+
+    if request.method == 'GET':
+        if request.is_ajax():
+            field_selected = request.GET.get('field', None)
+            currentFieldinSession = quiz.models.FieldPlayerSession.objects.filter(fieldID_id=int(field_selected), isFinish=True).order_by('id')
+            playerIDList = list(currentFieldinSession.values_list('fieldPlayerID', flat=True).distinct().order_by())
+
+            for playerID in playerIDList:
+                indPlayer.append(quiz.models.Player.objects.get(ID=playerID).avatarID.imageURL)
+                indPlayer.append(quiz.models.Player.objects.get(ID=playerID).ID.ID.username)
+                playerScoreDict = currentFieldinSession.filter(fieldPlayerID_id=playerID).aggregate(Sum('currentPointsEarned'))
+                indPlayer.append(playerScoreDict['currentPointsEarned__sum'])
+                playerFieldRecords.append(indPlayer)
+                indPlayer = []
+
+            playerFieldRecords = sorted(playerFieldRecords, key=itemgetter(2), reverse=True)
+
+            context = {
+                'shownFields': shownFields,
+                'field_selected': int(field_selected),
+                'playerFieldRecords': playerFieldRecords
+            }
+            return render(request, 'quiz/selectedField.html', context)
+        else: #refreshed
+            #for div-field
+            currentFieldinSession = quiz.models.FieldPlayerSession.objects.filter(fieldID_id=field_id, isFinish=True).order_by('id')
+            playerIDList = list(currentFieldinSession.values_list('fieldPlayerID', flat=True).distinct().order_by())
+
+            for playerID in playerIDList:
+                indPlayer.append(quiz.models.Player.objects.get(ID=playerID).avatarID.imageURL)
+                indPlayer.append(quiz.models.Player.objects.get(ID=playerID).ID.ID.username)
+                playerScoreDict = currentFieldinSession.filter(fieldPlayerID_id=playerID).aggregate(Sum('currentPointsEarned'))
+                indPlayer.append(playerScoreDict['currentPointsEarned__sum'])
+                playerFieldRecords.append(indPlayer)
+                indPlayer = []
+            
+            playerFieldRecords = sorted(playerFieldRecords, key=itemgetter(2), reverse=True)
+
+            #for div-overall
+            #not finish and not start play = not played
+            #only finished sessions counted
+            allCompletedSession = quiz.models.FieldPlayerSession.objects.filter(isFinish=True).order_by('id')
+            allPlayerIDList = list(quiz.models.Player.objects.values_list('ID', flat=True).order_by('ID'))
+            playedPlayerIDList = list(allCompletedSession.values_list('fieldPlayerID', flat=True).distinct().order_by())
+
+            for playerID in allPlayerIDList:
+                indPlayer.append(quiz.models.Player.objects.get(ID=playerID).avatarID.imageURL)
+                indPlayer.append(quiz.models.Player.objects.get(ID=playerID).ID.ID.username)
+                if playerID in playedPlayerIDList:
+                    playerScoreDict = allCompletedSession.filter(fieldPlayerID=playerID).aggregate(Sum('currentPointsEarned'))
+                    indPlayer.append(playerScoreDict['currentPointsEarned__sum'])
+                    indPlayer.append(True) #hasPlayed
+                else:
+                    indPlayer.append(0)
+                    indPlayer.append(False)
+                allPlayerRecords.append(indPlayer)
+                indPlayer = []
+
+            allPlayerRecords = sorted(allPlayerRecords, key=itemgetter(2), reverse=True)
+
+    context = {
+        'dashboardNav': dashboardNav,
+        'username': currentPlayerUsername,
+        'currentAvatarDetailsObject': currentAvatarDetailsObject,
+        'user_type': user_type,
+        'user_id': user_id,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'field_id': int(field_id),
+        'currentFieldRecord': currentFieldRecord,
+        'currentFieldPlayerSession': currentFieldPlayerSession,
+        'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
+        'shownFields': shownFields,
+        'playerFieldRecords': playerFieldRecords,
+        'allPlayerRecords': allPlayerRecords
+    }
+
+    return render(request, 'quiz/seeRanking.html', context)

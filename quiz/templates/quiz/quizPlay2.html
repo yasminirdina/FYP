@@ -1,0 +1,426 @@
+<p class="p-points_2" style="display: none;">{{ currentFieldPlayerSession.currentPointsEarned }}</p>
+<p class="p-totalPoints_2" style="display: none;">{{ currentPlayerTotalScoreAllField }}</p>
+<p class="p-cnt_ques" style="display: none;">{{ cnt_ques }}</p>
+<p class="p-next_cnt_ques" style="display: none;">{{ next_cnt_ques }}</p>
+<p class="p-hasSubmitted" style="display: none;">{{ hasSubmitted }}</p>
+<p class="p-timeLimit" style="display: none;">{{ nextQuestionRecord.timeLimit }}</p>
+<p class="p-isCorrect" style="display: none;">{{ isCorrect }}</p>
+
+<div class="div-outer">
+    <!-- Test -->
+    <!-- <p>cnt_ques: {{ cnt_ques }} || next_cnt_ques: {{ next_cnt_ques }}
+        <span>
+            || quesID: {{ nextQuestionRecord.id }}
+        </span>
+    </p>
+    <p>questionsExceptAttendedIDs: {{ questionsExceptAttendedIDs }}</p>
+    <p>sessionList: {{ sessionList }}
+        <span>
+            || cntQuesList: {{ cntQuesList }}
+        </span>
+    </p>
+    <p>hasSubmittedList: {{ hasSubmittedList }}
+        <span>
+            || hasAnsweredList: {{ hasAnsweredList }}
+        </span>
+    </p>
+    <p>isCorrectList: {{ isCorrectList }}
+        <span>
+            || hintsUsedList: {{ hintsUsedList }}
+        </span>
+    </p>
+    <p>isClicked: {{ isClicked }}</p>
+    <p>hasSubmitted: {{ hasSubmitted }}
+        <span>
+            || hasAnswered: {{ hasAnswered }}
+        </span>
+    </p>
+    <p>isCorrect: {{ isCorrect }}
+        <span>
+            || chosenAnswerText: {{ chosenAnswerText }}
+        </span>
+    </p> -->
+
+    <!-- head of display -->
+    <div id="hud">
+        <div class="hud-item">
+            <p id="progressText" class="hud-prefix">
+                Soalan {{ cnt_ques }} / 10
+            </p>
+            <h1 class="hud-main-text" id="progress">
+                <div id="progressBar">
+                    <div id="progressBarFull"></div>
+                </div>
+            </h1>
+        </div>
+        {% if hasSubmitted == False %}
+            <div class="hud-item">
+                <p class="hud-prefix">
+                    Masa
+                </p>
+                <h1 class="hud-main-text" id="timer">
+                    <div class="div-bg-bar-timer-ques">
+                        <div class="div-bar-timer-ques"></div>
+                    </div>
+                </h1>
+            </div>
+
+            <div class="hud-item">
+                <p class="hud-prefix">
+                    Baki Petunjuk
+                </p>
+                <h1 class="hud-main-text cntHint-wrapper" id="hint-wrapper">
+                    {% include 'quiz/updateBalanceHint1.html' %}
+                </h1>
+            </div>
+        {% endif %}
+
+        <div class="hud-item">
+            <p class="hud-prefix">
+                Markah Semasa
+            </p>
+            {% if isCorrect == True %}
+                <h1 class="hud-main-text score correct" id="score">
+                    {{ currentFieldPlayerSession.currentPointsEarned }}
+                </h1>
+            {% else %}
+                <h1 class="hud-main-text score" id="score">
+                    {{ currentFieldPlayerSession.currentPointsEarned }}
+                </h1>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% if nextQuestionRecord.questionImage %}
+        <div class="div-question with-image2">
+            <img class="img-question" src="{{ nextQuestionRecord.questionImage.url }}">
+            <div class=div-question-inner>
+                {% if questionTextOpt %}
+                    <h1 class="question with-image1" id="question">
+                        <span class="span-difficulty">
+                            {{ nextQuestionRecord.difficulty }}
+                        </span>
+                        {{ questionTextOnly }}
+                        <p></p>
+                        {% for opt in questionTextOpt %}
+                            {{ opt }}
+                            <br>
+                        {% endfor %}
+                    </h1>
+                {% else %}
+                    <h1 class="question with-image1" id="question">
+                        <span class="span-difficulty">
+                            {{ nextQuestionRecord.difficulty }}
+                        </span>
+                        {{ nextQuestionRecord.questionText }}
+                    </h1>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="div-question">
+            {% if questionTextOpt %}
+                <h1 class="question" id="question">
+                    <span class="span-difficulty">
+                        {{ nextQuestionRecord.difficulty }}
+                    </span>
+                    {{ questionTextOnly }}
+                    <p></p>
+                    {% for opt in questionTextOpt %}
+                        {{ opt }}
+                        <br>
+                    {% endfor %}
+                </h1>
+            {% else %}
+                <h1 class="question" id="question">
+                    <span class="span-difficulty">
+                        {{ nextQuestionRecord.difficulty }}
+                    </span>
+                    {{ nextQuestionRecord.questionText }}
+                </h1>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <form id="PlayForm" class="PlayForm" action="{% url 'quiz:quiz-play' user_id field_id %}" method="POST">
+        <div class="div-outer-choice">
+            {% csrf_token %}
+            {{ form.media.js }}
+
+            <input type='hidden' id='isClicked' name='isClicked' value='False'/>
+
+            {% for answer in form.answer_choices %}
+                <!--
+                    [form is always submitted - either clicked "semak jawapan"/wait till habis masa]
+
+                    if user actually clicked "semak jawapan" to submit,
+                    >>  
+                        ajax request for nextBtn click event (later in this file) will:
+                        A. change isClicked in view to 'True'
+                        B. update timeTaken based on duration (width of bar-hint)
+                        C. return isClicked='True' (string) in json response,
+                        then we change value of hidden input isClicked above to the returned isClicked by ajax,
+                        then form is submitted and we got the hidden field value; filledList['isClicked']='True',
+                        after some processing for:
+                        A. filledList['isClicked']='True' - checking got answer chosen and whether its true or not
+                        B. filledList['isClicked']='False' - update timeTaken which we plus by timeLimit,
+                        we will render the page again, with updated isClicked for the post-submit page (value taken from filledList['isChecked']),
+                        therefore we can check now whether isClicked is 'True' or 'False' to display appropriate answer option color
+                        based on submit/answered/correct status (True/False) from view tadi
+                    >>    
+                        if filled answer is correct
+                            if current answer value in current iteration is True, make it green
+                            else, remain color of others
+                        else (not correct) - cases are click next but salah jawab / click next tanpa pilih answer
+                            if ada answer chosen (user click on any option)
+                                if current iteration's answer value is True, make it green
+                                else (current one is False_1/False_2/False_3)
+                                    if current iteration's false answer label is same as user's chosen answer text, make it red
+                                    else remain color of the rest
+                            else (click next without choose answer)
+                                all red
+                            
+                    elif user tak click "semak jawapan", so form auto submit with/without pilih answer after habis masa OR its default
+                        if default/initial load (no submit)
+                            all original color
+                        else (auto submit)
+                            all red
+                -->
+                {% if isClicked == 'True' %}
+                    {% if isCorrect == True %}
+                        {% if answer.data.value == 'True' %}
+                            <div class="choice-container no-hover">
+                                <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                <div class="choice-prefix" style="background-color: rgb(41, 165, 41);">
+                                    {% if forloop.counter == 1 %}
+                                        A
+                                    {% elif forloop.counter == 2 %}
+                                        B
+                                    {% elif forloop.counter == 3 %}
+                                        C
+                                    {% elif forloop.counter == 4 %}
+                                        D
+                                    {% endif %}
+                                </div>
+                                <div class="choice-text" style="background-color: rgb(41, 165, 41);">
+                                    <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                                </div>
+                            </div>
+                        {% elif 'False' in answer.data.value %}
+                            <div class="choice-container no-hover">
+                                <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                <div class="choice-prefix">
+                                    {% if forloop.counter == 1 %}
+                                        A
+                                    {% elif forloop.counter == 2 %}
+                                        B
+                                    {% elif forloop.counter == 3 %}
+                                        C
+                                    {% elif forloop.counter == 4 %}
+                                        D
+                                    {% endif %}
+                                </div>
+                                <div class="choice-text">
+                                    <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% elif isCorrect == False %}
+                        {% if hasAnswered == True %}
+                            {% if answer.data.value == 'True' %}
+                                <div class="choice-container no-hover">
+                                    <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answe_choices.id_for_label }}" disabled/>
+                                    <div class="choice-prefix" style="background-color: rgb(41, 165, 41);">
+                                        {% if forloop.counter == 1 %}
+                                            A
+                                        {% elif forloop.counter == 2 %}
+                                            B
+                                        {% elif forloop.counter == 3 %}
+                                            C
+                                        {% elif forloop.counter == 4 %}
+                                            D
+                                        {% endif %}
+                                    </div>
+                                    <div class="choice-text" style="background-color: rgb(41, 165, 41);">
+                                        <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                                    </div>
+                                </div>
+                            {% else %}
+                                {% if chosenAnswerText == answer.choice_label %}
+                                    <div class="choice-container no-hover">
+                                        <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                        <div class="choice-prefix" style="background-color: rgb(235, 43, 43);">
+                                            {% if forloop.counter == 1 %}
+                                                A
+                                            {% elif forloop.counter == 2 %}
+                                                B
+                                            {% elif forloop.counter == 3 %}
+                                                C
+                                            {% elif forloop.counter == 4 %}
+                                                D
+                                            {% endif %}
+                                        </div>
+                                        <div class="choice-text" style="background-color: rgb(235, 43, 43);">
+                                            <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="choice-container no-hover">
+                                        <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                        <div class="choice-prefix">
+                                            {% if forloop.counter == 1 %}
+                                                A
+                                            {% elif forloop.counter == 2 %}
+                                                B
+                                            {% elif forloop.counter == 3 %}
+                                                C
+                                            {% elif forloop.counter == 4 %}
+                                                D
+                                            {% endif %}
+                                        </div>
+                                        <div class="choice-text">
+                                            <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        <!-- tak pilih answer + clicked next -->
+                        {% else %}
+                            <div class="choice-container no-hover">
+                                <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                                <div class="choice-prefix" style="background-color: rgb(235, 43, 43);">
+                                    {% if forloop.counter == 1 %}
+                                        A
+                                    {% elif forloop.counter == 2 %}
+                                        B
+                                    {% elif forloop.counter == 3 %}
+                                        C
+                                    {% elif forloop.counter == 4 %}
+                                        D
+                                    {% endif %}
+                                </div>
+                                <div class="choice-text" style="background-color: rgb(235, 43, 43);">
+                                    <label for="{{ answer.id_for_label }}">
+                                        {{ answer.choice_label }}
+                                    </label>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% elif isClicked == 'False' %}
+                    <!-- default (initial) bcs tak submit lagi and tak tekan click -->
+                    {% if hasSubmitted == False %}
+                        <div class="choice-container">
+                            <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}"/>
+                            {% if forloop.counter == 1 %}
+                                <div class="choice-prefix">A</div>
+                            {% elif forloop.counter == 2 %}
+                                <div class="choice-prefix">B</div>
+                            {% elif forloop.counter == 3 %}
+                                <div class="choice-prefix">C</div>
+                            {% elif forloop.counter == 4 %}
+                                <div class="choice-prefix">D</div>
+                            {% endif %}
+                            <div class="choice-text">
+                                <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                            </div>
+                        </div>
+                    <!-- pilih answer/not + didnt clicked next (masa habis then auto submit) -->
+                    {% else %}
+                        <div class="choice-container no-hover">
+                            <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
+                            <div class="choice-prefix" style="background-color: rgb(235, 43, 43);">
+                                {% if forloop.counter == 1 %}
+                                    A
+                                {% elif forloop.counter == 2 %}
+                                    B
+                                {% elif forloop.counter == 3 %}
+                                    C
+                                {% elif forloop.counter == 4 %}
+                                    D
+                                {% endif %}
+                            </div>
+                            <div class="choice-text" style="background-color: rgb(235, 43, 43);">
+                                <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </form>
+</div>
+
+<div class="div-buttons" id="div-buttons">
+    {% if cnt_ques < 10 %}
+        <button class="btn quit">
+            Tamatkan Kuiz
+        </button>
+    {% elif cnt_ques == 10 and hasSubmitted == False %}
+        <button class="btn quit">
+            Tamatkan Kuiz
+        </button>
+    {% endif %}
+
+    {% if hasSubmitted == False %}
+        <div class="div-buttons-wrapper-hint" id="hint-button-wrapper">
+            {% include 'quiz/updateBalanceHint2.html' %}
+        </div>
+
+        <button class="btn next" id="btn-next">
+            Semak Jawapan
+        </button>
+    {% elif hasSubmitted == True %}
+        {% if cnt_ques < 10 %}
+            <button class="btn next2">
+                Seterusnya
+            </button>
+        {% elif cnt_ques == 10 %}
+            <button class="btn showResult">
+                Lihat Keputusan
+            </button>
+        {% endif %}
+    {% endif %}
+</div>
+
+<div class="div-bg-modal">
+    <div class="div-modal-content">
+        <div class="div-modal-header">
+            Mesej
+        </div>
+        
+        Semua markah terkumpul untuk sesi ini tidak akan dikira.
+        Adakah anda pasti ingin tamatkan sesi kuiz ini?
+
+        <div class="div-quit-button">
+            <button class="btn quit-for-quizPlay">
+                Ya
+            </button>
+            <button class="btn cancelQuit-for-quizPlay">Tidak</button>
+        </div>
+    </div>
+</div>
+
+<div class="div-bg-modal2">
+    <div class="div-modal-content2">
+        <div class="div-modal-header">
+            Petunjuk
+        </div>
+
+        <div class="div-modal-content2-wrapper" id="modal2-wrapper">
+            {% include 'quiz/updateHint3.html' %}
+        </div>
+    </div>
+</div>
+
+<div class="div-bg-modal3">
+    <div class="div-modal-content3">
+        <div class="div-modal-header">
+            Petunjuk
+        </div>
+        
+        <div class="div-modal-content3-wrapper" id="modal3-wrapper">
+            {% include 'quiz/updateHint4.html' %}
+        </div>
+    </div>
+</div>

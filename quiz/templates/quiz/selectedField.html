@@ -1,0 +1,62 @@
+{% load static %}
+{% load quiz_index %}
+
+<!-- <p>{{ shownFields }}</p>
+<p>{{ field_selected }}</p>
+<p>{{ playerFieldRecords }}</p> -->
+
+<form type="get" action="." class="form-field">
+    <label for="field" style="margin-right: 5px; font-weight: bold; letter-spacing: 3px;">Bidang Kerjaya:</label>
+    <select name="field" id="field">
+        {% for field in shownFields %}
+            {% if field_selected %} <!--after ajax request for select field-->
+                {% if field.id == field_selected %}
+                    <option value="{{ field.id }}" selected="selected">{{ field.name }}</option>
+                {% else %}
+                    <option value="{{ field.id }}">{{ field.name }}</option>
+                {% endif %}
+            {% else %} <!-- on initial page load/refresh, follow field_id in url -->
+                {% if field.id == field_id %}
+                    <option value="{{ field.id }}" selected="selected">{{ field.name }}</option>
+                {% else %}
+                    <option value="{{ field.id }}">{{ field.name }}</option>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </select>
+</form>
+
+{% if playerFieldRecords %}
+    <div class="div-table">
+        <table id="playerFieldTable">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th colspan="2">Pemain</th>
+                    <th>Jumlah Markah</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for player in playerFieldRecords %}
+                    <tr>
+                        <td style="vertical-align: middle;">{{ forloop.counter }}</td>
+                        {% for details in player %}
+                            {% if forloop.counter0 == 0 %}
+                                <td style="padding-left:0; padding-right: 10px;">
+                                    <img src="{% static 'images/quiz_avatar/' %}{{ details }}" width="50px" height="50px" style="vertical-align: middle;">
+                                </td>
+                                <td style="padding-left: 0; padding-right: 0; text-align: left;">
+                                    {{ player|index:1 }}
+                                </td>
+                            {% elif forloop.counter0 == 2 %}
+                                <td style="vertical-align: middle;">{{ details }}</td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>Tiada pemain bagi bidang kerjaya ini.</p>
+{% endif %}

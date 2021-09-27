@@ -151,6 +151,7 @@ class FieldPlayerSession(models.Model):
     countMediumCorrect = models.IntegerField(default=0)
     countEasy = models.IntegerField(default=0)
     countEasyCorrect = models.IntegerField(default=0)
+    isFinish = models.BooleanField(default=False)
 
     def __str__(self):
         return "Session ID: " + str(self.id) + ", FieldPlayer ID: " + str(self.fieldPlayerID.ID.ID.ID) + ", Field ID: " + str(self.fieldID.id)

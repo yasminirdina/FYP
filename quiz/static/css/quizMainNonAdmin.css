@@ -1,11 +1,9 @@
 /* italic player username */
 .h2a-main-username {
     font-style: italic;
-    /* font-size: 35px; */
     font-size: 2.5vw;
     font-weight: bold;
     letter-spacing: 3px;
-    /* color: rgb(68, 8, 64); */
     color: white;
 }
 
@@ -14,8 +12,6 @@
     border: none;
     background-color: rgb(130, 124, 225);
     border-radius: 35px;
-    /* padding: 14px 28px;
-    margin: 5px; */
     padding: 1vw 2vw;
     margin: 0.4vw;
     font-size: 2vw;
@@ -24,13 +20,11 @@
     letter-spacing: 3px;
     cursor: pointer;
     display: inline-block;
-    /* width: 350px; */
     width: 24vw;
 }
   
 /* On mouse-over */
 .btn:hover{
-    border-radius: 50px;
     box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
     transition: transform 150ms;
     transform: scale(1.03);
@@ -40,11 +34,23 @@
 .avatar, .statistic {color: white;}
 .play{
     color: white;;
-    background-color: rgb(81, 194, 188);
+    background-color: rgb(52, 202, 152);
 }
 
 .play:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(113, 226, 221, 0.658);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+}
+
+/*KIV*/
+.music {
+    font-size: 1.1rem;
+    vertical-align: middle;
+    width: 3rem;
+    height: 3rem;
+    padding: 1vw;
+    line-height: 0;
+    border-radius: 35px;
+    color: white;
 }
 
 /* noAccessError.html */
@@ -67,10 +73,6 @@
 .img-icon{
     max-width: 6vw;
     max-height: 6vw;
-    /* width: 10vw;
-    height: 10vw; */
-    /* width: 150px;
-    height: 150px; */
 }
 
 /* div */
@@ -82,6 +84,7 @@
     padding: 1rem;
     padding-right: 0;
     position: absolute;
+    /* position: relative; */
     /* width: 80%; */
     width: 73vw;
     height: 28.5vw;
@@ -93,6 +96,14 @@
     /* grid-template-columns: repeat(2, 50%); */
     grid-template-columns: repeat(2, auto);
     gap: 3rem;
+}
+
+.div-music {
+    position: absolute;
+    right: 1vw;
+    left: auto;
+    float: right;
+    color: white;
 }
 
 .div-title{
@@ -154,4 +165,9 @@
     font-family: 'Poppins';
     display: inline-block;
     max-width: min-content;
+}
+
+/* ul-navbar */
+.ul-navbar{
+    position: unset;
 }

@@ -1,17 +1,15 @@
-<!-- <div class="div-modal-content2-inner" id="modal2-inner"> -->
 <p class="p-randomHintID" style="display: none;">{{ randomHint.id }}</p>
 
-<p>cntHint: {{ cntHint }}</p>
+<!-- <p>cntHint: {{ cntHint }}</p>
 <p>currentFieldPlayerSession.currentPointsEarned: {{ currentFieldPlayerSession.currentPointsEarned }}</p>
 <p>randomHint.id: {{ randomHint.id }}</p>
-<p>randomHint.value: {{ randomHint.value }}</p>
+<p>randomHint.value: {{ randomHint.value }}</p> -->
 
 {% if cntHint > 0 %}
     {% if currentFieldPlayerSession.currentPointsEarned >= randomHint.value %}
         Bagi melihat petunjuk, anda mesti menggunakan markah terkumpul anda mengikut nilai di bawah.
         (Contoh: Jika nilai petunjuk adalah 5, 5 mata akan ditolak daripada jumlah markah semasa anda.)
         
-        <!-- <p class="p-hintValue">Nilai: {{ randomHint.value }}</p> -->
         <p></p>
         Nilai: {{ randomHint.value }}
 
@@ -35,4 +33,3 @@
         <button class="btn cancelHint2-for-quizPlay">OK</button>
     </div>
 {% endif %}
-<!-- </div> -->

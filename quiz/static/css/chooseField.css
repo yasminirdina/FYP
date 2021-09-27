@@ -35,6 +35,23 @@
     font-size: 1.1rem;
 }
 
+.music {
+    /* font-size: 1.1rem;
+    vertical-align: middle;
+    width: fit-content;
+    min-width: 3rem;
+    min-height: 3.25rem; */
+    font-size: 1.1rem;
+    vertical-align: middle;
+    width: 3rem;
+    height: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
+    padding: 1vw;
+    line-height: 0;
+    border-radius: 35px;
+}
+
 /* hyperlink */
 .a-for-chooseField {
     text-decoration: none;
@@ -51,6 +68,14 @@
 }
 
 /* div */
+.div-music {
+    position: absolute;
+    right: 1vw;
+    left: auto;
+    float: right;
+    color: white;
+}
+
 .div-outer{
     display: grid;
     grid-template-columns: repeat(3, 33.3%);

@@ -1,0 +1,267 @@
+{% extends "quiz/baseNonAdmin.html" %}
+{% load static %}
+{% load quiz_index %}
+
+{% block title %}
+    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Kedudukan Pemain</title>
+{% endblock %}
+
+{% block js1 %}
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'css/seeRanking.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
+    <div class="div-player">
+        <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+        <span class="h2a-username" style="text-align: center;">{{ username }}</span>
+        <div class="div-totalScore">
+            <span>
+                <audio controls loop="true" preload="auto" id="music" style="display: none;">
+                    <source src="{% static 'audio/Goodnightmare.mp3' %}" type="audio/mp3">
+                </audio>
+                <button class="btn music" id="music-play">
+                    <i style="font-size: 1.1rem" class="fas" id="music-icon"></i>
+                </button>
+            </span>
+            <span class="span-title-totalScore">Jumlah Markah</span>
+            <span class="span-value-totalScore">{{ currentPlayerTotalScoreAllField }}</span>
+        </div>
+    </div>
+
+    <h1 class="h1-title">Kedudukan Pemain</h1>
+
+    <div class="div-outer">
+        <div class="div-category">
+            <button class="btn2 by-field clicked">Bidang Kerjaya</button>
+            <button class="btn2 overall">Keseluruhan Pemain</button>
+        </div>
+
+        <!--for by field-->
+        <div class="div-field">
+            {% include 'quiz/selectedField.html' %}
+        </div>
+
+        <!--for overall-->
+        <div class="div-overall">
+            {% if allPlayerRecords %}
+            <div class="div-table">
+                <table id="allPlayerTable">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th colspan="2">Pemain</th>
+                            <th>Jumlah Markah</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for player in allPlayerRecords %}
+                            <tr>
+                                {% if player|index:3 == True %}
+                                    <td style="vertical-align: middle;">{{ forloop.counter }}</td>
+                                    {% for details in player %}
+                                        {% if forloop.counter0 == 0 %}
+                                            <td style="padding-left:0; padding-right: 10px;">
+                                                <img src="{% static 'images/quiz_avatar/' %}{{ details }}" width="50px" height="50px"  style="vertical-align: middle;">
+                                            </td>
+                                            <td style="padding-left: 0; padding-right: 0; text-align: left;">
+                                                {{ player|index:1 }}
+                                            </td>
+                                        {% elif forloop.counter0 == 2 %}
+                                            <td style="vertical-align: middle;">{{ details }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <td style="vertical-align: middle;">{{ forloop.counter }}</td>
+                                    {% for details in player %}
+                                        {% if forloop.counter0 == 0 %}
+                                            <td style="padding-left:0; padding-right: 10px;">
+                                                <img src="{% static 'images/quiz_avatar/' %}{{ details }}" width="50px" height="50px" style="vertical-align: middle;">
+                                            </td>
+                                            <td style="padding-left: 0; padding-right: 0; text-align: left;">
+                                                {{ player|index:1 }}
+                                            </td>
+                                        {% elif forloop.counter0 == 2 %}
+                                            <td style="vertical-align: middle;">{{ details }}</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+                <p>Tiada rekod pemain.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="div-buttons">
+        <button class="btn">
+            <!--change with statistic page link-->
+            <a class="a-for-seeRanking" href="">Statistik Pemain</a>
+        </button>
+        <button class="btn main">
+            <a class="a-for-seeRanking" href="{% url quiz user_id %}">Main Semula</a>
+        </button>
+        <button class="btn quit">
+            <a class="a-for-seeRanking" href="{% url 'dashboard:index-nonadmin' user_type user_id %}">Papan Pemuka</a>
+        </button>
+    </div>
+    
+    <div class="div-credit">
+        <div class="div-credit-text">
+            <p>Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+                <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: rgb(130, 124, 225);">Pinclipart</a></span>
+                <span> dan </span>
+                <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: rgb(130, 124, 225);">ClipartMax</a></span>
+                <span>, serta pemilik asal ikon-ikon tersebut.</span>
+            </p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        const divField =  document.querySelector('.div-field')
+        const divOverall =  document.querySelector('.div-overall')
+        
+        function setCookie(c_name,value,exdays) {
+            if (c_name == 'maintimePlayed') {
+                var exdate=new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
+                document.cookie=c_name + "=" + c_value;
+            }
+            else if (c_name == 'mainMuted') {
+                var exdate=new Date();
+                exdate.setDate(exdate.getDate() + exdays);
+                var c_value = escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
+                document.cookie=c_name + "=" + c_value;
+            }
+        }
+
+        function getCookie(c_name) {
+            var i,x,y,ARRcookies=document.cookie.split(";");
+            for (i=0;i<ARRcookies.length;i++) {
+                x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+                y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+                x=x.replace(/^\s+|\s+$/g,"");
+                if (x==c_name) {
+                    return unescape(y);
+                }
+            }
+        }
+
+        var song = document.getElementsByTagName('audio')[0];
+        var played = false;
+        var tillPlayed = getCookie('maintimePlayed');
+        var isSongMuted = getCookie('mainMuted');
+        const musicBtn = document.getElementById('music-play')
+        const musicIcon = document.getElementsByClassName('fas')
+        song.volume = 0.2;
+
+        $(document).ready(function() {
+            if (isSongMuted) {
+                if (isSongMuted == 'false') {
+                    $('#music-icon').removeClass('fas');
+                    $('#music-icon').addClass('fas fa-volume-up');
+                }
+                else if (isSongMuted == 'true') {
+                    $('#music-icon').removeClass('fas');
+                    $('#music-icon').addClass('fas fa-volume-mute');
+                }
+            }
+            else {
+                $('#music-icon').removeClass('fas');
+                $('#music-icon').addClass('fas fa-volume-up');
+            }
+        });
+
+        musicBtn.addEventListener('click', () => {
+            // alert(song.muted);
+            if (song.muted == false) {
+                song.muted = true;
+                $('#music-icon').removeClass('fas fa-volume-up');
+                $('#music-icon').addClass('fas fa-volume-mute');
+            }
+            else if (song.muted == true) {
+                song.muted = false;
+                $('#music-icon').removeClass('fas fa-volume-mute');
+                $('#music-icon').addClass('fas fa-volume-up');
+            }
+        });
+
+        function update(){
+            if (!played){ //if played = true
+                if (tillPlayed){
+                    song.currentTime = tillPlayed;
+                    song.play();
+                    song.muted = (isSongMuted === 'true');
+                    played = true;
+                }
+                else {
+                    song.play();
+                    song.muted = (isSongMuted === 'true');
+                    played = true;
+                }
+            }
+            else { //if played = false
+                setCookie('maintimePlayed', song.currentTime);
+                setCookie('mainMuted', song.muted);
+            }
+        }
+
+        setInterval(update, 1000); //0 for localhost & testing only
+
+        var audio  = new Audio('/static/audio/clickDown.mp3');
+        var audio2 = new Audio('/static/audio/clickUp.mp3');
+        audio.volume = 0.5;
+        audio2.volume = 0.5;
+    
+        $(":button").click(function() {
+            audio2.play();
+            audio.play();
+        });
+
+        $('.div-category').on('click', '.by-field', function(){
+            $('.overall').removeClass('clicked');
+            $(this).addClass('clicked');
+            divOverall.style.display = 'none';
+            divField.style.display = 'block';
+        });
+
+        $('.div-category').on('click', '.overall', function(){
+            $('.by-field').removeClass('clicked');
+            $(this).addClass('clicked');
+            divField.style.display = 'none';
+            divOverall.style.display = 'block';
+        });
+
+        $('.div-field').on('change', '#field', function(){
+            var selected = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'quiz:quiz-ranking' user_id field_id %}",
+                data: {
+                    field: selected
+                },
+                success: function(result) {
+                    // alert('success');
+                    $(".div-field").html(result);
+                },
+                error: function(result) {
+                    // alert('error');
+                }
+            })
+        });
+    </script>
+{% endblock %}
