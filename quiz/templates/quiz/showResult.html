@@ -95,8 +95,7 @@
             <a class="a-for-showResult" href="{% url 'quiz:quiz-ranking' user_id field_id %}">Kedudukan Semasa</a>
         </button>
         <button class="btn">
-            <!--change with statistic page link-->
-            <a class="a-for-showResult" href="">Statistik Pemain</a>
+            <a class="a-for-showResult" href="{% url 'quiz:quiz-statistic' user_id field_id %}">Statistik Pemain</a>
         </button>
         <button class="btn main">
             <a class="a-for-showResult" href="{% url quiz user_id %}">Main Semula</a>

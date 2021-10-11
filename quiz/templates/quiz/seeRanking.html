@@ -106,8 +106,7 @@
 
     <div class="div-buttons">
         <button class="btn">
-            <!--change with statistic page link-->
-            <a class="a-for-seeRanking" href="">Statistik Pemain</a>
+            <a class="a-for-seeRanking" href="{% url 'quiz:quiz-statistic' user_id field_id %}">Statistik Pemain</a>
         </button>
         <button class="btn main">
             <a class="a-for-seeRanking" href="{% url quiz user_id %}">Main Semula</a>

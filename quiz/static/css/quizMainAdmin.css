@@ -1,26 +1,367 @@
 /* button */
 .btn {
     border: none;
-    background-color: inherit;
-    border-radius: 10px;
-    padding: 14px 28px;
+    background-color: rgb(121, 85, 118);
+    border-radius: 50px;
+    padding: 10px 15px;
     font-size: 16px;
-    font-family: "DM Sans";
+    font-family: 'Poppins';
     font-weight: bold;
+    letter-spacing: 1px;
     cursor: pointer;
-    display: inline-block;
-}
-
-/* On mouse-over */
+    color: white;
+    width: fit-content;
+    text-align: center;
+    margin: 10px 0;
+    margin-bottom: 30px;
+}  
+  
+/*On mouse-over*/
 .btn:hover{
-    background: #eee;
-    border-radius: 10px;
+    background-color: #eee;
+    color: rgb(121, 85, 118);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    transition: transform 150ms;
+    transform: scale(1.03);
 }
-
-.question-settings {color: purple;}
 
 /* hyperlink style */
-.a-settings-for-quizMainAdmin {
+.a-for-quizMainAdmin {
     text-decoration: none;
     color: inherit;
 }
+
+/* div */
+.div-main-header{
+    /* background-color: darkseagreen; */
+    position: relative;
+    margin: 10px auto;
+    width: 93%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.div-outer{
+    /* background-color: lightblue; */
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+    border-radius: 10px;
+    width: 95%;
+    min-width: fit-content;
+    height: fit-content;
+    margin: 10px auto;
+    padding: 1vw;
+}
+
+.div-inner{
+    background-color: rgb(240, 240, 240);
+    width: 100%;
+    min-width: fit-content;
+    height: fit-content;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 10px;
+    position: relative;
+    font-size: 1.1rem;
+    font-family: "Poppins";
+    color: black;
+}
+
+.div-inner .div-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 24.4%);
+    gap: 10px;
+    width: 100%;
+    min-width: fit-content;
+    box-sizing: border-box;
+}
+
+.div-inner .div-grid > article, .div-inner .div-grid .div-chart-container .div-chart-inner > canvas{
+    display: flex;
+    flex-direction: column;
+    /* height: 300px; */
+    width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.075);
+    background-color: white;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.div-inner .div-grid > article{
+    height: 180px;
+}
+
+.div-inner .div-grid .div-chart-container .div-chart-inner > canvas{
+    height: 400px;
+}
+
+.div-inner .div-grid > .div-chart-container {
+    height: 400px;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: auto;
+    /* scrollbar-color takes 2 colors. 1st is scroll grabber, 2nd background */
+    /* scrollbar-color: rgb(23, 38, 182) rgb(162, 170, 238); */
+    scrollbar-color: #ccc #eee;
+    scrollbar-width: auto;
+    -webkit-scroll-behavior: auto;
+    -webkit-scrollbar-color: #ccc #eee;
+    -webkit-scrollbar-width: auto;
+    /* background-color: rgb(255, 202, 202); */
+}
+
+.div-inner .div-grid .div-chart-container .div-chart-inner{
+    position: relative;
+    height: 100%;
+    /* width: 1500px; */
+    /* originally follow 100% width of canvas(chart) only until screen width 925px (see media screen), so up until that, no scrollbar */
+    width: 100%;
+    /* width: 900px; */
+    /* background-color: rgb(255, 184, 96); */
+}
+
+.div-inner .div-grid > .div-chart-container:nth-child(5),
+.div-inner .div-grid > .div-chart-container:nth-child(6){
+    grid-column: 1 / 5;
+}
+
+.div-header{
+    /* background-color: rgb(250, 191, 245); */
+    position: relative;
+    font-weight: bold;
+    height: fit-content;
+    text-align: left;
+    word-break: normal;
+}
+
+.div-data{
+    /* background-color: rgb(255, 195, 146); */
+    position: relative;
+    height: 180px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.div-data-value{
+    /* background-color: rgb(250, 159, 159); */
+    position: relative;
+    padding-top: 20px;
+    height: 60%;
+    vertical-align: bottom;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    font-size: 3rem;
+    color: rgb(179, 97, 173);
+}
+
+#TotalQuestionsbyDifficulty .div-data-value{
+    padding-top: 10px;
+}
+
+#TotalHints .div-data-value{
+    display: block;
+}
+
+.div-data-left, .div-data-center, .div-data-right{
+    width: 100%;
+}
+
+#TotalFields .div-data-value .div-data-right, #TotalQuestions  .div-data-value .div-data-right{
+    color: rgb(253, 108, 108);
+}
+
+.div-data-subtitle{
+    /* background-color: rgb(208, 122, 248); */
+    position: relative;
+    height: 40%;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    color: black;
+    font-size: 1.1rem;
+}
+
+#TotalHints .div-data-subtitle{
+    display: block;
+}
+
+@media screen and (max-width: 1180px){
+    .div-inner .div-grid > article:nth-child(1),
+    .div-inner .div-grid > article:nth-child(3){
+        grid-column: 1 / 3;
+    }
+    
+    .div-inner .div-grid > article:nth-child(2),
+    .div-inner .div-grid > article:nth-child(4){
+        grid-column: 3 / 5;
+    }
+
+    #TotalQuestionsbyDifficulty .div-data-value{
+        padding-top: 20px;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .div-inner .div-grid {
+        grid-template-columns: repeat(4, 24.2%);
+    }
+}
+
+@media screen and (max-width: 925px) {
+    .div-inner .div-grid{
+        grid-template-columns: repeat(4, 24%);
+    }
+
+    /* when screen width is down to max 925px (mobile, minimized desktop window etc.),
+        set inner chart div to 1500px (appx to handle bar sizes without letting it become to small/thin if got more field added later.
+        and here, since 1500px > screen width, scrollbar horizontal will appear (NOTE: on mobile, scrollbar on chart is
+        expected to appear only when user swipe to the left (due to screen size minimization) and will not appear by default.
+    */
+    .div-inner .div-grid .div-chart-container .div-chart-inner{
+        width: 1500px;
+    }
+
+    #TotalQuestionsbyDifficulty .div-data-value{
+        padding-top: 10px;
+    }
+}
+
+@media screen and (max-width: 740px) {
+    .div-inner .div-grid{
+        grid-template-columns: repeat(4, 23.8%);
+    }
+
+    .div-inner .div-grid > article:nth-child(3){
+        grid-column: 1 / 4;
+    }
+
+    .div-inner .div-grid > article:nth-child(4){
+        grid-column: 4 / 5;
+    }
+
+    #TotalQuestionsbyDifficulty .div-data-value{
+        padding-top: 20px;
+    }
+
+    #TotalHints .div-data-value{
+        padding-top: 10px;
+    }
+}
+
+@media screen and (max-width: 625px) {
+    .div-inner .div-grid{
+        grid-template-columns: repeat(4, 23.6%);
+    }
+
+    #TotalQuestionsbyDifficulty .div-data-value{
+        padding-top: 10px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+        line-height: 28px;
+    }
+      
+    h2 {
+      font-size: 20px;
+      line-height: 19px;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .div-inner .div-grid{
+        grid-template-columns: repeat(4, 23.4%);
+    }
+
+    .div-inner .div-grid > article:nth-child(1),
+    .div-inner .div-grid > article:nth-child(2),
+    .div-inner .div-grid > article:nth-child(3),
+    .div-inner .div-grid > article:nth-child(4){
+        grid-column: 1 / 5;
+    }
+
+    #TotalQuestionsbyDifficulty .div-data-value, #TotalHints .div-data-value{
+        padding-top: 20px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .div-inner .div-grid{
+        grid-template-columns: repeat(4, 22.8%);
+    }
+
+    #TotalQuestionsbyDifficulty .div-data-value{
+        padding-top: 10px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .btn{
+        font-size: 13px;
+    }
+
+    .div-inner .div-grid{
+        grid-template-columns: repeat(4, 22.6%);
+    }
+}
+
+/* !important is needed sometimes */
+/* ::-webkit-scrollbar {
+    width: 12px !important;
+} */
+
+/* Track */
+/* ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important;
+    -webkit-border-radius: 10px !important;
+    border-radius: 10px !important;
+} */
+
+/* Handle */
+/* ::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px !important;
+    border-radius: 10px !important;
+    background: #41617D !important; 
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3) !important;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5) !important; 
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+    background: #41617D !important; 
+} */
+
+/* ::-webkit-scrollbar {
+    -webkit-appearance: none;
+ }
+ 
+ ::-webkit-scrollbar:vertical {
+    width: 10px;
+ }
+ 
+ ::-webkit-scrollbar:horizontal {
+    height: 10px;
+ }
+ 
+ ::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 10px;
+    border: 2px solid #eee;
+ }
+ 
+ ::-webkit-scrollbar-track { 
+    background-color: #eee; 
+ } */
+
+/*  -webkit-scrollbar,
+-webkit-scrollbar-track {
+  display: block !important;
+} */

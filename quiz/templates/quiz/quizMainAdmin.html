@@ -5,19 +5,346 @@
     <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya</title>
 {% endblock %}
 
+{% block js1 %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+{% endblock %}
+
 {% block styles %}   
     <link rel="stylesheet" href="{% static 'css/quizMainAdmin.css' %}">
 {% endblock %}
 
 {% block header %}
-    <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
-    <h2>Statistik semasa Kandungan Soalan Kuiz</h2>
+    <div class="div-main-header">
+        <h1>Permainan Kuiz Penerokaan Kerjaya</h1>
+        <h2>&#128898; Statistik semasa Kandungan Soalan Kuiz</h2>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p style="font-style: italic;">(Simple cards to be put here.)</p>
+    <div class="div-outer">
+        <div class="div-inner">
+            <div class="div-grid">
+                <article id="TotalFields">
+                    <div class="div-header">
+                        Jumlah Bidang Kerjaya
+                    </div>
+                    <div class="div-data">
+                        <div class="div-data-value">
+                            <div class="div-data-left">
+                                {{ countAllFields }}
+                            </div>
+                            <div class="div-data-right">
+                                {{ countShownFields }}
+                            </div>
+                        </div>
+                        <div class="div-data-subtitle">
+                            <div class="div-data-left">
+                                keseluruhan
+                            </div>
+                            <div class="div-data-right">
+                                dipaparkan
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="TotalQuestions">
+                    <div class="div-header">
+                        Jumlah Soalan
+                    </div>
+                    <div class="div-data">
+                        <div class="div-data-value">
+                            <div class="div-data-left">
+                                {{ countAllQues }}
+                            </div>
+                            <div class="div-data-right">
+                                {{ countShownQues }}
+                            </div>
+                        </div>
+                        <div class="div-data-subtitle">
+                            <div class="div-data-left">
+                                keseluruhan
+                            </div>
+                            <div class="div-data-right">
+                                dipaparkan
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="TotalQuestionsbyDifficulty">
+                    <div class="div-header">
+                        Jumlah Soalan berdasarkan Tahap Kesukaran
+                    </div>
+                    <div class="div-data">
+                        <div class="div-data-value">
+                            <div class="div-data-left">
+                                {{ countEasyQues }}
+                            </div>
+                            <div class="div-data-center">
+                                {{ countMediumQues }}
+                            </div>
+                            <div class="div-data-right">
+                                {{ countHardQues }}
+                            </div>
+                        </div>
+                        <div class="div-data-subtitle">
+                            <div class="div-data-left">
+                                Mudah
+                            </div>
+                            <div class="div-data-center">
+                                Sederhana
+                            </div>
+                            <div class="div-data-right">
+                                Sukar
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article id="TotalHints">
+                    <div class="div-header">
+                        Jumlah Petunjuk
+                    </div>
+                    <div class="div-data">
+                        <div class="div-data-value">
+                            {{ countAllHints }}
+                        </div>
+                        <div class="div-data-subtitle">
+                            petunjuk
+                        </div>
+                    </div>
+                </article>
+                <div class="div-chart-container">
+                    <div class="div-chart-inner">
+                        <canvas id="DistOfQuestions">
+                        </canvas>
+                    </div>
+                    <canvas id="DistOfQuestions">
+                        <!-- Taburan Jumlah Soalan per Bidang Kerjaya -->
+                    </canvas>
+                </div>
+                <div class="div-chart-container">
+                    <div class="div-chart-inner">
+                        <canvas id="DistOfQuestionsByDifficulty">
+                            <!-- Taburan Jumlah Soalan berdasarkan Tahap Kesukaran Soalan -->
+                        </canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <button class="btn question-settings">
-        <a class ="a-settings-for-quizMainAdmin" href="{% url 'quiz:show-field' user_id %}">Kemaskini Kandungan Kuiz</a>
+    <button class="btn">
+        <a class ="a-for-quizMainAdmin" href="{% url 'quiz:show-field' user_id %}">Kemaskini Kandungan Kuiz</a>
     </button>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        // CHARTS AJAX
+        Chart.defaults.font.size = 17.6;
+        Chart.defaults.font.family = "Poppins";
+        Chart.defaults.color = "#000000";
+        $(document).ready(Charts);
+
+        function Charts() {
+            $.ajax({
+                url: "{% url 'quiz:index-admin' user_id %}",
+                success: function(response) {
+                    DistOfQuestionsChart(response["fieldNameList"], response["countQuesByFieldList"], response["fieldColorList"]);
+                    DistOfQuestionsByDifficultyChart(response["dist_ques_difficulty_chart_data"]);
+                }
+                /* complete: function() {
+                    setTimeout(Charts, 30000)
+                } */
+            });
+        };
+
+        function DistOfQuestionsChart(fieldNameList, countQuesByFieldList, fieldColorList) {
+            var ctx = document.getElementById("DistOfQuestions");
+
+            var chartData = {
+                labels: [""],
+                datasets: []
+            };
+
+            countQuesByFieldList.forEach(function (a, i) {
+                chartData.datasets.push({
+                    label: fieldNameList[i],
+                    backgroundColor: fieldColorList[i],
+                    data: [a]
+                });
+            });
+
+            var BarChart1 = new Chart(ctx, {
+                type: "bar",
+                data: chartData,
+                options: {
+                    events: ["mousemove", "click", "mouseout"],
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ['Taburan Jumlah Soalan per', 'Bidang Kerjaya'],
+                            align: 'start',
+                            font: {
+                                weight: "bold"
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        barValueSpacing: 10,
+                        tooltip: {
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 14
+                            },
+                            callbacks: {
+                                title: function(context) {
+                                    return "Jumlah Soalan";
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                callback: function(label, index, labels) {
+                                    if (/\s/.test(this.getLabelForValue(label))) {
+                                        return this.getLabelForValue(label).split(" ");
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    }              
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bidang Kerjaya',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                stepSize: 10
+                            },
+                            title: {
+                                display: true,
+                                text: 'Jumlah Soalan',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        };
+
+        function DistOfQuestionsByDifficultyChart(data) {
+            var ctx = document.getElementById("DistOfQuestionsByDifficulty");
+            var BarChart2 = new Chart(ctx, {
+                type: "bar",
+                data: data,
+                options: {
+                    events:["mousemove", "click", "mouseout"],
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ['Taburan Jumlah Soalan berdasarkan', 'Tahap Kesukaran Soalan'],
+                            align: 'start',
+                            font: {
+                                weight: "bold"
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        barValueSpacing: 10,
+                        tooltip: {
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 14
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y + "%";
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                callback: function(label, index, labels) {
+                                    /* if (/\s/.test(this.getLabelForValue(label))) {
+                                        return this.getLabelForValue(label).split(" ");
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    } */
+                                    if (this.getLabelForValue(label).length > 10) {
+                                        return this.getLabelForValue(label).substr(0, 9) + "...";
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    }          
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bidang Kerjaya',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Peratus Jumlah Soalan (%)',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
 {% endblock %}

@@ -166,8 +166,3 @@
     display: inline-block;
     max-width: min-content;
 }
-
-/* ul-navbar */
-.ul-navbar{
-    position: unset;
-}

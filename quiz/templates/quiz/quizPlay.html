@@ -70,13 +70,7 @@
         $('#progressBarFull').width((cnt_ques/10) * 100 + "%");
 
         function setCookie(c_name,value,exdays) {
-            if (c_name == 'timePlayed') {
-                var exdate=new Date();
-                exdate.setDate(exdate.getDate() + exdays);
-                var c_value=escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
-                document.cookie=c_name + "=" + c_value;
-            }
-            else if (c_name == 'muted') {
+            if (c_name == 'mainMuted') {
                 var exdate=new Date();
                 exdate.setDate(exdate.getDate() + exdays);
                 var c_value = escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
@@ -108,25 +102,27 @@
         audio5.volume = 0.5;
 
         var song = document.getElementsByTagName('audio')[0];
-        var played = false;
-        var tillPlayed = getCookie('timePlayed');
-        var isSongMuted = getCookie('muted');
+        var isSongMuted = getCookie('mainMuted');
         const musicBtn = document.getElementById('music-play')
         const musicIcon = document.getElementsByClassName('fas')
         song.volume = 0.5;
+        song.play();
 
         $(document).ready(function() {
             if (isSongMuted) {
                 if (isSongMuted == 'false') {
+                    song.muted = false;
                     $('#music-icon').removeClass('fas');
                     $('#music-icon').addClass('fas fa-volume-up');
                 }
                 else if (isSongMuted == 'true') {
+                    song.muted = true;
                     $('#music-icon').removeClass('fas');
                     $('#music-icon').addClass('fas fa-volume-mute');
                 }
             }
             else {
+                song.muted = false;
                 $('#music-icon').removeClass('fas');
                 $('#music-icon').addClass('fas fa-volume-up');
             }
@@ -135,7 +131,6 @@
         musicBtn.addEventListener('click', () => {
             audio2.play();
             audio.play();
-            // alert(song.muted);
             if (song.muted == false) {
                 song.muted = true;
                 $('#music-icon').removeClass('fas fa-volume-up');
@@ -148,27 +143,7 @@
             }
         });
 
-        function update(){
-            if (!played){ //if played = true
-                if (tillPlayed){
-                    song.currentTime = tillPlayed;
-                    song.play();
-                    song.muted = (isSongMuted === 'true');
-                    played = true;
-                }
-                else {
-                    song.play();
-                    song.muted = (isSongMuted === 'true');
-                    played = true;
-                }
-            }
-            else { //if played = false
-                setCookie('timePlayed', song.currentTime);
-                setCookie('muted', song.muted);
-            }
-        }
-
-        setInterval(update, 1000); //0 for localhost & testing only
+        setInterval(setCookie('mainMuted', song.muted), 1000); //0 for localhost & testing only
 
         function submit_form() {
             // alert("(isClicked=" + $('#isClicked').val() + ") Enter form submit");
@@ -440,6 +415,8 @@
         function update_hint() {
             var cntHint = parseInt(document.querySelector('.p-cntHint').innerText) - 1;
             var currentHintID = parseInt(document.querySelector('.p-randomHintID').innerText);
+
+            // HINT 1
             $.ajax({
                 headers: { "X-CSRFToken": '{{csrf_token}}' }, 
                 url: "{% url 'quiz:quiz-play' user_id field_id %}",
@@ -458,62 +435,65 @@
                     var currentSessionScore = document.querySelector('.score'); //in header
                     currPlayerAllFieldScoreText.innerText = document.querySelector('.p-totalPoints').innerText;
                     currentSessionScore.innerText = document.querySelector('.p-points').innerText;
+
+                    // HINT 2
+                    $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                        url: "{% url 'quiz:quiz-play' user_id field_id %}",
+                        data: {
+                            'cntHint': cntHint,
+                            'requestType': 'updateBalanceHint_2'
+                        },
+                        type: 'POST',
+                        success: function(result){
+                            // alert('updateBalanceHint_2: cntHint updated');
+                            $("#hint-button-wrapper").html(result);
+
+                            // HINT 3
+                            $.ajax({
+                                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                                url: "{% url 'quiz:quiz-play' user_id field_id %}",
+                                data: {
+                                    'cntHint': cntHint,
+                                    'usedHintID': currentHintID,
+                                    'requestType': 'updateHint_3'
+                                },
+                                type: 'POST',
+                                success: function(result){
+                                    // alert('updateHint_3: cntHint, randomHint, currentFieldPlayerSession updated');
+                                    $("#modal2-wrapper").html(result);
+
+                                    // HINT 4
+                                    $.ajax({
+                                        headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                                        url: "{% url 'quiz:quiz-play' user_id field_id %}",
+                                        data: {
+                                            'cntHint': cntHint,
+                                            'usedHintID': currentHintID,
+                                            'requestType': 'updateHint_4'
+                                        },
+                                        type: 'POST',
+                                        success: function(result){
+                                            // alert('updateHint_4: cntHint, randomHint updated');
+                                            $("#modal3-wrapper").html(result);
+                                        },
+                                        error: function(response){
+                                            // alert("updateHint_4: cntHint, randomHint NOT updated");
+                                        }
+                                    })
+                                },
+                                error: function(response){
+                                    // alert("updateHint_3: cntHint, randomHint,currentFieldPlayerSession NOT updated");
+                                }
+                            })
+                        },
+                        error: function(response){
+                            // alert("updateBalanceHint_2: cntHint NOT updated");
+                        }
+                    })
                 },
                 error: function(response){
                     // alert("updateBalanceHint_1: cntHint NOT updated");
-                }
-            })
-
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
-                url: "{% url 'quiz:quiz-play' user_id field_id %}",
-                data: {
-                    'cntHint': cntHint,
-                    'requestType': 'updateBalanceHint_2'
-                },
-                type: 'POST',
-                success: function(result){
-                    // alert('updateBalanceHint_2: cntHint updated');
-                    $("#hint-button-wrapper").html(result);
-                },
-                error: function(response){
-                    // alert("updateBalanceHint_2: cntHint NOT updated");
-                }
-            })
-
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
-                url: "{% url 'quiz:quiz-play' user_id field_id %}",
-                data: {
-                    'cntHint': cntHint,
-                    'usedHintID': currentHintID,
-                    'requestType': 'updateHint_3'
-                },
-                type: 'POST',
-                success: function(result){
-                    // alert('updateHint_3: cntHint, randomHint, currentFieldPlayerSession updated');
-                    $("#modal2-wrapper").html(result);
-                },
-                error: function(response){
-                    // alert("updateHint_3: cntHint, randomHint,currentFieldPlayerSession NOT updated");
-                }
-            })
-
-            $.ajax({
-                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
-                url: "{% url 'quiz:quiz-play' user_id field_id %}",
-                data: {
-                    'cntHint': cntHint,
-                    'usedHintID': currentHintID,
-                    'requestType': 'updateHint_4'
-                },
-                type: 'POST',
-                success: function(result){
-                    // alert('updateHint_4: cntHint, randomHint updated');
-                    $("#modal3-wrapper").html(result);
-                },
-                error: function(response){
-                    // alert("updateHint_4: cntHint, randomHint NOT updated");
                 }
             })
         }

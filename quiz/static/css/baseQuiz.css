@@ -2,10 +2,11 @@
     width: device-width;
     height: device-height;
     zoom: 1;
+    /* iniial-scale: 1.0; */
 } 
   
 body {
-    font-family: "DM Sans";
+    font-family: "Poppins";
     position: relative;
     margin: 0;
 }
@@ -24,7 +25,7 @@ h3 {
 }
   
 /* navbar */
-.ul-navbar {
+/* .ul-navbar {
     list-style-type: none;
     margin: 0;
     padding: 0;
@@ -47,6 +48,7 @@ h3 {
     color: white;
     font-weight: bold;
     font-size: 16px;
+    letter-spacing: 1px;
     text-align: center;
     padding: 1vw 1.25vw;
     text-decoration: none;
@@ -55,6 +57,60 @@ h3 {
 .li-a-navbar:hover:not(.active) {
     background-color: grey;
     border-radius: 10px;
+} */
+
+.div-navbar {
+    display: flex;
+    flex-direction: row;
+    background-color: palevioletred;
+    /* position: -webkit-sticky;
+    position: sticky; */
+    position: unset;
+    top: 0;
+    width: 100%;
+    height: auto;
+}
+
+.div-navbar.admin{
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.div-navbar-left{
+    max-width: 80%;
+    float: left;
+}
+
+.div-navbar-right{
+    position: absolute;
+    max-width: 30%;
+    float: right;
+    right: 0;
+}
+
+.p-navbar{
+    float: left;
+    margin: 0;
+}
+
+.p-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+}
+
+.p-a-navbar:hover:not(.active) {
+    background-color: grey;
+    border-radius: 10px;
+}
+
+.icon{
+    display: none;
 }
   
 .active{
@@ -65,6 +121,9 @@ h3 {
 .logout {
     float: right;
     background-color: crimson;
+}
+
+.div-navbar.admin .logout{
     border-radius: 10px;
 }
   
@@ -73,6 +132,56 @@ h3 {
     font-style: italic;
 }
 
-p{
+.logout:hover{
+    background-color: inherit;
+}
+
+p {
     font-size: 16px;
+}
+
+@media screen and (max-width: 1010px) {
+    .div-navbar-left{
+        width: 80%;
+    }
+    
+    .div-navbar-right{
+        width: 20%;
+    }
+
+    .div-navbar-left.admin-left{
+        width: 60%;
+        float: left;
+    }
+    
+    .div-navbar-right.admin-right{
+        width: 40%;
+        float: right;
+    }
+
+    .p-a-navbar{
+        padding: 5px 10px;
+    }
+
+    .no-icon{
+        display: none;
+    }
+
+    .icon{
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .div-navbar-left{
+        width: 70%;
+    }
+    
+    .div-navbar-right{
+        width: 30%;
+    }
+
+    .admin-right .username{
+        display: none;
+    }
 }

@@ -36,11 +36,6 @@
 }
 
 .music {
-    /* font-size: 1.1rem;
-    vertical-align: middle;
-    width: fit-content;
-    min-width: 3rem;
-    min-height: 3.25rem; */
     font-size: 1.1rem;
     vertical-align: middle;
     width: 3rem;
@@ -143,10 +138,6 @@
     box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
     transition: transform 150ms;
     transform: scale(1.03);
-    /* top: 50.5%;
-    left: 50.5%;
-    -ms-transform: scale(1.03) translate(-48.75%, -48.75%);
-    transform: scale(1.03) translate(-48.75%, -48.75%); */
 }
 
 .div-choice input[type="radio"]:checked ~ .div-img-label{
@@ -254,11 +245,6 @@
     width: max-content;
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
-}
-
-/* ul-navbar */
-.ul-navbar{
-    position: unset;
 }
 
 /* no hover for disabled (not shown) fields */

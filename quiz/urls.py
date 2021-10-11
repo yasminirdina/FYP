@@ -15,6 +15,7 @@ urlpatterns = [
     path('pelajar/<user_id>/mula/<field_id>/', views.play, name='quiz-play'),
     path('pelajar/<user_id>/<field_id>/tamat/keputusan/', views.showResult, name='quiz-result'),
     path('pelajar/<user_id>/<field_id>/tamat/kedudukan-pemain/', views.seeRanking, name='quiz-ranking'),
+    path('pelajar/<user_id>/<field_id>/tamat/statistik-pemain/', views.seeStatistic, name='quiz-statistic'),
     #questions (ADMIN only)
     path('admin/<user_id>/tetapan-kuiz/bidang/', views.showField, name='show-field'),
     path('admin/<user_id>/tetapan-kuiz/bidang/baharu/', views.addField, name='add-field'),

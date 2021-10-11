@@ -4,7 +4,7 @@ import dashboard.models
 import quiz.models
 import json
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseNotFound
 from django.urls import reverse
 from .forms import AvatarForm, AddFieldForm, AddQuestionForm, AddAnswerForm, AddHintForm, ChangeIconForm, CustomAnswerFormSet, CustomAnswerInlineFormSet, CustomHintFormSet, EditQuestionForm, EditHintForm, ChooseFieldForm, PlayForm
 from django.forms import formset_factory, inlineformset_factory
@@ -14,6 +14,9 @@ from random import randint
 from django.core.signals import request_finished
 from datetime import timedelta
 from django.db.models import Sum
+from collections import Counter
+from wsgiref.util import FileWrapper
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here.
 def quizMainAdmin(request, user_id):
@@ -30,10 +33,123 @@ def quizMainAdmin(request, user_id):
         urlSearch = 'search:index-admin'
         urlDashboard = 'dashboard:index-admin'
         urlLogout = 'dashboard:logout-confirm'
-        context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
-        'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
+
+        allGameFields = quiz.models.GameField.objects.all().order_by('id')
+
+        #Card 1
+        countAllFields = allGameFields.count()
+        countShownFields = allGameFields.filter(show=True).count()
+
+        #Card 2
+        allGameQuestions = quiz.models.GameQuestion.objects.all().order_by('id')
+        shownFieldIDList = list(allGameFields.filter(show=True).values_list('id', flat=True))
+
+        countAllQues = allGameQuestions.count()
+        countShownQues = allGameQuestions.filter(fieldID_id__in=shownFieldIDList).count()
+
+        #Card 3
+        countEasyQues = allGameQuestions.filter(difficulty='Mudah').count()
+        countMediumQues = allGameQuestions.filter(difficulty='Sederhana').count()
+        countHardQues = allGameQuestions.filter(difficulty='Sukar').count()
+
+        #Card 4
+        allGameHints = quiz.models.GameHint.objects.all().order_by('id')
+        countAllHints = allGameHints.count()
+
+        #Card 5
+        fieldNameList = list(allGameFields.values_list('name', flat=True))
+        countQuesByFieldList = []
+
+        for field in allGameFields:
+            countQuesByFieldList.append(allGameQuestions.filter(fieldID_id=field.id).count())
+
+        #Card 6
+        fieldIDList = list(allGameFields.values_list('id', flat=True))
+        percEasyQuesList = []
+        percMediumQuesList = []
+        percHardQuesList = []
+
+        for i in range(len(fieldIDList)):
+            currentFieldQues = allGameQuestions.filter(fieldID_id=fieldIDList[i])
+
+            #Easy
+            countEasy = currentFieldQues.filter(difficulty='Mudah').count()
+            percEasyQuesList.append(round((countEasy/currentFieldQues.count())*100, 2))
+
+            #Medium
+            countMedium = currentFieldQues.filter(difficulty='Sederhana').count()
+            percMediumQuesList.append(round((countMedium/currentFieldQues.count())*100, 2))
+
+            #Easy
+            countHard = currentFieldQues.filter(difficulty='Sukar').count()
+            percHardQuesList.append(round((countHard/currentFieldQues.count())*100, 2))
+
+        # For ALL CHARTS(field colors)
+        colors = [
+                "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
+                "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
+                "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
+                "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
+                "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
+                "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
+                "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
+                "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
+                "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
+                "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
+            ]
+        
+        fieldColorList = colors[:allGameFields.count()]
+        # END color designation
+
+        if request.is_ajax():
+            # Card 4
+            # return fieldNameList, countQuesByFieldList, fieldColorList
+
+            # Card 5
+            dist_ques_difficulty_chart_data = {
+                "labels": fieldNameList,
+                "datasets":[{
+                    "label": "Mudah",
+                    "data": percEasyQuesList,
+                    "backgroundColor": "rgb(216, 144, 211)"
+                }, {
+                    "label": "Sederhana",
+                    "data": percMediumQuesList,
+                    "backgroundColor": "rgb(179, 97, 173)"
+                }, {
+                    "label": "Sukar",
+                    "data": percHardQuesList,
+                    "backgroundColor": "rgb(141, 56, 135)"
+                }]
+            }
+
+            data_dict = {
+                "fieldNameList": fieldNameList,
+                "countQuesByFieldList": countQuesByFieldList,
+                "fieldColorList": fieldColorList,
+                "dist_ques_difficulty_chart_data": dist_ques_difficulty_chart_data
+            }
+
+            return JsonResponse(data=data_dict, safe=False)
+
+        context = {
+            'user_id': user_id,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard': urlDashboard,
+            'logout': urlLogout,
+            'countAllFields': countAllFields,
+            'countShownFields': countShownFields,
+            'countAllQues': countAllQues,
+            'countShownQues': countShownQues,
+            'countEasyQues': countEasyQues,
+            'countMediumQues': countMediumQues,
+            'countHardQues': countHardQues,
+            'countAllHints': countAllHints
+        }
         return render(request, 'quiz\quizMainAdmin.html', context)
-        #return HttpResponse(response % user_id)
     else:
         if 'S' in user_id:
             dashboardNav = " Pelajar"
@@ -57,7 +173,6 @@ def quizMainAdmin(request, user_id):
         'user_id': user_id, 'user_type': user_type, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
         'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
         return render(request, 'quiz/noAccessError.html', context)
-        #return HttpResponse(response)
 
 def quizMain(request, user_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
@@ -976,7 +1091,7 @@ def play(request, user_id, field_id):
     #      bcs of cookies in browser.
     #Solution: if ever want to play simultaneously on same device, need to open diff browsers bc different cookies
     required_keys = frozenset(('attendedQuestions','cntQuesList','user_id','field_id','cnt_ques','hasSubmittedList',
-    'hasAnsweredList', 'isCorrectList', 'hintsUsedList'))
+    'hasAnsweredList', 'isCorrectList', 'hintsUsedList', 'randomHintID'))
 
     if cnt_ques == '1' and request.method == 'GET':
         if required_keys <= request.session.keys():
@@ -988,7 +1103,8 @@ def play(request, user_id, field_id):
             request.session['hasSubmittedList'] = [] #test
             request.session['hasAnsweredList'] = [] #test
             request.session['isCorrectList'] = [] #test
-            request.session['hintsUsedList'] = [] 
+            request.session['hintsUsedList'] = []
+            request.session['randomHintID'] = [] 
         else:
             request.session['attendedQuestions'] = []
             request.session['cntQuesList'] = []
@@ -999,6 +1115,7 @@ def play(request, user_id, field_id):
             request.session['hasAnsweredList'] = []
             request.session['isCorrectList'] = []
             request.session['hintsUsedList'] = []
+            request.session['randomHintID'] = [] 
 
     attendedQuestionsIDsList = request.session['attendedQuestions']
     questionsExceptAttended = allQuestionsPerField #for getRandomQuestion condition cnt_ques = 1
@@ -1121,6 +1238,7 @@ def play(request, user_id, field_id):
                 updatedHintRecords = nextHintRecords.exclude(id__in=request.session['hintsUsedList']).order_by('id')
                 if cntHint > 0:
                     randomHint = getRandomHint(updatedHintRecords)
+                    request.session['randomHintID'] = randomHint.id
 
                 currentFieldPlayerSession = allCurrFieldPlayerSession.last()
 
@@ -1132,9 +1250,10 @@ def play(request, user_id, field_id):
                 return render(request, 'quiz/updateHint3.html', context)
             elif request.POST['requestType'] == 'updateHint_4':
                 cntHint = int(request.POST['cntHint'])
-                updatedHintRecords = nextHintRecords.exclude(id__in=request.session['hintsUsedList']).order_by('id')
+                # updatedHintRecords = nextHintRecords.exclude(id__in=request.session['hintsUsedList']).order_by('id')
                 if cntHint > 0:
-                    randomHint = getRandomHint(updatedHintRecords)
+                    # randomHint = getRandomHint(updatedHintRecords)
+                    randomHint = nextHintRecords.get(id=request.session['randomHintID'])
 
                 context = {
                     'cntHint': cntHint,
@@ -1497,3 +1616,335 @@ def seeRanking(request, user_id, field_id):
     }
 
     return render(request, 'quiz/seeRanking.html', context)
+
+def seeStatistic(request, user_id, field_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
+    currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
+    currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index-nonadmin'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+    dashboardNav = ' Pelajar'
+    user_type = 'pelajar'
+
+    currentFieldRecord = quiz.models.GameField.objects.get(id=field_id)
+
+    allCurrFieldPlayerSession = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, fieldID_id=field_id).order_by('id')
+    cntFieldPlayerSession = allCurrFieldPlayerSession.count()
+    currentFieldPlayerSession = allCurrFieldPlayerSession.last()
+
+    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
+    currentPlayerTotalScoreAllFieldList = list(currentPlayerAllFieldRecords.values_list('currentPointsEarned', flat=True))
+
+    #For DIV 1: game-perf
+    #Card 1: Total No of Plays
+    playCount = currentPlayerAllFieldRecords.count()
+
+    #Card 2: Total Score All Fields
+    currentPlayerTotalScoreAllField = 0
+    for score in currentPlayerTotalScoreAllFieldList:
+        currentPlayerTotalScoreAllField += score
+
+    #Card 3: Average score per session (all fields)
+    avgSessionScore = int(round(currentPlayerTotalScoreAllField/playCount, 0))
+
+    #Card 4: Average hints used per session (all fields)
+    totalHintsUsedDict = currentPlayerAllFieldRecords.aggregate(Sum('hintsUsedCount'))
+    avgHintsUsed = int(round(totalHintsUsedDict['hintsUsedCount__sum']/playCount, 0))
+
+    #Card 5: Last Played Time
+    lastPlayedTime = currentFieldPlayerSession.dateLastPlayed #Format to string HH:mmPM, DD/MM/YYYY
+
+    #Card 6: Average time taken per session (all fields)
+    timeList = list(currentPlayerAllFieldRecords.values_list('timeTaken', flat=True))
+    totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList))
+    avgSessionTimeTaken = int(round(totalTimeTaken.total_seconds()/playCount, 0))
+
+    minutes = avgSessionTimeTaken // 60
+    seconds = avgSessionTimeTaken % 60
+
+    if minutes != 0 and seconds != 0:
+        avgSessionTimeTaken = '{} minit {} saat'.format(minutes, seconds)
+    elif minutes == 0:
+        avgSessionTimeTaken = '{} saat'.format(seconds)
+    elif seconds == 0:
+        avgSessionTimeTaken = '{} minit'.format(minutes)
+
+    #Card 7: (Bar Chart) Most Played Field
+    fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+    allGameFields = quiz.models.GameField.objects.filter(id__in=fieldIDList).order_by('id')
+
+    fieldPlayedCountList = []
+    fieldNameList = []
+    fieldName_CountDict = {}
+
+    for fieldID in fieldIDList:
+        fieldPlayedCountList.append(0)
+
+    for session in currentPlayerAllFieldRecords:
+        for i in range(len(fieldIDList)):
+            if session.fieldID_id == fieldIDList[i]:
+                fieldPlayedCountList[i] += 1
+                break
+
+    for i in range(len(fieldIDList)):
+        for field in allGameFields:
+            if fieldIDList[i] == field.id:
+                fieldNameList.append(field.name)
+                fieldName_CountDict[field.name] = fieldPlayedCountList[i]
+                break
+
+    # Card 8
+    fieldEasyCorrectList = []
+    fieldMediumCorrectList = []
+    fieldHardCorrectList = []
+
+    for i in range(len(fieldIDList)):
+        #Easy
+        totalCurrentFieldEasyDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countEasy'))
+        totalCurrentFieldEasyCorrectDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countEasyCorrect'))
+        
+        if totalCurrentFieldEasyCorrectDict['countEasyCorrect__sum'] > 0:
+            percEasy = round((totalCurrentFieldEasyCorrectDict['countEasyCorrect__sum']/totalCurrentFieldEasyDict['countEasy__sum'])*100, 2)
+        else:
+            percEasy = 0
+        fieldEasyCorrectList.append(percEasy)
+
+        #Medium
+        totalCurrentFieldMediumDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countMedium'))
+        totalCurrentFieldMediumCorrectDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countMediumCorrect'))
+        if totalCurrentFieldMediumCorrectDict['countMediumCorrect__sum'] > 0:
+            percMedium = round((totalCurrentFieldMediumCorrectDict['countMediumCorrect__sum']/totalCurrentFieldMediumDict['countMedium__sum'])*100, 2)
+        else:
+            percMedium = 0
+        fieldMediumCorrectList.append(percMedium)
+
+        #Hard
+        totalCurrentFieldHardDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countHard'))
+        totalCurrentFieldHardCorrectDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countHardCorrect'))
+        if totalCurrentFieldHardCorrectDict['countHardCorrect__sum'] > 0:
+            percHard = round((totalCurrentFieldHardCorrectDict['countHardCorrect__sum']/totalCurrentFieldHardDict['countHard__sum'])*100, 2)
+        else:
+            percHard = 0
+        fieldHardCorrectList.append(percHard)
+
+    # Card 9, 10 & 11
+    avgSessionScoreByFieldList = []
+    avgSessionHintByFieldList = []
+    avgSessionTimeTakenByFieldList = []
+
+    for i in range(len(fieldIDList)):
+        currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
+        currentFieldSessionCount = currentIterFieldRecords.count()
+
+        totalScoreCurrentFieldDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+        totalHintCurrentFieldDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+        timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+        totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList))
+        avgTimeTaken_unformatted = int(round(totalTimeTaken.total_seconds()/currentFieldSessionCount, 0))
+
+        avgSessionScoreByFieldList.append(int(round(totalScoreCurrentFieldDict['currentPointsEarned__sum']/currentFieldSessionCount, 0)))
+        avgSessionHintByFieldList.append(int(round(totalHintCurrentFieldDict['hintsUsedCount__sum']/currentFieldSessionCount, 0)))
+        avgSessionTimeTakenByFieldList.append(avgTimeTaken_unformatted)
+    
+    #For DIV 2: career-rec
+    criteria_score_list = []
+    criteria_hint_list = []
+    criteria_time_list = []
+    final_field_criteria_dict = {}
+
+    for i in range(len(fieldIDList)):
+        currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
+        currentFieldSessionCount = currentIterFieldRecords.count()
+
+        #for criteria_score_list
+        fullScoreEasyDict = currentIterFieldRecords.aggregate(Sum('countEasy'))
+        fullScoreEasy = fullScoreEasyDict['countEasy__sum']*6
+        fullScoreMediumDict = currentIterFieldRecords.aggregate(Sum('countMedium'))
+        fullScoreMedium = fullScoreMediumDict['countMedium__sum']*8
+        fullScoreHardDict = currentIterFieldRecords.aggregate(Sum('countHard'))
+        fullScoreHard = fullScoreHardDict['countHard__sum']*10
+        totalFullScore = fullScoreEasy + fullScoreMedium + fullScoreHard
+
+        #deducted hint already because took from currentPointsEarned
+        earnedScoreDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+        earnedScore = earnedScoreDict['currentPointsEarned__sum']
+
+        if totalFullScore > 0:
+            criteria_score_list.append(round((earnedScore/totalFullScore)*45, 2))
+        else:
+            criteria_score_list.append(0)
+
+        #for criteria_hint_list
+        fullHintCount = 30*currentFieldSessionCount
+        usedHintCountDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+        usedHintCount = usedHintCountDict['hintsUsedCount__sum']
+
+        criteria_hint_list.append(round(((fullHintCount-usedHintCount)/fullHintCount)*30, 2))
+
+        #for criteria_time_list (in seconds)
+        fullTimeEasy = fullScoreEasyDict['countEasy__sum']*10
+        fullTimeMedium = fullScoreMediumDict['countMedium__sum']*20
+        fullTimeHard = fullScoreHardDict['countHard__sum']*30
+        totalFullTime = fullTimeEasy + fullTimeMedium + fullTimeHard
+
+        timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+        totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList)).total_seconds()
+
+        #rasanya no totalFullTime should be 0? Sebab mesti time akan running at least 1s. But this one happened sebab
+        #while debugging something dulu it didnt manage to track time but now should be ok
+        if totalFullTime > 0:
+            criteria_time_list.append(round(((totalFullTime-totalTimeTaken)/totalFullTime)*25, 2))
+        else:
+            criteria_time_list.append(0)
+
+        final_field_criteria_dict[fieldIDList[i]] = criteria_score_list[i] + criteria_hint_list[i] + criteria_time_list[i]
+    
+    k = Counter(final_field_criteria_dict)
+ 
+    # Finding 3 highest values
+    three_highest_fields = k.most_common(3) #returns list = [(fieldID_1, perc_1), (fieldID_2, perc_2), (fieldID_3, perc_3)]
+    three_highest_fieldIDs = list(field[0] for field in three_highest_fields)
+    three_highest_fieldPerc = list(field[1] for field in three_highest_fields)
+    three_highest_fieldImage = []
+    three_highest_fieldName = []
+
+    #append image URL into imageURLList following the order of gameFields
+    for fieldID in three_highest_fieldIDs:
+        for field in quiz.models.GameField.objects.all():
+            if fieldID == field.id:
+                three_highest_fieldName.append(field.name)
+                for image in quiz.models.ImageField.objects.all():
+                    if field.imageURL_id == image.id:
+                        three_highest_fieldImage.append(image.imageURL)
+                        break
+                break
+
+    # For ALL CHARTS(field colors)
+    colors = [
+            "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
+            "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
+            "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
+            "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
+            "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
+            "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
+            "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
+            "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
+            "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
+            "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
+        ]
+
+    allGameFieldColorsDict = {}
+
+    for i in range(len(allGameFields)):
+        allGameFieldColorsDict[allGameFields[i].name] = colors[i]
+    
+    playedFieldColorList = colors[:len(fieldNameList)]
+    # END color designation
+
+    if request.is_ajax():
+        # Card 7
+        most_played_field_chart_data = {
+            "labels": list(fieldName_CountDict.keys()),
+            "datasets":[{
+                "label": "Purata Petunjuk Digunakan",
+                "data": list(fieldName_CountDict.values()),
+                "backgroundColor": playedFieldColorList
+            }]
+        }
+
+        # Card 8
+        dist_correct_answers_chart_data = {
+            "labels": list(fieldName_CountDict.keys()),
+            "datasets":[{
+                "label": "Mudah",
+                "data": fieldEasyCorrectList,
+                "backgroundColor": "rgb(216, 144, 211)"
+            }, {
+                "label": "Sederhana",
+                "data": fieldMediumCorrectList,
+                "backgroundColor": "rgb(179, 97, 173)"
+            }, {
+                "label": "Sukar",
+                "data": fieldHardCorrectList,
+                "backgroundColor": "rgb(141, 56, 135)"
+            }]
+        }
+        
+        # Card 9
+        avg_field_session_score_chart_data = {
+            "labels": list(fieldName_CountDict.keys()),
+            "datasets":[{ 
+                "label": "Purata Markah per Sesi",
+                "data": avgSessionScoreByFieldList,
+                "backgroundColor": playedFieldColorList
+            }]
+        }
+
+        # Card 10
+        avg_field_session_hints_chart_data = {
+            "labels": list(fieldName_CountDict.keys()),
+            "datasets":[{ 
+                "label": "Purata Petunjuk Digunakan per Sesi",
+                "data": avgSessionHintByFieldList,
+                "backgroundColor": playedFieldColorList
+            }]
+        }
+
+        # Card 11
+        avg_field_session_time_chart_data = {
+            "labels": list(fieldName_CountDict.keys()),
+            "datasets":[{
+                "label": "Purata Masa Diambil per Sesi",
+                "data": avgSessionTimeTakenByFieldList,
+                "fill": False,
+                "borderColor": 'rgb(179, 97, 173)',
+                "tension": 0.1
+            }]
+        }
+
+        data_dict = {
+            "most_played_field_chart_data": most_played_field_chart_data,
+            "dist_correct_answers_chart_data": dist_correct_answers_chart_data,
+            "avg_field_session_score_chart_data": avg_field_session_score_chart_data,
+            "avg_field_session_hints_chart_data": avg_field_session_hints_chart_data,
+            "avg_field_session_time_chart_data": avg_field_session_time_chart_data
+        }
+
+        return JsonResponse(data=data_dict, safe=False)
+
+    context = {
+        'dashboardNav': dashboardNav,
+        'username': currentPlayerUsername,
+        'currentAvatarDetailsObject': currentAvatarDetailsObject,
+        'user_type': user_type,
+        'user_id': user_id,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'field_id': int(field_id),
+        'currentFieldRecord': currentFieldRecord,
+        'currentFieldPlayerSession': currentFieldPlayerSession,
+        'playCount': playCount,
+        'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
+        'avgSessionScore': avgSessionScore,
+        'avgHintsUsed': avgHintsUsed,
+        'lastPlayedTime': lastPlayedTime,
+        'avgSessionTimeTaken': avgSessionTimeTaken,
+        'three_highest_fieldName': three_highest_fieldName,
+        'three_highest_fieldImage': three_highest_fieldImage
+    }
+
+    return render(request, 'quiz/seeStatistic.html', context)

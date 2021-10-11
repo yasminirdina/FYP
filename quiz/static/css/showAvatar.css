@@ -197,56 +197,97 @@
 }
 
 .div-credit {
-    background: rgba(0, 0, 0, 0.2);
+    background: #00000033;
     width: 100vw;
-    overflow: hidden;
     bottom: 0;
     position: fixed;
     height: fit-content;
+    overflow: hidden;
 }
 
 .div-credit-text {
-    font-size: 0.01vw;
+    height: fit-content;
+    position: relative;
+    display: inline-block;
+}
+
+.div-credit-text p {
+    font-size: 16px;
     font-family: 'Poppins';
     font-style: italic; 
+    text-align: center;
+    margin: 10px 0;
     line-height: 1.3;
+    white-space: nowrap; /* will put text in 1 line */
+    -moz-animation: scroll-left 2s linear infinite;
+    -webkit-animation: scroll-left 2s linear infinite;
+    animation: scroll-left 20s linear infinite;
+}
 
-    /* animation properties */
-    -moz-transform: translateX(100vw);
-    -webkit-transform: translateX(100vw);
-    transform: translateX(100vw);
+.div-credit-text:hover p{
+    animation-play-state: paused;
+}
+  
+@-moz-keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+    }
+}
+
+@-webkit-keyframes scroll-left {
+    0% {
+        -webkit-transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(-100%);
+    }
+}
+
+@keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+}
+
+@media screen and (max-width: 800px) {
+    @-moz-keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+        }
+    }
     
-    -moz-animation: my-animation 17s linear infinite;
-    -webkit-animation: my-animation 17s linear infinite;
-    animation: my-animation 17s linear infinite;
-}
-  
-/* for Firefox */
-@-moz-keyframes my-animation {
-    from { -moz-transform: translateX(100vw); }
-    to { -moz-transform: translateX(-100vw); }
-}
-  
-/* for Chrome */
-@-webkit-keyframes my-animation {
-    from { -webkit-transform: translateX(100vw); }
-    to { -webkit-transform: translateX(-100vw); }
-}
-  
-@keyframes my-animation {
-    from {
-      -moz-transform: translateX(100vw);
-      -webkit-transform: translateX(100vw);
-      transform: translateX(100vw);
+    @-webkit-keyframes scroll-left {
+        0% {
+            -webkit-transform: translateX(30%);
+        }
+        100% {
+            -webkit-transform: translateX(-100%);
+        }
     }
-    to {
-      -moz-transform: translateX(-100vw);
-      -webkit-transform: translateX(-100vw);
-      transform: translateX(-100vw);
+    
+    @keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+            -webkit-transform: translateX(30%);
+            transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+            -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
     }
-}
-
-/* ul-navbar */
-.ul-navbar{
-    position: unset;
 }

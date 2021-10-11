@@ -1,0 +1,739 @@
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(130, 124, 225);
+    border-radius: 50px;
+    padding: 1vw 2vw;
+    font-size: 2vw;
+    /* font-size: 1.8rem; */
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    min-width: 7rem;
+    min-height: 3rem;
+    line-height: 2.5vw;
+    text-align: center;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.main, .quit{
+    background-color: rgb(52, 202, 152);
+}
+
+.main:hover, .quit:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+}
+
+.music {
+    font-size: 1.1rem;
+    vertical-align: middle;
+    width: 3rem;
+    height: 3rem;
+    min-width: 3rem;
+    min-height: 3rem;
+    padding: 1vw;
+    line-height: 0;
+    border-radius: 35px;
+    margin: 6px 0;
+    box-sizing: border-box;
+}
+
+.btn2{
+    border: none;
+    background-color: rgb(250, 159, 159);
+    border-radius: 35px 35px 0 0;
+    padding: 1vw 2vw;
+    font-size: 1.1rem;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    min-width: min-content;
+    max-height: max-content;
+    text-align: center;
+}
+
+.clicked{
+    border: solid white;
+    /* top | horizontal | bottom */
+    border-width: 3px 3px 0;
+    background-color: rgb(253, 108, 108);
+}
+
+/* hyperlink */
+.a-for-seeStatistic {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* div */
+.div-totalScore {
+    position: absolute;
+    right: 0;
+    display: grid;
+    grid-template-columns: 30% 35% 35%;
+    float: right;
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: white;
+    line-height: normal;
+    vertical-align: middle;
+    box-sizing: border-box;
+    height: 100%;
+    /* background-color: coral; */
+}
+
+.div-outer{
+    /* background-color: rgba(255, 255, 255, 0.384); */
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+    border-radius: 10px;
+    width: 100%;
+    min-width: fit-content;
+    height: fit-content;
+    margin: 10px auto;
+    padding: 1vw;
+}
+
+.div-category{
+    grid-template-columns: repeat(2, auto);
+    /* background-color: aliceblue; */
+    display: flex;
+    flex-direction: row;
+    margin-right: auto;
+    margin-left: 0;
+    position: relative;
+    width: fit-content;
+    gap: 0;
+}
+
+.div-game-perf, .div-career-rec{
+    background-color: rgb(240, 240, 240);
+    width: 100%;
+    min-width: fit-content;
+    height: fit-content;
+    box-sizing: border-box;
+    /* top-left | top-right | bottom-right | bottom-left */
+    border-radius: 0 10px 10px 10px;
+    padding: 1vw;
+    position: relative;
+    font-size: 1.1rem;
+    font-family: "Poppins";
+    color: black;
+}
+
+.div-career-rec {
+    display: none;
+}
+
+.div-game-perf .div-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 24.4%);
+    /* grid-template-columns: repeat(4, auto); */
+    gap: 10px;
+    width: 100%;
+    min-width: fit-content;
+    box-sizing: border-box;
+}
+
+.div-game-perf .div-grid > article, .div-game-perf .div-grid .div-chart-container > canvas {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgb(240, 240, 240);
+    /* box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.075); */
+    background-color: white;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.div-game-perf .div-grid > article {
+    height: 180px;
+}
+
+.div-game-perf .div-grid .div-chart-container > canvas {
+    height: 300px;
+}
+
+.div-game-perf .div-grid > div {
+    width: 100%;
+    height: 350px;
+    box-sizing: border-box;
+    /* background-color: rgb(255, 202, 202); */
+}
+
+#LastPlayedTime, #AvgSessionTimeTaken{
+    height: 150px;
+}
+
+.div-game-perf .div-grid > article:nth-child(5),
+.div-game-perf .div-grid > div:nth-child(7),
+.div-game-perf .div-grid > div:nth-child(9),
+.div-game-perf .div-grid > div:nth-child(11){
+    grid-column: 1 / 3;
+}
+
+.div-game-perf .div-grid > article:nth-child(6),
+.div-game-perf .div-grid > div:nth-child(8),
+.div-game-perf .div-grid > div:nth-child(10){
+    grid-column: 3 / 5;
+}
+
+.div-game-perf .div-grid > div:nth-child(11){
+    grid-column: 1 / 5;
+}
+
+.div-game-perf .div-grid > div:nth-child(7),
+.div-game-perf .div-grid > div:nth-child(8){
+    height: 500px;
+}
+
+.div-header{
+    /* background-color: rgb(250, 191, 245); */
+    position: relative;
+    font-weight: bold;
+    height: fit-content;
+    text-align: left;
+    word-break: break-all;
+}
+
+.div-data{
+    /* background-color: rgb(255, 195, 146); */
+    position: relative;
+    height: 180px;
+    /* height: auto; */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.div-data-value{
+    /* background-color: rgb(250, 159, 159); */
+    position: relative;
+    padding-top: 20px;
+    height: 60%;
+    vertical-align: bottom;
+    /* padding: 0 10px; */
+    box-sizing: border-box;
+    font-size: 3rem;
+    color: rgb(179, 97, 173);
+}
+
+#LastPlayedTime .div-data-value,
+#AvgSessionTimeTaken .div-data-value{
+    padding: 0 10px;
+    word-break: break-word;
+}
+
+.div-data-subtitle{
+    /* background-color: rgb(208, 122, 248); */
+    position: relative;
+    height: 40%;
+    box-sizing: border-box;
+    color: black;
+    font-size: 1.1rem;
+}
+
+#LastPlayedTime .div-data-subtitle,
+#AvgSessionTimeTaken .div-data-subtitle{
+    display: none;
+}
+
+.div-career-rec #podium-box{
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    height: 280px;
+    /* background-color: lightsalmon; */
+}
+
+.div-career-rec .div-step-container{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    /* background-color: darkseagreen; */
+    width: fit-content;
+}
+
+.div-step-container > div:first-child {
+    margin-top: auto;
+    text-align: center;
+    margin-bottom: 10px;
+    /* background-color: lightblue; */
+}
+
+.div-step-container > div:first-child:hover {
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    transition: transform 150ms;
+    transform: scale(1.03);
+    border-radius: 60px;
+    width: 70%;
+    align-self: center;
+    background-color: rgb(211, 162, 206);
+    text-decoration: underline;
+}
+
+.div-step-container > div:first-child .div-tooltip-text {
+    visibility: hidden;
+    width: 100%;
+    top: 100%;
+    margin-top: 5px;
+    background-color: black;
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    border-radius: 10px;
+    padding: 5px;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 1;
+    word-break: break-all;
+}
+
+.div-step-container > div:first-child .div-tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* to put arrow on top of tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    /* top | right | bottom | left */
+    border-color: transparent transparent black transparent;
+}
+
+.div-step-container > div:first-child:hover .div-tooltip-text {
+    visibility: visible;
+}
+
+.more-info{
+    text-decoration: none;
+}
+
+.more-info:hover{
+    color: rgb(211, 162, 206);
+}
+
+.img-field{
+    width: 80px;
+    height: 80px;
+}
+
+.div-ind-step{
+    color: white;
+    font-size: 3rem;
+    background-color: rgb(121, 85, 118);
+    text-align: center;
+}
+
+#first-step {
+    height: 50%;
+}
+
+#second-step {
+    height: 35%;
+}
+
+#third-step {
+    height: 30%;
+}
+
+.div-buttons{
+    /* background-color: antiquewhite; */
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    box-sizing: border-box;
+    /* width: 72vw; */
+    width: 100%;
+    margin: 1vw 0;
+    margin-bottom: 15%;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 1vw;
+}
+
+.div-credit {
+    background: #00000033;
+    width: 100vw;
+    bottom: 0;
+    position: fixed;
+    height: fit-content;
+    overflow: hidden;
+}
+
+.div-credit-text {
+    height: fit-content;
+    position: relative;
+    display: inline-block;
+}
+
+.div-credit-text p {
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-style: italic; 
+    text-align: center;
+    margin: 10px 0;
+    line-height: 1.3;
+    white-space: nowrap; /* will put text in 1 line */
+    -moz-animation: scroll-left 2s linear infinite;
+    -webkit-animation: scroll-left 2s linear infinite;
+    animation: scroll-left 20s linear infinite;
+}
+
+.div-credit-text:hover p{
+    animation-play-state: paused;
+}
+  
+@-moz-keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+    }
+}
+
+@-webkit-keyframes scroll-left {
+    0% {
+        -webkit-transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(-100%);
+    }
+}
+
+@keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+}
+
+/* span */
+.span-title-totalScore{
+    word-break: normal;
+    padding-top: 4px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.span-value-totalScore{
+    font-size: 35px;
+    padding-top: 4px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* FOR MOBILE/TABLET */
+@media screen and (max-width: 1280px){
+    #AvgSessionHintsUsed .div-data-value {
+        padding-top: 5px;
+    }
+}
+
+@media screen and (max-width: 1195px){
+    .div-game-perf .div-grid {
+        grid-template-columns: repeat(4, 24.1%);
+    }
+}
+
+@media screen and (max-width: 1185px) {
+    .div-game-perf, .div-career-rec {
+        position: static;
+        width: 100%;
+        min-height: 0;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .btn, .btn2{
+        line-height: normal;
+        padding: 10px 15px;
+    }
+
+    .btn{
+        min-width: 13rem;
+        font-size: 1.1rem;
+    }
+
+    .music{
+        width: 3rem;
+        height: 3rem;
+        min-width: 3rem;
+        min-height: 3rem;
+        padding: 1vw;
+    }
+
+    .div-totalScore {
+        grid-template-columns: 35% 40% 25%;
+        justify-items: right;
+        right: 10px;
+    }
+
+    .div-game-perf .div-grid > article:nth-child(1),
+    .div-game-perf .div-grid > article:nth-child(2),
+    .div-game-perf .div-grid > article:nth-child(3),
+    .div-game-perf .div-grid > article:nth-child(4){
+        height: 180px;
+    }
+
+    .div-game-perf .div-grid > article:nth-child(1),
+    .div-game-perf .div-grid > article:nth-child(3){
+        grid-column: 1 / 3;
+    }
+
+    .div-game-perf .div-grid > article:nth-child(2),
+    .div-game-perf .div-grid > article:nth-child(4){
+        grid-column: 3 / 5;
+    }
+
+    #AvgSessionHintsUsed .div-data-value{
+        padding-top: 20px;
+    }
+
+    #LastPlayedTime, #AvgSessionTimeTaken{
+        height: 215px;
+    }
+
+    #LastPlayedTime .div-data-value, #AvgSessionTimeTaken .div-data-value{
+        height: fit-content;
+        line-height: 3.5rem;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    .div-game-perf .div-grid{
+        grid-template-columns: repeat(4, 24%);
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .div-game-perf .div-grid{
+        grid-template-columns: repeat(4, 23.8%);
+    }
+
+    .div-step-container > div:first-child:hover {
+        width: 100%;
+        border-radius: 10px;
+    }
+    
+    .div-step-container > div:first-child .div-tooltip-text {
+        width: 100%;
+    }
+
+    @-moz-keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+        }
+    }
+    
+    @-webkit-keyframes scroll-left {
+        0% {
+            -webkit-transform: translateX(30%);
+        }
+        100% {
+            -webkit-transform: translateX(-100%);
+        }
+    }
+    
+    @keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+            -webkit-transform: translateX(30%);
+            transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+            -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+    }
+}
+
+@media screen and (max-width: 660px) { 
+    .btn{
+        font-size: 16px;
+        min-width: fit-content;
+    }
+
+    .div-game-perf .div-grid{
+        grid-template-columns: repeat(4, 23.5%);
+    }
+
+    #AvgSessionHintsUsed .div-data-value{
+        padding-top: 5px;
+    }
+
+    #LastPlayedTime .div-data-value, #AvgSessionTimeTaken .div-data-value{
+        /* font-size: 1.5rem; */
+        line-height: 2.8rem;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .div-game-perf, .div-career-rec {
+        /* top-left | top-right | bottom-right | bottom-left */
+        border-radius: 0 0 10px 10px;
+    }
+
+    .div-game-perf .div-grid{
+        grid-template-columns: repeat(4, 23%);
+    }
+
+    .div-game-perf .div-grid > div {
+        width: 99%;
+    }
+
+    .div-game-perf .div-grid > article:nth-child(1),
+    .div-game-perf .div-grid > article:nth-child(2),
+    .div-game-perf .div-grid > article:nth-child(3),
+    .div-game-perf .div-grid > article:nth-child(4){
+        height: 150px;
+    }
+
+    .div-game-perf .div-grid > div:nth-child(7),
+    .div-game-perf .div-grid > div:nth-child(8),
+    .div-game-perf .div-grid > div:nth-child(9),
+    .div-game-perf .div-grid > div:nth-child(10){
+        grid-column: 1 / 5;
+    }
+
+    .div-data-value{
+        height: 50%;
+        font-size: 1.5rem;
+    }
+
+    .div-data-subtitle{
+        height: 50%;
+    }
+
+    #AvgSessionScore .div-data-value, #TotalNoOfPlays .div-data-value, #AvgSessionHintsUsed .div-data-value{
+        padding-top: 10px;
+    }
+
+    #LastPlayedTime, #AvgSessionTimeTaken{
+        height: 150px;
+    }
+
+    #LastPlayedTime .div-data, #AvgSessionTimeTaken .div-data{
+        height: 130px;
+    }
+
+    #LastPlayedTime .div-header, #AvgSessionTimeTaken .div-header{
+        height: fit-content;
+    }
+
+    #LastPlayedTime .div-data-value, #AvgSessionTimeTaken .div-data-value{
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+
+    .div-buttons{
+        width: 80%;
+        height: fit-content;
+    }
+
+    .div-buttons > button {
+        grid-column: 1 / 4;
+    }
+
+    .back, .download, .main {
+        width: 90vw;
+        min-width: 90vw;
+        /* border: 1px solid white; */
+        border-radius: 5px;
+        line-height: normal;
+        min-height: fit-content;
+    }  
+}
+
+@media screen and (max-width: 390px) {
+    .div-totalScore {
+        width: 260px;
+        grid-template-columns: 35% 38% 27%;
+        justify-items: right;
+        right: 10px;
+    }
+
+    .div-data-value{
+        height: 50%;
+        padding-top: 10px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .h2a-username{
+        display: none;
+    }
+
+    .div-player img:hover ~ .h2a-username{
+        display: flex;
+        z-index: 2;
+        background-color: rgba(250, 159, 159);
+        /* top | right | bottom | left */
+        padding: 7px 7px 7px 5px;
+        border-radius: 35px;
+        width: 50px;
+        justify-content: space-around;
+    }
+
+    .div-player img:hover ~ .div-totalScore{
+        display: none;
+    }
+
+    .btn{
+        font-size: 13px;
+        min-width: fit-content;
+    }
+
+    .div-game-perf .div-grid{
+        grid-template-columns: repeat(4, 22.5%);
+    }
+
+    #AvgSessionHintsUsed .div-data-value{
+        padding-top: 0;
+    }
+
+    .div-step-container > div:first-child {
+        font-size: 14px;
+    }
+}
+
+/* HEIGHT */
+@media screen and (max-height: 600px){
+    .div-career-rec #podium-box{
+        height: 230px;
+    }
+
+    .div-ind-step{
+        font-size: 2rem;
+    }
+}

@@ -231,8 +231,3 @@ td{
     transform: rotate(45deg); /* will make it look like x */
     cursor: pointer;
 }
-
-/* ul-navbar */
-.ul-navbar{
-    position: unset;
-}
