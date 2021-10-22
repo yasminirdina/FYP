@@ -10,9 +10,8 @@
     letter-spacing: 3px;
     cursor: pointer;
     color: white;
-    width: 15vw;
-    min-width: 7rem;
-    min-height: 2rem;
+    width: fit-content;
+    height: fit-content;
 }  
   
 /*On mouse-over*/
@@ -27,9 +26,7 @@
 }
 
 .cancelSubmit-for-editAvatar{
-    width: 10vw;
     font-size: 1.1rem;
-    margin-left: 0.5vw;
     background-color: rgb(52, 202, 152);
 }
 
@@ -37,26 +34,11 @@
     box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
 }
 
-.submit-for-editAvatar{
-    width: 10vw;
-    font-size: 1.1rem;
-    margin-right: 0.5vw;
-}
-
-.back-for-editAvatar{
-    width: fit-content;
-    height: fit-content;
-    min-width: 16rem;
-    min-height: 3rem;
+.submit-for-editAvatar, .back-for-editAvatar{
     font-size: 1.1rem;
 }
 
 .music {
-    /* font-size: 1.1rem;
-    vertical-align: middle;
-    width: fit-content;
-    min-width: 3rem;
-    min-height: 3.25rem; */
     font-size: 1.1rem;
     vertical-align: middle;
     width: 3rem;
@@ -76,21 +58,16 @@
 
 /* form fields */
 .avatarid, .workplace, .avatargender{
-    /* background-color: rgb(255, 227, 255); */
     background-color: white;
     font-size: 1.1rem;
     font-family: 'Poppins';
+    /* top-left | top-right | bottom-right | bottom-left */
     border-radius: 25px 10px 10px 25px;
-    /* border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px; */
     border: 1px solid lightgray;
     padding: 1vw;
-    margin-left: 1vw;
-    width: 23.8vw;
-    min-width: 15rem;
-    min-height: 3.7rem;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .avatarid:focus, .workplace:focus, .avatargender:focus{
@@ -98,44 +75,42 @@
     background-color: rgb(121, 85, 118);
     border: 3px solid rgb(255, 200, 250);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(255, 200, 250);
-    /* border: 3px solid rgb(152, 144, 252);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252); */
 }
 
 /* table */
 .table-form{
-    width: 50vw;
-    height: 14vw;
-    min-width: 28.6rem;
-    min-height: 11.9rem;
+    /* background-color: azure; */
+    width: 100%;
+    height: 100%;
     border-collapse: separate;
-    border-spacing: 0 0.5vw;
+    border-spacing: 1vw;
+    box-sizing: border-box;
+}
+
+tr{
+    /* background-color: darksalmon; */
+    box-sizing: border-box;
 }
 
 th{
-    border: solid 1px rgb(245, 118, 59);
     background-color: rgb(245, 118, 59);
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    border-top-right-radius: 25px;
-    border-bottom-right-radius: 25px;
+    /* top-left | top-right | bottom-right | bottom-left */
+    border-radius: 10px 25px 25px 10px;
     font-style: italic;
     font-size: 1.1rem;
     font-family: 'Poppins';
     font-weight: bold;
     letter-spacing: 0.2vw;
     padding: 0.5vw 1vw;
-    width: 26.5vw;
-    min-width: 13rem;
-    min-height: 2rem;
-    max-height: 3.3rem;
+    width: 25vw;
+    height: fit-content;
+    box-sizing: border-box;
 }
 
 td{
-    width: 25vw;
-    min-width: 15rem;
-    min-height: 2.1rem;
-    max-height: 3.6rem;
+    /* background-color: darkcyan; */
+    width: auto;
+    box-sizing: border-box;
 }
 
 /* div */
@@ -148,27 +123,38 @@ td{
 }
 
 .div-outer{
-    width: 51vw;
-    height: max-content;
-    min-width: 30rem;
-    min-height: 12.3rem;
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: center;
+    justify-items: center;
+    width: 60%;
+    height: fit-content;
     background-color: rgba(255, 255, 255, 0.384);
     border-radius: 10px;
-    padding: 0.6vw 0.5vw;
-    margin: 0 14.5vw;
-    position: relative;
-    align-items: center;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .div-buttons{
+    /* background-color: coral; */
     display: grid;
     grid-template-columns: repeat(2, auto);
-    width: 31vw;
-    margin: 2vw 14vw;
+    width: fit-content;
+    height: fit-content;
+    margin: 1vw auto;
+    margin-bottom: 0;
     align-items: center;
-    justify-content: center;
+    justify-items: center;
     position: relative;
-    gap: 1rem;
+    gap: 1vw;
+    box-sizing: border-box;
+}
+
+.div-space{
+    position: relative;
+    height: 30px;
+    /* background-color: yellowgreen; */
 }
 
 .div-bg-modal-1, .div-bg-modal-2{
@@ -184,44 +170,50 @@ td{
 }
 
 .div-modal-content-1, .div-modal-content-2{
-    width: 30vw;
-    height: max-content;
-    min-width: 25rem;
-    min-height: 9rem;
+    width: 30%;
     background-color: white;
     border: none; 
     border-radius: 15px;
-    padding: 0 1vw;
-    padding-right: 1.5vw;
+    padding: 1vw;
     position: relative;
-    margin-top: 8vw;
+    margin: 0 auto;
     font-size: 1.1rem;
     font-family: 'Poppins';
     color: black;
+    box-sizing: border-box;
 }
 
 .div-modal-header{
     position: relative;
-    width: max-content;
-    height: 2vw;
-    min-height: 1.2rem;
-    padding: 10px 0;
-    margin-bottom: 1vw;
+    width: 80%;
+    height: fit-content;
+    margin-bottom: 2vw;
     z-index: 1;
     font-size: 1.1rem;
     font-family: 'Poppins';
     font-weight: bold;
+    box-sizing: border-box;
     /* background-color: rgb(121, 85, 118); */
 }
 
 .div-submit-button{
+    /* background-color: darkgray; */
     position: relative;
-    width: max-content;
-    padding: 1vw 0;
-    padding-bottom: 1.5vw;
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    width: fit-content;
+    height: fit-content;
+    margin: 2vw auto;
+    margin-bottom: 0;
+    align-items: center;
+    justify-items: center;
+    position: relative;
+    gap: 1vw;
+    box-sizing: border-box;
 }
 
 .div-close-1, .div-close-2{
+    /* background-color: bisque; */
     position: absolute;
     top: 0;
     right: 13px;
@@ -230,4 +222,135 @@ td{
     color: black;
     transform: rotate(45deg); /* will make it look like x */
     cursor: pointer;
+}
+
+/* Tablet & mobile vertical
+- Grid vertically
+- Buttons all font size 16px, width full, radius 5px, remain letter spacing 3px, in rows */
+@media screen and (max-width: 930px) {
+    .confirm-for-editAvatar, .cancel-for-editAvatar, .submit-for-editAvatar,
+    .cancelSubmit-for-editAvatar, .back-for-editAvatar{
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+
+    .confirm-for-editAvatar, .cancel-for-editAvatar {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .div-buttons{
+        grid-template-columns: 100%;
+        width: 80%;
+        gap: 5px;
+        margin-top: 10px;
+    }
+    
+    .avatarid, .workplace, .avatargender{
+        /* top-left | top-right | bottom-right | bottom-left */
+        border-radius: 0 0 5px 5px;
+    }
+
+    .avatarid:focus, .workplace:focus, .avatargender:focus{
+        font-size: 1.1rem;
+    }
+
+    .table-form{
+        border-spacing: 10px;
+        table-layout: fixed;
+    }
+    
+    tr{
+        justify-items: center;
+        align-items: center;
+    }
+
+    th{
+        width: 100%;
+        display: inline-block;
+        /* top-left | top-right | bottom-right | bottom-left */
+        border-radius: 5px 5px 0 0;
+        padding: 1vw;
+        text-align: left;
+    }
+    
+    td{
+        width: 100%;
+        display: inline-block;
+    }
+    
+    .div-outer{
+        grid-auto-flow: column;
+        width: 80%;
+        border-spacing: 10px;
+    }
+
+    .div-space{
+        height: 5vw;
+    }
+
+    .div-modal-content-1, .div-modal-content-2{
+        width: 60%;
+        padding: 10px;
+    }
+    
+    .div-modal-header{
+        margin-bottom: 20px;
+    }
+
+    .div-submit-button{
+        margin-top: 20px;
+        gap: 10px;
+    }
+}
+
+/* Screen width <= 450px (mobile vertical OR horizontal)
+- Follow grid vertical
+- Buttons, label & details all font size 12px, letter spacing 1px for bottom buttons
+- Give appropriate spacing/gap to the grid elements */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .h1-title {
+        width: 70%;
+        font-size: 30px;
+        word-wrap: break-word;
+    }
+
+    .confirm-for-editAvatar, .cancel-for-editAvatar, .submit-for-editAvatar,
+    .cancelSubmit-for-editAvatar, .back-for-editAvatar{
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+    
+    .avatarid, .workplace, .avatargender{
+        font-size: 12px;
+    }
+
+    .avatarid:focus, .workplace:focus, .avatargender:focus{
+        font-size: 12px;
+    }
+    
+    th{
+        font-size: 12px;
+        padding: 1vw 10px;
+    }
+
+    .div-space{
+        height: 5vw;
+    }
+
+    .div-modal-content-1, .div-modal-content-2{
+        width: 70%;
+        font-size: 12px;
+    }
+
+    .div-modal-header{
+        width: 70%;
+        font-size: 12px;
+    }
+
+    .div-close-1, .div-close-2{
+        top: 0;
+        right: 13px;
+        font-size: 1.6rem;
+    }
 }

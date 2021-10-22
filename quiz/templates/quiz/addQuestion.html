@@ -11,175 +11,188 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Tetapan Kandungan Kuiz</h1>
-    <h2>Tambah Soalan Kuiz Baharu</h2>
-    <h3><a class="a-main-for-addQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
-        <a class="a-back-for-addQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
-        <a class="a-back-for-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">{{ currentGameFieldName }}</a> > 
-        <span style="color: gray;">Soalan Baharu</span>
-    </h3>
+    <div class="div-main-header">
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Tambah Soalan Kuiz Baharu</h2>
+        <h3><a class="a-nav-addQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
+            <a class="a-nav-addQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
+            <a class="a-nav-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">{{ currentGameFieldName }}</a> > 
+            <span style="color: gray;">Soalan Baharu</span>
+        </h3>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p></p>
+    <div class="div-quesTips">
+        <ul class="ul-addQuestion">
+            <span style="font-weight: bolder;">PERINGATAN</span>
+                <li>
+                    <span style="text-decoration: underline;">Panjang setiap teks:</span>
+                    <span>Tidak melebihi 500 karakter</span>
+                </li>
+                <li>
+                    <span style="text-decoration: underline;">Bilangan minimum dan maksimum bagi:</span>
+                    <ul class="ul-addQuestion-inner">
+                        <li>
+                            <span style="font-weight: bold;">Jawapan:</span>
+                            <span>2 hingga 4</span>
+                        </li>
+                        <li>
+                            <span style="font-weight: bold;">Petunjuk:</span>
+                            <span>0 hingga 3</span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <span style="text-decoration: underline;">Pilihan bagi:</span>
+                    <ul class="ul-addQuestion-inner">
+                        <li>
+                            <span style="font-weight: bold;">Tahap Kesukaran Soalan:</span>
+                            <span>Mudah, Sederhana, Sukar</span>
+                        </li>
+                        <li>
+                            <span style="font-weight: bold;">Nilai Petunjuk:</span>
+                            <span>3 hingga 7</span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <span>Anda hanya boleh memuat naik </span>
+                    <span style="font-weight: bold;"> SATU </span>
+                    <span>sahaja gambar sokongan bagi setiap soalan dan/atau petunjuk.</span>
+                </li>
+                <li>
+                    <span>Anda hanya boleh menanda </span>
+                    <span style="font-weight: bold;"> SATU </span>
+                    <span>sahaja jawapan yang betul</span>
+                </li>
+                <li>
+                    Nilai petunjuk menunjukkan nilai yang pemain/pelajar perlu tukarkan dengan jumlah mata terkumpul mereka
+                    untuk menggunakan petunjuk berkenaan
+                </li>
+        </ul>
+    </div>
 
-    <ul class="ul-addQuestion">
-        <span style="font-weight: bolder;">PERINGATAN</span>
-            <li>
-                <span style="text-decoration: underline;">Panjang setiap teks</span>
-                <span>: Tidak melebihi 500 karakter</span>
-            </li>
-            <li>
-                <span style="text-decoration: underline;">Bilangan minimum dan maksimum bagi</span>
-                <span>:</span>
-                <ul>
-                    <li>
-                        <span style="font-weight: bold;">Jawapan</span>
-                        <span>: 2 hingga 4</span>
-                    </li>
-                    <li>
-                        <span style="font-weight: bold;">Petunjuk</span>
-                        <span>: 0 hingga 3</span>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <span style="text-decoration: underline;">Pilihan bagi</span>
-                <span>:</span>
-                <ul>
-                    <li>
-                        <span style="font-weight: bold;">Tahap Kesukaran Soalan</span>
-                        <span>: Mudah, Sederhana, Sukar</span>
-                    </li>
-                    <li>
-                        <span style="font-weight: bold;">Nilai Petunjuk</span>
-                        <span>: 3 hingga 7</span>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <span>Anda hanya boleh memuat naik </span>
-                <span style="font-weight: bold;"> SATU </span>
-                <span>sahaja gambar sokongan bagi setiap soalan dan/atau petunjuk.</span>
-            </li>
-            <li>
-                <span>Anda hanya boleh menanda </span>
-                <span style="font-weight: bold;"> SATU </span>
-                <span>sahaja jawapan yang betul</span>
-            </li>
-            <li>
-                Nilai petunjuk menunjukkan nilai yang pemain/pelajar perlu tukarkan dengan jumlah mata terkumpul mereka
-                untuk menggunakan petunjuk berkenaan
-            </li>
-    </ul>
-
-    <form action="{% url 'quiz:add-question' user_id field_id %}" method="post" enctype='multipart/form-data'>
+    <form action="{% url 'quiz:add-question' user_id field_id %}" method="post" enctype='multipart/form-data' class="AddQuestionForm">
         {% csrf_token %}
-
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
-            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                Soalan
-            </p>
+        
+        <div class="div-form-header">
+            Soalan
         </div>
-        <p style="color: crimson; font-style: italic;">{{ errormsg1 }}</p>
-        <table style="width: 72.5vw;">
-            <thead>
-                <tr>
-                    <th>Teks Soalan</th>
-                    <th>Gambar Sokongan</th>
-                    <th>Tahap Kesukaran</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ questionForm.questionText }}</td>
-                    <td>
-                        <!--
-                            Method 3:
-                        -->
-                        <input id="id_questionImageName" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                        <div class="imageUpload btn upload-for-addQuestion">
-                            <span>Muat naik gambar</span>
-                            <input name="{{ questionForm.questionImage.html_name }}" id="{{ questionForm.questionImage.id_for_label }}"
-                            type="file" accept="image/*" class="questionImage" />
-                        </div>
-                    </td>
-                    <td>{{ questionForm.difficulty }}</td>
-                </tr>
-            </tbody>
-        </table>
 
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;" >
-            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                Jawapan
-            </p>
+        <p class="p-error">{{ errormsg1 }}</p>
+
+        <p class="p-scroll">Skrol jadual ke kanan &#128898;</p>
+        
+        <div class="div-question">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Teks Soalan</th>
+                        <th>Gambar Sokongan</th>
+                        <th>Tahap Kesukaran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ questionForm.questionText }}</td>
+                        <td>
+                            <!--
+                                Method 3:
+                            -->
+                            <input id="id_questionImageName" placeholder="Tiada gambar dipilih" disabled="disabled"/>
+                            <div class="imageUpload btn upload-for-addQuestion">
+                                <span>Muat naik gambar</span>
+                                <input name="{{ questionForm.questionImage.html_name }}" id="{{ questionForm.questionImage.id_for_label }}"
+                                type="file" accept="image/*" class="questionImage"/>
+                            </div>
+                        </td>
+                        <td>{{ questionForm.difficulty }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <p style="color: crimson; font-style: italic;">{{ errormsg2 }}</p>
-        <p style="color: crimson; font-style: italic;">{{ errormsg3 }}</p>
-        {{ answer_formset.management_form }}
-        <table style="width: 72.5vw;">
-            <thead>
-                <tr>
-                    <th>Teks Jawapan</th>
-                    <th>Jawapan yang Betul?</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in answer_formset %}
-                <tr class="answer-formset">
-                    <td>{{ form.answerText }}</td>
-                    <td>{{ form.isCorrect }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
-            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                Petunjuk
-            </p>
+        
+        <div class="div-form-header">
+            Jawapan
         </div>
-        <p style="color: crimson; font-style: italic;">{{ errormsg4 }}</p>
-        <p style="color: crimson; font-style: italic;">{{ errormsg5 }}</p>
-        {{ hint_formset.management_form }}
-        <table style="width: 72.5vw;">
-            <thead>
-                <tr>
-                    <th>Teks Petunjuk</th>
-                    <th>Gambar Sokongan</th>
-                    <th>Nilai Petunjuk</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in hint_formset %}
-                <tr class="hint-formset">
-                    <td>{{ form.hintText }}</td>
-                    <td>
-                        {% if forloop.counter0 == 0 %}
-                            <input id="id_hintImageName0" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                        {% elif forloop.counter0 == 1 %}
-                            <input id="id_hintImageName1" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                        {% elif forloop.counter0 == 2 %}
-                            <input id="id_hintImageName2" placeholder="Tiada gambar dipilih" disabled="disabled" />
-                        {% endif %}
-                        <div class="imageUpload btn upload-for-addQuestion">
-                            <span>Muat naik gambar</span>
-                            <input name="{{ form.hintImage.html_name }}" id="{{ form.hintImage.id_for_label }}"
-                            type="file" accept="image/*" class="hintImage" />
-                        </div>
-                    </td>
-                    <td>{{ form.value }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
 
-        <p></p>
-        <button class="btn question-for-addQuestion" type="submit">Simpan</button>
-        <button class="btn cancel-for-addQuestion">
-            <a class="a-cancel-for-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Batal</a>
-        </button>
+        <p class="p-error">{{ errormsg2 }}</p>
+        <p class="p-error">{{ errormsg3 }}</p>
+        
+        <div class="div-question">
+            {{ answer_formset.management_form }}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Teks Jawapan</th>
+                        <th>Jawapan yang Betul?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in answer_formset %}
+                    <tr class="answer-formset">
+                        <td>{{ form.answerText }}</td>
+                        <td>{{ form.isCorrect }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="div-form-header">
+            Petunjuk
+        </div>
+
+        <p class="p-error">{{ errormsg4 }}</p>
+        <p class="p-error">{{ errormsg5 }}</p>
+
+        <p class="p-scroll">Skrol jadual ke kanan &#128898;</p>
+
+        <div class="div-question">
+            {{ hint_formset.management_form }}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Teks Petunjuk</th>
+                        <th>Gambar Sokongan</th>
+                        <th>Nilai Petunjuk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in hint_formset %}
+                    <tr class="hint-formset">
+                        <td>{{ form.hintText }}</td>
+                        <td>
+                            {% if forloop.counter0 == 0 %}
+                                <input id="id_hintImageName0" placeholder="Tiada gambar dipilih" disabled="disabled"/>
+                            {% elif forloop.counter0 == 1 %}
+                                <input id="id_hintImageName1" placeholder="Tiada gambar dipilih" disabled="disabled"/>
+                            {% elif forloop.counter0 == 2 %}
+                                <input id="id_hintImageName2" placeholder="Tiada gambar dipilih" disabled="disabled"/>
+                            {% endif %}
+                            <div class="imageUpload btn upload-for-addQuestion">
+                                <span>Muat naik gambar</span>
+                                <input name="{{ form.hintImage.html_name }}" id="{{ form.hintImage.id_for_label }}"
+                                type="file" accept="image/*" class="hintImage"/>
+                            </div>
+                        </td>
+                        <td>{{ form.value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="div-buttons">
+            <button class="btn question-for-addQuestion" type="submit">Simpan</button>
+            <button class="btn cancel-for-addQuestion">
+                <a class="a-for-addQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Batal</a>
+            </button>
+        </div>
     </form>
+
+    <div class="div-space"></div>
 {% endblock %}
 
 {% block js2 %}

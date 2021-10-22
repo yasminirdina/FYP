@@ -32,6 +32,8 @@
 
     <p style="display: none;">{{ isFieldSelected }}</p>
 
+    <p class="p-scroll">Skrol ke bawah &#128899;</p>
+
     <form action="{% url 'quiz:choose-field' user_id %}" class="ChooseFieldForm" method="post">
         <div class="div-outer">
             {% csrf_token %}
@@ -42,14 +44,12 @@
                         <input type="radio" name="name" value="{{ radio.data.value }}" id="{{ radio.id_for_label }}"/>
                         <div class="div-img-label">
                             <img class="img-field" src="{% static 'images/quiz_field/' %}{{ imageURLList|index:forloop.counter0 }}"> 
-                            <br>
                             <label for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                         </div>
                     {% else %}
                         <input type="radio" name="name" value="{{ radio.data.value }}" id="{{ radio.id_for_label }}" disabled/>
                         <div class="div-img-label" style="opacity: 0.6;">
                             <img class="img-field no-hover" src="{% static 'images/quiz_field/' %}{{ imageURLList|index:forloop.counter0 }}"> 
-                            <br>
                             <label class="no-hover" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
                             <div class="div-coming-soon">
                                 AKAN DATANG
@@ -69,6 +69,8 @@
             <a class="a-for-chooseField" href="{% url 'quiz:index-student' user_id %}">Kembali</a>
         </button>
     </div>
+
+    <div class="div-space"></div>
 
     <div class="div-bg-modal">
         <div class="div-modal-content">

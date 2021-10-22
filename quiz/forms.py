@@ -239,7 +239,7 @@ class CustomHintInlineFormSet(BaseInlineFormSet):
                     )
 
 class ChangeIconForm(forms.Form):
-    image = forms.ChoiceField(label="Pilih ikon baharu:", choices=ICON_CHOICES, required=True)
+    image = forms.ChoiceField(label="Pilih ikon baharu:", widget=forms.RadioSelect, choices=ICON_CHOICES, required=True)
     image.widget.attrs.update({'class' : 'image'})
 
 class AvatarForm(forms.ModelForm):

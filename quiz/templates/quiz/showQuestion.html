@@ -51,24 +51,25 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Tetapan Kandungan Kuiz</h1>
-    <h2>Senarai Soalan Kuiz</h2>
-    <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
-        <a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
-        <span style="color: gray;">{{ currentGameFieldName }}</span>
-    </h3>
+    <div class="div-main-header">
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Senarai Soalan Kuiz</h2>
+        <h3><a class="a-nav-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
+            <a class="a-nav-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
+            <span style="color: gray;">{{ currentGameFieldName }}</span>
+        </h3>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p></p>
-    <form type="get" action="."> 
+    <form type="get" action="." class="search-form"> 
         {% if search_text %}
             <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..." value="{{ search_text }}">
         {% else %}
             <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..."> 
         {% endif %}
         
-        <label for="difficulty" style="margin-left: 10px;">Pilih tahap kesukaran:</label>
+        <label for="difficulty">Pilih tahap kesukaran:</label>
             <select name="difficulty" id="difficulty">
                 {% if filter_selected == 'Mudah' %}
                     <option value="Tiada">---------</option>
@@ -92,9 +93,11 @@
                     <option value="Sukar">Sukar</option>
                 {% endif %}
             </select>
-
-        <button class="btn submit1-for-showQuestion" type="submit" >Cari</button> 
-        <button class="btn clear1-for-showQuestion"><a class="a-clear1-for-showQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Padam Carian</a></button>
+            
+        <div class="div-form-buttons">
+            <button class="btn submit-for-showQuestion" type="submit">Cari</button> 
+            <button class="btn clear-for-showQuestion"><a class="a-for-showQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Padam Carian</a></button>
+        </div>
     </form>
 
     {% if search_text and filter_selected %}
@@ -118,9 +121,12 @@
     {% endif %}
 
     <div class="div-quesTips">
-        <span style="font-weight: bold;">TIPS: </span>
+        <span style="font-weight: bold;">TIPS</span>
+        <br>
         <span>Anda boleh menyusun rekod-rekod soalan berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
     </div>
+
+    <p class="p-scroll">Skrol jadual ke kanan &#128898;</p>
 
     <div class="div-question">
         <table id="quesTable" class="tablesorter">
@@ -174,7 +180,7 @@
                             </td>
                             <td style="vertical-align: top;">{{ question.lastEdited|date:"d/m/Y, h:i A" }}</td>
                             <td style="vertical-align: top;">
-                                <button class="btn2 edit-for-showQuestion">
+                                <button class="btn2">
                                     <a class="a-question-for-showQuestion" href="{% url 'quiz:edit-question' user_id field_id question.id %}">
                                         Kemaskini Soalan
                                     </a>
@@ -212,12 +218,14 @@
         </table>
     </div>
 
-    <p>
+    <div class="div-buttons">
         <button class="btn add-for-showQuestion">
-            <a class="a-add-for-showQuestion" href="{% url 'quiz:add-question' user_id field_id %}">Tambah Soalan Baharu</a>
+            <a class="a-for-showQuestion" href="{% url 'quiz:add-question' user_id field_id %}">Tambah Soalan Baharu</a>
         </button>
         <button class="btn back-for-showQuestion">
-            <a class="a-back2-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Kembali</a>
+            <a class="a-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Kembali</a>
         </button>
-    </p>
+    </div>
+
+    <div class="div-space"></div>
 {% endblock %}

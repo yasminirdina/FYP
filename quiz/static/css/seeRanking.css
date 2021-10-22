@@ -11,9 +11,7 @@
     cursor: pointer;
     color: white;
     width: fit-content;
-    min-width: 7rem;
-    min-height: 3rem;
-    line-height: 2.5vw;
+    height: 100%;
     text-align: center;
 }  
   
@@ -24,12 +22,11 @@
     transform: scale(1.03);
 }
 
-.main, .quit{
+.main{
     background-color: rgb(52, 202, 152);
-    border-radius: 50px;
 }
 
-.main:hover, .quit:hover{
+.main:hover{
     box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
 }
 
@@ -59,8 +56,6 @@
     cursor: pointer;
     color: white;
     width: fit-content;
-    min-width: min-content;
-    max-height: max-content;
     text-align: center;
 }
 
@@ -79,18 +74,23 @@
 
 /* form */
 .form-field{
-    /* background-color: rgb(161, 185, 252); */
+    /* background-color: rgb(33, 150, 120); */
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     text-align: right;
     margin-left: auto;
-    margin-right: 1vw;
+    margin-right: -1vw;
     box-sizing: border-box;
-    padding: 1vw 0;
+    padding: 1vw 0 0;
     position: relative;
     width: fit-content;
-    max-width: 70vw;
+}
+
+/* image */
+.img-field, .img-overall{
+    width: 50px;
+    height: 50px;
 }
 
 /* div */
@@ -112,16 +112,14 @@
 }
 
 .div-outer{
-    /* background-color: rgba(255, 255, 255, 0.384); */
+    /* background-color: #7ea0b6; */
     align-items: center;
     position: relative;
     box-sizing: border-box;
     border-radius: 10px;
-    max-width: fit-content;
-    min-width: 70%;
+    width: 70%;
     height: fit-content;
     margin: 0 auto;
-    padding: 1vw;
 }
 
 .div-category{
@@ -137,21 +135,22 @@
 }
 
 .div-field, .div-overall{
-    /* background-color: rgb(245, 193, 125); */
     background-color: rgba(255, 255, 255, 0.384);
     width: 100%;
     height: fit-content;
     min-width: 100%;
     /* top-left | top-right | bottom-right | bottom-left */
     border-radius: 0 10px 10px 10px;
+    padding-right: 2vw;
     padding-bottom: 1vw;
     position: relative;
     font-size: 1.1rem;
     font-family: "Poppins";
+    box-sizing: border-box;
 }
 
 .div-overall {
-    padding-top: 1vw;
+    padding-top: 2px;
     display: none;
 }
 
@@ -172,25 +171,31 @@
 
 /* Set a fixed scrollable wrapper */
 .div-table {
-    width: 70vw;
+    width: 100%;
     margin: 0 1vw;
-    min-height: 12vw;
-    max-height: 30vw;
+    max-height: 40vh;
     overflow: auto;
+    box-sizing: border-box;
 }
 
 .div-buttons{
-    /* background-color: antiquewhite; */
+    /* background-color: white; */
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     box-sizing: border-box;
-    width: 72vw;
+    width: fit-content;
+    height: fit-content;
     margin: 1vw 0;
-    margin-bottom: 15%;
     align-items: center;
-    justify-content: center;
+    justify-items: center;
     position: relative;
     gap: 1vw;
+}
+
+.div-space{
+    position: relative;
+    height: 50px;
+    /* background-color: yellowgreen; */
 }
 
 .div-credit {
@@ -294,16 +299,13 @@ table {
     border: none;
     border-collapse: separate !important;
     border-spacing: 0;
-    /* top-left | top-right | bottom-right | bottom-left */
-    /* border-radius: 10px 0 0 10px; */
     font-size: 1.1rem;
     letter-spacing: 3px;
     box-sizing: border-box;
-    /* overflow: hidden; */
     width: 100%;
     color: black;
     position: relative;
-  }
+}
 
 /* Set header to stick to the top of the container. */
 thead tr th {
@@ -350,4 +352,182 @@ tr:hover {
     padding-top: 4px;
     height: 100%;
     box-sizing: border-box;
+}
+
+/* p */
+.p-scroll{
+    position: relative;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    width: 100%;
+    text-align: right;
+    display: block;
+}
+
+/* Tablet & mobile vertical
+- Grid vertically
+- Enlarge width outer div
+- Buttons all font size 16px, grid 2-2, radius 5px, remain letter spacing 3px, in rows
+- Change paddings in vw to px */
+@media screen and (max-width: 930px) {
+    .div-totalScore {
+        grid-template-columns: 35% 40% 25%;
+        justify-items: right;
+        right: 10px;
+    }
+
+    .div-outer{
+        width: 80%;
+    }
+
+    .div-field, .div-overall{
+        padding-right: 20px;
+        padding-bottom: 10px;
+    }
+
+    .form-field{
+        margin-right: -10px;
+        padding: 10px 0 0;
+    }
+
+    .div-table {
+        width: 100%;
+        margin: 0 10px;
+    }
+
+    .btn2{
+        padding: 10px 15px;
+    }
+
+    .statistic, .main{
+        padding: 10px 15px;
+        font-size: 16px;
+        border-radius: 5px;
+        width: 100%;
+    }
+
+    .div-buttons{
+        grid-template-columns: 100%;
+        width: 80%;
+        gap: 5px;
+        margin: 10px 0;
+    }
+}
+
+/* Mobile vertical OR horizontal
+- All grid vertical
+- Reduce font size on header, buttons
+- Buttons full width
+- On horizontal width <= 390px and <= 320px, adjust div player & total score
+- Adjust the outer width when mobile horizontal according to height when on certain mobile width */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .h1-title {
+        width: 70%;
+        font-size: 30px;
+        word-wrap: break-word;
+    }
+
+    @media screen and (max-width: 390px) {
+        .div-totalScore {
+            width: 260px;
+            grid-template-columns: 35% 38% 27%;
+            justify-items: right;
+            right: 10px;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .h2a-username{
+            display: none;
+        }
+    
+        .div-player img:hover ~ .h2a-username{
+            display: flex;
+            z-index: 2;
+            background-color: rgba(250, 159, 159);
+            /* top | right | bottom | left */
+            padding: 7px 7px 7px 5px;
+            border-radius: 35px;
+            width: 50px;
+            justify-content: space-around;
+        }
+    
+        .div-player img:hover ~ .div-totalScore{
+            display: none;
+        }
+    }
+
+    .div-outer{
+        width: 80%;
+    }
+
+    .form-field label, .form-field #field{
+        font-size: 12px;
+    }
+    
+    .p-scroll{
+        font-size: 8px;
+    }
+
+    .div-table {
+        max-height: 55vh;
+        width: 100%;
+        margin: 0 10px;
+    }
+
+    table {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    th {
+        padding: 5px;
+    }
+    
+    td {
+        padding: 5px 0;
+        letter-spacing: 0;
+    }
+
+    .btn2, .statistic, .main{
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .div-buttons{
+        width: 80%;
+    }
+
+    .div-space{
+        height: 10vh;
+    }
+
+    .div-credit-text p {
+        margin: 5px 0;
+        font-size: 12px;
+    }
+
+    @media screen and (max-height: 450px) {
+        @media screen and (max-width: 600px) {
+            .div-outer{
+                width: 80%;
+            }
+    
+            .div-buttons{
+                width: 80%;
+            }
+        }
+        
+        @media screen and (min-width: 601px) {
+            .div-outer{
+                width: 60%;
+            }
+    
+            .div-buttons{
+                width: 60%;
+            }
+        }
+    }
 }

@@ -10,10 +10,8 @@
     letter-spacing: 3px;
     cursor: pointer;
     color: white;
-    width: 18.5vw;
-    min-width: 7rem;
-    min-height: 2rem;
-    line-height: 2.5vw;
+    width: fit-content;
+    height: 100%;
     text-align: center;
 }  
   
@@ -24,11 +22,11 @@
     transform: scale(1.03);
 }
 
-.main, .quit{
+.main{
     background-color: rgb(52, 202, 152);
 }
 
-.main:hover, .quit:hover{
+.main:hover{
     box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
 }
 
@@ -56,9 +54,7 @@
     margin: 0.5vw 0;
     box-sizing: border-box;
     width: 100%;
-    height: min-content;
-    min-width: 100%;
-    min-height: min-content;
+    height: fit-content;
     font-size: 1.1rem;
     font-family: 'Poppins';
     font-weight: bold;
@@ -80,11 +76,8 @@
     box-sizing: border-box;
     width: 100%;
     height: fit-content;
-    min-width: 100%;
-    min-height: fit-content;
     font-size: 1.1rem;
     font-family: 'Poppins';
-    font-weight: bold;
     letter-spacing: 0.2vw;
     cursor: unset;
     display: inline-block;
@@ -133,37 +126,48 @@
 .div-outer{
     background-color: rgba(255, 255, 255, 0.384);
     align-items: center;
+    justify-items: center;
     position: relative;
     box-sizing: border-box;
     border-radius: 10px;
     width: 78%;
-    min-width: 78%;
+    height: fit-content;
     margin: 0 auto;
-    padding: 1vw;
+    padding: 0.5vw 1vw;
 }
 
 .div-result-ind{
+    /* background-color: darksalmon; */
     display: grid;
-    grid-template-columns: 40% 58.5%;
+    grid-template-columns: 25vw auto;
     gap: 1vw;
-    vertical-align: middle;
+    justify-items: center;
+    box-sizing: border-box;
 }
 
 .div-details{
+    /* background-color: darkseagreen; */
     text-align: center;
 }
 
 .div-buttons{
+    /* background-color: coral; */
     display: grid;
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(3, auto);
     box-sizing: border-box;
-    width: 78%;
-    margin: 2vw 0;
-    margin-bottom: 30%;
+    width: fit-content;
+    height: fit-content;
+    margin: 1vw 0;
     align-items: center;
-    justify-content: center;
+    justify-items: center;
     position: relative;
     gap: 1vw;
+}
+
+.div-space{
+    position: relative;
+    height: 50px;
+    /* background-color: yellowgreen; */
 }
 
 .div-credit {
@@ -275,4 +279,172 @@
     padding-top: 4px;
     height: 100%;
     box-sizing: border-box;
+}
+
+/* Tablet & mobile vertical
+- Grid vertically
+- Enlarge width outer div
+- Buttons all font size 16px, grid 2-2, radius 5px, remain letter spacing 3px, in rows
+- Change paddings in vw to px */
+@media screen and (max-width: 930px) {
+    .div-totalScore {
+        grid-template-columns: 35% 40% 25%;
+        justify-items: right;
+        right: 10px;
+    }
+    
+    .div-outer{
+        width: 80%;
+        /* top | horizontal | bottom */
+        padding: 15px 15px 5px;
+    }
+
+    .div-result-ind{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 0;
+        margin-bottom: 10px;
+    }
+
+    .btn2-label{
+        border: none;
+        /* top-left | top-right | bottom-right | bottom-left */
+        border-radius: 5px 5px 0 0;
+        margin: 0;
+    }
+    
+    .btn2-details{
+        border: none;
+        /* top-left | top-right | bottom-right | bottom-left */
+        border-radius: 0 0 5px 5px;
+        margin: 0;
+        text-align: left;
+    }
+
+    .div-buttons{
+        width: 80%;
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 5px;
+        margin: 10px 0;
+    }
+
+    .ranking, .statistic, .main{
+        padding: 10px 15px;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        border-radius: 5px;
+        line-height: normal;
+    }
+
+    .div-space{
+        height: 8vw;
+    }
+
+    @-moz-keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+        }
+    }
+    
+    @-webkit-keyframes scroll-left {
+        0% {
+            -webkit-transform: translateX(30%);
+        }
+        100% {
+            -webkit-transform: translateX(-100%);
+        }
+    }
+    
+    @keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+            -webkit-transform: translateX(30%);
+            transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+            -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+    }
+}
+
+/* Mobile vertical OR horizontal
+- All grid vertical
+- Reduce font size on header, buttons
+- Buttons full width
+- On horizontal width <= 390px and <= 320px, adjust div player & total score */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .h1-title {
+        width: 70%;
+        font-size: 30px;
+    }
+
+    .div-outer{
+        /* top | horizontal | bottom */
+        padding: 10px 10px 5px;
+    }
+
+    .div-result-ind{
+        margin-bottom: 5px;
+    }
+
+    .btn2-label, .btn2-details{
+        font-size: 12px;
+    }
+
+    .ranking, .statistic, .main{
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .div-space{
+        height: 15vw;
+    }
+
+    .div-credit-text p {
+        margin: 5px 0;
+        font-size: 12px;
+    }
+
+    @media screen and (max-height: 450px) {
+        .div-space{
+            height: 8vw;
+        }
+    }
+
+    @media screen and (max-width: 390px) {
+        .div-totalScore {
+            width: 260px;
+            grid-template-columns: 35% 38% 27%;
+            justify-items: right;
+            right: 10px;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .h2a-username{
+            display: none;
+        }
+    
+        .div-player img:hover ~ .h2a-username{
+            display: flex;
+            z-index: 2;
+            background-color: rgba(250, 159, 159);
+            /* top | right | bottom | left */
+            padding: 7px 7px 7px 5px;
+            border-radius: 35px;
+            width: 50px;
+            justify-content: space-around;
+        }
+    
+        .div-player img:hover ~ .div-totalScore{
+            display: none;
+        }
+    }
 }

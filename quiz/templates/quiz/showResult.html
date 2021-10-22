@@ -84,26 +84,24 @@
         <div class="div-result-ind">
             <button class="btn2-label total-points1">Markah Akhir</button>
             <button class="btn2-details total-points2">
-                <span></span>
                 <span>{{ currentFieldPlayerSession.currentPointsEarned }}/{{ fullScore}} ({{percentageScore}}%)</span>
             </button>
         </div>
     </div>
 
     <div class="div-buttons">
-        <button class="btn">
+        <button class="btn ranking">
             <a class="a-for-showResult" href="{% url 'quiz:quiz-ranking' user_id field_id %}">Kedudukan Semasa</a>
         </button>
-        <button class="btn">
+        <button class="btn statistic">
             <a class="a-for-showResult" href="{% url 'quiz:quiz-statistic' user_id field_id %}">Statistik Pemain</a>
         </button>
         <button class="btn main">
-            <a class="a-for-showResult" href="{% url quiz user_id %}">Main Semula</a>
-        </button>
-        <button class="btn quit">
-            <a class="a-for-showResult" href="{% url 'dashboard:index-nonadmin' user_type user_id %}">Papan Pemuka</a>
+            <a class="a-for-showResult" href="{% url quiz user_id %}">Utama</a>
         </button>
     </div>
+
+    <div class="div-space"></div>
     
     <div class="div-credit">
         <div class="div-credit-text">

@@ -33,23 +33,26 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Tetapan Kandungan Kuiz</h1>
-    <h2>Senarai Bidang Kerjaya</h2>
-    <h3><a class="a-main1-for-showField" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
-        <span style="color: gray;">Bidang Kerjaya</span>
-    </h3>
+    <div class="div-main-header">
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Senarai Bidang Kerjaya</h2>
+        <h3><a class="a-main1-for-showField" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+            <span style="color: gray;">Bidang Kerjaya</span>
+        </h3>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p></p>
-    <form type="get" action="."> 
+    <form type="get" action="." class="search-form"> 
         {% if search_text %}
             <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Soalan..." value="{{ search_text }}">
         {% else %}
             <input id="search_box" type="text" name="kotak_carian" placeholder="Cari Bidang..."> 
         {% endif %}
-        <button class="btn submit-for-showField" type="submit" >Cari</button> 
-        <button class="btn clear-for-showField"><a class="a-clear-for-showField" href="{% url 'quiz:show-field' user_id %}">Padam Carian</a></button>
+        <div class="div-form-buttons">
+            <button class="btn submit-for-showField" type="submit">Cari</button> 
+            <button class="btn clear-for-showField"><a class="a-for-showField" href="{% url 'quiz:show-field' user_id %}">Padam Carian</a></button>
+        </div>
     </form>
 
     {% if search_text %}
@@ -59,12 +62,14 @@
     {% endif %}
 
     <div class="div-fieldTips">
-        <span style="font-weight: bold;">TIPS: </span>
+        <span style="font-weight: bold;">TIPS</span>
+        <br>
         <span>Anda boleh menyusun rekod-rekod kerjaya berdasarkan lebih daripada satu lajur dengan menekan butang SHIFT (tidak dilepaskan) sambil menekan pada tajuk-tajuk lajur yang berkenaan.</span>
     </div>
 
+    <p class="p-scroll">Skrol jadual ke kanan &#128898;</p>
+    
     <div class="div-field">
-        <!-- <table class="sortable"> -->
         <table id="fieldTable" class="tablesorter">
             {% if gameFields %}
                 <thead>
@@ -79,16 +84,10 @@
                 <tbody>
                     {% for field in gameFields %}
                         <tr>
-                            <td><button class="btn2 change edit-icon"><a class="a-icon-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
+                            <td><button class="btn2 change edit-icon"><a class="a-for-showField" href="{% url changeicon user_id field.id %}">Tukar Ikon</a></button></td>
                             <td style="padding-right: 0px;"><img src="{% static 'images/quiz_field/' %}{{ field.imageURL.imageURL }}" width="50px" height="50px"></td>
                             <td style="padding-left: 20px; padding-right: 0px; text-align: left;">{{ field.name }}</td>
-                            <!--{% if lengthFQCL > 1 %}-->
                             <td>{{ fieldQuesCountList|index:forloop.counter0 }}</td>
-                            <!--{% else %}
-                                <td>{{ fieldQuesCountList|index:0 }}</td>
-                                <td>0</td>
-                            {% endif %}-->
-                            <!--<td sorttable_customkey="field.lastEdited">{{ field.lastEdited|date:"d/m/Y, h:i a" }}</td>-->
                             <td>{{ field.lastEdited|date:"d/m/Y, h:i A" }}</td>
                             <td>
                                 {% if field.show == True %}
@@ -96,7 +95,7 @@
                                 {% else %}
                                     <button class="btn2 status" style="background-color: crimson">Tidak</button></td>
                                 {% endif %}
-                            <td><button class="btn2 change question"><a class="a-question-for-showField" href="{% url showquestion user_id field.id %}">Lihat Soalan</a></button></td>
+                            <td><button class="btn2 change question"><a class="a-for-showField" href="{% url showquestion user_id field.id %}">Lihat Soalan</a></button></td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -123,22 +122,25 @@
         </table>
     </div>
 
-    <p>
+    <div class="div-buttons">
         <button class="btn field-for-showField">
-            <a class="a-field-for-showField" href="{% url 'quiz:add-field' user_id %}">Tambah Bidang Kerjaya Baharu</a>
+            <a class="a-for-showField" href="{% url 'quiz:add-field' user_id %}">Tambah Bidang Kerjaya Baharu</a>
         </button>
         <button class="btn main-for-showField">
-            <a class="a-main2-for-showField" href="{% url 'quiz:index-admin' user_id %}">Kembali ke Halaman Utama Kuiz</a>
+            <a class="a-for-showField" href="{% url 'quiz:index-admin' user_id %}">Kembali ke Halaman Utama Kuiz</a>
         </button>
-    </p>
-
-    <div class="div-icon">
-        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
-            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
-            <span> dan </span>
-            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
-            <span>, serta pemilik asal ikon-ikon tersebut.</span>
-        </p>
     </div>
-    <p></p>
+
+    <div class="div-space"></div>
+    
+    <div class="div-credit">
+        <div class="div-credit-text">
+            <p>Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+                <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: rgb(121, 85, 118);">Pinclipart</a></span>
+                <span> dan </span>
+                <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: rgb(121, 85, 118);">ClipartMax</a></span>
+                <span>, serta pemilik asal ikon-ikon tersebut.</span>
+            </p>
+        </div>
+    </div>
 {% endblock %}

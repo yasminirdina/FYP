@@ -12,8 +12,9 @@
     color: white;
     width: fit-content;
     text-align: center;
-    margin: 10px 0;
-    margin-bottom: 30px;
+    margin: 10px auto 30px;
+    /* margin: 10px 0;
+    margin-bottom: 30px; */
 }  
   
 /*On mouse-over*/
@@ -50,7 +51,7 @@
     width: 95%;
     min-width: fit-content;
     height: fit-content;
-    margin: 10px auto;
+    margin: 0 auto 10px;
     padding: 1vw;
 }
 
@@ -191,6 +192,18 @@
     display: block;
 }
 
+/* p */
+.p-scroll{
+    position: relative;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    width: 95%;
+    text-align: right;
+    display: none;
+}
+
 @media screen and (max-width: 1180px){
     .div-inner .div-grid > article:nth-child(1),
     .div-inner .div-grid > article:nth-child(3){
@@ -214,6 +227,11 @@
 }
 
 @media screen and (max-width: 925px) {
+    .btn{
+        width: 95%;
+        border-radius: 5px;
+    }
+
     .div-inner .div-grid{
         grid-template-columns: repeat(4, 24%);
     }
@@ -229,6 +247,10 @@
 
     #TotalQuestionsbyDifficulty .div-data-value{
         padding-top: 10px;
+    }
+
+    .p-scroll{
+        display: block;
     }
 }
 
@@ -294,6 +316,10 @@
 }
 
 @media screen and (max-width: 480px) {
+    .btn{
+        font-size: 12px;
+    }
+    
     .div-inner .div-grid{
         grid-template-columns: repeat(4, 22.8%);
     }
@@ -301,13 +327,13 @@
     #TotalQuestionsbyDifficulty .div-data-value{
         padding-top: 10px;
     }
+
+    .p-scroll{
+        font-size: 8px;
+    }
 }
 
 @media screen and (max-width: 360px) {
-    .btn{
-        font-size: 13px;
-    }
-
     .div-inner .div-grid{
         grid-template-columns: repeat(4, 22.6%);
     }

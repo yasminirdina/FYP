@@ -11,161 +11,72 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Tetapan Kandungan Kuiz</h1>
-    <h2>Tambah Bidang Kerjaya Baharu</h2>
-    <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
-        <span><a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
-        <span style="color: gray;">Baharu</span>
-    </h3>
+    <div class="div-main-header">
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Tambah Bidang Kerjaya Baharu</h2>
+        <h3><a class="a-main-for-addField" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
+            <span><a class="a-back-for-addField" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
+            <span style="color: gray;">Baharu</span>
+        </h3>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <ul class="ul-addField">
-        Format nama bidang kerjaya yang diterima adalah seperti berikut:
+    <div class="div-tips">
+        <ul class="ul-addField">
+            Format nama bidang kerjaya yang diterima adalah seperti berikut:
             <li>Setiap perkataan mesti bermula dengan Huruf Besar, contoh:
-                <ul>
+                <ul class="ul-addField-inner">
                     <li>Fesyen & Kecantikan</li>
                     <li>Seni Bina</li>
                 </ul>
             <li>Mestilah ditulis dalam Bahasa Malaysia</li>
-    </ul>
-
-    <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
-    <form action="{% url 'quiz:add-field' user_id %}" class="AddFieldForm" method="post">
-        {% csrf_token %}
-        <p>{{ form.name.label_tag }} {{ form.name }}</p>
-        <p>{{ form.image.label_tag }}</p>
-        <div>
-            {% for choice in form.image.field.choices %}
-                <span style="padding: 10px;"></span>
-                {% ifequal forloop.counter|divisibleby:"4" True %}    
-                    <input type="radio" name="image" value="{{ choice.0 }}">
-                    <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
-                    </div>
-                    <div>
-                {% endifequal %}      
-                {% ifequal forloop.counter|divisibleby:"4" False %}   
-                    <input type="radio" name="image" value="{{ choice.0 }}">
-                    <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
-                {% endifequal %}
-            {% endfor %}
-        </div>
-        <p></p>
-        <button class="btn field-for-addField" type="submit">Simpan</button>
-        <button class="btn cancel-for-addField">
-            <a class="a-cancel-for-addField" href="{% url 'quiz:show-field' user_id %}">Batal</a>
-        </button>
-    </form>
-
-    <div class="div-icon">
-        <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
-            <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
-            <span> dan </span>
-            <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
-            <span>, serta pemilik asal ikon-ikon tersebut.</span>
-        </p>
+        </ul>
     </div>
 
-    <p></p>
-{% endblock %}
+    <p class="p-error">{{ errorMessage }}</p>
 
-<!-- {% load static %}
-{% load quiz_index %}
-    <link rel="stylesheet" href="{% static 'css/avatar.css' %}">
+    <form action="{% url 'quiz:add-field' user_id %}" class="AddFieldForm" method="post">
+        {% csrf_token %}
+        <div class="div-form-name">
+            {{ form.name.label_tag }} {{ form.name }}
+        </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Permainan Kuiz Penerokaan Kerjaya | Tetapan Kandungan Kuiz</title>
-    <style>
-        .ul-addField {
-            font-family: DM Sans; 
-            text-align: left;
-            padding: 20px;
-            border: 2px solid coral;
-            background-color: peachpuff;
-            border-radius: 20px;
-            list-style-position: inside;
-            width: 37%
-        }
+        <div class="div-form-image-label">
+            {{ form.image.label_tag }}
+        </div>
 
-        div {
-            display: flex;
-            align-items: center;
-            flex-direction: row;
-            padding: 10px;
-            justify-content: center;
-            margin-left: -2%;
-        }
-    </style>
-</head>
-<body>
-    <center>
-        <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id %}">Blog Berita</a></li>
-            <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span> Admin</span></a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>            
-        </ul>
-        <h1>Tetapan Kandungan Kuiz</h1>
-        <h2>Tambah Bidang Kerjaya Baharu</h2>
-        <h3><a class="a-main-for-showQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> >  
-            <span><a class="a-back1-for-showQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a></span> >
-            <span style="color: gray;">Baharu</span>
-        </h3>
-
-        <ul class="ul-addField">
-            Format nama bidang kerjaya yang diterima adalah seperti berikut:
-                <li>Setiap perkataan mesti bermula dengan Huruf Besar, contoh:
-                    <ul>
-                        <li>Fesyen & Kecantikan</li>
-                        <li>Seni Bina</li>
-                    </ul>
-                <li>Mestilah ditulis dalam Bahasa Malaysia</li>
-        </ul>
-
-        <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
-        <form action="{% url 'quiz:add-field' user_id %}" class="AddFieldForm" method="post">
-            {% csrf_token %}
-            <p>{{ form.name.label_tag }} {{ form.name }}</p>
-            <p>{{ form.image.label_tag }}</p>
-            <div>
-                {% for choice in form.image.field.choices %}
-                    <span style="padding: 10px;"></span>
-                    {% ifequal forloop.counter|divisibleby:"4" True %}    
-                        <input type="radio" name="image" value="{{ choice.0 }}">
-                        <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
-                        </div>
-                        <div>
-                    {% endifequal %}      
-                    {% ifequal forloop.counter|divisibleby:"4" False %}   
-                        <input type="radio" name="image" value="{{ choice.0 }}">
-                        <span><img src="{% static 'images/quiz_field/' %}{{ choice.0 }}" width="100px" height="100px"></span>
-                    {% endifequal %}
-                {% endfor %}
+        <div class="div-outer">
+            {% for radio in form.image %}
+                <div class="div-choice">
+                    <input type="radio" name="image" value="{{ radio.data.value }}" id="{{ radio.id_for_label }}"/>
+                    <div class="div-img-label">
+                        <label for="{{ radio.id_for_label }}">
+                            <img class="img-field" src="{% static 'images/quiz_field/' %}{{ imageURLList|index:forloop.counter0 }}">
+                        </label>
+                    </div>
                 </div>
-            <button class="btn2 field-for-addField" type="submit">Simpan</button>
-            <button class="btn2 cancel-for-addField">
-                <a class="a-cancel-for-addField" href="{% url 'quiz:show-field' user_id %}">Batal</a>
+            {% endfor %}
+        </div>
+        
+        <div class="div-buttons">
+            <button class="btn field-for-addField" type="submit">Simpan</button>
+            <button class="btn cancel-for-addField">
+                <a class="a-for-addField" href="{% url 'quiz:show-field' user_id %}">Batal</a>
             </button>
-        </form>
+        </div>
+    </form>
 
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: fit-content; margin: auto; padding: 5px;">
-            <p style="font-style: italic; font-size: 12px;">Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
-                <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: purple;">Pinclipart</a></span>
+    <div class="div-space"></div>
+    
+    <div class="div-credit">
+        <div class="div-credit-text">
+            <p>Semua ikon yang digunakan di halaman ini dikreditkan kepada laman web 
+                <span style="font-weight: bold;"><a href="https://www.pinclipart.com/" style="text-decoration: none; color: rgb(121, 85, 118);">Pinclipart</a></span>
                 <span> dan </span>
-                <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: purple;">ClipartMax</a></span>
+                <span style="font-weight: bold;"><a href="https://www.clipartmax.com/" style="text-decoration: none; color: rgb(121, 85, 118);">ClipartMax</a></span>
                 <span>, serta pemilik asal ikon-ikon tersebut.</span>
             </p>
         </div>
-
-        <p></p>
-    </center>
-</body>
-</html> -->
+    </div>
+{% endblock %}

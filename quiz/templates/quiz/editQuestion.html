@@ -11,235 +11,248 @@
 {% endblock %}
 
 {% block header %}
-    <h1>Tetapan Kandungan Kuiz</h1>
-    <h2>Kemaskini Soalan Kuiz</h2>
-    <h3><a class="a-main-for-editQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
-        <a class="a-back-for-editQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
-        <a class="a-back-for-editQuestion" href="{% url 'quiz:show-question' user_id field_id %}">{{ currentGameFieldName }}</a> > 
-        <span style="color: gray;">Kemaskini Soalan</span>
-    </h3>
+    <div class="div-main-header">
+        <h1>Tetapan Kandungan Kuiz</h1>
+        <h2>Kemaskini Soalan Kuiz</h2>
+        <h3><a class="a-nav-editQuestion" href="{% url quiz user_id %}">Halaman Utama Kuiz</a> > 
+            <a class="a-nav-editQuestion" href="{% url 'quiz:show-field' user_id %}">Bidang Kerjaya</a> > 
+            <a class="a-nav-editQuestion" href="{% url 'quiz:show-question' user_id field_id %}">{{ currentGameFieldName }}</a> > 
+            <span style="color: gray;">Kemaskini Soalan</span>
+        </h3>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p></p>
+    <div class="div-quesTips">
+        <ul class="ul-editQuestion">
+            <span style="font-weight: bolder;">PERINGATAN</span>
+                <li>
+                    <span style="text-decoration: underline;">Panjang setiap teks:</span>
+                    <span>Tidak melebihi 500 karakter</span>
+                </li>
+                <li>
+                    <span style="text-decoration: underline;">Bilangan minimum dan maksimum bagi:</span>
+                    <ul class="ul-editQuestion-inner">
+                        <li>
+                            <span style="font-weight: bold;">Jawapan:</span>
+                            <span>2 hingga 4</span>
+                        </li>
+                        <li>
+                            <span style="font-weight: bold;">Petunjuk:</span>
+                            <span>0 hingga 3</span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <span style="text-decoration: underline;">Pilihan bagi:</span>
+                    <ul class="ul-editQuestion-inner">
+                        <li>
+                            <span style="font-weight: bold;">Tahap Kesukaran Soalan:</span>
+                            <span>Mudah, Sederhana, Sukar</span>
+                        </li>
+                        <li>
+                            <span style="font-weight: bold;">Nilai Petunjuk:</span>
+                            <span>3 hingga 7</span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <span>Bagi setiap soalan dan/atau petunjuk, anda hanya boleh memadam gambar </span>
+                    <span style="font-weight: bold;"> ATAU </span>
+                    <span>memuat naik gambar baharu, dan</span>
+                    <span style="font-weight: bold;"> BUKAN kedua-duanya.</span>
+                </li>
+                <li>
+                    <span>Bagi setiap soalan dan/atau petunjuk, anda hanya boleh memuat naik</span>
+                    <span style="font-weight: bold;"> SATU </span>
+                    <span>sahaja gambar sokongan.</span>
+                </li>
+                <li>
+                    <span>Anda hanya boleh menanda </span>
+                    <span style="font-weight: bold;"> SATU </span>
+                    <span>sahaja jawapan yang betul</span>
+                </li>
+                <li>
+                    Nilai petunjuk menunjukkan nilai yang pemain/pelajar perlu tukarkan dengan jumlah mata terkumpul mereka
+                    untuk menggunakan petunjuk berkenaan
+                </li>
+                <li>
+                    Jika ingin memadam mana-mana jawapan atau petunjuk, sila 
+                    <span style="font-weight: bold;">tandakan kotak "Buang?" pada lajur sebelah kanan sebaris dengan jawapan atau petunjuk </span>
+                    berkenaan. Sila ambil perhatian tentang jumlah minimum dan maksimum jawapan dan petunjuk yang dinyatakan di atas.
+                </li>
+        </ul>
+    </div>
 
-    <ul class="ul-editQuestion">
-        <span style="font-weight: bolder;">PERINGATAN</span>
-            <li>
-                <span style="text-decoration: underline;">Panjang setiap teks</span>
-                <span>: Tidak melebihi 500 karakter</span>
-            </li>
-            <li>
-                <span style="text-decoration: underline;">Bilangan minimum dan maksimum bagi</span>
-                <span>:</span>
-                <ul>
-                    <li>
-                        <span style="font-weight: bold;">Jawapan</span>
-                        <span>: 2 hingga 4</span>
-                    </li>
-                    <li>
-                        <span style="font-weight: bold;">Petunjuk</span>
-                        <span>: 0 hingga 3</span>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <span style="text-decoration: underline;">Pilihan bagi</span>
-                <span>:</span>
-                <ul>
-                    <li>
-                        <span style="font-weight: bold;">Tahap Kesukaran Soalan</span>
-                        <span>: Mudah, Sederhana, Sukar</span>
-                    </li>
-                    <li>
-                        <span style="font-weight: bold;">Nilai Petunjuk</span>
-                        <span>: 3 hingga 7</span>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <span>Bagi setiap soalan dan/atau petunjuk, anda hanya boleh memadam gambar </span>
-                <span style="font-weight: bold;"> ATAU </span>
-                <span>memuat naik gambar baharu, dan</span>
-                <span style="font-weight: bold;"> BUKAN kedua-duanya.</span>
-            </li>
-            <li>
-                <span>Bagi setiap soalan dan/atau petunjuk, anda hanya boleh memuat naik</span>
-                <span style="font-weight: bold;"> SATU </span>
-                <span>sahaja gambar sokongan.</span>
-            </li>
-            <li>
-                <span>Anda hanya boleh menanda </span>
-                <span style="font-weight: bold;"> SATU </span>
-                <span>sahaja jawapan yang betul</span>
-            </li>
-            <li>
-                Nilai petunjuk menunjukkan nilai yang pemain/pelajar perlu tukarkan dengan jumlah mata terkumpul mereka
-                untuk menggunakan petunjuk berkenaan
-            </li>
-            <li>
-                Jika ingin memadam mana-mana jawapan atau petunjuk, sila 
-                <span style="font-weight: bold;">tandakan kotak "Buang?" pada lajur sebelah kanan sebaris dengan jawapan atau petunjuk </span>
-                berkenaan. Sila ambil perhatian tentang jumlah minimum dan maksimum jawapan dan petunjuk yang dinyatakan di atas.
-            </li>
-    </ul>
-
-    <form id="editQuesForm" action="{% url 'quiz:edit-question' user_id field_id question_id %}" method="post" enctype='multipart/form-data'>
+    <form id="editQuesForm" action="{% url 'quiz:edit-question' user_id field_id question_id %}" method="post" enctype='multipart/form-data' class="EditQuestionForm">
         {% csrf_token %}
 
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
-            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                Soalan
-            </p>
+        <div class="div-form-header">
+            Soalan
         </div>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg1 }}</p>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg2 }}</p>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg3 }}</p>
-        <table style="width: 72.5vw;">
-            <thead>
-                <tr>
-                    <th>Teks Soalan</th>
-                    <th>Gambar Sokongan</th>
-                    <th>Tahap Kesukaran</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        {% if questionForm.questionImage.value %}
-                            <textarea rows="12" id= "id_questionText" name="questionText" class="questionText" maxlength="1500" style="width: 43vw;">{{ questionForm.questionText.value }}</textarea>
-                        {% else %}
-                            <textarea rows="8" id= "id_questionText" name="questionText" class="questionText" maxlength="1500" style="width: 44vw;">{{ questionForm.questionText.value }}</textarea>
-                        {% endif %}
-                    </td>
-                    <td style="vertical-align: middle;">{{ questionForm.questionImage }}</td>
-                    <td>
-                        <select id="id_difficulty" name="difficulty" class="difficulty">
-                            {% if questionForm.difficulty.value == 'Mudah' %}
-                                <option selected="selected" value="Mudah">Mudah</option>
-                            {% else %}
-                                <option value="Mudah">Mudah</option>
-                            {% endif %}
 
-                            {% if questionForm.difficulty.value == 'Sederhana' %}
-                                <option selected="selected" value="Sederhana">Sederhana</option>
-                            {% else %}
-                                <option value="Sederhana">Sederhana</option>
-                            {% endif %}
+        <p class="p-error">{{ errormsg1 }}</p>
+        <p class="p-error">{{ errormsg2 }}</p>
+        <p class="p-error">{{ errormsg3 }}</p>
 
-                            {% if questionForm.difficulty.value == 'Sukar' %}
-                                <option selected="selected" value="Sukar">Sukar</option>
-                            {% else %}
-                                <option value="Sukar">Sukar</option>
-                            {% endif %}
-                        </select>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <p class="p-scroll">Skrol jadual ke kanan &#128898;</p>
 
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;" >
-            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                Jawapan
-            </p>
+        <div class="div-question">
+            <table class="table-1">
+                <thead>
+                    <tr>
+                        <th>Teks Soalan</th>
+                        <th>Gambar Sokongan</th>
+                        <th>Tahap Kesukaran</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {% if questionForm.questionImage.value %}
+                                <textarea rows="12" id= "id_questionText" name="questionText" class="questionText" maxlength="1500">{{ questionForm.questionText.value }}</textarea>
+                            {% else %}
+                                <textarea rows="8" id= "id_questionText" name="questionText" class="questionText" maxlength="1500">{{ questionForm.questionText.value }}</textarea>
+                            {% endif %}
+                        </td>
+                        <td style="vertical-align: middle;">{{ questionForm.questionImage }}</td>
+                        <td>
+                            <select id="id_difficulty" name="difficulty" class="difficulty">
+                                {% if questionForm.difficulty.value == 'Mudah' %}
+                                    <option selected="selected" value="Mudah">Mudah</option>
+                                {% else %}
+                                    <option value="Mudah">Mudah</option>
+                                {% endif %}
+    
+                                {% if questionForm.difficulty.value == 'Sederhana' %}
+                                    <option selected="selected" value="Sederhana">Sederhana</option>
+                                {% else %}
+                                    <option value="Sederhana">Sederhana</option>
+                                {% endif %}
+    
+                                {% if questionForm.difficulty.value == 'Sukar' %}
+                                    <option selected="selected" value="Sukar">Sukar</option>
+                                {% else %}
+                                    <option value="Sukar">Sukar</option>
+                                {% endif %}
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg4 }}</p>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg5 }}</p>
-        {{ answer_inlineformset.management_form }}
-        <table style="width: 72.5vw;">
-            <thead>
-                <tr>
-                    <th>Teks Jawapan</th>
-                    <th>Jawapan yang Betul?</th>
-                    <th>Buang?</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in answer_inlineformset %}
-                <tr class="answer-inlineformset">
-                    {{ form.id }}
-                    <td>
-                        {% if form.answerText.value != None %}
-                            <textarea rows="3" id="{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="1500" style="width: 49vw;">{{ form.answerText.value }}</textarea>
-                        {% else %}
-                            <textarea rows="3" id="{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="1500" style="width: 49vw;"></textarea>
-                        {% endif %}
-                    </td>
-                    <td>{{ form.isCorrect }}</td>
-                    <td>
-                        {% if form.instance.pk %}
-                            {{ form.DELETE }}
-                        {% else %}
-                            <span style="font-weight: bolder;">X</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
 
-        <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; width: 72.5vw; margin: 1.5vw;">
-            <p style="font-weight: bold; text-decoration: underline; text-align: left; padding-left: 10px; padding-top: 5px; padding-bottom: 5px;">
-                Petunjuk
-            </p>
+        <div class="div-form-header">
+            Jawapan
         </div>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg6 }}</p>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg7 }}</p>
-        <p style="color: crimson; font-style: italic; width: 72.5vw;">{{ errormsg8 }}</p>
-        {{ hint_inlineformset.management_form }}
-        <table style="width: 72.5vw;">
-            <thead>
-                <tr>
-                    <th>Teks Petunjuk</th>
-                    <th>Gambar Sokongan</th>
-                    <th>Nilai Petunjuk</th>
-                    <th>Buang?</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in hint_inlineformset %}
-                <tr class="hint-inlineformset">
-                    {{ form.id }}
-                    
-                    <td>
-                        {% if form.hintText.value != None %}
-                            {% if form.hintImage.value %}
-                                <textarea rows="12" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;">{{ form.hintText.value }}</textarea>
-                            {% else %}
-                                <textarea rows="3" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;">{{ form.hintText.value }}</textarea>
-                            {% endif %}
-                        {% else %}
-                            {% if form.hintImage.value %}
-                                <textarea rows="12" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;"></textarea>
-                            {% else %}
-                                <textarea rows="3" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500" style="width: 38.5vw;"></textarea>
-                            {% endif %}
-                        {% endif %}
-                    </td>
-                    <td>{{ form.hintImage }}</td>
-                    <td>
-                        {% if form.value.value %}
-                            <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="5" value="{{ form.value.value }}">
-                        {% else %}
-                            <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="5">
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if form.instance.pk %}
-                            {{ form.DELETE }}
-                        {% else %}
-                            <span style="font-weight: bolder;">X</span>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
 
-        <p></p>
-        <button class="btn question-for-editQuestion" type="submit">Simpan</button>
-        <button class="btn cancel-for-editQuestion">
-            <a class="a-cancel-for-editQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Batal</a>
-        </button>
+        <p class="p-error">{{ errormsg4 }}</p>
+        <p class="p-error">{{ errormsg5 }}</p>
+
+        <div class="div-question">
+            {{ answer_inlineformset.management_form }}
+            <table class="table-2">
+                <thead>
+                    <tr>
+                        <th>Teks Jawapan</th>
+                        <th>Jawapan yang Betul?</th>
+                        <th>Buang?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in answer_inlineformset %}
+                    <tr class="answer-inlineformset">
+                        {{ form.id }}
+                        <td>
+                            {% if form.answerText.value != None %}
+                                <textarea rows="3" id="{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="1500">{{ form.answerText.value }}</textarea>
+                            {% else %}
+                                <textarea rows="3" id="{{ form.answerText.id_for_label }}" name="{{ form.answerText.html_name }}" class="answerText" maxlength="1500"></textarea>
+                            {% endif %}
+                        </td>
+                        <td>{{ form.isCorrect }}</td>
+                        <td>
+                            {% if form.instance.pk %}
+                                {{ form.DELETE }}
+                            {% else %}
+                                <span style="font-weight: bolder;">X</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="div-form-header">
+            Petunjuk
+        </div>
+
+        <p class="p-error">{{ errormsg6 }}</p>
+        <p class="p-error">{{ errormsg7 }}</p>
+        <p class="p-error">{{ errormsg8 }}</p>
+
+        <p class="p-scroll">Skrol jadual ke kanan &#128898;</p>
+
+        <div class="div-question">
+            {{ hint_inlineformset.management_form }}
+            <table class="table-3">
+                <thead>
+                    <tr>
+                        <th>Teks Petunjuk</th>
+                        <th>Gambar Sokongan</th>
+                        <th>Nilai Petunjuk</th>
+                        <th>Buang?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in hint_inlineformset %}
+                    <tr class="hint-inlineformset">
+                        {{ form.id }}
+                        
+                        <td>
+                            {% if form.hintText.value != None %}
+                                {% if form.hintImage.value %}
+                                    <textarea rows="12" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500">{{ form.hintText.value }}</textarea>
+                                {% else %}
+                                    <textarea rows="3" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500">{{ form.hintText.value }}</textarea>
+                                {% endif %}
+                            {% else %}
+                                {% if form.hintImage.value %}
+                                    <textarea rows="12" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500"></textarea>
+                                {% else %}
+                                    <textarea rows="3" id="{{ form.hintText.id_for_label }}" name="{{ form.hintText.html_name }}" class="hintText" maxlength="1500"></textarea>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        <td>{{ form.hintImage }}</td>
+                        <td>
+                            {% if form.value.value %}
+                                <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="5" value="{{ form.value.value }}">
+                            {% else %}
+                                <input type="number" id="{{ form.value.id_for_label }}" name="{{ form.value.html_name }}" class="value" min="3" max="5">
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if form.instance.pk %}
+                                {{ form.DELETE }}
+                            {% else %}
+                                <span style="font-weight: bolder;">X</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="div-buttons">
+            <button class="btn question-for-editQuestion" type="submit">Simpan</button>
+            <button class="btn cancel-for-editQuestion">
+                <a class="a-for-editQuestion" href="{% url 'quiz:show-question' user_id field_id %}">Batal</a>
+            </button>
+        </div>
     </form>
+
+    <div class="div-space"></div>
 {% endblock %}

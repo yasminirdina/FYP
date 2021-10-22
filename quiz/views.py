@@ -26,131 +26,131 @@ def quizMainAdmin(request, user_id):
     if currentUserRecord.isActive == False:
         return redirect('home:login')
 
-    if user_id == 'A1':
-        urlTest = 'test:index-admin'
-        urlBlog = 'blog:index-admin'
-        urlQuiz = 'quiz:index-admin'
-        urlSearch = 'search:index-admin'
-        urlDashboard = 'dashboard:index-admin'
-        urlLogout = 'dashboard:logout-confirm'
+    # if user_id == 'A1':
+    urlTest = 'test:index-admin'
+    urlBlog = 'blog:index-admin'
+    urlQuiz = 'quiz:index-admin'
+    urlSearch = 'search:index-admin'
+    urlDashboard = 'dashboard:index-admin'
+    urlLogout = 'dashboard:logout-confirm'
 
-        allGameFields = quiz.models.GameField.objects.all().order_by('id')
+    allGameFields = quiz.models.GameField.objects.all().order_by('id')
 
-        #Card 1
-        countAllFields = allGameFields.count()
-        countShownFields = allGameFields.filter(show=True).count()
+    #Card 1
+    countAllFields = allGameFields.count()
+    countShownFields = allGameFields.filter(show=True).count()
 
-        #Card 2
-        allGameQuestions = quiz.models.GameQuestion.objects.all().order_by('id')
-        shownFieldIDList = list(allGameFields.filter(show=True).values_list('id', flat=True))
+    #Card 2
+    allGameQuestions = quiz.models.GameQuestion.objects.all().order_by('id')
+    shownFieldIDList = list(allGameFields.filter(show=True).values_list('id', flat=True))
 
-        countAllQues = allGameQuestions.count()
-        countShownQues = allGameQuestions.filter(fieldID_id__in=shownFieldIDList).count()
+    countAllQues = allGameQuestions.count()
+    countShownQues = allGameQuestions.filter(fieldID_id__in=shownFieldIDList).count()
 
-        #Card 3
-        countEasyQues = allGameQuestions.filter(difficulty='Mudah').count()
-        countMediumQues = allGameQuestions.filter(difficulty='Sederhana').count()
-        countHardQues = allGameQuestions.filter(difficulty='Sukar').count()
+    #Card 3
+    countEasyQues = allGameQuestions.filter(difficulty='Mudah').count()
+    countMediumQues = allGameQuestions.filter(difficulty='Sederhana').count()
+    countHardQues = allGameQuestions.filter(difficulty='Sukar').count()
 
-        #Card 4
-        allGameHints = quiz.models.GameHint.objects.all().order_by('id')
-        countAllHints = allGameHints.count()
+    #Card 4
+    allGameHints = quiz.models.GameHint.objects.all().order_by('id')
+    countAllHints = allGameHints.count()
 
-        #Card 5
-        fieldNameList = list(allGameFields.values_list('name', flat=True))
-        countQuesByFieldList = []
+    #Card 5
+    fieldNameList = list(allGameFields.values_list('name', flat=True))
+    countQuesByFieldList = []
 
-        for field in allGameFields:
-            countQuesByFieldList.append(allGameQuestions.filter(fieldID_id=field.id).count())
+    for field in allGameFields:
+        countQuesByFieldList.append(allGameQuestions.filter(fieldID_id=field.id).count())
 
-        #Card 6
-        fieldIDList = list(allGameFields.values_list('id', flat=True))
-        percEasyQuesList = []
-        percMediumQuesList = []
-        percHardQuesList = []
+    #Card 6
+    fieldIDList = list(allGameFields.values_list('id', flat=True))
+    percEasyQuesList = []
+    percMediumQuesList = []
+    percHardQuesList = []
 
-        for i in range(len(fieldIDList)):
-            currentFieldQues = allGameQuestions.filter(fieldID_id=fieldIDList[i])
+    for i in range(len(fieldIDList)):
+        currentFieldQues = allGameQuestions.filter(fieldID_id=fieldIDList[i])
 
-            #Easy
-            countEasy = currentFieldQues.filter(difficulty='Mudah').count()
-            percEasyQuesList.append(round((countEasy/currentFieldQues.count())*100, 2))
+        #Easy
+        countEasy = currentFieldQues.filter(difficulty='Mudah').count()
+        percEasyQuesList.append(round((countEasy/currentFieldQues.count())*100, 2))
 
-            #Medium
-            countMedium = currentFieldQues.filter(difficulty='Sederhana').count()
-            percMediumQuesList.append(round((countMedium/currentFieldQues.count())*100, 2))
+        #Medium
+        countMedium = currentFieldQues.filter(difficulty='Sederhana').count()
+        percMediumQuesList.append(round((countMedium/currentFieldQues.count())*100, 2))
 
-            #Easy
-            countHard = currentFieldQues.filter(difficulty='Sukar').count()
-            percHardQuesList.append(round((countHard/currentFieldQues.count())*100, 2))
+        #Easy
+        countHard = currentFieldQues.filter(difficulty='Sukar').count()
+        percHardQuesList.append(round((countHard/currentFieldQues.count())*100, 2))
 
-        # For ALL CHARTS(field colors)
-        colors = [
-                "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
-                "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
-                "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
-                "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
-                "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
-                "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
-                "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
-                "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
-                "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
-                "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
-            ]
-        
-        fieldColorList = colors[:allGameFields.count()]
-        # END color designation
+    # For ALL CHARTS(field colors)
+    colors = [
+            "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
+            "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
+            "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
+            "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
+            "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
+            "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
+            "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
+            "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
+            "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
+            "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
+        ]
+    
+    fieldColorList = colors[:allGameFields.count()]
+    # END color designation
 
-        if request.is_ajax():
-            # Card 4
-            # return fieldNameList, countQuesByFieldList, fieldColorList
+    if request.is_ajax():
+        # Card 4
+        # return fieldNameList, countQuesByFieldList, fieldColorList
 
-            # Card 5
-            dist_ques_difficulty_chart_data = {
-                "labels": fieldNameList,
-                "datasets":[{
-                    "label": "Mudah",
-                    "data": percEasyQuesList,
-                    "backgroundColor": "rgb(216, 144, 211)"
-                }, {
-                    "label": "Sederhana",
-                    "data": percMediumQuesList,
-                    "backgroundColor": "rgb(179, 97, 173)"
-                }, {
-                    "label": "Sukar",
-                    "data": percHardQuesList,
-                    "backgroundColor": "rgb(141, 56, 135)"
-                }]
-            }
-
-            data_dict = {
-                "fieldNameList": fieldNameList,
-                "countQuesByFieldList": countQuesByFieldList,
-                "fieldColorList": fieldColorList,
-                "dist_ques_difficulty_chart_data": dist_ques_difficulty_chart_data
-            }
-
-            return JsonResponse(data=data_dict, safe=False)
-
-        context = {
-            'user_id': user_id,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard': urlDashboard,
-            'logout': urlLogout,
-            'countAllFields': countAllFields,
-            'countShownFields': countShownFields,
-            'countAllQues': countAllQues,
-            'countShownQues': countShownQues,
-            'countEasyQues': countEasyQues,
-            'countMediumQues': countMediumQues,
-            'countHardQues': countHardQues,
-            'countAllHints': countAllHints
+        # Card 5
+        dist_ques_difficulty_chart_data = {
+            "labels": fieldNameList,
+            "datasets":[{
+                "label": "Mudah",
+                "data": percEasyQuesList,
+                "backgroundColor": "rgb(216, 144, 211)"
+            }, {
+                "label": "Sederhana",
+                "data": percMediumQuesList,
+                "backgroundColor": "rgb(179, 97, 173)"
+            }, {
+                "label": "Sukar",
+                "data": percHardQuesList,
+                "backgroundColor": "rgb(141, 56, 135)"
+            }]
         }
-        return render(request, 'quiz\quizMainAdmin.html', context)
-    else:
+
+        data_dict = {
+            "fieldNameList": fieldNameList,
+            "countQuesByFieldList": countQuesByFieldList,
+            "fieldColorList": fieldColorList,
+            "dist_ques_difficulty_chart_data": dist_ques_difficulty_chart_data
+        }
+
+        return JsonResponse(data=data_dict, safe=False)
+
+    context = {
+        'user_id': user_id,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'countAllFields': countAllFields,
+        'countShownFields': countShownFields,
+        'countAllQues': countAllQues,
+        'countShownQues': countShownQues,
+        'countEasyQues': countEasyQues,
+        'countMediumQues': countMediumQues,
+        'countHardQues': countHardQues,
+        'countAllHints': countAllHints
+    }
+    return render(request, 'quiz\quizMainAdmin.html', context)
+    """ else:
         if 'S' in user_id:
             dashboardNav = " Pelajar"
             user_type = "pelajar"
@@ -172,7 +172,7 @@ def quizMainAdmin(request, user_id):
         context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'response': response,
         'user_id': user_id, 'user_type': user_type, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
         'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
-        return render(request, 'quiz/noAccessError.html', context)
+        return render(request, 'quiz/noAccessError.html', context) """
 
 def quizMain(request, user_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
@@ -189,7 +189,7 @@ def quizMain(request, user_id):
     urlLogout = 'dashboard:logout-confirm'
     dashboardNav = ' Pelajar'
     user_type = 'pelajar'
-    #user_id = student_id
+
     #comment out bawah ni sebab dah disable tab "Permainan Kuiz" for non-student
     """if 'S' not in user_id: #meaning actualy not student id (can be Px, Tx, A1)
         #if admin, redirect to quizMainAdmin
@@ -241,7 +241,6 @@ def showAvatar(request, user_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    #currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
     currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
@@ -253,11 +252,9 @@ def showAvatar(request, user_id):
     urlLogout = 'dashboard:logout-confirm'
     dashboardNav = ' Pelajar'
     user_type = 'pelajar'
-    #user_id = student_id
 
     context = {'dashboardNav': dashboardNav, 'username': currentPlayerUsername, 'currentAvatarDetailsObject': currentAvatarDetailsObject,
     'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout}
-    #context = {'student_id': student_id, 'currentPlayerUsername': currentPlayerUsername, 'currentAvatarDetailsObject': currentAvatarDetailsObject}
     return render(request, 'quiz/showAvatar.html', context)
 
 def editAvatar(request, user_id):
@@ -267,7 +264,6 @@ def editAvatar(request, user_id):
     if currentUserDetail.isActive == False:
         return redirect('home:login')
 
-    #allAvatarDetailsList = quiz.models.AvatarGenderImageFinal.objects.values().order_by('id')
     currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
     currentPlayerUsername = currentPlayerRecord.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecord.avatarID
@@ -280,7 +276,6 @@ def editAvatar(request, user_id):
     dashboardNav = ' Pelajar'
     user_type = 'pelajar'
     isSubmitted = False
-    #user_id = student_id
 
     if request.method == 'POST':
         currentPlayerAvatarID = currentPlayerRecord.avatarID.avatarID.id
@@ -294,8 +289,6 @@ def editAvatar(request, user_id):
         if form.is_valid():
             currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
             currentPlayerRecord = quiz.models.Player.objects.get(ID=user_id)
-            #currentPlayerAvatarID = currentPlayerRecord.avatarID.avatarID.id
-            #currentAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.get(id=currentPlayerAvatarID)
 
             allAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.all()
             for x in allAvatarDetails:
@@ -303,17 +296,12 @@ def editAvatar(request, user_id):
                     if x.avatarGender.avatarGender == form.cleaned_data['avatarGender'].avatarGender:
                         currentPlayerRecord.avatarID = x
                         break
-            #form.save()
             currentPlayerRecord.save()
-            #currentAvatarDetailsObject = currentPlayerRecord.avatarID
             title = "Future Cruise: Tetapan Avatar"
-            #successMessage = "Avatar berjaya dikemaskini!"
             isSubmitted = True
             context = {'title': title, 'dashboardNav': dashboardNav, 'username': currentPlayerUsername,
             'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
             'dashboard':urlDashboard, 'logout': urlLogout}
-            #return redirect('quiz:show-avatar', user_id)
-            #return render(request, 'quiz/editAvatar.html', context)
     else:
         currentPlayerAvatarID = currentPlayerRecord.avatarID.id
         currentAvatarDetails = quiz.models.AvatarGenderImageFinal.objects.get(id=currentPlayerAvatarID)
@@ -323,12 +311,10 @@ def editAvatar(request, user_id):
         imageURL = currentAvatarDetails.imageURL.id
         form = AvatarForm(initial={'avatarID': avatarID, 'workplace': workplace, 'avatarGender': avatarGender,
         'imageURL': imageURL})
-        #form = AvatarForm()
 
     context = {'dashboardNav': dashboardNav, 'username': currentPlayerUsername, 'currentAvatarDetailsObject': currentAvatarDetailsObject,
     'user_type': user_type, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
     'dashboard':urlDashboard, 'logout': urlLogout, 'form': form, 'isSubmitted': isSubmitted}
-    #return render(request, 'quiz/editAvatar.html', {'user_id': student_id, 'form': form, 'currentPlayerAvatar': currentPlayerRecord.avatarID})
     return render(request, 'quiz/editAvatar.html', context)
 
 """
@@ -456,6 +442,11 @@ def addField(request, user_id):
     urlLogout = 'dashboard:logout-confirm'
     allImageField = quiz.models.ImageField.objects.all()
 
+    #get all objects (image records) in ImageField table
+    allFieldImage = quiz.models.ImageField.objects.all().order_by('id')
+    #get values_list of imageURL in ImageField, ordered by id
+    imageURLList = list(allFieldImage.values_list('imageURL', flat=True).order_by('id'))
+
     if request.method == 'POST':
         form = AddFieldForm(request.POST)
         if form.is_valid():
@@ -470,7 +461,7 @@ def addField(request, user_id):
                 form = AddFieldForm()
                 context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
                 'dashboard': urlDashboard, 'logout': urlLogout, 'errorMessage': errorMessage,
-                'allImageField': allImageField, 'form': form}
+                'allImageField': allImageField, 'form': form,'imageURLList': imageURLList}
                 return render(request, 'quiz/addField.html', context)
             #kalau memang takda
             else:
@@ -483,7 +474,7 @@ def addField(request, user_id):
                     form = AddFieldForm()
                     context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
                     'dashboard': urlDashboard, 'logout': urlLogout, 'errorMessage': errorMessage,
-                    'allImageField': allImageField, 'form': form}
+                    'allImageField': allImageField, 'form': form, 'imageURLList': imageURLList}
                     return render(request, 'quiz/addField.html', context)
                 else:
                     quiz.models.GameField.objects.create(name=filledList['name'], imageURL=selectedImageRecord)
@@ -492,7 +483,7 @@ def addField(request, user_id):
         form = AddFieldForm()
 
     context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'allImageField': allImageField, 'form': form}
+    'dashboard': urlDashboard, 'logout': urlLogout, 'allImageField': allImageField, 'form': form, 'imageURLList': imageURLList}
     return render(request, 'quiz/addField.html', context)
 
 def changeIcon(request, user_id, field_id):
@@ -512,6 +503,11 @@ def changeIcon(request, user_id, field_id):
     currentGameFieldRecord = allGameFields.get(id=field_id)
     currentGameFieldName = currentGameFieldRecord.name
 
+    #get all objects (image records) in ImageField table
+    allFieldImage = quiz.models.ImageField.objects.all().order_by('id')
+    #get values_list of imageURL in ImageField, ordered by id
+    imageURLList = list(allFieldImage.values_list('imageURL', flat=True).order_by('id'))
+
     if request.method == 'POST':
         form = ChangeIconForm(request.POST)
         if form.is_valid():
@@ -525,7 +521,7 @@ def changeIcon(request, user_id, field_id):
                 form = ChangeIconForm()
                 context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
                 'dashboard': urlDashboard, 'logout': urlLogout, 'errorMessage': errorMessage,
-                'currentGameFieldName': currentGameFieldName, 'form': form}
+                'currentGameFieldName': currentGameFieldName, 'form': form, 'imageURLList': imageURLList}
                 return render(request, 'quiz/changeIcon.html', context)
             else:
                 currentGameFieldRecord.imageURL = selectedImageRecord
@@ -535,7 +531,8 @@ def changeIcon(request, user_id, field_id):
         form = ChangeIconForm()
 
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'form': form}
+    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'form': form,
+    'imageURLList': imageURLList}
     return render(request, 'quiz/changeIcon.html', context)
 
 def showQuestion(request, user_id, field_id):

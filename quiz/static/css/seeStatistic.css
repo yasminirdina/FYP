@@ -5,16 +5,13 @@
     border-radius: 50px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    /* font-size: 1.8rem; */
     font-family: 'Poppins';
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
     color: white;
     width: fit-content;
-    min-width: 7rem;
-    min-height: 3rem;
-    line-height: 2.5vw;
+    height: 100%;
     text-align: center;
 }  
   
@@ -143,7 +140,6 @@
 .div-game-perf .div-grid {
     display: grid;
     grid-template-columns: repeat(4, 24.4%);
-    /* grid-template-columns: repeat(4, auto); */
     gap: 10px;
     width: 100%;
     min-width: fit-content;
@@ -156,7 +152,6 @@
     width: 100%;
     border-radius: 10px;
     border: 1px solid rgb(240, 240, 240);
-    /* box-shadow: 0 0 10px -2px rgba(0, 0, 0, 0.075); */
     background-color: white;
     box-sizing: border-box;
     padding: 10px;
@@ -229,7 +224,6 @@
     padding-top: 20px;
     height: 60%;
     vertical-align: bottom;
-    /* padding: 0 10px; */
     box-sizing: border-box;
     font-size: 3rem;
     color: rgb(179, 97, 173);
@@ -358,9 +352,8 @@
 .div-buttons{
     /* background-color: antiquewhite; */
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(2, auto);
     box-sizing: border-box;
-    /* width: 72vw; */
     width: 100%;
     margin: 1vw 0;
     margin-bottom: 15%;
@@ -472,13 +465,7 @@
 
 @media screen and (max-width: 1150px) {
     .btn, .btn2{
-        line-height: normal;
         padding: 10px 15px;
-    }
-
-    .btn{
-        min-width: 13rem;
-        font-size: 1.1rem;
     }
 
     .music{
@@ -487,12 +474,6 @@
         min-width: 3rem;
         min-height: 3rem;
         padding: 1vw;
-    }
-
-    .div-totalScore {
-        grid-template-columns: 35% 40% 25%;
-        justify-items: right;
-        right: 10px;
     }
 
     .div-game-perf .div-grid > article:nth-child(1),
@@ -527,12 +508,24 @@
 }
 
 @media screen and (max-width: 950px) {
+    .div-totalScore {
+        grid-template-columns: 35% 40% 25%;
+        justify-items: right;
+        right: 10px;
+    }
+
     .div-game-perf .div-grid{
         grid-template-columns: repeat(4, 24%);
     }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 850px) {
+    .download, .main{
+        width: 100%;
+        font-size: 16px;
+        border-radius: 5px;
+    }
+    
     .div-game-perf .div-grid{
         grid-template-columns: repeat(4, 23.8%);
     }
@@ -544,6 +537,17 @@
     
     .div-step-container > div:first-child .div-tooltip-text {
         width: 100%;
+    }
+
+    .div-buttons{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0 1vw;
+        margin: 1vw 0;
+        margin-bottom: 15%;
+        gap: 5px;
     }
 
     @-moz-keyframes scroll-left {
@@ -578,12 +582,7 @@
     }
 }
 
-@media screen and (max-width: 660px) { 
-    .btn{
-        font-size: 16px;
-        min-width: fit-content;
-    }
-
+@media screen and (max-width: 660px) {
     .div-game-perf .div-grid{
         grid-template-columns: repeat(4, 23.5%);
     }
@@ -593,7 +592,6 @@
     }
 
     #LastPlayedTime .div-data-value, #AvgSessionTimeTaken .div-data-value{
-        /* font-size: 1.5rem; */
         line-height: 2.8rem;
     }
 }
@@ -656,23 +654,15 @@
         line-height: 2rem;
     }
 
-    .div-buttons{
-        width: 80%;
-        height: fit-content;
-    }
-
-    .div-buttons > button {
-        grid-column: 1 / 4;
-    }
-
     .back, .download, .main {
-        width: 90vw;
-        min-width: 90vw;
-        /* border: 1px solid white; */
-        border-radius: 5px;
-        line-height: normal;
-        min-height: fit-content;
-    }  
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .div-credit-text p {
+        margin: 5px 0;
+        font-size: 12px;
+    }
 }
 
 @media screen and (max-width: 390px) {
@@ -709,11 +699,6 @@
         display: none;
     }
 
-    .btn{
-        font-size: 13px;
-        min-width: fit-content;
-    }
-
     .div-game-perf .div-grid{
         grid-template-columns: repeat(4, 22.5%);
     }
@@ -735,5 +720,17 @@
 
     .div-ind-step{
         font-size: 2rem;
+    }
+
+    .back, .download, .main {
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    @media screen and (max-height: 450px) {
+        .div-credit-text p {
+            margin: 5px 0;
+            font-size: 12px;
+        }
     }
 }

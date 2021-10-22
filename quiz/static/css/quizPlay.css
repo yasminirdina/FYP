@@ -2,16 +2,15 @@
 h1 {
     font-family: 'Poppins';
     letter-spacing: 3px;
-    font-size: 2vw;
+    font-size: 1.4rem;
     text-align: center;
     color: white;
-    line-height: 1.5em;
+    line-height: normal;
 }
 
 .question{
     /* background-color: rgb(255, 177, 177); */
     letter-spacing: 1px;
-    line-height: 3vw;
     width: 100%;
 }
 
@@ -32,17 +31,21 @@ h1 {
     letter-spacing: 3px;
     cursor: pointer;
     color: white;
-    width: max-content;
-    min-width: 7rem;
-    min-height: 2rem;
+    width: fit-content;
+    height: 100%;
     text-align: center;
-}  
+}
   
 /*On mouse-over*/
 .btn:hover{
     box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
     transition: transform 150ms;
     transform: scale(1.03);
+}
+
+.hint.no-show{
+    pointer-events: none;
+    opacity: 0.6;
 }
 
 .next, .next2, .showResult{
@@ -92,6 +95,11 @@ h1 {
     margin: 0 auto;
 }
 
+.img-hintImage{
+    max-width: 100%;
+    max-height: 60vh;
+}
+
 /* div */
 .div-totalScore {
     position: absolute;
@@ -111,6 +119,7 @@ h1 {
 }
 
 #div-wrapper {
+    /* background-color: darkseagreen; */
     box-sizing: border-box;
     position: relative;
 }
@@ -119,55 +128,59 @@ h1 {
     /* background-color: burlywood; */
     box-sizing: border-box;
     width: 95%;
-    min-width: 95%;
-    margin: 0 2vw;
+    margin: 0 auto;
     padding: 1vw 0;
 }
 
-/* .flex-column{
-    display: flex;
-    flex-direction: column;
-}
-  
-.justify-center{
-    justify-content: center;
-} */
-
 /* Heads of Display */
 #hud{
+    /* background-color: rgb(130, 124, 225); */
     display: flex;
-    justify-content:space-between;
+    justify-content: space-between;
+    width: 100%;
+    height: fit-content;
     font-family: 'Poppins';
     letter-spacing: 3px;
+    box-sizing: border-box;
 }
 
 .hud-item{
+    /* background-color: darksalmon; */
+    display: grid;
+    grid-template-rows: 40% 60%;
+    gap: 0;
+    width: fit-content;
+    /* width: 100%; */
+    height: 150px;
     align-items: center;
     justify-items: center;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .hud-prefix {
+    /* background-color: dodgerblue; */
+    width: 100%;
     text-align: center;
     font-weight: bold;
-    font-size: 2vw;
+    font-size: 1.4rem;
+    box-sizing: border-box;
 }
 
 .hud-main-text {
+    /* background-color: darkred; */
     text-align: center;
-    font-size: 2vw;
-    font-weight: unset;
-    line-height: 3vw;
+    width: 100%;
+    padding: 0 1vw;
+    box-sizing: border-box;
 }
 
 .div-bg-bar-timer-ques {
     position: relative;
-    width: 15vw;
+    width: 150px;
     height: 1.5rem;
-    min-height: 1.5rem;
     border: 3px solid rgb(255, 255, 255);
     border-radius: 50px;
-    /* background-color: rgb(241, 236, 236); */
     overflow: hidden;
 }
   
@@ -179,8 +192,8 @@ h1 {
     background-color: rgb(52, 202, 152);
 }
 
-.score, .cntHint-wrapper, .cntHint-inner{
-    font-size: 3vw;
+.score, .cntHint-wrapper{
+    font-size: 2.5rem;
     font-weight: bold;
 }
 
@@ -201,9 +214,8 @@ h1 {
 }
 
 #progressBar {
-    width: 95%;
+    width: 100%;
     height: 1.5rem;
-    min-height: 1.5rem;
     border: 3px solid rgb(255, 255, 255);
     border-radius: 50px;
     overflow: hidden;
@@ -211,7 +223,6 @@ h1 {
 
 #progressBarFull {
     height: 100%;
-    /* background: rgb(18, 93, 255); */
     background-color: rgb(130, 124, 225);
     width: 0%;
 }
@@ -234,6 +245,7 @@ h1 {
 }
 
 .div-question-inner{
+    /* background-color: lightseagreen; */
     width: 100%;
     box-sizing: border-box;
     padding-right: 3%;
@@ -243,22 +255,21 @@ h1 {
     /* background-color: rgb(213, 248, 172); */
     display: grid;
     box-sizing: border-box;
-    grid-template-columns: repeat(2, 49.5%);
+    grid-template-columns: repeat(2, 50%);
     justify-content: center;
     width: 100%;
     height: 100%;
     gap: 1vw;
-    margin-top: 3vw;
+    padding: 0 1.5vw;
+    margin-top: 1vw;
 }
 
 .choice-container {
     display: grid;
     grid-template-columns: 10% 90%;
-    font-size: 2vw;
     /* background-color: rgb(18, 93, 255); */
     box-sizing: border-box;
-    height: min-content;
-    min-height: 100%;
+    height: 100%;
     position: relative;
     width: 100%;
 }
@@ -279,7 +290,7 @@ h1 {
     box-sizing: border-box;
     padding: 1vw;
     color: white;
-    font-size: 2vw;
+    font-size: 1.4rem;
     font-family: 'Poppins';
     font-weight: bold;
     letter-spacing: 1px;
@@ -293,7 +304,7 @@ h1 {
     text-align: left;
     padding: 1vw;
     width: 100%;
-    font-size: 2vw;
+    font-size: 1.4rem;
     font-family: 'Poppins';
     font-weight: bold;
     letter-spacing: 1px;
@@ -327,19 +338,21 @@ h1 {
 }
 
 .div-buttons{
+    /* background-color: plum; */
     display: grid;
     grid-template-columns: repeat(3, auto);
     width: 100%;
-    margin: 2vw 0;
+    /* top | horizontal | bottom */
+    margin: 1vw 0 2vw;
     align-items: center;
     justify-content: center;
     position: relative;
-    gap: 1rem;
+    gap: 1vw;
 }
 
-.div-buttons-wrapper-hint, .div-buttons-inner-hint{
-    width:max-content;
-    height: max-content;
+.div-buttons-wrapper-hint{
+    width: fit-content;
+    height: fit-content;
     position: relative;
 }
 
@@ -356,18 +369,14 @@ h1 {
 }
 
 .div-modal-content, .div-modal-content2, .div-modal-content3{
-    width: 31vw;
+    width: 30%;
     box-sizing: border-box;
-    max-height: 100vh;
-    min-width: 25rem;
-    min-height: 9rem;
     background-color: white;
     border: none; 
     border-radius: 15px;
-    padding: 0 1vw;
-    padding-right: 1.5vw;
+    padding: 1vw;
     position: relative;
-    margin: 6vw 0;
+    margin: 0 auto;
     font-size: 1.1rem;
     font-family: 'Poppins';
     color: black;
@@ -379,14 +388,14 @@ h1 {
 
 .div-modal-header{
     position: relative;
-    width: max-content;
-    height: 2vw;
-    min-height: 1.2rem;
-    padding: 1rem 0;
+    width: 100%;
+    height: fit-content;
+    margin-bottom: 2vw;
     z-index: 1;
     font-size: 1.1rem;
     font-family: 'Poppins';
     font-weight: bold;
+    box-sizing: border-box;
     /* background-color: rgb(121, 85, 118); */
 }
 
@@ -394,31 +403,42 @@ h1 {
     box-sizing: border-box;
     position: relative;
     width: 100%;
-    height: min-content;
+    height: fit-content;
+}
+
+.p-hintText {
+    font-size: 1.1rem;
 }
 
 /* div buttons for modal 1, 2 */
 .div-quit-button, .div-hint-button{
+    /* background-color: peachpuff; */
     position: relative;
-    width: max-content;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    display: grid;
+    grid-auto-flow: column;
+    width: fit-content;
+    height: fit-content;
+    margin: 2vw auto;
+    margin-bottom: 0;
+    align-items: center;
+    justify-items: center;
+    gap: 1vw;
+    box-sizing: border-box;
 }
 
 .div-outer-bg-bar {
+    /* background-color: lightgreen; */
     text-align: left;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding: 1vw 0;
 }
 
 .div-bg-bar-timer-hint {
     position: relative;
     width: 90%;
     height: 1.5rem;
-    min-height: 1.5rem;
     border: 2px solid rgb(114, 114, 114);
     border-radius: 15px;
     background-color: rgb(241, 236, 236);
@@ -429,7 +449,6 @@ h1 {
     position: relative;
     width: 0%;
     height: 1.5rem;
-    min-height: 1.5rem;
     border: none;
     border-radius: 15px;
     background-color: rgb(52, 202, 152);
@@ -454,7 +473,7 @@ h1 {
 {
     color: black;
     text-transform: uppercase;
-    font-size: 1vw;
+    font-size: 0.8rem;
     font-style: italic;
     background-color: rgb(130, 124, 225);
     box-sizing: border-box;
@@ -463,4 +482,235 @@ h1 {
     border-radius: 50px;
     vertical-align: middle;
     margin-right: 10px;
+}
+
+/* Tablet & mobile vertical
+- Grid question w/ image, answer choices & buttons vertically
+- Buttons all font size 16px, full width, radius 5px, remain letter spacing 3px, in rows
+- Change paddings in vw to px
+- Change font size hud items, question, answer
+- Appropriate modal width */
+@media screen and (max-width: 930px) {
+    .div-totalScore {
+        grid-template-columns: 35% 40% 25%;
+        justify-items: right;
+        right: 10px;
+    }
+
+    h1.question{
+        font-size: 1.1rem;
+    }
+
+    .with-image1{
+        text-align: center;
+    }
+
+    .quit, .hint, .next, .next2, .showResult,
+    .quit-for-quizPlay, .cancelQuit-for-quizPlay, .useHint-for-quizPlay, .cancelHint1-for-quizPlay, .cancelHint2-for-quizPlay{
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+
+    .quit, .hint, .next, .next2, .showResult{
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .img-question{
+        max-width: 70%;
+        max-height: 70%;
+    }
+
+    .img-hintImage{
+        max-width: 90%;
+        max-height: 40vh;
+    }
+
+    .div-outer{
+        padding: 10px 0;
+    }
+
+    .hud-item{
+        height: 100px;
+    }
+
+    .hud-prefix{
+        font-size: 1.1rem;
+    }
+
+    .hud-main-text{
+        padding: 0 10px;
+    }
+
+    .div-bg-bar-timer-ques{
+        width: 100px;
+    }
+
+    .score, .cntHint-wrapper{
+        font-size: 2rem;
+    }
+
+    .div-question{
+        margin: 10px 0;
+    }
+
+    .with-image2{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 0;
+    }
+
+    .div-question-inner{
+        padding-right: 0;
+    }
+
+    .div-outer-choice{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 5px;
+        width: 100%;
+        padding: 0;
+        margin-top: 10px;
+    }
+
+    .choice-prefix, .choice-text{
+        padding: 10px;
+        font-size: 1.1rem;
+    }
+
+    .div-buttons{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        width: 95%;
+        /* top | horizontal | bottom */
+        margin: 10px 0 20px;
+        gap: 5px;
+    }
+
+    .div-buttons-wrapper-hint{
+        width: 100%;
+    }
+
+    .div-modal-content, .div-modal-content2, .div-modal-content3{
+        width: 60%;
+        padding: 10px;
+    }
+
+    .div-modal-content3{
+        width: 90%;
+    }
+
+    .div-modal-header{
+        margin-bottom: 20px;
+    }
+
+    .div-quit-button, .div-hint-button{
+        margin-top: 20px;
+        gap: 10px;
+    }
+
+    .div-outer-bg-bar{
+        padding: 10px 0;
+    }
+
+    .span-difficulty{
+        font-size: 0.6rem;
+    }
+}
+
+/* Mobile vertical OR horizontal
+- Same layout as previous media query
+- Reduce font size on header, buttons
+- On horizontal width <= 390px and <= 320px, adjust div player & total score
+- On vertical width <= 350px (ip5 & ipSE), smaller font size for hud items */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    @media screen and (max-width: 390px) {
+        .div-totalScore {
+            width: 260px;
+            grid-template-columns: 35% 38% 27%;
+            justify-items: right;
+            right: 10px;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .h2a-username{
+            display: none;
+        }
+    
+        .div-player img:hover ~ .h2a-username{
+            display: flex;
+            z-index: 2;
+            background-color: rgba(250, 159, 159);
+            /* top | right | bottom | left */
+            padding: 7px 7px 7px 5px;
+            border-radius: 35px;
+            width: 50px;
+            justify-content: space-around;
+        }
+    
+        .div-player img:hover ~ .div-totalScore{
+            display: none;
+        }
+    }
+
+    h1.question{
+        font-size: 12px;
+    }
+
+    .quit, .hint, .next, .next2, .showResult,
+    .quit-for-quizPlay, .cancelQuit-for-quizPlay, .useHint-for-quizPlay, .cancelHint1-for-quizPlay, .cancelHint2-for-quizPlay{
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .hud-item{
+        height: 70px;
+    }
+
+    .hud-prefix{
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .div-bg-bar-timer-ques , #progressBar{
+        width: 70px;
+        height: 1rem;
+    }
+
+    .score, .cntHint-wrapper{
+        font-size: 1.1rem;
+    }
+
+    @media screen and (max-width: 350px) {
+        .div-bg-bar-timer-ques, #progressBar{
+            width: 50px;
+            border-width: 2px;
+        }
+    }
+
+    .choice-prefix, .choice-text{
+        font-size: 12px;
+    }
+
+    .div-modal-content, .div-modal-content2, .div-modal-content3{
+        width: 70%;
+        font-size: 12px;
+    }
+
+    .div-modal-content3 {
+        width: 90%;
+    }
+
+    .div-modal-header{
+        font-size: 12px;
+    }
+
+    .p-hintText {
+        font-size: 12px;
+    }
+
+    .span-difficulty{
+        font-size: 8px;
+    }
 }

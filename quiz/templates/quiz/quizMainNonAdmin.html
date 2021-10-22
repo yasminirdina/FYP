@@ -23,29 +23,28 @@
         </button>
     </div>
 
-    <div class="div-outer">
-        <div class="div-title">
-            <span class="wordWrap">
+    <div class="div-real-outer">
+        <div class="div-outer">
+            <div class="div-title">
                 Permainan Kuiz Penerokaan Kerjaya
-            </span>
-        </div>
-        <div class="div-menu">
-            <div class="div-avatar">
-                <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
-                <span class="h2a-main-username">{{ username }}</span>
             </div>
-            <br>
-            <button class="btn avatar">
-                <a class ="a-settings-for-quizMain" href="{% url 'quiz:show-avatar' user_id %}">Tetapan Avatar</a>
-            </button>
-            <br>
-            <button class="btn statistic">
-                <a class ="a-statistic-for-quizMain" href="{% url 'quiz:quiz-statistic' user_id 1 %}">Statistik Pemain</a>
-            </button>
-            <br>
-            <button class="btn play">
-                <a class="a-play-for-quizMain" href="{% url 'quiz:choose-field' user_id %}">PILIH BIDANG</a>
-            </button>
+            <div class="div-menu">
+                <div class="div-avatar">
+                    <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                    <span class="h2a-main-username">{{ username }}</span>
+                </div>
+                <div class="div-buttons">
+                    <button class="btn avatar">
+                        <a class ="a-settings-for-quizMain" href="{% url 'quiz:show-avatar' user_id %}">Tetapan Avatar</a>
+                    </button>
+                    <button class="btn statistic">
+                        <a class ="a-statistic-for-quizMain" href="{% url 'quiz:quiz-statistic' user_id 1 %}">Statistik Pemain</a>
+                    </button>
+                    <button class="btn play">
+                        <a class="a-play-for-quizMain" href="{% url 'quiz:choose-field' user_id %}">PILIH BIDANG</a>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

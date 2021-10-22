@@ -6,7 +6,7 @@
 <p>{{ playerFieldRecords }}</p> -->
 
 <form type="get" action="." class="form-field">
-    <label for="field" style="margin-right: 5px; font-weight: bold; letter-spacing: 3px;">Bidang Kerjaya:</label>
+    <label for="field" style="margin-right: 5px; letter-spacing: 1px;">Bidang Kerjaya:</label>
     <select name="field" id="field">
         {% for field in shownFields %}
             {% if field_selected %} <!--after ajax request for select field-->
@@ -26,6 +26,8 @@
     </select>
 </form>
 
+<p class="p-scroll">Skrol jadual ke bawah &#128899;</p>
+
 {% if playerFieldRecords %}
     <div class="div-table">
         <table id="playerFieldTable">
@@ -42,10 +44,10 @@
                         <td style="vertical-align: middle;">{{ forloop.counter }}</td>
                         {% for details in player %}
                             {% if forloop.counter0 == 0 %}
-                                <td style="padding-left:0; padding-right: 10px;">
-                                    <img src="{% static 'images/quiz_avatar/' %}{{ details }}" width="50px" height="50px" style="vertical-align: middle;">
+                                <td style="text-align: right; padding-right: 5px;">
+                                    <img class="img-field" src="{% static 'images/quiz_avatar/' %}{{ details }}">
                                 </td>
-                                <td style="padding-left: 0; padding-right: 0; text-align: left;">
+                                <td style="text-align: left; padding-left: 5px;">
                                     {{ player|index:1 }}
                                 </td>
                             {% elif forloop.counter0 == 2 %}

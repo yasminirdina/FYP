@@ -1,65 +1,481 @@
 /* ul addField tips */
 .ul-addField {
-    font-family: DM Sans; 
-    text-align: left;
-    padding: 20px;
-    border: 2px solid coral;
-    background-color: peachpuff;
-    border-radius: 20px;
     list-style-position: inside;
-    width: 37%
+    /* background-color: darkgoldenrod; */
+    padding-left: 0;
+}
+
+.ul-addField-inner {
+    padding-left: 2vw;
 }
 
 /* button */
 .btn {
     border: none;
-    background-color: inherit;
-    border-radius: 10px;
-    padding: 14px 28px;
+    background-color: rgb(121, 85, 118);
+    border-radius: 50px;
+    padding: 10px 15px;
     font-size: 16px;
-    font-family: "DM Sans";
+    font-family: 'Poppins';
     font-weight: bold;
+    letter-spacing: 1px;
     cursor: pointer;
-    display: inline-block;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
 }  
   
 /*On mouse-over*/
 .btn:hover{
-    background: #eee;
-    border-radius: 10px;
+    background-color: #eee;
+    color: rgb(121, 85, 118);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    transition: transform 150ms;
+    transform: scale(1.03);
 }
 
-.field-for-addField {color: coral;}
-.cancel-for-addField {color: purple;}
+.cancel-for-addField {
+    background-color: rgb(250, 159, 159);
+}
+
+.cancel-for-addField:hover{
+    background-color: #eee;
+    color: rgb(250, 159, 159);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+}
 
 /* hyperlink */
-.a-cancel-for-addField {
+.a-for-addField {
     text-decoration: none;
     color: inherit;
 }
 
+.a-main-for-addField, .a-back-for-addField {color: rgb(121, 85, 118);}
+
 /* form fields */
 .name {
     font-size: 16px;
-    font-family: "DM Sans";
-    border-radius: 10px;
+    font-family: "Poppins";
+    border-radius: 25px;
     border: 1px solid lightgray;
-    padding: 3px;
-}
-  
-.image {
-    list-style-type: none;
-    padding-left: 0vw;
-    display:inline;
-    font-size: 16px;
-    font-family: "DM Sans";
+    padding: 10px;
+    box-sizing: border-box;
 }
 
-/* div icon */
-div-icon{
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
+/* image */
+.img-field{
+    /* background-color: hotpink; */
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* div */
+.div-main-header{
+    /* background-color: darksalmon; */
+    position: relative;
+    margin: 10px auto;
+    width: 90%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.div-tips {
+    font-family: "Poppins";
+    font-size: 16px;
+    text-align: left;
+    padding: 0 1vw;
+    /* top | right | bottom | left */
+    margin: 1vw auto 1vw 5%;
+    border: 2px solid lightgray;
+    background-color: #eee;
+    border-radius: 5px;
+    width: 90%;
+    box-sizing: border-box;
+}
+
+.div-form-name, .div-form-image-label{
+    /* background-color: indianred; */
+    font-family: 'Poppins';
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    padding: 1vw 0;
+    padding-right: 0;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.div-form-name{
+    display: grid;
+    grid-template-columns: repeat(2, auto);
     width: fit-content;
-    margin: auto;
-    padding: 5px;
+    justify-items: left;
+    align-items: center;
+    gap: 1vw;
+    /* top | right | bottom | left */
+    margin: 1vw auto 0 5%;
+}
+
+.div-form-image-label{
+    width: 90%;
+    /* top | horizontal | bottom */
+    margin: 0 auto 1vw;
+    border: 1px solid lightgray;
+    /* top | horizontal | bottom */
+    border-width: 1px 0 0;
+}
+
+.div-outer{
+    display: grid;
+    grid-template-columns: repeat(8, auto);
+    box-sizing: border-box;
+    width: 90%;
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    padding: 1vw;
+    /* top | right | bottom | left */
+    margin: 0 auto 1vw 5%;
+    position: relative;
+    align-items: center;
+    justify-items: center;
+    gap: 1vw;
+}
+
+.div-choice{
+    width: 100%;
+    height: 100%;
+    /* background-color: rgb(247, 21, 21); */
+    border-radius: 10px;
+}
+
+.div-img-label{
+    position: relative;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-auto-flow: row;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+    background-color: rgb(168, 148, 167);
+    align-items: center;
+    justify-items: center;
+    padding: 1vw;
+}
+
+.div-choice input[type="radio"]:empty{
+    display: none;
+}
+
+.div-img-label label{
+    /* background-color: darkseagreen; */
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-auto-flow: row;
+    justify-items: center;
+    align-items: center;
+}
+
+.div-choice input[type="radio"]:empty ~ .div-img-label .img-field, .div-choice input[type="radio"]:empty ~ .div-img-label label{
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+
+.div-choice input[type="radio"]:hover:not(:checked) ~ .div-img-label{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.div-choice input[type="radio"]:checked ~ .div-img-label{
+    background-color: rgb(250, 159, 159);
+}
+
+.div-buttons{
+    /* background-color: darkseagreen; */
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    box-sizing: border-box;
+    width: fit-content;
+    height: fit-content;
+    margin: 2vw 0;
+    align-items: center;
+    justify-items: center;
+    position: relative;
+    gap: 1vw;
+}
+
+.div-space{
+    position: relative;
+    height: 5vw;
+    /* background-color: yellowgreen; */
+}
+
+.div-credit {
+    background: #00000033;
+    width: 100vw;
+    bottom: 0;
+    position: fixed;
+    height: fit-content;
+    overflow: hidden;
+}
+
+.div-credit-text {
+    height: fit-content;
+    position: relative;
+    display: inline-block;
+}
+
+.div-credit-text p {
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-style: italic; 
+    text-align: center;
+    color: black;
+    margin: 10px 0;
+    line-height: 1.3;
+    white-space: nowrap; /* will put text in 1 line */
+    -moz-animation: scroll-left 2s linear infinite;
+    -webkit-animation: scroll-left 2s linear infinite;
+    animation: scroll-left 20s linear infinite;
+}
+
+.div-credit-text:hover p{
+    animation-play-state: paused;
+}
+  
+@-moz-keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+    }
+}
+
+@-webkit-keyframes scroll-left {
+    0% {
+        -webkit-transform: translateX(100%);
+    }
+    100% {
+        -webkit-transform: translateX(-100%);
+    }
+}
+
+@keyframes scroll-left {
+    0% {
+        -moz-transform: translateX(100%);
+        -webkit-transform: translateX(100%);
+        transform: translateX(100%);
+    }
+    100% {
+        -moz-transform: translateX(-100%);
+        -webkit-transform: translateX(-100%);
+        transform: translateX(-100%);
+    }
+}
+
+/* p */
+.p-error{
+    width: 90%;
+    font-style: italic;
+    color: rgb(235, 43, 43);
+}
+
+/* Tablet & mobile vertical
+- Grid icons to 4
+- Change gap/padding/margin from vw to px
+- Buttons bottom grid vertical, full width, gap 5px */
+@media screen and (max-width: 930px) {
+    .btn {
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .ul-addField-inner {
+        padding-left: 25px;
+    }
+
+    .div-tips {
+        padding: 0 10px;
+        margin: 10px auto 10px 5%;
+    }
+
+    .p-error{
+        width: 80%;
+    }
+
+    .div-form-name, .div-form-image-label{
+        padding: 10px 0;
+    }
+    
+    .div-form-name{
+        gap: 10px;
+        margin: 10px auto 0 5%;
+    }
+    
+    .div-form-image-label{
+        margin: 0 auto 10px;
+    }
+
+    .div-outer{
+        grid-template-columns: repeat(4, auto);
+        width: 80%;
+        height: 60vh;
+        padding: 10px;
+        margin: 0 auto 10px 10%;
+        gap: 10px;
+    }
+
+    .div-img-label{
+        padding: 10px;
+    }
+
+    .div-buttons{
+        width: 80%;
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 5px;
+    }
+
+    .div-space{
+        height: 8vw;
+    }
+
+    @-moz-keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+        }
+    }
+
+    @-webkit-keyframes scroll-left {
+        0% {
+            -webkit-transform: translateX(30%);
+        }
+        100% {
+            -webkit-transform: translateX(-100%);
+        }
+    }
+
+    @keyframes scroll-left {
+        0% {
+            -moz-transform: translateX(30%);
+            -webkit-transform: translateX(30%);
+            transform: translateX(30%);
+        }
+        100% {
+            -moz-transform: translateX(-100%);
+            -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+    }
+}
+
+/* Width <= 600px
+- Smaller header font-size */
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+        line-height: 28px;
+    }
+      
+    h2 {
+        font-size: 20px;
+        line-height: 19px;
+    }
+}
+
+/* Mobile vertical OR horizontal
+- (Vertical) Follow layout from previous media query, Form name grid auto flow row
+- (Horizontal) Change grid icon to 3
+- Buttons, search form, tips, table, credit font size to 12px */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .btn {
+        font-size: 12px;
+    }
+
+    .div-tips {
+        font-size: 12px;
+    }
+
+    .name {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .div-form-name, .div-form-image-label{
+        font-size: 12px;
+    }
+
+    .div-outer{
+        margin: 0 auto 10px;
+    }
+
+    @media screen and (max-width: 450px) {
+        .ul-addField-inner {
+            padding-left: 20px;
+        }
+
+        .p-error{
+            width: 70%;
+        }
+
+        .name{
+            width: 100%;
+        }
+
+        .div-form-name{
+            grid-template-columns: 100%;
+            grid-auto-flow: row;
+        }
+
+        .div-outer{
+            grid-template-columns: repeat(3, auto);
+            width: 70%;
+            height: 50vh;
+            margin: 0 auto 10px 15%;
+        }
+    
+        .div-img-label{
+            padding: 5px;
+        }
+
+        .div-buttons{
+            width: 70%;
+        }
+
+        .div-space{
+            height: 10vw;
+        }
+    }
+
+    @media screen and (max-height: 450px) {
+        .div-outer{
+            height: 80vh;
+        }
+    }
+
+    .div-credit-text p {
+        margin: 5px 0;
+        font-size: 12px;
+    }
+
+    .p-error{
+        font-size: 12px;
+        width: 90%;
+    }
 }

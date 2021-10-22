@@ -29,34 +29,38 @@
 
     <h1 class="h1-title">Tetapan Avatar</h1>
     
-    <div class="div-outer">
-        <div class="div-icon">
-            <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+    <div class="div-real-outer">
+        <div class="div-outer">
+            <div class="div-icon">
+                <img class="img-icon" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+            </div>
+            <div class="div-labeldetails">
+                <div class="div-labeldetails-ind">
+                    <button class="btn2-label">Nama Kerjaya</button>
+                    <button class="btn2-details">{{ currentAvatarDetailsObject.avatarID }}</button>
+                </div>
+                <div class="div-labeldetails-ind">
+                    <button class="btn2-label">Tempat Kerja</button>
+                    <button class="btn2-details">{{ currentAvatarDetailsObject.workplace }}</button>
+                </div>
+                <div class="div-labeldetails-ind">
+                    <button class="btn2-label">Jantina</button>
+                    <button class="btn2-details">{{ currentAvatarDetailsObject.avatarGender }}</button>
+                </div>
+            </div>
         </div>
-        <div class="div-labeldetails">
-            <div class="div-labeldetails-ind">
-                <button class="btn2-label">Nama Kerjaya</button>
-                <button class="btn2-details">{{ currentAvatarDetailsObject.avatarID }}</button>
-            </div>
-            <div class="div-labeldetails-ind">
-                <button class="btn2-label">Tempat Kerja</button>
-                <button class="btn2-details">{{ currentAvatarDetailsObject.workplace }}</button>
-            </div>
-            <div class="div-labeldetails-ind">
-                <button class="btn2-label">Jantina</button>
-                <button class="btn2-details">{{ currentAvatarDetailsObject.avatarGender }}</button>
-            </div>
+
+        <div class="div-buttons">
+            <button class="btn update">
+                <a class="a-for-showAvatar" href="{% url 'quiz:edit-avatar' user_id %}">Kemaskini Avatar</a>
+            </button>
+            <button class="btn back">
+                <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali</a>
+            </button>
         </div>
     </div>
 
-    <div class="div-buttons">
-        <button class="btn">
-            <a class="a-for-showAvatar" href="{% url 'quiz:edit-avatar' user_id %}">Kemaskini Avatar</a>
-        </button>
-        <button class="btn back-for-showAvatar">
-            <a class="a-for-showAvatar" href="{% url 'quiz:index-student' user_id %}">Kembali</a>
-        </button>
-    </div>
+    <div class="div-space"></div>
     
     <div class="div-credit">
         <div class="div-credit-text">

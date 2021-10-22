@@ -51,6 +51,8 @@
 
         <!--for overall-->
         <div class="div-overall">
+            <p class="p-scroll">Skrol jadual ke bawah &#128899;</p>
+
             {% if allPlayerRecords %}
             <div class="div-table">
                 <table id="allPlayerTable">
@@ -68,10 +70,10 @@
                                     <td style="vertical-align: middle;">{{ forloop.counter }}</td>
                                     {% for details in player %}
                                         {% if forloop.counter0 == 0 %}
-                                            <td style="padding-left:0; padding-right: 10px;">
-                                                <img src="{% static 'images/quiz_avatar/' %}{{ details }}" width="50px" height="50px"  style="vertical-align: middle;">
+                                            <td style="text-align: right; padding-right: 5px;">
+                                                <img class="img-overall" src="{% static 'images/quiz_avatar/' %}{{ details }}">
                                             </td>
-                                            <td style="padding-left: 0; padding-right: 0; text-align: left;">
+                                            <td style="text-align: left; padding-left: 5px;">
                                                 {{ player|index:1 }}
                                             </td>
                                         {% elif forloop.counter0 == 2 %}
@@ -82,10 +84,10 @@
                                     <td style="vertical-align: middle;">{{ forloop.counter }}</td>
                                     {% for details in player %}
                                         {% if forloop.counter0 == 0 %}
-                                            <td style="padding-left:0; padding-right: 10px;">
-                                                <img src="{% static 'images/quiz_avatar/' %}{{ details }}" width="50px" height="50px" style="vertical-align: middle;">
+                                            <td style="text-align: right; padding-right: 5px;">
+                                                <img class="img-overall" src="{% static 'images/quiz_avatar/' %}{{ details }}">
                                             </td>
-                                            <td style="padding-left: 0; padding-right: 0; text-align: left;">
+                                            <td style="text-align: left; padding-left: 5px;">
                                                 {{ player|index:1 }}
                                             </td>
                                         {% elif forloop.counter0 == 2 %}
@@ -105,16 +107,15 @@
     </div>
 
     <div class="div-buttons">
-        <button class="btn">
+        <button class="btn statistic">
             <a class="a-for-seeRanking" href="{% url 'quiz:quiz-statistic' user_id field_id %}">Statistik Pemain</a>
         </button>
         <button class="btn main">
-            <a class="a-for-seeRanking" href="{% url quiz user_id %}">Main Semula</a>
-        </button>
-        <button class="btn quit">
-            <a class="a-for-seeRanking" href="{% url 'dashboard:index-nonadmin' user_type user_id %}">Papan Pemuka</a>
+            <a class="a-for-seeRanking" href="{% url quiz user_id %}">Utama</a>
         </button>
     </div>
+
+    <div class="div-space"></div>
     
     <div class="div-credit">
         <div class="div-credit-text">
