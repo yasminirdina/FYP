@@ -1,0 +1,219 @@
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(121, 85, 118);
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background-color: #eee;
+    color: rgb(121, 85, 118);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.cancel {
+    background-color: rgb(250, 159, 159);
+}
+
+.cancel:hover{
+    background-color: #eee;
+    color: rgb(250, 159, 159);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+}
+
+/* hyperlink style */
+.a-for-enterOTP {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* form fields */
+form{
+    /* background-color: antiquewhite; */
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.OTP{
+    background-color: white;
+    font-size: 16px;
+    font-family: 'Poppins';
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 1vw;
+    width: fit-content;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.OTP:focus{
+    color: white;
+    background-color: rgb(121, 85, 118);
+    border: 3px solid rgb(255, 200, 250);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(255, 200, 250);
+}
+
+/* div */
+.div-main-header{
+    /* background-color: darkseagreen; */
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.div-label {
+    font-family: "Poppins";
+    font-size: 16px;
+    text-align: center;
+    margin: 0 auto;
+    /* background-color: lightgreen; */
+    width: 90%;
+    box-sizing: border-box;
+}
+
+.div-error{
+    width: 90%;
+    height: fit-content;
+    text-align: center;
+    font-size: 16px;
+    font-style: italic;
+    color: rgb(235, 43, 43);
+    margin: 2vw auto 0;
+}
+
+.div-form-outer{
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: center;
+    justify-items: center;
+    width: 90%;
+    height: fit-content;
+    /* background-color: azure; */
+    margin: 0 auto;
+    padding-top: 2vw;
+    box-sizing: border-box;
+}
+
+.div-buttons{
+    /* background-color: darkseagreen; */
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-auto-flow: column;
+    gap: 1vw;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    justify-items: center;
+    margin: 2vw auto 1vw;
+    position: relative;
+    box-sizing: border-box;
+}
+
+
+/* p */
+.p-error{
+    width: 90%;
+    font-style: italic;
+    color: rgb(235, 43, 43);
+}
+
+.p-input{
+    position: relative;
+}
+
+/* Tablet & mobile vertical
+- all div width 90%
+- Change gap/padding/margin from vw to px */
+@media screen and (max-width: 930px) {
+    .div-outer{
+        width: 90%;
+    }
+
+    .btn{
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .div-error{
+        margin: 20px auto 0;
+    }
+
+    .div-form-outer{
+        padding-top: 20px;
+    }
+
+    .OTP{
+        width: 100%;
+        padding: 10px;
+    }
+
+    .div-buttons{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 5px;
+        width: 100%;
+        margin: 30px auto 10px;
+    }
+}
+
+/* Mobile vertical OR horizontal
+- Follow layout from previous media query
+- Horizontal - div outer position relative to avoid cutoff
+- All div-outer height fit
+- Font size to 12px */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .div-outer{
+        height: fit-content;
+    }
+
+    @media screen and (max-height: 450px) {
+        .div-outer{
+            position: relative;
+            top: 0;
+            left: 0;
+            margin: 0 auto;
+            transform: none;
+        }
+    }
+
+    .btn{
+        font-size: 12px
+    }
+
+    .div-label{
+        font-size: 12px;
+    }
+
+    .OTP{
+        font-size: 12px;
+    }
+
+    .OTP:focus{
+        font-size: 12px;
+    }
+
+    .div-error{
+        font-size: 12px;
+    }
+
+    .p-error, .p-input{
+        font-size: 12px;
+    }
+}

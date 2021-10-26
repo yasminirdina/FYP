@@ -1,27 +1,43 @@
 {% extends "home/base.html" %}
 {% load static %}
 
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+{% endblock %}
+
 {% block header %}
-    <span style="font-style:italic;">Future Cruise</span>
-    <span>: Portal Web Penerokaan Kerjaya</span>
+    <div class="div-main-header">
+        <h1>
+            <span style="font-style:italic;">Future Cruise</span>
+            <span>: Portal Web Penerokaan Kerjaya</span>
+        </h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p style="font-style: italic; font-weight: bold; color: purple;">
-        "He who fails to plan is planning to fail."
-    </p>
-    <p style="margin-bottom: 30px;">- Winston Churchill</p>
+    <div class="div-inner">
+        <div class="div-quote">
+            <span class="span-quote-text">
+                "He who fails to plan is planning to fail."
+            </span>
+            <span class="span-quote-author">
+                - Winston Churchill
+            </span>
+        </div>
+    
+        <div class="div-buttons">
+            <button class="btn">
+                <a class="a-for-homeIndex" href="{% url 'home:login' %}">Log Masuk</a>
+            </button>
+            <button class="btn">
+                <a class="a-for-homeIndex" href="{% url 'home:sign-up' %}">Daftar</a>
+            </button>
+        </div>
+    </div>
 
-    <button class="btn login">
-        <a class="a-login-for-homeIndex" href="{% url 'home:login' %}">Log Masuk</a>
-    </button>
-    <button class="btn signup">
-        <a class="a-signup-for-homeIndex", href="{% url 'home:sign-up' %}">Daftar</a>
-    </button>
-    <p></p>
-    <div>
-        <img src="{% static 'images/homepage/3-smkdd1_logo.png' %}" width="50px" height="50px">
-        <span style="text-align: center; font-style: italic;">Hasil kolaborasi bersama 
+    <div class="div-credit">
+        <img class="img-logo" src="{% static 'images/homepage/3-smkdd1_logo.png' %}">
+        <span class="span-credit-text">Hasil kolaborasi bersama 
             <a class="a-fb" href="https://www.facebook.com/smkdd1/">SMK Damansara Damai 1</a>
         </span>
     </div>

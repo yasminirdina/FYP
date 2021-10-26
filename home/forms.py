@@ -16,20 +16,6 @@ NONADMIN_SIGNUP_CHOICES=[
     ('Teacher', 'Guru'),
 ]
 
-"""SALUTATION_CHOICES=[
-    ('Tun', 'Tun'),
-    ('Toh Puan', 'Toh Puan'),
-    ('Tan Sri', 'Tan Sri'),
-    ('Puan Sri', 'Puan Sri'),
-    ('Datuk', 'Datuk'),
-    ('Datin', 'Datin'),
-    ('Tuan Haji', 'Tuan Haji'),
-    ('Puan Hajah', 'Puan Hajah'),
-    ('Encik', 'Encik'),
-    ('Puan', 'Puan'),
-    ('Cik', 'Cik'),
-]"""
-
 class LoginFormAdmin(forms.Form):
     username = forms.CharField(label="Sila masukkan nama pengguna admin", max_length=10, required=True)
     password = forms.CharField(label="Sila masukkan kata laluan", widget=forms.PasswordInput, max_length=10, required=True)
@@ -69,12 +55,3 @@ class SignUpForm(forms.Form):
     email.widget.attrs.update({'class' : 'email'})
     username.widget.attrs.update({'class' : 'username'})
     password.widget.attrs.update({'class' : 'password-field'})
-
-"""class SignUpFormParentTeacher(forms.Form):
-    userType = forms.CharField(label="Daftar sebagai", widget=forms.Select(choices=NONADMIN_CHOICES), required=True)
-    email = forms.EmailField(label="Sila masukkan alamat emel", max_length=254, required=True)
-    username = forms.CharField(label="Sila masukkan nama panggilan", max_length=10, required=True)
-    password = forms.CharField(label="Sila masukkan kata laluan", widget=forms.PasswordInput, max_length=10, required=True) 
-    name = forms.CharField(label="Sila masukkan nama penuh anda", max_length=50, required=True)
-    salutation = forms.CharField(label="Sila pilih kata hormat anda:", widget=forms.Select(choices=SALUTATION_CHOICES), required=True)
-"""

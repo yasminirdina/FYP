@@ -1,29 +1,50 @@
 {% extends "home/base.html" %}
+{% load static %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/enterOTP.css' %}">
+{% endblock %}
 
 {% block header %}
-    Kemaskini Kata Laluan
+    <div class="div-main-header">
+        <h1>
+            Kemaskini Kata Laluan
+        </h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-    {% if expired %}
-        <p>{{ expired }} Sila masukkan nombor pin OTP baharu yang dihantar ke alamat emel 
-            <span style="font-weight: bold;">{{ currentEmail }}</span>
-        .</p>
-    {% else %}
-        <p>Sila masukkan nombor pin OTP yang dihantar ke alamat emel 
-            <span style="font-weight: bold;">{{ currentEmail }}</span>
-        .</p>
+    <div class="div-label">
+        {% if expired %}
+            <span>{{ expired }} Sila masukkan nombor pin OTP baharu yang dihantar ke alamat emel </span>
+            <span style="font-weight: bold;">{{ currentEmail }}.</span>
+        {% else %}
+            <span>Sila masukkan nombor pin OTP yang dihantar ke alamat emel </span>
+            <span style="font-weight: bold;">{{ currentEmail }}.</span>
+        {% endif %}
+    </div>
+
+    {% if error %}
+        <div class="div-error">
+            {{ error }}
+        </div>
     {% endif %}
 
-    <p style="font-style: italic; color: crimson;">{{ error }}</p>
-
-    <form action="{% url 'home:reset-pass' %}" class="EnterOTP" method="post">
-        {% csrf_token %}
-        {{ form.media.js }}
-        {{ form.as_p }}
-        <button class="btn5 save-for-resetPassword" type="submit">Seterusnya</button>
-        <button class="btn5 login-for-resetPassword">
-            <a class="a-for-resetPassword" href="{% url 'home:login-nonadmin' %}">Batal</a>
-        </button>
-    </form>
+    <div class="div-form-outer">
+        <form action="{% url 'home:reset-pass' %}" class="EnterOTP" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+            
+            <p class="p-input">
+                <input id="id_OTP" type="text" name="OTP" maxlength="6" class="OTP" required>
+            </p>
+    
+            <div class="div-buttons">
+                <button class="btn" type="submit">Seterusnya</button>
+                <button class="btn cancel">
+                    <a class="a-for-enterOTP" href="{% url 'home:login-nonadmin' %}">Batal</a>
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

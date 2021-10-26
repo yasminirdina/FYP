@@ -1,15 +1,26 @@
 {% extends "home/base.html" %}
+{% load static %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/loginIndex.css' %}">
+{% endblock %}
 
 {% block header %}
-    <span style="font-style:italic;">Future Cruise</span>
-    <span>: Log Masuk</span>
+    <div class="div-main-header">
+        <h1>
+            <span style="font-style:italic;">Future Cruise</span>
+            <span>: Log Masuk</span>
+        </h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <button class="btn2 login-Admin-for-loginIndex">
-        <a class="a-admin-for-loginIndex" href="{% url 'home:login-admin' %}">Log Masuk Admin</a>
-    </button>
-    <button class="btn2 login-NonAdmin-for-loginIndex">
-        <a class="a-nonadmin-for-loginIndex" href="{% url 'home:login-nonadmin' %}">Log Masuk Pengguna</a>
-    </button>
+    <div class="div-buttons">
+        <button class="btn">
+            <a class="a-for-loginIndex" href="{% url 'home:login-admin' %}">Log Masuk Admin</a>
+        </button>
+        <button class="btn">
+            <a class="a-for-loginIndex" href="{% url 'home:login-nonadmin' %}">Log Masuk Pengguna</a>
+        </button>
+    </div>
 {% endblock %}

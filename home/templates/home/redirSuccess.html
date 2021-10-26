@@ -1,19 +1,28 @@
 {% extends "home/base.html" %}
+{% load static %}
 
-{% block header %}
-    Kemaskini Kata Laluan Berjaya
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/redirSuccess.css' %}">
 {% endblock %}
 
-{% block header2 %}
-    Sila tunggu sebentar... Ke halaman log masuk dalam 3, 2, 1...
+{% block header %}
+    <div class="div-main-header">
+        <h1>
+            Kemaskini Kata Laluan Berjaya
+        </h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <script>
+    <div class="div-confirm">
+        Sila tunggu sebentar... Ke halaman log masuk dalam 3, 2, 1...
+    </div>
+
+    <!-- <script>
         function redirect(){
            window.location.href = "/halaman-utama/log-masuk/bukan-admin/";
         }
     
         setTimeout(redirect, 3000);
-    </script>
+    </script> -->
 {% endblock %}

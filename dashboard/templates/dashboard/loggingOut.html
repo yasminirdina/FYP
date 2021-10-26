@@ -1,31 +1,45 @@
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/homeIndex.css' %}">
+<link rel="stylesheet" href="{% static 'css/baseHome.css' %}">
+<link rel="stylesheet" href="{% static 'css/logoutConfirm.css' %}">
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Future Cruise: Log Keluar</title>
-    <style>
-        body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            background-size: 100% 100%;
-        }
-    </style>
-</head>
-<body>
-<center><h1>Log Keluar dalam Proses</h1>
-    <h2 style='font-style: italic;'>{{ response }}</h2>
-    <script>
-        function redirect(){
-           window.location.href = "/halaman-utama/";
-        }
-    
-        setTimeout(redirect, 3000);
-    </script>
-</center>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Future Cruise: Log Keluar</title>
+        <style>
+            body {
+                background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: 100% 100%;
+            }
+        </style>
 
-</body>
+        <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    </head>
+    <body>
+        <center>
+            <div class="div-outer">
+                <div class="div-main-header">
+                    <h1>
+                        Log Keluar dalam Proses
+                    </h1>
+                </div>
+
+                <div class="div-confirm real">
+                    {{ response }}
+                </div>
+            </div>
+
+            <script>
+                function redirect(){
+                window.location.href = "/halaman-utama/";
+                }
+            
+                setTimeout(redirect, 3000);
+            </script>
+        </center>
+    </body>
 </html>

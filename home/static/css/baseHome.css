@@ -1,0 +1,48 @@
+body {
+    font-family: 'Poppins';
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+.h2a {
+    color: rgb(121, 85, 118);
+}
+
+h3 {
+    font-size: 16px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.div-outer{
+    /* background-color: lightblue; */
+    position: absolute;
+    display: grid;
+    grid-auto-flow: row;
+    justify-items: center;
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    margin-left: -0%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+}
+
+/* Width <= 600px
+- Smaller header font-size */
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+    }
+      
+    h2 {
+        font-size: 20px;
+    }
+}

@@ -1,0 +1,246 @@
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(121, 85, 118);
+    border-radius: 25px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background-color: #eee;
+    color: rgb(121, 85, 118);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.cancel {
+    background-color: rgb(250, 159, 159);
+}
+
+.cancel:hover{
+    background-color: #eee;
+    color: rgb(250, 159, 159);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+}
+
+/* hyperlink style */
+.a-for-loginAdmin {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* form fields */
+form{
+    /* background-color: antiquewhite; */
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.username, .password-field{
+    background-color: white;
+    font-size: 16px;
+    font-family: 'Poppins';
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 1vw;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.username:focus, .password-field:focus{
+    color: white;
+    background-color: rgb(121, 85, 118);
+    border: 3px solid rgb(255, 200, 250);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(255, 200, 250);
+}
+
+/* div */
+.div-main-header{
+    /* background-color: darkseagreen; */
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.div-form-outer{
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    align-items: center;
+    justify-items: center;
+    width: 100%;
+    height: fit-content;
+    /* background-color: azure; */
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.div-error{
+    width: 90%;
+    height: fit-content;
+    text-align: center;
+    font-size: 16px;
+    font-style: italic;
+    color: rgb(235, 43, 43);
+}
+
+.div-buttons{
+    /* background-color: darkseagreen; */
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    grid-auto-flow: column;
+    gap: 1vw;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    justify-items: center;
+    margin: 2vw auto 1vw;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* table */
+.table-form{
+    background-color: rgba(255, 255, 255, 0.384);
+    width: 100%;
+    height: 100%;
+    border-collapse: separate;
+    border-spacing: 1vw;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+tr{
+    /* background-color: darksalmon; */
+    box-sizing: border-box;
+}
+
+th{
+    /* background-color: rgb(245, 118, 59); */
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: bold;
+    /* top | right | bottom | left */
+    padding: 5px 10px 5px 0;
+    width: 50%;
+    text-align: left;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+td{
+    /* background-color: darkcyan; */
+    width: 50%;
+    box-sizing: border-box;
+}
+
+/* Tablet & mobile vertical
+- outer div width 90%
+- Change gap/padding/margin from vw to px
+- buttons width 100% */
+@media screen and (max-width: 930px) {
+    .div-outer{
+        width: 90%;
+    }
+
+    .btn{
+        width: 100%;
+        border-radius: 5px;
+    }
+
+    .username, .password-field{
+        padding: 10px;
+    }
+
+    .div-buttons{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        gap: 5px;
+        width: 100%;
+        margin: 20px auto 10px;
+    }
+    
+    .table-form{
+        border-spacing: 10px;
+    }
+}
+
+/* Mobile vertical OR horizontal
+- Follow layout from previous media query
+- Vertical: form fields alternate th-td every row
+- Horizontal: outer div position relative to avoid cutoff 
+- All font size to 12px */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .div-outer{
+        height: fit-content;
+    }
+
+    @media screen and (max-height: 450px) {
+        .div-outer{
+            position: relative;
+            top: 0;
+            left: 0;
+            margin: 0 auto;
+            transform: none;
+        }
+    }
+
+    @media screen and (max-width: 450px) {
+        .table-form{
+            table-layout: fixed;
+        }
+        
+        tr{
+            justify-items: center;
+            align-items: center;
+        }
+    
+        th{
+            width: 100%;
+            display: inline-block;
+            padding: 5px;
+            text-align: left;
+        }
+        
+        td{
+            width: 100%;
+            display: inline-block;
+        }
+    }
+
+    .btn{
+        font-size: 12px
+    }
+
+    .div-error{
+        font-size: 12px;
+    }
+
+    .username, .password-field{
+        font-size: 12px;
+    }
+
+    .username:focus, .password-field:focus{
+        font-size: 12px;
+    }
+
+    th{
+        font-size: 12px;
+    }
+}

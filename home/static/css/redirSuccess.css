@@ -1,0 +1,35 @@
+/* div */
+.div-main-header{
+    /* background-color: darkseagreen; */
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.div-confirm{
+    /* background-color: lightpink; */
+    font-size: 16px;
+    width: 100%;
+    height: fit-content;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Tablet & mobile vertical
+- all div width 90% */
+@media screen and (max-width: 930px) {
+    .div-outer{
+        width: 90%;
+    }
+}
+
+/* Mobile vertical OR horizontal
+- All div-outer height fit */
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .div-outer{
+        width: 90%;
+        height: fit-content;
+    }
+}

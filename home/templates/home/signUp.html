@@ -1,25 +1,43 @@
 {% extends "home/base.html" %}
+{% load static %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/signUp.css' %}">
+{% endblock %}
 
 {% block header %}
-    Daftar Akaun
+    <div class="div-main-header">
+        <h1>Daftar Akaun</h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <ul class="password">
-        Format kata laluan yang diterima adalah mesti mengandungi PALING KURANG SATU(1):
+    <div class="div-password">
+        <ul class="ul-password">
+            Format kata laluan yang diterima adalah mesti mengandungi PALING KURANG SATU(1):
             <li>Huruf besar: A, B, C, hingga Z</li>
             <li>Huruf kecil: a, b, c, hingga z</li>
             <li>Angka: 0, 1, 2, hingga 9</li>
             <li>Aksara khas: !, @, # dan lain-lain</li>
-    </ul>
-    <p style="font-style: italic; color: crimson;">{{ response }}</p>
-    <form action="{% url 'home:sign-up' %}" class="SignUpForm" method="post">
-        {% csrf_token %}
-        {{ form.media.js }}
-        {{ form.as_p }}
-        <button class="btn6 signUp-for-signUp" type="submit">Daftar Akaun</button>
-        <button class="btn6 index-for-signUp">
-            <a class="a-index-for-signUp" href="{% url 'home:index' %}">Batal</a>
-        </button>
-    </form>
+        </ul>
+    </div>
+
+    <p class="p-error">{{ response }}</p>
+
+    <div class="div-form-outer">
+        <form action="{% url 'home:sign-up' %}" class="SignUpForm" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+            <table class="table-form">
+                {{ form }}
+            </table>
+    
+            <div class="div-buttons">
+                <button class="btn" type="submit">Daftar Akaun</button>
+                <button class="btn cancel">
+                <a class="a-for-signUp" href="{% url 'home:index' %}">Batal</a>
+            </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

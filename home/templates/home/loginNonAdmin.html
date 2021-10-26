@@ -1,23 +1,40 @@
 {% extends "home/base.html" %}
+{% load static %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/loginNonAdmin.css' %}">
+{% endblock %}
 
 {% block header %}
-    Log Masuk Pengguna
+    <div class="div-main-header">
+        <h1>
+            Log Masuk Pengguna
+        </h1>
+    </div>
 {% endblock %}
 
 {% block content %}
-    <p style="font-style: italic; color: green;">{{ success }}</p>
-    <p style="font-style: italic; color: crimson;">{{ response }}</p>
+    <div class="div-error">
+        {{ response }}
+    </div>
 
-    <form action="{% url 'home:login-nonadmin' %}" class="LoginFormNonAdmin" method="post">
-        {% csrf_token %}
-        {{ form.media.js }}
-        {{ form.as_p }}
-        <button class="btn4 login-for-loginNonAdmin" type="submit">Log Masuk</button>
-    </form>
-    <button class="btn4 reset-for-loginNonAdmin">
-        <a class="a-reset-for-loginNonAdmin" href="{% url 'home:reset-pass' %}">Lupa Kata Laluan</a>
-    </button>
-    <button class="btn4 index-for-loginNonAdmin">
-        <a class="a-index-for-loginNonAdmin" href="{% url 'home:index' %}">Batal</a>
-    </button>
+    <div class="div-form-outer">
+        <form action="{% url 'home:login-nonadmin' %}" class="LoginFormNonAdmin" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+            <table class="table-form">
+                {{ form }}
+            </table>
+    
+            <div class="div-buttons">
+                <button class="btn" type="submit">Log Masuk</button>
+                <button class="btn">
+                    <a class="a-for-loginNonAdmin" href="{% url 'home:reset-pass' %}">Lupa Kata Laluan</a>
+                </button>
+                <button class="btn cancel">
+                    <a class="a-for-loginNonAdmin" href="{% url 'home:index' %}">Batal</a>
+                </button>
+            </div>
+        </form>
+    </div>
 {% endblock %}
