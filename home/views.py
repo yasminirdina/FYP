@@ -7,6 +7,7 @@ from .forms import LoginFormAdmin, LoginFormNonAdmin, ResetPasswordFormA, ResetP
 from django.core.mail import send_mail
 from django.core.serializers.json import DjangoJSONEncoder
 import dashboard.models, string, re, random, json
+from django.contrib.auth.hashers import make_password, check_password
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, o):
@@ -165,7 +166,8 @@ def signUp(request):
                                 dashboard.models.User.objects.create(ID=newStudentID, studentID=newStudentID, username=filledList['username'], isActive=False)
                                 #create new Student with new Student ID after getting the newly added Student in User 
                                 newStudentUserRecord = dashboard.models.User.objects.get(ID=newStudentID)
-                                dashboard.models.Student.objects.create(ID=newStudentUserRecord, email=filledList['email'], password=filledList['password'])
+                                final_password = make_password(filledList['password'])
+                                dashboard.models.Student.objects.create(ID=newStudentUserRecord, email=filledList['email'], password=final_password)
                                 #go to dashboard main page
                                 #return redirect('dashboard:index', newStudentID)
                                 #go to login page
@@ -219,7 +221,8 @@ def signUp(request):
                                 dashboard.models.User.objects.create(ID=newParentID, parentID=newParentID, username=filledList['username'], isActive=False)
                                 #create new Parent with new Parent ID after getting the newly added Parent in User 
                                 newParentUserRecord = dashboard.models.User.objects.get(ID=newParentID)
-                                dashboard.models.Parent.objects.create(ID=newParentUserRecord, email=filledList['email'], password=filledList['password'])
+                                final_password = make_password(filledList['password'])
+                                dashboard.models.Parent.objects.create(ID=newParentUserRecord, email=filledList['email'], password=final_password)
                                 #go to dashboard main page
                                 #return redirect('dashboard:index', newParentID)
                                 #go to login page
@@ -273,7 +276,8 @@ def signUp(request):
                                 dashboard.models.User.objects.create(ID=newTeacherID, teacherID=newTeacherID, username=filledList['username'], isActive=False)
                                 #create new Teacher with new Teacher ID after getting the newly added Teacher in User 
                                 newTeacherUserRecord = dashboard.models.User.objects.get(ID=newTeacherID)
-                                dashboard.models.Teacher.objects.create(ID=newTeacherUserRecord, email=filledList['email'], password=filledList['password'])
+                                final_password = make_password(filledList['password'])
+                                dashboard.models.Teacher.objects.create(ID=newTeacherUserRecord, email=filledList['email'], password=final_password)
                                 #go to dashboard main page
                                 #return redirect('dashboard:index', newTeacherID)
                                 #go to login page
@@ -317,11 +321,10 @@ def loginAdmin(request):
             #if entered username matches username in Admin table
             if filledList['username'] == UserRecord.username:
                 #if entered password matches password in Admin table
-                if filledList['password'] == AdminRecord.password:
+                if check_password(filledList['password'], AdminRecord.password) == True:
                     UserRecord.isActive = True
                     UserRecord.save()
                     admin_id = 'A1'
-                    #return redirect('dashboard:index', "A1")
                     return redirect('dashboard:index-admin', admin_id)
                 #wrong password entered
                 else:
@@ -392,7 +395,7 @@ def loginNonAdmin(request):
                     #get that Student record (object)
                     StudentRecord = getCurrentUserTypeRecord(filledList)
                     #if entered password = the Student record's password
-                    if filledList['password'] == StudentRecord.password:
+                    if check_password(filledList['password'], StudentRecord.password) == True:
                         request.session['countWrong'] = 0
                         UserRecord = getUserRecord(StudentRecord)
                         return redirect('dashboard:index-nonadmin', 'pelajar', UserRecord.ID)
@@ -402,7 +405,6 @@ def loginNonAdmin(request):
                         if request.session['countWrong'] <= 2:
                             return errorMessagePassword(request, form)
                         else:
-                            #request.session['countWrong'] = 0
                             request.session['afterFailedLoginMsg'] = "Anda telah memasukkan kata laluan yang salah sebanyak 3 kali. Sila kemaskini kata laluan anda."
                             return redirect('home:reset-pass')
                 #entered email does not exist in email column in Student table
@@ -416,7 +418,7 @@ def loginNonAdmin(request):
                     #get that Parent record (object)
                     ParentRecord = getCurrentUserTypeRecord(filledList)
                     #if entered password = the Parent record's password
-                    if filledList['password'] == ParentRecord.password:
+                    if check_password(filledList['password'], ParentRecord.password) == True:
                         request.session['countWrong'] = 0
                         UserRecord = getUserRecord(ParentRecord)
                         return redirect('dashboard:index-nonadmin', 'penjaga', UserRecord.ID)
@@ -426,7 +428,6 @@ def loginNonAdmin(request):
                         if request.session['countWrong'] <= 2:
                             return errorMessagePassword(request, form)
                         else:
-                            #request.session['countWrong'] = 0
                             request.session['afterFailedLoginMsg'] = "Anda telah memasukkan kata laluan yang salah sebanyak 3 kali. Sila kemaskini kata laluan anda."
                             return redirect('home:reset-pass')
                 #entered email does not exist in email column in Parent table
@@ -440,7 +441,7 @@ def loginNonAdmin(request):
                     #get that Teacher record (object)
                     TeacherRecord = getCurrentUserTypeRecord(filledList)
                     #if entered password = the Teacher record's password
-                    if filledList['password'] == TeacherRecord.password:
+                    if check_password(filledList['password'], TeacherRecord.password) == True:
                         request.session['countWrong'] = 0
                         UserRecord = getUserRecord(TeacherRecord)
                         return redirect('dashboard:index-nonadmin', 'guru', UserRecord.ID)
@@ -450,7 +451,6 @@ def loginNonAdmin(request):
                         if request.session['countWrong'] <= 2:
                             return errorMessagePassword(request, form)
                         else:
-                            #request.session['countWrong'] = 0
                             request.session['afterFailedLoginMsg'] = "Anda telah memasukkan kata laluan yang salah sebanyak 3 kali. Sila kemaskini kata laluan anda."
                             return redirect('home:reset-pass')
                 #entered email does not exist in email column in Teacher table
@@ -633,18 +633,18 @@ def resetPassword(request):
                         if currentUserType == 'Student':
                             #update password in Student record for the entered email
                             StudentRecord = dashboard.models.Student.objects.get(email=currentEmail)
-                            StudentRecord.password = filledList['newPassConfirm']
+                            StudentRecord.password = make_password(filledList['newPassConfirm'])
                             StudentRecord.save()
                         elif currentUserType == 'Parent':
                             #update password in Parent record for the entered email
                             ParentRecord = dashboard.models.Parent.objects.get(email=currentEmail)
-                            ParentRecord.password = filledList['newPassConfirm']
-                            ParentRecord.save() 
+                            ParentRecord.password = make_password(filledList['newPassConfirm'])
+                            ParentRecord.save()
                         elif currentUserType == 'Teacher':
                             #update password in Teacher record for the entered email
                             TeacherRecord = dashboard.models.Teacher.objects.get(email=currentEmail)
-                            TeacherRecord.password = filledList['newPassConfirm']
-                            TeacherRecord.save()   
+                            TeacherRecord.password = make_password(filledList['newPassConfirm'])
+                            TeacherRecord.save()
                         #redirect to intermediary page which displays success message (not Django message)
                         #and after 3 seconds redirect to home:login-nonadmin   
                         return render(request, 'home/redirSuccess.html')

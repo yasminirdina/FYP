@@ -28,13 +28,15 @@ def quizMainAdmin(request, user_id):
 
     # if user_id == 'A1':
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
+    user_type = "admin"
 
     allGameFields = quiz.models.GameField.objects.all().order_by('id')
+    lastEdited = allGameFields.order_by('-lastEdited').first().lastEdited
 
     #Card 1
     countAllFields = allGameFields.count()
@@ -140,6 +142,7 @@ def quizMainAdmin(request, user_id):
         'search': urlSearch,
         'dashboard': urlDashboard,
         'logout': urlLogout,
+        'user_type': user_type,
         'countAllFields': countAllFields,
         'countShownFields': countShownFields,
         'countAllQues': countAllQues,
@@ -147,32 +150,10 @@ def quizMainAdmin(request, user_id):
         'countEasyQues': countEasyQues,
         'countMediumQues': countMediumQues,
         'countHardQues': countHardQues,
-        'countAllHints': countAllHints
+        'countAllHints': countAllHints,
+        'lastEdited': lastEdited
     }
     return render(request, 'quiz\quizMainAdmin.html', context)
-    """ else:
-        if 'S' in user_id:
-            dashboardNav = " Pelajar"
-            user_type = "pelajar"
-        elif 'P' in user_id:
-            dashboardNav = " Penjaga"
-            user_type = "penjaga"
-        elif 'T' in user_id:
-            dashboardNav = " Guru"
-            user_type = "guru"
-        urlTest = 'test:index-nonadmin'
-        urlBlog = 'blog:index-nonadmin'
-        urlQuiz = 'quiz:index-student'
-        urlSearch = 'search:index-nonadmin'
-        urlDashboard = 'dashboard:index-nonadmin'
-        urlLogout = 'dashboard:logout-confirm'
-        username = currentUserRecord.username
-        title = "Future Cruise: Permainan Kuiz Penerokaan Kerjaya"
-        response = "Anda tidak dibenarkan untuk mengakses halaman ini."
-        context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'response': response,
-        'user_id': user_id, 'user_type': user_type, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
-        'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
-        return render(request, 'quiz/noAccessError.html', context) """
 
 def quizMain(request, user_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
@@ -182,7 +163,7 @@ def quizMain(request, user_id):
         return redirect('home:login')
 
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -245,7 +226,7 @@ def showAvatar(request, user_id):
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -268,7 +249,7 @@ def editAvatar(request, user_id):
     currentPlayerUsername = currentPlayerRecord.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecord.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -339,13 +320,14 @@ def showField(request, user_id):
 
     if user_id == 'A1':
         urlTest = 'test:index-admin'
-        urlBlog = 'blog:index-admin'
+        urlBlog = 'blog:index'
         urlQuiz = 'quiz:index-admin'
         urlSearch = 'search:index-admin'
         urlDashboard = 'dashboard:index-admin'
         urlLogout = 'dashboard:logout-confirm'
         urlShowQuestion = 'quiz:show-question'
         urlChangeIcon = 'quiz:change-icon'
+        user_type = "admin"
 
         if request.method == 'GET': # If the form is submitted / refresh page
             search_text = request.GET.get('kotak_carian', None)
@@ -366,16 +348,9 @@ def showField(request, user_id):
                             if id == fieldIDList[j]:
                                 fieldQuesCountList[j] += 1
                                 break
-                    
-                    #fieldIDList = [gameFields.first().id]
-                    #fieldIDinQuesValueList = list(quiz.models.GameQuestion.objects.values_list('fieldID', flat=True))
-                    #fieldQuesCountList = [0]
-                    #for id in fieldIDinQuesValueList:
-                    #    if id == gameFields.first().id:
-                    #        fieldQuesCountList[0] += 1
                 else:
                     context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-                    'dashboard': urlDashboard, 'logout': urlLogout, 'showquestion': urlShowQuestion, 'changeicon': urlChangeIcon,
+                    'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'showquestion': urlShowQuestion, 'changeicon': urlChangeIcon,
                     'gameFields': gameFields, 'search_text': search_text, 'gameFieldsCount': gameFields.count()}
                     return render(request, 'quiz/showField.html', context)
             #if admin tak cari kerjaya (refresh page)
@@ -395,10 +370,8 @@ def showField(request, user_id):
                             break
 
         lengthFQCL = len(fieldQuesCountList)
-        #cnt = 0
-        #fixedCnt = 0
         context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard': urlDashboard, 'logout': urlLogout, 'showquestion': urlShowQuestion, 'changeicon': urlChangeIcon,
+        'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'showquestion': urlShowQuestion, 'changeicon': urlChangeIcon,
         'gameFields': gameFields, 'fieldQuesCountList': fieldQuesCountList, 'lengthFQCL': lengthFQCL,
         'search_text': search_text, 'gameFieldsCount': gameFields.count()}
         return render(request, 'quiz/showField.html', context)
@@ -413,7 +386,7 @@ def showField(request, user_id):
             dashboardNav = " Guru"
             user_type = "guru"
         urlTest = 'test:index-nonadmin'
-        urlBlog = 'blog:index-nonadmin'
+        urlBlog = 'blog:index'
         urlQuiz = 'quiz:index-student'
         urlSearch = 'search:index-nonadmin'
         urlDashboard = 'dashboard:index-nonadmin'
@@ -435,12 +408,13 @@ def addField(request, user_id):
         return redirect('home:login')
 
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allImageField = quiz.models.ImageField.objects.all()
+    user_type = "admin"
 
     #get all objects (image records) in ImageField table
     allFieldImage = quiz.models.ImageField.objects.all().order_by('id')
@@ -460,7 +434,7 @@ def addField(request, user_id):
                 errorMessage = "Bidang kerjaya telah wujud. Sila masukkan bidang kerjaya lain."
                 form = AddFieldForm()
                 context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-                'dashboard': urlDashboard, 'logout': urlLogout, 'errorMessage': errorMessage,
+                'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'errorMessage': errorMessage,
                 'allImageField': allImageField, 'form': form,'imageURLList': imageURLList}
                 return render(request, 'quiz/addField.html', context)
             #kalau memang takda
@@ -473,7 +447,7 @@ def addField(request, user_id):
                     errorMessage = "Ikon telah digunakan untuk bidang kerjaya lain. Sila pilih ikon yang lain."
                     form = AddFieldForm()
                     context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-                    'dashboard': urlDashboard, 'logout': urlLogout, 'errorMessage': errorMessage,
+                    'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'errorMessage': errorMessage,
                     'allImageField': allImageField, 'form': form, 'imageURLList': imageURLList}
                     return render(request, 'quiz/addField.html', context)
                 else:
@@ -483,7 +457,8 @@ def addField(request, user_id):
         form = AddFieldForm()
 
     context = {'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'allImageField': allImageField, 'form': form, 'imageURLList': imageURLList}
+    'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'allImageField': allImageField, 'form': form,
+    'imageURLList': imageURLList}
     return render(request, 'quiz/addField.html', context)
 
 def changeIcon(request, user_id, field_id):
@@ -494,7 +469,7 @@ def changeIcon(request, user_id, field_id):
         return redirect('home:login')
 
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
@@ -502,6 +477,7 @@ def changeIcon(request, user_id, field_id):
     allGameFields = quiz.models.GameField.objects.all()
     currentGameFieldRecord = allGameFields.get(id=field_id)
     currentGameFieldName = currentGameFieldRecord.name
+    user_type = "admin"
 
     #get all objects (image records) in ImageField table
     allFieldImage = quiz.models.ImageField.objects.all().order_by('id')
@@ -520,7 +496,7 @@ def changeIcon(request, user_id, field_id):
                 errorMessage = "Ikon telah digunakan untuk bidang kerjaya lain. Sila pilih ikon yang lain."
                 form = ChangeIconForm()
                 context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-                'dashboard': urlDashboard, 'logout': urlLogout, 'errorMessage': errorMessage,
+                'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'errorMessage': errorMessage,
                 'currentGameFieldName': currentGameFieldName, 'form': form, 'imageURLList': imageURLList}
                 return render(request, 'quiz/changeIcon.html', context)
             else:
@@ -531,7 +507,7 @@ def changeIcon(request, user_id, field_id):
         form = ChangeIconForm()
 
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'form': form,
+    'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'currentGameFieldName': currentGameFieldName, 'form': form,
     'imageURLList': imageURLList}
     return render(request, 'quiz/changeIcon.html', context)
 
@@ -543,7 +519,7 @@ def showQuestion(request, user_id, field_id):
         return redirect('home:login')
 
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
@@ -554,6 +530,7 @@ def showQuestion(request, user_id, field_id):
     gameQuestions = quiz.models.GameQuestion.objects.filter(fieldID=currentGameFieldRecord).order_by('id')
     allGameQuesAns = quiz.models.GameAnswer.objects.order_by('id')
     allGameHintQuesIDList = quiz.models.GameHint.objects.order_by('id').values_list('questionID_id', flat=True)
+    user_type = "admin"
 
     if request.method == 'GET': # If the form is submitted / refresh page
         search_text = request.GET.get('kotak_carian', None)
@@ -567,7 +544,7 @@ def showQuestion(request, user_id, field_id):
             
     #if admin tak search soalan AND tak filter difficulty (refresh page = GET request)
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName,
+    'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'currentGameFieldName': currentGameFieldName,
     'gameQuestions': gameQuestions, 'search_text': search_text, 'filter_selected': filter_selected,
     'gameQuestionsCount': gameQuestions.count(), 'allGameQuesAns': allGameQuesAns, 'allGameHintQuesIDList': allGameHintQuesIDList}
     return render(request, 'quiz/showQuestion.html', context)
@@ -580,7 +557,7 @@ def addQuestion(request, user_id, field_id):
         return redirect('home:login')
 
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
@@ -588,6 +565,7 @@ def addQuestion(request, user_id, field_id):
     allGameFields = quiz.models.GameField.objects.all()
     currentGameFieldRecord = allGameFields.get(id=field_id)
     currentGameFieldName = currentGameFieldRecord.name
+    user_type = "admin"
 
     answerFormSet = formset_factory(AddAnswerForm, formset=CustomAnswerFormSet, extra=2, min_num=2, max_num=4, validate_min=True) 
     hintFormSet = formset_factory(AddHintForm, formset=CustomHintFormSet, extra=3, max_num=3)
@@ -711,7 +689,7 @@ def addQuestion(request, user_id, field_id):
         hint_formset = hintFormSet(prefix='hint')
 
     context = {'user_id': user_id, 'field_id': field_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
+    'dashboard': urlDashboard, 'logout': urlLogout,'user_type': user_type, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
     'answer_formset': answer_formset, 'hint_formset': hint_formset, 'errormsg1': errormsg1, 'errormsg2': errormsg2,
     'errormsg3': errormsg3, 'errormsg4': errormsg4, 'errormsg5': errormsg5}
     return render(request, 'quiz/addQuestion.html', context) 
@@ -724,12 +702,13 @@ def editQuestion(request, user_id, field_id, question_id):
         return redirect('home:login')
 
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     allGameFields = quiz.models.GameField.objects.all()
+    user_type = "admin"
 
     currentGameFieldRecord = allGameFields.get(id=field_id)
     currentGameFieldName = currentGameFieldRecord.name
@@ -881,7 +860,7 @@ def editQuestion(request, user_id, field_id, question_id):
         hint_inlineformset = hintInlineFormSet(instance=currentGameQuestionRecord, prefix='hint')
 
     context = {'user_id': user_id, 'field_id': field_id, 'question_id': question_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-    'dashboard': urlDashboard, 'logout': urlLogout, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
+    'dashboard': urlDashboard, 'logout': urlLogout, 'user_type': user_type, 'currentGameFieldName': currentGameFieldName, 'questionForm': questionForm,
     'answer_inlineformset': answer_inlineformset, 'hint_inlineformset': hint_inlineformset,
     'errormsg1': errormsg1, 'errormsg2': errormsg2,'errormsg3': errormsg3, 'errormsg4': errormsg4,
     'errormsg5': errormsg5, 'errormsg6': errormsg6, 'errormsg7': errormsg7, 'errormsg8': errormsg8}
@@ -898,7 +877,7 @@ def chooseField(request, user_id):
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -992,7 +971,7 @@ def play(request, user_id, field_id):
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -1438,7 +1417,7 @@ def showResult(request, user_id, field_id):
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -1506,7 +1485,7 @@ def seeRanking(request, user_id, field_id):
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -1625,7 +1604,7 @@ def seeStatistic(request, user_id, field_id):
     currentPlayerUsername = currentPlayerRecordObject.ID.ID.username #give username from User model
     currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'

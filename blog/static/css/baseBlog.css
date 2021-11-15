@@ -1,0 +1,185 @@
+@viewport {
+    width: device-width;
+    height: device-height;
+    zoom: 1;
+    /* iniial-scale: 1.0; */
+} 
+  
+body {
+    font-family: "Poppins";
+    position: relative;
+    margin: 0;
+}
+  
+h1 {
+    font-size: 40px;
+    line-height: 1.25em;
+}
+  
+h2 {
+  font-size: 30px;
+}
+  
+h3 {
+    font-size: 16px;
+}
+  
+/* navbar */
+/* .ul-navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: palevioletred;
+    border-bottom-right-radius: 1vw;
+    border-bottom-left-radius: 1vw;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    width: 100%;
+} 
+  
+.li-navbar{
+    float: left;
+}
+  
+.li-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+}
+  
+.li-a-navbar:hover:not(.active) {
+    background-color: grey;
+    border-radius: 10px;
+} */
+
+.div-navbar {
+    display: flex;
+    flex-direction: row;
+    background-color: palevioletred;
+    /* position: -webkit-sticky;
+    position: sticky; */
+    position: unset;
+    top: 0;
+    width: 100%;
+    height: auto;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.div-navbar-left{
+    max-width: 80%;
+    float: left;
+}
+
+.div-navbar-right{
+    position: absolute;
+    max-width: 30%;
+    float: right;
+    right: 0;
+}
+
+.p-navbar{
+    float: left;
+    margin: 0;
+}
+
+.p-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+}
+
+.p-a-navbar:hover:not(.active) {
+    background-color: grey;
+    border-radius: 10px;
+}
+
+.icon{
+    display: none;
+}
+  
+.active{
+    background-color: coral;
+    border-radius: 10px;
+}
+  
+.logout {
+    float: right;
+    background-color: crimson;
+    border-radius: 10px;
+}
+  
+.username {
+    float: right;
+    font-style: italic;
+}
+
+.logout:hover{
+    background-color: inherit;
+}
+
+p {
+    font-size: 16px;
+}
+
+@media screen and (max-width: 1010px) {
+    .div-navbar-left{
+        width: 60%;
+        float: left;
+    }
+    
+    .div-navbar-right{
+        width: 40%;
+        float: right;
+    }
+
+    .p-a-navbar{
+        padding: 5px 10px;
+    }
+
+    .no-icon{
+        display: none;
+    }
+
+    .icon{
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+        /* line-height: 28px; */
+    }
+      
+    h2 {
+      font-size: 20px;
+      /* line-height: 19px; */
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .div-navbar-left{
+        width: 70%;
+    }
+    
+    .div-navbar-right{
+        width: 30%;
+    }
+
+    .username{
+        display: none;
+    }
+}

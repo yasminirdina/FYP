@@ -1,0 +1,309 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Future Cruise: Blog Pengajian Tinggi dan Kerjaya</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/blogMain.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-buttons-1">
+        <button class="btn all"><a class="a-for-blogMain" href="{% url 'blog:post-list' user_type user_id %}">Lihat Semua Artikel</a></button>
+        {% if user_type == 'admin' %}
+            <button class="btn write"><a class="a-for-blogMain" href="">Tulis Artikel</a></button>
+        {% endif %}
+    </div>
+
+    <!-- for mobile vertical -->
+    <div class="div-buttons-2">
+        <button class="btn all"><a class="a-for-blogMain" href="{% url 'blog:post-list' user_type user_id %}">
+            <i class="fas fa-folder-open"></i>
+        </a></button>
+        {% if user_type == 'admin' %}
+            <button class="btn write"><a class="a-for-blogMain" href="">
+                <i class="fas fa-plus"></i>
+            </a></button>
+        {% endif %}
+    </div>
+
+    <div class="div-outer">
+        <div class="div-side-navbar">
+            <form type="get" action="{% url 'blog:post-list' user_type user_id %}" class="form-filter">
+                <div class="div-search">
+                    <div class="div-search-box">
+                        Tajuk :
+                        {% if title_text %}
+                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..." value="{{ title_text }}">
+                        {% else %}
+                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..."> 
+                        {% endif %}
+                    </div>
+
+                    <div class="div-dropdown-cat">
+                        Kategori :
+                        <select name="kategori" id="category">
+                            {% for cat in allCategoriesByName %}
+                                {% if cat_selected %}
+                                    {% if cat.id == cat_selected %}
+                                        <option value="{{ cat.name }}" selected="selected">{{ cat.name }}</option>
+                                    {% else %}
+                                        <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                    {% endif %}
+                                {% else %}
+                                    {% if forloop.counter0 == 0 %}
+                                        <option value="Semua">Semua</option>
+                                    {% endif %}
+                                    <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="div-checkbox-date">
+                        <span>
+                            Tahun
+                            <span class="span-scroll">
+                                (Skrol ke bawah &#128899;)
+                            </span>:
+                        </span>
+                        <span id="span-error-1"></span>
+                        {% for year in allYearList %}
+                            <div class="div-input">
+                                {% if forloop.counter0 == 0 %}
+                                    <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
+                                    <label for="select-all">Semua</label>
+                                {% else %}
+                                    <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" checked="checked" class="checkbox">
+                                    <label for="year[]">{{ year }}</label>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <span id="span-error-2"></span>
+
+                    <div class="div-form-buttons">
+                        <button class="btn submit-for-blogMain" type="submit">Cari</button> 
+                    </div>
+                </div>
+            </form>
+
+            <div class="div-facebook-1">
+                <div class="fb-page first" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="200" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+            </div>
+        </div>
+
+        <div class="div-posts">
+            <div class="div-popular">
+                <div class="div-title">
+                    Popular
+                </div>
+                <div class="div-outer-tiles">
+                    {% for post in mostPopularPosts %}
+                        <div class="div-ind-tiles">
+                            {% if post.id in postIDswithImageList %}
+                                {% for image in postIDswithImageList %}
+                                    {% if image.blogPostID_id == post.id %}
+                                        <div class="div-overlay">
+                                            <div class="div-image">
+                                                <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="div-overlay">
+                                    <div class="div-image-default">
+                                        <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <div class="div-details">
+                                <div class="div-post-title">
+                                    {{ post.title|truncatechars:50 }}
+                                </div>
+                                <div class="div-date-published">
+                                    {{ post.datePublished|date:"d/m/Y" }}
+                                </div>
+                                <div class="div-sub-details">
+                                    <div class="div-outer-tags">
+                                        {% for post_tag in allBlogCategoryBridge %}
+                                            {% if post_tag.blogPostID_id == post.id %}
+                                                {% for tag in allCategories %}
+                                                    {% if post_tag.categoryID_id == tag.id %}
+                                                        <button class="btn tag">{{ tag.name }}</button>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="div-views">
+                                            <i class="fas fa-eye"></i>
+                                            <div class="div-views-text">
+                                                {{ post.noOfViews }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="div-latest">
+                <div class="div-title">
+                    Terkini
+                </div>
+                <div class="div-outer-tiles">
+                    {% for post in latestPosts %}
+                        <div class="div-ind-tiles">
+                            {% if post.id in postIDswithImageList %}
+                                {% for image in postIDswithImageList %}
+                                    {% if image.blogPostID_id == post.id %}
+                                        <div class="div-overlay">
+                                            <div class="div-image">
+                                                <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="div-overlay">
+                                    <div class="div-image">
+                                        <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}">
+                                    </div>
+                                    <!-- later when admin is able to add post, use the below code for image -->
+                                    <!-- <div class="div-image-default">
+                                        <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                                    </div> -->
+                                </div>
+                            {% endif %}
+
+                            <div class="div-details">
+                                <div class="div-post-title">
+                                    {{ post.title|truncatechars:50 }}
+                                </div>
+                                <div class="div-date-published">
+                                    {{ post.datePublished|date:"d/m/Y" }}
+                                </div>
+                                <div class="div-sub-details">
+                                    <div class="div-outer-tags">
+                                        {% for post_tag in allBlogCategoryBridge %}
+                                            {% if post_tag.blogPostID_id == post.id %}
+                                                {% for tag in allCategories %}
+                                                    {% if post_tag.categoryID_id == tag.id %}
+                                                        <button class="btn tag">{{ tag.name }}</button>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                        <div class="div-views">
+                                            <i class="fas fa-eye"></i>
+                                            <div class="div-views-text">
+                                                {{ post.noOfViews }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="div-facebook-2">
+            Ikuti SMK Damansara Damai 1 di Facebook:
+            <div class="fb-page second" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="500" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+
+            <!-- mobile horizontal height <= 320px -->
+            <div class="fb-page third" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="480" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+
+            <!-- mobile vertical width 361px-450px -->
+            <div class="fb-page fourth" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="300" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+
+            <!-- mobile vertical width <= 360px -->
+            <div class="fb-page fifth" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="250" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        var select_all = document.getElementById("select-all"); //select all checkbox
+        var checkboxes = document.getElementsByClassName("checkbox"); 
+        //checkbox items
+
+        //select all checkboxes
+        select_all.addEventListener("change", function(e){
+            for (i = 0; i < checkboxes.length; i++) { 
+                checkboxes[i].checked = select_all.checked;
+            }
+
+            if(document.querySelectorAll('.checkbox:checked').length == 0){
+                // alert("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                $("#span-error-1").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                $("#span-error-2").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                select_all.checked = true;
+                for (i = 0; i < checkboxes.length; i++) { 
+                    checkboxes[i].checked = true;
+                }
+            }
+            else{
+                $("#span-error-1").text("");
+                $("#span-error-2").text("");
+            }
+        });
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', function(e){ //".checkbox" change 
+                //uncheck "select all", if one of the listed checkbox item is unchecked
+                if(this.checked == false){
+                    select_all.checked = false;
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
+                }
+                //check "select all" if all checkbox items are checked
+                if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
+                    select_all.checked = true;
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
+                }
+
+                if(document.querySelectorAll('.checkbox:checked').length == 0){
+                    $("#span-error-1").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    $("#span-error-2").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    this.checked = true;
+                }
+            });
+        }
+    </script>
+{% endblock %}

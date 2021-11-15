@@ -1,0 +1,479 @@
+{% extends "blog/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>{{ currentBlogPost.title }}</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/viewPost.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-outer">
+        <!-- left part -->
+        <div class="div-side-navbar">
+            <form type="get" action="{% url 'blog:post-list' user_type user_id %}" class="form-filter">
+                <div class="div-search">
+                    <div class="div-search-box">
+                        Tajuk :
+                        {% if title_text %}
+                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..." value="{{ title_text }}">
+                        {% else %}
+                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..."> 
+                        {% endif %}
+                    </div>
+
+                    <div class="div-dropdown-cat">
+                        Kategori :
+                        <select name="kategori" id="category">
+                            {% for cat in allCategoriesByName %}
+                                {% if cat_selected %}
+                                    {% if cat.id == cat_selected %}
+                                        <option value="{{ cat.name }}" selected="selected">{{ cat.name }}</option>
+                                    {% else %}
+                                        <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                    {% endif %}
+                                {% else %}
+                                    {% if forloop.counter0 == 0 %}
+                                        <option value="Semua">Semua</option>
+                                    {% endif %}
+                                    <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="div-checkbox-date">
+                        <span>
+                            Tahun
+                            <span class="span-scroll">
+                                (Skrol ke bawah &#128899;)
+                            </span>:
+                        </span>
+                        <span id="span-error-1"></span>
+                        {% for year in allYearList %}
+                            <div class="div-input">
+                                {% if forloop.counter0 == 0 %}
+                                    <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
+                                    <label for="select-all">Semua</label>
+                                {% else %}
+                                    <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" checked="checked" class="checkbox">
+                                    <label for="year[]">{{ year }}</label>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <span id="span-error-2"></span>
+
+                    <div class="div-form-buttons">
+                        <button class="btn submit-for-viewPost" type="submit">Cari</button> 
+                    </div>
+                </div>
+            </form>
+
+            <div class="div-facebook-1">
+                <div class="fb-page first" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="200" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+            </div>
+
+            <div class="div-popular">
+                Popular :
+                <div class="div-outer-tiles">
+                    {% for post in mostPopularPosts %}
+                        <div class="div-ind-tiles">
+                            <a class="a-for-title popular-latest" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                {{ post.title|truncatechars:50 }}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="div-latest">
+                Terkini :
+                <div class="div-outer-tiles">
+                    {% for post in latestPosts %} 
+                        <div class="div-ind-tiles">
+                            <a class="a-for-title popular-latest" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                {{ post.title|truncatechars:50 }}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- right part -->
+        <div class="div-outer-post">
+            <div class="div-inner-post">
+                <div class="div-outer-tags">
+                    <div class="div-inner-tags">
+                        {% for post_tag in currentBlogCategoryBridge %}
+                            {% for tag in allCategories %}
+                                {% if post_tag.categoryID_id == tag.id %}
+                                    <button class="btn tag">{{ tag.name }}</button>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+
+                    <div class="div-edit-bookmark">
+                        {% if user_id == 'A1' %}
+                            <button class="btn edit">Kemaskini</button>
+                        {% else %}
+                            <button class="btn bookmark">
+                                {% include 'blog/updateBookmark.html' %}
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="div-post-title-2">
+                    {{ currentBlogPost.title }}
+                </div>
+
+                <div class="div-datetime-published">
+                    <div class="div-date-published">
+                        {{ currentBlogPost.datePublished|date:"d/m/Y" }}, 
+                    </div>
+
+                    <div class="div-time-published">
+                        {{ currentBlogPost.timePublished|date:"h:i A" }}
+                    </div>
+                </div>
+
+                <div class="div-views-share">
+                    <div class="div-views">
+                        <i class="fas fa-eye"></i>
+                        <div class="div-views-text">
+                            {{ currentBlogPost.noOfViews }}, 
+                        </div>
+                    </div>
+
+                    <div class="div-share">
+                        <i class="fas fa-eye"></i>
+                        <div class="div-share-text">
+                            {{ currentBlogPost.noOfShares }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="div-social">
+                    Social share widgets here
+                </div>
+
+                <div class="div-content">
+                    {{ currentBlogPost.content }}
+                </div>
+            </div>
+
+            <div class="div-related-posts">
+                Artikel Berkaitan:
+                <div class="div-related-outer">
+                    {% for post in relatedPosts %}
+                        <div class="div-related-ind">
+                            {% if post.id in postIDswithImageList %}
+                                {% for image in postIDswithImageList %}
+                                    {% if image.blogPostID_id == post.id %}
+                                        <div class="div-image">
+                                            <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <div class="div-image-default">
+                                    <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
+                                    <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                                </div>
+                            {% endif %}
+
+                            <div class="div-related-title">
+                                <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                    {{ post.title|truncatechars:50 }}
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="div-facebook-2">
+                Ikuti SMK Damansara Damai 1 di Facebook:
+                <div class="fb-page second" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="500" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+    
+                <!-- mobile horizontal height <= 320px -->
+                <div class="fb-page third" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="480" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+    
+                <!-- mobile vertical width 361px-450px -->
+                <div class="fb-page fourth" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="300" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+    
+                <!-- mobile vertical width <= 360px -->
+                <div class="fb-page fifth" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="250" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+            </div>
+
+            <div class="div-comment">
+                Ruangan Komen:
+
+                <div class="div-count-sort">
+                    <div class="div-count">
+                        {{ commentCount }} Komen
+                    </div>
+
+                    <form type="get" action="." class="form-comment-sort">
+                        Susun:
+                        <select name="tarikh-komen" id="comment">
+                            <option value="A-Z" selected="selected">A-Z</option>
+                            <option value="Z-A">Z-A</option>
+                        </select>
+                    </form>
+                </div>
+
+                <div class="div-add-comment">
+                    <img class="img-user" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+                    <form type="post" action="." class="form-add-comment">
+                        <textarea rows="8" id="new-comment" name="new-comment" class="new-comment" maxlength="200" placeholder="Sila tinggalkan komen anda..."></textarea>
+                    </form>
+                </div>
+
+                {% if allCurrentPostComments %}
+                    <div class="div-comment-outer">
+                        {% for comment in allCurrentPostComments %}
+                            {% if comment.parentCommentID_id == null %}
+                                <div class="div-comment-inner">
+                                    <div class="div-user">
+                                        <img class="img-user" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+                                        <div class="div-user-details">
+                                            <div class="div-username-type">
+                                                {{ username }}
+                                                {% if reply.userID_id.ID == 'A1' %}
+                                                    <button class="btn admin">Admin</button>
+                                                {% elif 'S' in reply.userID_id.ID %}
+                                                    <button class="btn student">Pelajar</button>
+                                                {% elif 'P' in reply.userID_id.ID %}
+                                                    <button class="btn parents">Penjaga</button>
+                                                {% elif 'T' in reply.userID_id.ID %}
+                                                    <button class="btn teacher">Guru</button>
+                                                {% endif %}
+                                            </div>
+                                            <div class="div-comment-datetime">
+                                                <div class="div-comment-date">
+                                                    {{ comment.dateComment|date:"d/m/Y" }}, 
+                                                </div>
+                                                <div class="div-comment-date">
+                                                    {{ comment.timeComment|date:"h:i A" }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="div-body">
+                                        <div class="div-body-text">
+                                            {{ comment.text }}
+                                        </div>
+                                        <div class="div-body-buttons">
+                                            <button class="btn" value="{{ comment.id }}">Balas</button>
+
+                                            {% if reply.userID_id.ID == 'A1' %}
+                                                <button class="btn delete">Buang</button>
+                                            {% endif %}
+
+                                            {% if comment.id in postsIDsWithReplies %}
+                                                <a class="a-for-replies down" href="#">
+                                                    &#128899; {{ parentRepliesCount }} Balasan
+                                                </a>
+                                                <a class="a-for-replies up" href="#">
+                                                    &#128897; {{ parentRepliesCount }} Balasan
+                                                </a>
+                                            {% endif %}
+                                        </div>
+
+                                        {% if comment.id in postsIDsWithReplies %}
+                                            <div class="div-replies-outer">
+                                                {% for reply in allCurrentPostComments %}
+                                                    {% if reply.parentCommentID_id == comment.id %}
+                                                        <div class="div-replies-inner">
+                                                            <div class="div-user">
+                                                                <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+                                                                <div class="div-user-details">
+                                                                    <div class="div-username-type">
+                                                                        {{ reply.userID_id.username }}
+                                                                        {% if reply.userID_id.ID == 'A1' %}
+                                                                            <button class="btn admin">Admin</button>
+                                                                        {% elif 'S' in reply.userID_id.ID %}
+                                                                            <button class="btn student">Pelajar</button>
+                                                                        {% elif 'P' in reply.userID_id.ID %}
+                                                                            <button class="btn parents">Penjaga</button>
+                                                                        {% elif 'T' in reply.userID_id.ID %}
+                                                                            <button class="btn teacher">Guru</button>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                    <div class="div-comment-datetime">
+                                                                        <div class="div-comment-date">
+                                                                            {{ reply.dateComment|date:"d/m/Y" }}
+                                                                        </div>
+                                                                        <div class="div-comment-date">
+                                                                            {{ reply.timeComment|date:"h:i A" }}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                    
+                                                            <div class="div-body">
+                                                                <div class="div-body-text">
+                                                                    {{ reply.text }}
+                                                                </div>
+                                                                <div class="div-body-buttons">
+                                                                    <button class="btn reply" value="{{ reply.id }}">Balas</button>
+                                                                    {% if reply.userID_id.ID == 'A1' %}
+                                                                        <button class="btn delete">Buang</button>
+                                                                    {% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                <div class="div-add-reply"> <!-- display: none, only displayed when clicked "Balas" on parent comment OR any replies under parent comment -->
+                                                    <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
+                                                    <form type="post" action="{% url 'blog:view-post' user_type user_id post_id %}" class="form-add-reply">
+                                                        <textarea rows="8" id="new-comment" name="new-comment" class="new-comment" maxlength="200"></textarea>
+                                                    </form>
+                                                    <button class="btn reply" type="submit">Balas</button>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        var select_all = document.getElementById("select-all"); //select all checkbox
+        var checkboxes = document.getElementsByClassName("checkbox"); 
+        //checkbox items
+
+        //select all checkboxes
+        select_all.addEventListener("change", function(e){
+            for (i = 0; i < checkboxes.length; i++) { 
+                checkboxes[i].checked = select_all.checked;
+            }
+
+            if(document.querySelectorAll('.checkbox:checked').length == 0){
+                // alert("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                $("#span-error-1").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                $("#span-error-2").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                select_all.checked = true;
+                for (i = 0; i < checkboxes.length; i++) { 
+                    checkboxes[i].checked = true;
+                }
+            }
+            else{
+                $("#span-error-1").text("");
+                $("#span-error-2").text("");
+            }
+        });
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', function(e){ //".checkbox" change 
+                //uncheck "select all", if one of the listed checkbox item is unchecked
+                if(this.checked == false){
+                    select_all.checked = false;
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
+                }
+                //check "select all" if all checkbox items are checked
+                if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
+                    select_all.checked = true;
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
+                }
+
+                if(document.querySelectorAll('.checkbox:checked').length == 0){
+                    $("#span-error-1").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    $("#span-error-2").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    this.checked = true;
+                }
+            });
+        }
+
+        var bookmarkNoFill = document.querySelector('#no-fill');
+        var bookmarkFill = document.querySelector('#fill');
+        var hasBookmark = document.querySelector('.p-hasBookmark').innerText;
+        // alert(typeof hasBookmark);
+
+        $('.bookmark').on('click', function(){
+            // alert('hi');
+            if(hasBookmark == 'False'){
+                // alert('hello');
+                $.ajax({
+                    headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                    url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                    data: {
+                        'requestType': 'addBookmark'
+                    },
+                    type: 'POST',
+                    success: function(result){
+                        // alert("addBookmark: success");
+                        $('.bookmark').html(result);
+                        hasBookmark = document.querySelector('.p-hasBookmark').innerText;
+                    },
+                    error: function(result){
+                        // alert("addBookmark: failure");
+                    }
+                })
+            }
+            else if (hasBookmark == 'True'){
+                // alert('hello 2');
+                $.ajax({
+                    headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                    url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                    data: {
+                        'requestType': 'removeBookmark'
+                    },
+                    type: 'POST',
+                    success: function(result){
+                        // alert("removeBookmark: success");
+                        $('.bookmark').html(result);
+                        hasBookmark = document.querySelector('.p-hasBookmark').innerText;
+                    },
+                    error: function(result){
+                        // alert("removeBookmark: failure");
+                    }
+                })
+            }
+        });
+    </script>
+{% endblock %}

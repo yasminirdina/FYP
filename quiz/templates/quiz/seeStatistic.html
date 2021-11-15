@@ -200,7 +200,7 @@
                     </div>
                     <div id="third-step" class="div-ind-step">
                         3
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,6 +226,10 @@
 {% endblock %}
 
 {% block js2 %}
+    <script type="text/javascript">
+        const username = '{{ username }}';
+    </script>
+
     <script type="text/javascript">
         const divGamePerf =  document.querySelector('.div-game-perf');
         const divCareerRec =  document.querySelector('.div-career-rec');
@@ -333,7 +337,6 @@
         Chart.defaults.font.size = 17.6;
         Chart.defaults.font.family = "Poppins";
         Chart.defaults.color = "#000000";
-        // import {de} from 'date-fns/locale';
         $(document).ready(Charts);
 
         function Charts() {
@@ -346,9 +349,6 @@
                     AvgFieldSessionHintsChart(response["avg_field_session_hints_chart_data"]);
                     AvgFieldSessionTimeChart(response["avg_field_session_time_chart_data"]);
                 }
-                // complete: function() {
-                    // setTimeout(Charts, 30000) /* refresh chart every 30seconds (30000ms=30secs) */
-                // }
             });
         };
 
@@ -444,11 +444,6 @@
                                     size: 14
                                 },
                                 callback: function(label, index, labels) {
-                                    /* if (/\s/.test(this.getLabelForValue(label))) {
-                                        return this.getLabelForValue(label).split(" ");
-                                    } else {
-                                        return this.getLabelForValue(label);
-                                    }  */
                                     if (this.getLabelForValue(label).length > 10) {
                                         return this.getLabelForValue(label).substr(0, 9) + "...";
                                     } else {
@@ -524,11 +519,6 @@
                                     size: 14
                                 },
                                 callback: function(label, index, labels) {
-                                    /* if (/\s/.test(this.getLabelForValue(label))) {
-                                        return this.getLabelForValue(label).split(" ");
-                                    } else {
-                                        return this.getLabelForValue(label);
-                                    } */
                                     if (this.getLabelForValue(label).length > 10) {
                                         return this.getLabelForValue(label).substr(0, 9) + "...";
                                     } else {
@@ -604,11 +594,6 @@
                                     size: 14
                                 },
                                 callback: function(label, index, labels) {
-                                    /* if (/\s/.test(this.getLabelForValue(label))) {
-                                        return this.getLabelForValue(label).split(" ");
-                                    } else {
-                                        return this.getLabelForValue(label);
-                                    } */
                                     if (this.getLabelForValue(label).length > 10) {
                                         return this.getLabelForValue(label).substr(0, 9) + "...";
                                     } else {
@@ -737,7 +722,6 @@
 
         function convert_formatted_1(value) {
             return Math.floor(value / 60) + ":" + (value % 60 ? value % 60 : '00')
-
         }
 
         function convert_formatted_2(value) {
@@ -761,12 +745,43 @@
         });
 
         $('#downloadPDF').on('click', function() {
+            let options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+            // var today = new Date().toLocaleString('en-US', options);
+            var today = new Date();
+            /* today = new Intl.DateTimeFormat('default',
+            {
+                hour12: true
+            }).format(today);
+            alert(today); */
+            
+            day = today.getDate();
+            month = (today.getMonth()+1);
+
+            day = day < 10 ? '0'+day : day;
+            month = month < 10 ? '0'+month : month;
+
+            var date = day + '-' + month + '-' + today.getFullYear();
+
+            hour = today.getHours();
+            minute = today.getMinutes();
+            second = today.getSeconds();
+
+            var ampm = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12;
+            hour = hour ? hour : 12; 
+            hour = hour < 10 ? '0'+hour : hour;
+            minute = minute < 10 ? '0'+minute : minute;
+            second = second < 10 ? '0'+second : second;
+
+            var time = hour + ":" + minute + ":" + second + " " + ampm;
+            var dateTime = date + ', ' + time;
+
             var reportPageHeight = $('.div-grid').innerHeight();
             var reportPageWidth = $('.div-grid').innerWidth();
             var top_left_margin = 15;
             var PDF_Width = reportPageWidth + (top_left_margin * 2);
             // var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
-            var PDF_Height = reportPageHeight + (top_left_margin * 4);
+            var PDF_Height = reportPageHeight + (top_left_margin * 6);
             var canvas_image_width = reportPageWidth;
             var canvas_image_height = reportPageHeight;
 
@@ -778,11 +793,13 @@
                 var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
                 pdf.setFont("Poppins-Bold", "normal", 400);
                 pdf.setFontSize(20);
-                text = "Statistik Prestasi Permainan";
+                text = "Statistik Prestasi Permainan (" + username + ")";
+                text2 = dateTime;
                 xOffset = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / 2);
-                // pdf.text("Statistik Prestasi Permainan", top_left_margin, top_left_margin * 2, "center");
+                xOffset2 = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text2) * pdf.internal.getFontSize() / 2);
                 pdf.text(text, xOffset, top_left_margin * 2);
-                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin * 3, canvas_image_width, canvas_image_height);
+                pdf.text(text2, xOffset2, top_left_margin * 4);
+                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin * 5, canvas_image_width, canvas_image_height);
                 /* for (var i = 1; i <= totalPDFPages; i++) { 
                     pdf.addPage(PDF_Width, PDF_Height);
                     pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);

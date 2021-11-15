@@ -20,7 +20,7 @@ def dashboardMain(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
     username = userRecord.username
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -90,15 +90,16 @@ def dashboardMainAdmin(request, user_id):
         return redirect('home:login')
 
     urlTest = 'test:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
+    user_type= "admin"
     if user_id == 'A1': #betul ni admin, render dashboard index admin
         #response = "Hai! Anda berada di "
         context = {'admin_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard':urlDashboard, 'logout': urlLogout}
+        'dashboard':urlDashboard, 'logout': urlLogout, "user_type": user_type}
         return render(request, 'dashboard\dashboardIndexAdmin.html', context)
     else: #url jadi admin/Sx @ Tx @ Px - manual enter
         response = "Halaman ini hanya boleh diakses oleh admin."
@@ -130,7 +131,7 @@ def showProfile(request, user_id):
 """
 def showProfileAdmin(request, user_id):
     urlTest = 'dashboard:index-admin'
-    urlBlog = 'blog:index-admin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
     urlSearch = 'dashboard:index-admin'
     urlDashboard = 'dashboard:index-admin'
@@ -158,7 +159,7 @@ def showProfileNonAdmin(request, user_type, user_id):
 
     username = userRecord.username
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -235,7 +236,7 @@ def changePassword(request, user_type, user_id):
     username = currentUserDetail.username
     #urls for navbar
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
@@ -344,7 +345,7 @@ def editProfile(request, user_type, user_id):
     username = currentUserDetail.username
     #urls for navbar
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'

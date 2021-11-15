@@ -20,7 +20,7 @@
     <center>    
         <!-- <ul class="ul-navbar">
             <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_id%}">Blog Berita</a></li>
+            <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></li>
             <li class="li-navbar"><a class="li-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
             <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></li>
             <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
@@ -32,7 +32,7 @@
         <div class="div-navbar admin">
             <div class="div-navbar-left admin-left">
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></p>
-                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_id%}">Blog Berita</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
                 <p class="p-navbar no-icon"><a class="p-a-navbar active" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></p>
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">
@@ -44,7 +44,7 @@
                 <p class="p-navbar icon"><a class="p-a-navbar" href="{% url test user_id %}">
                     <i class="fas fa-edit"></i>
                 </a></p>
-                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url blog user_id%}">
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">
                     <i class="fas fa-blog"></i>
                 </a></p>
                 <p class="p-navbar icon"><a class="p-a-navbar active" href="{% url quiz user_id %}">

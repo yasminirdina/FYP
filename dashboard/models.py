@@ -26,7 +26,7 @@ class User(models.Model):
 
 class Admin(models.Model):
     ID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
-    password = models.CharField(max_length=10)
+    password = models.CharField(max_length=4096)
 
     def __str__(self):
         return "Admin " + self.ID.ID
@@ -65,7 +65,7 @@ class Parent(models.Model):
 
     ID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     email = models.EmailField(max_length=254)
-    password = models.CharField(max_length=10)
+    password = models.CharField(max_length=4096)
     name = models.CharField(max_length=100, default="NA")
     age = models.CharField(max_length=2, default="NA")
     job = models.CharField(max_length=50, default="NA")
@@ -130,7 +130,7 @@ class Teacher(models.Model):
 
     ID = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     email = models.EmailField(max_length=254)
-    password = models.CharField(max_length=10)
+    password = models.CharField(max_length=4096)
     name = models.CharField(max_length=100, default="NA")
     #salutation = models.CharField(max_length=15, default="NA")
     salutation = models.CharField(max_length=15, choices=SALUTATION_CHOICES, default='NA')
@@ -156,7 +156,7 @@ class Student(models.Model):
     parentID = models.ForeignKey(Parent, on_delete=models.SET_DEFAULT, default="NA")
     studentClass = models.ForeignKey(HomeroomTeacherClass, on_delete=models.SET_DEFAULT, default="NA")
     email = models.EmailField(max_length=254)
-    password = models.CharField(max_length=10)
+    password = models.CharField(max_length=4096)
     name = models.CharField(max_length=100, default="NA")
     year = models.IntegerField(default=currentYear, validators=[MinValueValidator(2021), MaxValueValidator(currentYear)])
     interest = models.CharField(max_length=50, default="NA")

@@ -1,0 +1,437 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}
+    <title>Future Cruise: Blog Pengajian Tinggi dan Kerjaya | Senarai Artikel</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/blogPostList.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-buttons-1">
+        <button class="btn all"><a class="a-for-blogPostList" href="{% url 'blog:post-list' user_type user_id %}">Lihat Semua Artikel</a></button>
+        {% if user_type == 'admin' %}
+            <button class="btn write"><a class="a-for-blogPostList" href="">Tulis Artikel</a></button>
+        {% endif %}
+    </div>
+
+    <!-- for mobile vertical -->
+    <div class="div-buttons-2">
+        <button class="btn all"><a class="a-for-blogPostList" href="{% url 'blog:post-list' user_type user_id %}">
+            <i class="fas fa-folder-open"></i>
+        </a></button>
+        {% if user_type == 'admin' %}
+            <button class="btn write"><a class="a-for-blogPostList" href="">
+                <i class="fas fa-plus"></i>
+            </a></button>
+        {% endif %}
+    </div>
+
+    <div class="div-outer">
+        <div class="div-side-navbar">
+            <form type="get" action="." class="form-filter">
+                <div class="div-search">
+                    <div class="div-search-box">
+                        Tajuk :
+                        {% if title_text %} <!-- have searched title from blogMain/this page -->
+                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..." value="{{ title_text }}">
+                        {% else %} <!-- have not searched title form blogMain/this page OR cleared search -->
+                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..."> 
+                        {% endif %}
+                    </div>
+
+                    <div class="div-dropdown-cat">
+                        Kategori :
+                        <select name="kategori" id="category">
+                            {% for cat in allCategoriesByName %}
+                                {% if cat_selected %} <!-- have filtered category from blogMain/this page -->
+                                    {% if cat_selected == 'Semua' %}
+                                        {% if forloop.counter0 == 0 %}
+                                            <option value="Semua" selected="selected">Semua</option>
+                                        {% endif %}
+
+                                        <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                    {% else %}
+                                        {% if forloop.counter0 == 0 %}
+                                            <option value="Semua">Semua</option>
+                                        {% endif %}
+
+                                        {% if cat.name == cat_selected %}
+                                            <option value="{{ cat.name }}" selected="selected">{{ cat.name }}</option>
+                                        {% else %}
+                                            <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                        {% endif %}
+                                    {% endif %}
+                                {% else %} <!-- cleared search -->
+                                    {% if forloop.counter0 == 0 %}
+                                        <option value="Semua">Semua</option>
+                                    {% endif %}
+                                    <option value="{{ cat.name }}">{{ cat.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="div-checkbox-date">
+                        <span>
+                            Tahun
+                            <span class="span-scroll">
+                                (Skrol ke bawah &#128899;)
+                            </span>:
+                        </span>
+                        <span id="span-error-1"></span>
+                        {% for year in allYearList %}
+                            {% if yearSelectedList %} <!-- have checked year from blogMain/this page -->
+                                {% if year in yearSelectedList %}
+                                    <div class="div-input">
+                                        {% if year == '0' %}
+                                            <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
+                                            <label for="select-all">Semua</label>
+                                        {% else %}
+                                            <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" checked="checked" class="checkbox">
+                                            <label for="year[]">{{ year }}</label>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <div class="div-input">
+                                        {% if year == '0' %}
+                                            <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}">
+                                            <label for="select-all">Semua</label>
+                                        {% else %}
+                                            <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" class="checkbox">
+                                            <label for="year[]">{{ year }}</label>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="div-input"> <!-- clicked "Lihat Semua Artikel" -->
+                                    {% if year == '0' %}
+                                        <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
+                                        <label for="select-all">Semua</label>
+                                    {% else %}
+                                        <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" class="checkbox" checked="checked">
+                                        <label for="year[]">{{ year }}</label>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <span id="span-error-2"></span>
+
+                    <div class="div-form-buttons">
+                        <button class="btn submit-for-blogPostList" type="submit">Cari</button>
+                        <button class="btn clear-for-blogPostList"><a class="a-for-blogPostList" href="{% url 'blog:index' user_type user_id %}">Padam Carian</a></button>
+                    </div>
+                </div>
+            </form>
+                
+            <div class="div-facebook-1">
+                <div class="fb-page first" 
+                data-href="https://www.facebook.com/smkdd1"
+                data-width="200" 
+                data-hide-cover="false"
+                data-show-facepile="false">
+                </div>
+            </div>
+        </div>
+
+        <div class="div-result-outer">
+            <div class="div-result-inner">
+                <div class="div-title">
+                    Senarai Artikel
+                </div>
+                <div class="div-result-heading">
+                    {% if title_text or cat_selected or yearSelectedList %}
+                        Keputusan carian bagi
+                    {% endif %}
+
+                    {% if title_text %}
+                        {% if cat_selected and yearSelectedList %}
+                            <span>kata kunci tajuk "{{ title_text }}", </span>
+                        {% elif cat_selected or yearSelectedList %}
+                            <span>kata kunci tajuk "{{ title_text }}" dan </span>
+                        {% else %}
+                            <span>kata kunci tajuk "{{ title_text }}":</span>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if cat_selected %}
+                        {% if yearSelectedList %}
+                            <span>kategori "{{ cat_selected }}" dan </span>
+                        {% else %}
+                            <span>kategori "{{ cat_selected }}":</span>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if yearSelectedList %}
+                        <span>tahun </span>
+                        {% if '0' in yearSelectedList %}
+                            <span>"Semua":</span>
+                        {% else %}
+                            {% for year in yearSelectedList %}
+                                {% if forloop.last %}
+                                    <span>{{ year }}:</span>
+                                {% else %}
+                                    <span>{{ year }},</span>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                {% if allBlogPostsCount == 0 %}
+                    <div class="div-error">
+                        <span class="p-found">Tiada artikel dijumpai.</span>
+                        <ul>
+                            <li>Pastikan ejaan tajuk anda betul.</li>
+                            <li>Tarikh artikel yang boleh dicari adalah tarikh artikel diterbitkan, dan bukan tarikh suntingan terkini.</li>
+                        </ul>
+                        Jika masih tidak berjaya, sila lihat senarai penuh artikel di
+                        <span><a class="a-allPosts" href="{% url 'blog:post-list' user_type user_id %}">sini.</a></span>
+                    </div>
+                {% else %}
+                    <div class="div-non-error">
+                        <span class="p-found">{{ allBlogPostsCount }} artikel dijumpai.</span>
+                        <div class="div-outer-posts">
+                            {% for post in allBlogPosts %}
+                                <div class="div-inner-posts">
+                                    {% if post.id in postIDswithImageList %}
+                                        {% for image in postIDswithImageList %}
+                                            {% if image.blogPostID_id == post.id %}
+                                                <div class="div-image">
+                                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="div-image-default">
+                                            <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
+                                            <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="div-details">
+                                        <div class="div-post-title">
+                                            <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                                {{ post.title|truncatechars:100 }}
+                                            </a>
+                                        </div>
+                                        <div class="div-date-published">
+                                            {{ post.datePublished|date:"d/m/Y" }}
+                                        </div>
+                                        <div class="div-views">
+                                            <i class="fas fa-eye"></i>
+                                            <div class="div-views-text">
+                                                {{ post.noOfViews }}
+                                            </div>
+                                        </div>
+                                        <div class="div-content">
+                                            {{ post.content|truncatechars:200 }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <p class="p-break" style="display: none;"></p>
+
+                            <div id="nav"></div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="div-facebook-2">
+            Ikuti SMK Damansara Damai 1 di Facebook:
+            <div class="fb-page second" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="500" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+
+            <!-- mobile horizontal height <= 320px -->
+            <div class="fb-page third" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="480" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+
+            <!-- mobile vertical width 361px-450px -->
+            <div class="fb-page fourth" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="300" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+
+            <!-- mobile vertical width <= 360px -->
+            <div class="fb-page fifth" 
+            data-href="https://www.facebook.com/smkdd1"
+            data-width="250" 
+            data-hide-cover="false"
+            data-show-facepile="false">
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        var select_all = document.getElementById("select-all"); //select all checkbox
+        var checkboxes = document.getElementsByClassName("checkbox");
+        //checkbox items
+
+        //select all checkboxes
+        select_all.addEventListener("change", function(e){
+            for (i = 0; i < checkboxes.length; i++) { 
+                checkboxes[i].checked = select_all.checked;
+            }
+
+            if(document.querySelectorAll('.checkbox:checked').length == 0){
+                // alert("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                $("#span-error-1").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                $("#span-error-2").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                select_all.checked = true;
+                for (i = 0; i < checkboxes.length; i++) { 
+                    checkboxes[i].checked = true;
+                }
+            }
+            else{
+                $("#span-error-1").text("");
+                $("#span-error-2").text("");
+            }
+        });
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', function(e){ //".checkbox" change 
+                //uncheck "select all", if one of the listed checkbox item is unchecked
+                if(this.checked == false){
+                    select_all.checked = false;
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
+                }
+                //check "select all" if all checkbox items are checked
+                if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
+                    select_all.checked = true;
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
+                }
+
+                if(document.querySelectorAll('.checkbox:checked').length == 0){
+                    $("#span-error-1").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    $("#span-error-2").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    this.checked = true;
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var rowsShown = 1; /* nanti change to 5 */
+            var numLimit = 2; /* nanti change to 3 */
+            var rowsTotal = $('.div-inner-posts').length;
+            var numPages = rowsTotal / rowsShown;
+            for (var i = 0; i < numPages; i++) {
+                var pageNum = i + 1;
+                $('#nav').append('<a class="btn nums a-for-blogPostList-page" href="#muka_' + pageNum + '" rel="' + i + '">' + pageNum + '</a>');
+            }
+            $('.div-inner-posts').hide();
+            $('.div-inner-posts').slice(0, rowsShown).show();
+            $('#nav a:first').addClass('active');
+            if (numPages > numLimit) {
+                $('#nav').append('<a class="btn a-for-blogPostList-page next" href="#" rel="next">></a>');
+                $('#nav').prepend('<a class="btn a-for-blogPostList-page prev" href="#" rel="prev" style="display:none"><</a>');
+                $('#nav').append('<a class="btn a-for-blogPostList-page last" href="#muka_' + numPages + '" rel="last">>></a>');
+                $('#nav').prepend('<a class="btn a-for-blogPostList-page pg-first" href="#muka_1" rel="first" style="display:none"><<</a>');
+            }
+
+            $('#nav').on('mouseover', 'a', function () {
+                var $nums = $('.nums');
+                var currPage = $(this).attr('rel');
+                if (currPage == "next") {
+                    currPage = $('#nav a.active').attr('rel');
+                    currPage++;
+                    $(this).attr('href', "#muka_" + (currPage + 1));
+                } else if (currPage == "prev") {
+                    currPage = $('#nav a.active').attr('rel');
+                    currPage--;
+                    $(this).attr('href', "#muka_" + (currPage + 1));
+                }
+            });
+
+            $('#nav').on('click', 'a', function () {
+                var $nums = $('.nums');
+                var currPage = $(this).attr('rel');
+                if (currPage == "next") {
+                    currPage = $('#nav a.active').attr('rel');
+                    currPage++;
+                    $(this).attr('href', "#muka_" + (currPage + 1));
+                } else if (currPage == "prev") {
+                    currPage = $('#nav a.active').attr('rel');
+                    currPage--;
+                    $(this).attr('href', "#muka_" + (currPage + 1));
+                }
+                if (currPage == "first") {
+                    $nums.first().trigger('click');
+                    return false;
+                } else if (currPage == "last") {
+                    $nums.last().trigger('click');
+                    return false;
+                }
+                var startItem = currPage * rowsShown;
+                var endItem = startItem + rowsShown;
+                $('#nav a').removeClass('active');
+                $('#nav a[rel="' + currPage + '"]').addClass('active');
+                $('.div-inner-posts').css('opacity', '0.0').hide().slice(startItem, endItem).
+                css('display', 'grid').animate({
+                    opacity: 1
+                }, 300);
+                if ($nums.last().hasClass('active')) 
+                    $('#nav a[rel="next"]').hide();
+                else 
+                    $('#nav a[rel="next"]').show();
+                if (!$nums.first().hasClass('active')) 
+                    $('#nav a[rel="prev"]').show();
+                else 
+                    $('#nav a[rel="prev"]').hide();
+                $nums.hide();
+                if(numLimit < 1)
+                    numLimit = 2;
+                var $temp = {};
+                if ($nums.filter('.active').is($nums.first())){
+                    $('#nav a[rel="first"]').hide();
+                    $('#nav a[rel="last"]').show();
+                    $temp = $nums.first().show();
+                    for (var j = 0; j < numLimit; j++) {
+                        $temp = $temp.next().show();
+                    }
+                }
+                else if ($nums.filter('.active').is($nums.last())){
+                    $('#nav a[rel="last"]').hide();
+                    $('#nav a[rel="first"]').show();
+                    $temp = $nums.last().show();
+                    for (var j = 0; j < numLimit; j++) {
+                        $temp = $temp.prev().show();
+                    }
+                }
+                else {
+                    $('#nav a[rel="first"]').show();
+                    $('#nav a[rel="last"]').show();
+                    $temp = $('#nav a[rel="' + currPage + '"]').show();
+                    for (var j = 0; j < numLimit; j++) {
+                        $temp = $temp.prev().show();
+                    }
+                    $temp = $('#nav a[rel="' + currPage + '"]').show();
+                    for (var j = 0; j < numLimit; j++) {
+                        $temp = $temp.next().show();
+                    }
+                }
+            }).find('a.active').trigger('click');
+        });
+    </script>
+{% endblock %}

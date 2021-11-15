@@ -1,0 +1,608 @@
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(121, 85, 118);
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Poppins';
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background-color: #eee;
+    color: rgb(121, 85, 118);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.write{
+    background-color: rgb(250, 159, 159);
+}
+
+.write:hover{
+    background-color: #eee;
+    color: rgb(250, 159, 159);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+}
+
+.submit-for-blogMain{
+    width: 100%;
+}
+
+.tag{
+    pointer-events: none;
+    padding: 5px;
+    background-color: rgb(250, 159, 159);
+}
+
+/* hyperlink style */
+.a-for-blogMain {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* div */
+.div-buttons-1, .div-buttons-2{
+    /* background-color: antiquewhite; */
+    position: relative;
+    width: 95%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: right;
+    justify-content: right;
+    margin-top: 1vw;
+    padding: 0 1vw;
+    gap: 1vw;
+    box-sizing: border-box;
+}
+
+.div-buttons-2{
+    display: none;
+}
+
+.div-outer{
+    /* background-color: lightblue; */
+    position: relative;
+    width: 95%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    justify-content: center;
+    margin: 0 auto 1vw;
+    gap: 1vw;
+    padding: 1vw 1.5vw;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.div-side-navbar, .div-posts, .div-facebook-2{
+    /* background-color: burlywood; */
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1vw;
+    box-sizing: border-box;
+}
+
+.div-side-navbar{
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    padding: 1vw;
+    justify-content: center;
+}
+
+.div-facebook-2{
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    padding: 1vw;
+    display: none;
+    justify-items: center;
+    text-align: left;
+    font-weight: bold;
+}
+
+.fb-page.third, .fb-page.fourth, .fb-page.fifth{
+    display: none;
+}
+
+form{
+    /* background-color: antiquewhite; */
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.div-search{
+    /* background-color: cadetblue; */
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1vw;
+    box-sizing: border-box;
+}
+
+.div-search-box, .div-dropdown-cat, .div-checkbox-date{
+    /* background-color: cornflowerblue; */
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 100%;
+    text-align: left;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+/* input search */
+#title, #category {
+    font-size: 16px;
+    font-family: "Poppins";
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+  
+input:focus::placeholder {color: transparent}
+
+.div-search-box, .div-dropdown-cat{
+    gap: 5px;
+}
+
+.span-scroll{
+    display: none;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.div-checkbox-date label{
+    font-weight: normal;
+}
+
+.div-input{
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: left;
+    align-items: center;
+    gap: 0.5vw;
+    box-sizing: border-box;
+}
+
+#span-error-1, #span-error-2{
+    font-size: 12px;
+    font-weight: normal;
+    font-style: italic;
+    text-align: justify;
+    color: rgb(235, 43, 43);
+    display: grid;
+}
+
+#span-error-2{
+    display: none;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.div-form-buttons{
+    /* background-color: cornflowerblue; */
+    width: 100%;
+    display: grid;
+    grid-template-columns: 100%;
+    box-sizing: border-box;
+}
+
+.div-facebook-1{
+    /* background-color: pink; */
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: row;
+    box-sizing: border-box;
+}
+
+.div-popular, .div-latest{
+    background-color: rgb(240, 240, 240);
+    position: relative;
+    width: 100%;
+    height: fit-content;
+    padding: 0 1vw 1vw;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 1vw;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.div-title{
+    /* background-color: darkolivegreen; */
+    border-bottom: 1px solid lightgray;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    text-align: left;
+    font-size: 30px;
+    font-weight: bold;
+    padding: 1vw 0 0;
+    box-sizing: border-box;
+}
+
+.div-outer-tiles{
+    /* background-color: darksalmon; */
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, 50%);
+    gap: 1vw;
+    padding: 0 0.5vw;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.div-ind-tiles{
+    background-color: rgb(202, 202, 202);
+    position: relative;
+    width: 100%;
+    height: 50vh;
+    padding: 1vw;
+    z-index: 0;
+    box-sizing: border-box;
+}
+
+.div-overlay{
+    background-color: rgb(0, 0, 0, 0.3);
+    position: absolute;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    right: auto;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.div-image, .div-image-default{
+    position: absolute;
+    top: 0;
+    bottom: auto;
+    left: 0;
+    right: auto;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    box-sizing: border-box;
+}
+
+/* .div-image-default{
+    display: grid;
+    align-items: center;
+    justify-items: center;
+} */
+
+.div-image-default{
+    padding: 10px;
+}
+
+.img-post{
+    width: 100%;
+    height: 100%;
+}
+
+.img-post-default{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.div-details{
+    /* background-color: aliceblue; */
+    position: absolute;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: auto;
+    padding: 1vw;
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: row;
+    box-sizing: border-box;
+}
+
+.div-post-title, .div-date-published, .div-sub-details{
+    /* background-color: darkmagenta; */
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    color: white;
+    box-sizing: border-box;
+}
+
+.div-post-title{
+    /* background-color: darkcyan; */
+    font-size: 20px;
+    font-weight: bold;
+    word-break: break-all;
+}
+
+.div-date-published{
+    font-size: 16px;
+}
+
+.div-sub-details{
+    /* background-color: lightpink; */
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    justify-content: left;
+    gap: 1vw;
+    margin-top: 0.5vw;
+}
+
+.div-outer-tags, .div-views{
+    /* background-color: lavender; */
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-items: left;
+    box-sizing: border-box;
+}
+
+.div-outer-tags{
+    gap: 0.5vw;
+    align-items: center;
+}
+
+.div-views{
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+    margin-left: 0.5vw;
+}
+
+.fas fa-eye{
+    height: 100%;
+}
+
+.div-views-text{
+    width: fit-content;
+    height: 100%;
+    margin-left: 0.5vw;
+    box-sizing: border-box;
+}
+
+@media screen and (max-width: 1200px){
+    .div-buttons-1, .div-buttons-2{
+        margin-top: 10px;
+        padding: 0 15px;
+        gap: 10px;
+    }
+
+    .div-outer{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        margin: 0 auto 10px;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .div-side-navbar, .div-posts, .div-facebook-2{
+        gap: 10px;
+    }
+    
+    .div-facebook-1{
+        display: none;
+    }
+
+    .div-facebook-2{
+        display: grid;
+    }
+
+    .div-side-navbar{
+        padding: 10px;
+        justify-content: stretch;
+    }
+
+    .div-search{
+        grid-auto-flow: row;
+        grid-template-columns: 35% 35% 30%;
+        width: 100%;
+        justify-content: center;
+        padding: 0 10px;
+        gap: 10px;
+    }
+
+    .div-search-box, .div-dropdown-cat{
+        height: 100%;
+        align-content: flex-start;
+    }
+
+    #title, #category{
+        height: 65px;
+    }
+
+    .div-checkbox-date{
+        height: 100px;
+        overflow: auto;
+    }
+
+    .span-scroll{
+        display: contents;
+    }
+
+    .div-input{
+        gap: 5px;
+    }
+
+    #span-error-1{
+        display: none;
+    }
+
+    #span-error-2{
+        display: block;
+    }
+
+    .div-search > #span-error-2, .div-search > .div-form-buttons{
+        grid-column: 1/4;
+    }
+
+    .div-form-buttons{
+        margin-top: -20px;
+    }
+
+    .div-popular, .div-latest{
+        padding: 0 10px 10px;
+        gap: 10px;
+    }
+
+    .div-title{
+        padding: 10px 0 0;
+    }
+
+    .div-outer-tiles{
+        gap: 10px;
+        padding: 0 5px;
+    }
+
+    .div-ind-tiles, .div-details{
+        padding: 10px;
+    }
+
+    .div-sub-details{
+        gap: 10px;
+        margin-top: 5px;
+    }
+
+    .div-outer-tags{
+        gap: 5px;
+    }
+
+    .div-views, .div-views-text{
+        margin-left: 5px;
+    }
+}
+
+@media screen and (max-width: 930px){
+    .div-ind-tiles{
+        height: 250px;
+    }
+}
+
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .btn{
+        font-size: 12px;
+    }
+
+    @media screen and (max-width: 450px){
+        .div-buttons-1{
+            display: none;
+        }
+    
+        .div-buttons-2{
+            display: grid;
+        }
+    }
+
+    .div-search{
+        font-size: 16px;
+        grid-template-columns: 100%;
+        padding: 0 5px;
+    }
+
+    .div-search > #span-error-2, .div-search > .div-form-buttons{
+        grid-column: unset;
+    }
+    
+    .div-search-box, .div-dropdown-cat{
+        align-content: unset;
+    }
+
+    .div-input, #title, #category{
+        font-size: 12px;
+    }
+
+    #title, #category{
+        height: fit-content;
+    }
+
+    @media screen and (max-width: 450px) {
+        .div-outer-tiles{
+            grid-template-columns: 100%;
+            height: 50vh;
+            overflow: auto;
+        }
+    }
+
+    .div-ind-tiles{
+        height: 200px;
+    }
+
+    .div-title{
+        font-size: 16px;
+        padding: 10px 5px 0;
+    }
+
+    .div-post-title{
+        font-size: 16px;
+    }
+    
+    .div-date-published, .div-views{
+        font-size: 12px;
+    }
+
+    .div-facebook-2{
+        padding: 10px;
+    }
+
+    @media screen and (max-height: 320px){
+        .fb-page.second{
+            display: none;
+        }
+    
+        .fb-page.third{
+            display: grid;
+        }
+    }
+
+    @media screen and (max-width: 450px) and (min-width: 361px){
+        .fb-page.second{
+            display: none;
+        }
+    
+        .fb-page.fourth{
+            display: grid;
+        }
+    }
+
+    @media screen and (max-width: 360px){
+        .fb-page.second{
+            display: none;
+        }
+    
+        .fb-page.fifth{
+            display: grid;
+        }
+    }
+}
