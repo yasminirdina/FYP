@@ -1,11 +1,12 @@
 {% extends "blog/base.html" %}
 {% load static %}
+{% load blog_tags %}
 
 {% block title %}
     <title>{{ currentBlogPost.title }}</title>
 {% endblock %}
 
-{% block styles %}   
+{% block styles %}
     <link rel="stylesheet" href="{% static 'css/viewPost.css' %}">
 {% endblock %}
 
@@ -125,7 +126,8 @@
 
                     <div class="div-edit-bookmark">
                         {% if user_id == 'A1' %}
-                            <button class="btn edit">Kemaskini</button>
+                            <button class="btn delete"><a class="a-for-viewPost">Padam</a></button>
+                            <button class="btn edit"><a class="a-for-viewPost" href="{% url 'blog:edit-post' user_type user_id currentBlogPost.id %}">Kemaskini</a></button>
                         {% else %}
                             <button class="btn bookmark">
                                 {% include 'blog/updateBookmark.html' %}
@@ -134,17 +136,40 @@
                     </div>
                 </div>
 
-                <div class="div-post-title-2">
+                <div class="div-post-title">
                     {{ currentBlogPost.title }}
+                    {% if currentBlogPost.show == False %}
+                        <button class="btn draft">Draf</button>
+                    {% endif %}
                 </div>
 
-                <div class="div-datetime-published">
-                    <div class="div-date-published">
-                        {{ currentBlogPost.datePublished|date:"d/m/Y" }}, 
+                <div class="div-author-datetime">
+                    <div class="div-author">
+                        <i class="fas fa-feather"></i>
+                        <div class="div-author-text">
+                            <a class="a-for-author">Admin</a>
+                        </div>
                     </div>
 
-                    <div class="div-time-published">
-                        {{ currentBlogPost.timePublished|date:"h:i A" }}
+                    <span>&#8226;</span>
+
+                    <div class="div-datetime">
+                        <i class="far fa-calendar-alt"></i>
+                        <div class="div-datetime-text">
+                            {{ currentBlogPost.datePublished|date:"d/m/Y" }}, {{ currentBlogPost.timePublished|date:"h:i A" }}
+                        </div>
+                        
+                        {% if currentBlogPost.lastDateEdited != currentBlogPost.datePublished %}
+                            <div class="div-datetime-text-edited">
+                                (Dikemaskini pada: {{ currentBlogPost.lastDateEdited|date:"d/m/Y" }}, {{ currentBlogPost.lastTimeEdited|date:"h:i A" }})
+                            </div>
+                        {% else %}
+                            {% if currentBlogPost.lastTimeEdited != currentBlogPost.timePublished %}
+                                <div class="div-datetime-text-edited">
+                                    (Dikemaskini pada: {{ currentBlogPost.lastDateEdited|date:"d/m/Y" }}, {{ currentBlogPost.lastTimeEdited|date:"h:i A" }})
+                                </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
 
@@ -152,55 +177,68 @@
                     <div class="div-views">
                         <i class="fas fa-eye"></i>
                         <div class="div-views-text">
-                            {{ currentBlogPost.noOfViews }}, 
+                            <a class="a-for-views">{{ currentBlogPost.noOfViews }} bacaan</a>
                         </div>
                     </div>
 
+                    <!-- KIV: How to track shares? -->
+                    <!-- <span>&#8226;</span>
+
                     <div class="div-share">
-                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-share-alt"></i>
                         <div class="div-share-text">
-                            {{ currentBlogPost.noOfShares }}
+                            {{ currentBlogPost.noOfShares }} kongsian
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="div-social">
-                    Social share widgets here
+                    <div class="sharethis-inline-share-buttons" style="z-index:0;"></div>
                 </div>
 
                 <div class="div-content">
-                    {{ currentBlogPost.content }}
+                    {{ currentBlogPost.content | safe }}
                 </div>
             </div>
 
             <div class="div-related-posts">
                 Artikel Berkaitan:
-                <div class="div-related-outer">
-                    {% for post in relatedPosts %}
-                        <div class="div-related-ind">
-                            {% if post.id in postIDswithImageList %}
-                                {% for image in postIDswithImageList %}
-                                    {% if image.blogPostID_id == post.id %}
-                                        <div class="div-image">
-                                            <img class="img-post" src="{{ image.blogPostImage.url }}">
+                    {% if relatedPostIDsList %}
+                        <div class="div-related-outer">
+                            {% for post in relatedPosts %}
+                                <div class="div-related-ind">
+                                    {% if post.id in postIDswithImageList %}
+                                        {% for image in postIDswithImageList %}
+                                            {% if image.blogPostID_id == post.id %}
+                                                <div class="div-image">
+                                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="div-image-default">
+                                            <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
+                                            <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
                                         </div>
                                     {% endif %}
-                                {% endfor %}
-                            {% else %}
-                                <div class="div-image-default">
-                                    <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
-                                    <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
-                                </div>
-                            {% endif %}
 
-                            <div class="div-related-title">
-                                <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
-                                    {{ post.title|truncatechars:50 }}
-                                </a>
-                            </div>
+                                    <div class="div-related-title">
+                                        <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                            {{ post.title|truncatechars:50 }}
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
                         </div>
-                    {% endfor %}
-                </div>
+                    {% else %}
+                        <div class="div-related-outer no-post">
+                            <span>
+                                Tiada artikel berkaitan. Klik di
+                                <span><a class="a-all" href="{% url 'blog:post-list' user_type user_id %}">sini</a></span>
+                                untuk melihat semua artikel, atau cari artikel tertentu menggunakan fungsi carian disediakan.
+                            </span>
+                        </div>
+                    {% endif %}
             </div>
 
             <div class="div-facebook-2">
@@ -242,138 +280,228 @@
 
                 <div class="div-count-sort">
                     <div class="div-count">
-                        {{ commentCount }} Komen
+                        {{ commentCount }} komen
                     </div>
 
                     <form type="get" action="." class="form-comment-sort">
                         Susun:
                         <select name="tarikh-komen" id="comment">
-                            <option value="A-Z" selected="selected">A-Z</option>
-                            <option value="Z-A">Z-A</option>
+                            <option value="Terkini">Terkini</option>
+                            <option value="Paling Lama" selected="selected">Paling Lama</option>
                         </select>
                     </form>
                 </div>
 
                 <div class="div-add-comment">
-                    <img class="img-user" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
-                    <form type="post" action="." class="form-add-comment">
-                        <textarea rows="8" id="new-comment" name="new-comment" class="new-comment" maxlength="200" placeholder="Sila tinggalkan komen anda..."></textarea>
+                    {% if user_id == 'A1' %}
+                        <img class="img-user-add-comment" src="{% static 'images/avatar/1-default_avatar_admin.png' %}">
+                    {% elif 'P' in user_id %}
+                        <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                    {% elif 'T' in user_id %}
+                        <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                    {% else %}
+                        <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                    {% endif %}
+                    
+                    <form method="POST" action="{% url 'blog:view-post' user_type user_id post_id %}" class="form-add-comment">
+                        {% csrf_token %}
+                        {{ form.media.js }}
+
+                        <textarea rows="5" id="new-comment" name="new-comment" class="new-comment" maxlength="200" placeholder="Sila tinggalkan komen anda..."></textarea>
+                        <div class="div-form-addcomment-buttons">
+                            <button class="btn add-comment">Komen</button> 
+                        </div>
                     </form>
                 </div>
 
-                {% if allCurrentPostComments %}
-                    <div class="div-comment-outer">
-                        {% for comment in allCurrentPostComments %}
-                            {% if comment.parentCommentID_id == null %}
-                                <div class="div-comment-inner">
-                                    <div class="div-user">
-                                        <img class="img-user" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
-                                        <div class="div-user-details">
-                                            <div class="div-username-type">
-                                                {{ username }}
-                                                {% if reply.userID_id.ID == 'A1' %}
-                                                    <button class="btn admin">Admin</button>
-                                                {% elif 'S' in reply.userID_id.ID %}
-                                                    <button class="btn student">Pelajar</button>
-                                                {% elif 'P' in reply.userID_id.ID %}
-                                                    <button class="btn parents">Penjaga</button>
-                                                {% elif 'T' in reply.userID_id.ID %}
-                                                    <button class="btn teacher">Guru</button>
-                                                {% endif %}
-                                            </div>
-                                            <div class="div-comment-datetime">
-                                                <div class="div-comment-date">
-                                                    {{ comment.dateComment|date:"d/m/Y" }}, 
-                                                </div>
-                                                <div class="div-comment-date">
-                                                    {{ comment.timeComment|date:"h:i A" }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                <div class="div-comment-most-outer">
+                    {% include 'blog/updateComment.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
 
-                                    <div class="div-body">
-                                        <div class="div-body-text">
-                                            {{ comment.text }}
-                                        </div>
-                                        <div class="div-body-buttons">
-                                            <button class="btn" value="{{ comment.id }}">Balas</button>
+    <div class="div-bg-modal-1">
+        <div class="div-modal-content-1">
+            <div class="div-modal-header">
+                Balas kepada ...
+            </div>
 
-                                            {% if reply.userID_id.ID == 'A1' %}
-                                                <button class="btn delete">Buang</button>
-                                            {% endif %}
+            <p class="p-repliedParentID" style="display: none;">{{ repliedParentID }}</p>
+            <p class="p-repliedChildID" style="display: none;">{{ repliedChildID }}</p>
+            <p class="p-repliedTo" style="display: none;">{{ repliedTo }}</p>
 
-                                            {% if comment.id in postsIDsWithReplies %}
-                                                <a class="a-for-replies down" href="#">
-                                                    &#128899; {{ parentRepliesCount }} Balasan
-                                                </a>
-                                                <a class="a-for-replies up" href="#">
-                                                    &#128897; {{ parentRepliesCount }} Balasan
-                                                </a>
-                                            {% endif %}
-                                        </div>
+            <div class="div-reply-details">
+                ...
+            </div>
 
-                                        {% if comment.id in postsIDsWithReplies %}
-                                            <div class="div-replies-outer">
-                                                {% for reply in allCurrentPostComments %}
-                                                    {% if reply.parentCommentID_id == comment.id %}
-                                                        <div class="div-replies-inner">
-                                                            <div class="div-user">
-                                                                <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
-                                                                <div class="div-user-details">
-                                                                    <div class="div-username-type">
-                                                                        {{ reply.userID_id.username }}
-                                                                        {% if reply.userID_id.ID == 'A1' %}
-                                                                            <button class="btn admin">Admin</button>
-                                                                        {% elif 'S' in reply.userID_id.ID %}
-                                                                            <button class="btn student">Pelajar</button>
-                                                                        {% elif 'P' in reply.userID_id.ID %}
-                                                                            <button class="btn parents">Penjaga</button>
-                                                                        {% elif 'T' in reply.userID_id.ID %}
-                                                                            <button class="btn teacher">Guru</button>
-                                                                        {% endif %}
-                                                                    </div>
-                                                                    <div class="div-comment-datetime">
-                                                                        <div class="div-comment-date">
-                                                                            {{ reply.dateComment|date:"d/m/Y" }}
-                                                                        </div>
-                                                                        <div class="div-comment-date">
-                                                                            {{ reply.timeComment|date:"h:i A" }}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                    
-                                                            <div class="div-body">
-                                                                <div class="div-body-text">
-                                                                    {{ reply.text }}
-                                                                </div>
-                                                                <div class="div-body-buttons">
-                                                                    <button class="btn reply" value="{{ reply.id }}">Balas</button>
-                                                                    {% if reply.userID_id.ID == 'A1' %}
-                                                                        <button class="btn delete">Buang</button>
-                                                                    {% endif %}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    {% endif %}
-                                                {% endfor %}
+            <div class="div-add-reply" id="div-add-reply"> <!-- display: none, only displayed when clicked "Balas" on parent comment OR any replies under parent comment -->
+                {% if user_id == 'A1' %}
+                    <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                {% elif 'P' in user_id %}
+                    <!-- change with parent icon (in dashboard/static/images/user_avatar/default_parent.png) -->
+                    <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                {% elif 'T' in user_id %}
+                    <!-- change with teacher icon (in dashboard/static/images/user_avatar/default_teacher.png) -->
+                    <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                {% else %}
+                    <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                {% endif %}
 
-                                                <div class="div-add-reply"> <!-- display: none, only displayed when clicked "Balas" on parent comment OR any replies under parent comment -->
-                                                    <img src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}" width="50px" height="50px">
-                                                    <form type="post" action="{% url 'blog:view-post' user_type user_id post_id %}" class="form-add-reply">
-                                                        <textarea rows="8" id="new-comment" name="new-comment" class="new-comment" maxlength="200"></textarea>
-                                                    </form>
-                                                    <button class="btn reply" type="submit">Balas</button>
-                                                </div>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            {% endif %}
+                <form method="POST" action="{% url 'blog:view-post' user_type user_id post_id %}" class="form-add-reply">
+                    {% csrf_token %}
+                    {{ form.media.js }}
+
+                    <textarea rows="5" id="new-reply" name="new-reply" class="new-reply" maxlength="200" placeholder="..."></textarea>
+                </form>
+            </div>
+
+            <div class="div-form-add-reply-buttons">
+                <button class="btn add-reply">Balas</button> 
+                <button class="btn cancel-reply">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal-2">
+        <div class="div-modal-content-2">
+            <div class="div-modal-header">
+                Senarai Bacaan
+            </div>
+
+            Jumlah bacaan: {{ currentBlogPost.noOfViews }}
+
+            <div class="div-views-list">
+                <div class="div-views-ind-outer">
+                    <div class="div-views-ind-outer-title">
+                        <span class="span-for-arrows right" id="right-admin">
+                            <a>&#x25B6;</a>
+                            <a class="a-underline">Admin ({{ userViewsCnt|index:0 }} bacaan)</a>
+                        </span>
+                        <span class="span-for-arrows down" id="down-admin">
+                            <a>&#x25BC;</a>
+                            <a class="a-underline">Admin ({{ userViewsCnt|index:0 }} bacaan)</a>
+                        </span>
+                    </div>
+                </div>
+                <div class="div-views-ind-outer">
+                    <div class="div-views-ind-outer-title">
+                        <span class="span-for-arrows right" id="right-student">
+                            <a>&#x25B6;</a>
+                            <a class="a-underline">Pelajar ({{ userCnt|index:1 }} pelajar, {{ userViewsCnt|index:1 }} bacaan)</a>
+                        </span>
+                        <span class="span-for-arrows down" id="down-student">
+                            <a>&#x25BC;</a>
+                            <a class="a-underline">Pelajar ({{ userCnt|index:1 }} pelajar, {{ userViewsCnt|index:1 }} bacaan)</a>
+                        </span>
+                    </div>
+
+                    <div class="div-views-ind-inner" id="div-views-ind-inner-student">
+                        {% for student in studentViews %}
+                            <div class="div-views-ind-inner-details">
+                                &#x25B6; {{ student.userID.username }} ({{ student.noOfViews }})
+                            </div>
                         {% endfor %}
                     </div>
-                {% endif %}
+                </div>
+                <div class="div-views-ind-outer">
+                    <div class="div-views-ind-outer-title">
+                        <span class="span-for-arrows right" id="right-parent">
+                            <a>&#x25B6;</a>
+                            <a class="a-underline">Penjaga ({{ userCnt|index:2 }} penjaga, {{ userViewsCnt|index:2 }} bacaan)</a>
+                        </span>
+                        <span class="span-for-arrows down" id="down-parent">
+                            <a>&#x25BC;</a>
+                            <a class="a-underline">Penjaga ({{ userCnt|index:2 }} penjaga, {{ userViewsCnt|index:2 }} bacaan)</a>
+                        </span>
+                    </div>
+
+                    <div class="div-views-ind-inner" id="div-views-ind-inner-parent">
+                        {% for parent in parentViews %}
+                            <div class="div-views-ind-inner-details">
+                                &#x25B6; {{ parent.userID.username }} ({{ parent.noOfViews }})
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="div-views-ind-outer">
+                    <div class="div-views-ind-outer-title">
+                        <span class="span-for-arrows right" id="right-teacher">
+                            <a>&#x25B6;</a>
+                            <a class="a-underline">Guru ({{ userCnt|index:3 }} guru, {{ userViewsCnt|index:3 }} bacaan)</a>
+                        </span>
+                        <span class="span-for-arrows down" id="down-teacher">
+                            <a>&#x25BC;</a>
+                            <a class="a-underline">Guru ({{ userCnt|index:3 }} guru, {{ userViewsCnt|index:3 }} bacaan)</a>
+                        </span>
+                    </div>
+
+                    <div class="div-views-ind-inner" id="div-views-ind-inner-teacher">
+                        {% for teacher in teacherViews %}
+                            <div class="div-views-ind-inner-details">
+                                &#x25B6; {{ teacher.userID.username }} ({{ teacher.noOfViews }})
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="div-modal-button">
+                <button class="btn close">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal-3">
+        <div class="div-modal-content-3">
+            <div class="div-modal-header">
+                Padam Artikel
+            </div>
+
+            Adakah anda pasti ingin memadam artikel ini?
+
+            <div class="div-confirm-delete-buttons">
+                <button class="btn confirm-delete">Ya</button> 
+                <button class="btn cancel-delete">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal-4">
+        <div class="div-modal-content-4">
+            <div class="div-modal-header">
+                Artikel Telah Dipadam
+            </div>
+
+            <div class="div-back-to-main-buttons">
+                <button class="btn back-to-main">Kembali ke Halaman Utama Blog</button> 
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal-5">
+        <div class="div-modal-content-5">
+            <div class="div-modal-header-5">
+                Padam Komen
+            </div>
+
+            Adakah anda pasti ingin memadam komen ini?
+
+            <div class="div-confirm-delete-buttons">
+                <button class="btn confirm-delete-comment" value="">Ya</button> 
+                <button class="btn cancel-delete-comment">Tidak</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="div-bg-modal-6">
+        <div class="div-modal-content-6">
+            <div class="div-modal-header-6">
+                Komen Telah Dipadam
+            </div>
+
+            <div class="div-back-to-main-buttons">
+                <button class="btn refresh">Muat Semula Halaman</button> 
             </div>
         </div>
     </div>
@@ -429,17 +557,106 @@
             });
         }
 
-        var bookmarkNoFill = document.querySelector('#no-fill');
-        var bookmarkFill = document.querySelector('#fill');
-        var hasBookmark = document.querySelector('.p-hasBookmark').innerText;
+        $('.delete').on('click', function(){
+            // alert('hi delete open');
+
+            $('.div-bg-modal-3').css("display","flex");
+        });
+
+        $('.confirm-delete').on('click', function(){
+            // alert('hi confirm delete click');
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                data: {
+                    'requestType': 'deletePost'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    // alert("deletePost: success");
+
+                    $('.div-bg-modal-3').css("display","none");
+                    $('.div-bg-modal-4').css("display","flex");
+                },
+                error: function(result){
+                    // alert("deletePost: failure");
+                }
+            })
+        });
+
+        $('.cancel-delete').on('click', function(){
+            $('.div-bg-modal-3').css("display","none");
+        });
+
+        $('.back-to-main').on('click', function(){
+            $('.div-bg-modal-4').css("display","none");
+            window.location.href = "/blog/" + "{{ user_type }}" + "/" + "{{ user_id }}" + "/";
+        });
+
+        // ADMIN DELETE COMMENT & REPLY FUNCTION
+        $('.div-comment-most-outer').on('click', '.delete-comment', function(){
+            // alert('hi delete comment open');
+            
+            $('.confirm-delete-comment').val($(this).val());
+
+            $('.div-bg-modal-5').css("display","flex");
+        });
+
+        $('.div-comment-most-outer').on('click', '.delete-reply', function(){
+            // alert('hi delete reply open');
+            
+            $('.confirm-delete-comment').val($(this).val());
+
+            $('.div-bg-modal-5').css("display","flex");
+        });
+
+        $('.confirm-delete-comment').on('click', function(){
+            // alert('hi confirm delete comment click');
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                data: {
+                    'commentID': $(this).val(),
+                    'requestType': 'deleteComment',
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    // alert("deleteComment: success");
+
+                    $('.div-bg-modal-5').css("display","none");
+                    $('.div-bg-modal-6').css("display","flex");
+                },
+                error: function(result){
+                    // alert("deleteComment: failure");
+                }
+            })
+        });
+
+        $('.cancel-delete-comment').on('click', function(){
+            $('.div-bg-modal-5').css("display","none");
+        });
+
+        $('.refresh').on('click', function(){
+            $('.div-bg-modal-6').css("display","none");
+            window.location.href = "/blog/" + "{{ user_type }}" + "/" + "{{ user_id }}" + "/senarai-artikel/artikel/" + "{{ post_id }}" + "/";
+        });
+
+        // var bookmarkNoFill = document.querySelector('#no-fill');
+        // var bookmarkFill = document.querySelector('#fill');
+        // var hasBookmark = document.querySelector('.p-hasBookmark').innerText;
         // alert(typeof hasBookmark);
 
         $('.bookmark').on('click', function(){
             // alert('hi');
+            var hasBookmark = document.querySelector('.p-hasBookmark').innerText;
             if(hasBookmark == 'False'){
                 // alert('hello');
                 $.ajax({
-                    headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                    headers: { "X-CSRFToken": '{{csrf_token}}' },
                     url: "{% url 'blog:view-post' user_type user_id post_id %}",
                     data: {
                         'requestType': 'addBookmark'
@@ -457,8 +674,8 @@
             }
             else if (hasBookmark == 'True'){
                 // alert('hello 2');
-                $.ajax({
-                    headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                $.ajax({ 
+                    headers: { "X-CSRFToken": '{{csrf_token}}' },
                     url: "{% url 'blog:view-post' user_type user_id post_id %}",
                     data: {
                         'requestType': 'removeBookmark'
@@ -474,6 +691,267 @@
                     }
                 })
             }
+        });
+
+        $('.a-for-views').on('click', function(){
+            // alert('hi views open');
+
+            $('.div-bg-modal-2').css("display","flex");
+        });
+
+        $('.div-views-ind-outer-title').on('click', '.span-for-arrows.right', function(){
+            // alert('hi');
+
+            let expandedViewsID = $(this).attr("id");
+            let result_1 = expandedViewsID.replace("right", "div-views-ind-inner");
+            let result_2 = expandedViewsID.replace("right", "down");
+            // alert(result_1);
+            // alert(result_2);
+            // alert(expandedViewsID);
+
+            $('#'+result_1).css("display","grid");
+            $(this).css("display","none");
+            $('#'+result_2).css("display","block");
+        });
+
+        $('.div-views-ind-outer-title').on('click', '.span-for-arrows.down', function(){
+            // alert('hi');
+
+            let closedViewsID = $(this).attr("id");
+            let result_1 = closedViewsID.replace("down", "div-views-ind-inner");
+            let result_2 = closedViewsID.replace("down", "right");
+            // alert(result_1);
+            // alert(result_2);
+            // alert(closedViewsID);
+
+            $('#'+result_1).css("display","none");
+            $(this).css("display","none");
+            $('#'+result_2).css("display","block");
+        });
+
+        $('.close').on('click', function(){
+            $('.div-views-ind-inner').css("display","none");
+            $('.span-for-arrows.down').css("display","none");
+            $('.span-for-arrows.right').css("display","block");
+
+            $('.div-bg-modal-2').css("display","none");
+        });
+
+        $('.form-comment-sort').on('change', '#comment', function(){
+            var selected = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                data: {
+                    sort_order: selected
+                },
+                success: function(result) {
+                    // alert("sort-comment: success");
+                    $('.div-comment-most-outer').html(result);
+                },
+                error: function(result) {
+                    // alert("sort-comment: error");
+                }
+            })
+        });
+
+        $('.btn.add-comment').on('click', function(e){
+            e.preventDefault();
+            // alert("hi 5");
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                data: {
+                    'newComment': $('#new-comment').val(),
+                    'requestType': 'addComment_1'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    // alert("addComment_1: success");
+                    $('.div-count').text(result.commentCount + ' komen');
+
+                    $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                        url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                        data: {
+                            'requestType': 'addComment_2'
+                        },
+                        type: 'POST',
+                        success: function(result){
+                            // alert("addComment_2: success");
+                            $('.div-comment-most-outer').html(result);
+
+                            var newCommentID = "div-comment-inner-" + document.querySelector('.p-newCommentID').innerText;
+                            // alert(newCommentID);
+                            var divNewCommentInner = document.getElementById(newCommentID);
+                            divNewCommentInner.scrollIntoView();
+                        },
+                        error: function(result){
+                            // alert("addComment_2: failure");
+                        }   
+                    })
+                },
+                error: function(result){
+                    // alert("addComment_1: failure");
+                }
+            })
+        });
+
+        $('.div-comment-most-outer').on('click', '.a-for-replies.down', function(){
+            // alert('hi');
+
+            let expandedCommentID = $(this).attr("id");
+            let result_1 = expandedCommentID.replace("down", "replies");
+            let result_2 = expandedCommentID.replace("down", "up");
+            // alert(result_1);
+            // alert(result_2);
+            // alert(expandedCommentID);
+
+            $('#'+result_1).css("display","grid");
+            $(this).css("display","none");
+            $('#'+result_2).css("display","block");
+        });
+
+        $('.div-comment-most-outer').on('click', '.a-for-replies.up', function(){
+            // alert('hi 2');
+
+            let closedCommentID = $(this).attr("id");
+            let result_1 = closedCommentID.replace("up", "replies");
+            let result_2 = closedCommentID.replace("up", "down");
+            // alert(result_1);
+            // alert(result_2);
+            // alert(closedCommentID);
+
+            $('#'+result_1).css("display","none");
+            $(this).css("display","none");
+            $('#'+result_2).css("display","block");
+        });
+
+        function add_reply_2() {
+            $('.btn.add-reply').off('click').on('click', function(){
+                // alert("hi 6");
+                $.ajax({
+                    headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                    url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                    data: {
+                        'newReply': $('#new-reply').val(),
+                        'repliedParentID': $('.p-repliedParentID').text(), /* Parent comment ID (available for both repliedTo Parent or Child) */
+                        'repliedChildID': $('.p-repliedChildID').text(), /* Child comment ID (repliedTo Parent: 0, repliedTo Child: available) */
+                        'repliedTo': $('.p-repliedTo').text(),
+                        'requestType': 'addReply_2'
+                    },
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(result){
+                        // alert("addReply_2: success");
+                        $('.div-count').text(result.commentCount + ' komen');
+
+                        $.ajax({
+                            headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                            url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                            data: {
+                                'repliedParentID': $('.p-repliedParentID').text(), /* Parent comment ID (available for both repliedTo Parent or Child) */
+                                'repliedChildID': $('.p-repliedChildID').text(), /* Child comment ID (repliedTo Parent: 0, repliedTo Child: available) */
+                                'repliedTo': $('.p-repliedTo').text(),
+                                'requestType': 'addReply_3'
+                            },
+                            type: 'POST',
+                            success: function(result){
+                                // alert("addReply_3: success");
+                                $('.div-bg-modal-1').css("display","none");
+                                $('.div-comment-most-outer').html(result);
+
+                                let expandedCommentID = "";
+
+                                /* expand the replied comment/reply's parent box first */
+                                if($('.p-repliedTo').text() == 'Parent'){
+                                    expandedCommentID = 'down-' + $('.p-repliedParentID').text(); /* Parent comment ID (available for both repliedTo Parent or Child) */
+                                }
+                                else if($('.p-repliedTo').text() == 'Child'){
+                                    expandedCommentID = 'down-' + $('#p-currParentID-' + $('.p-repliedChildID').text()).attr("class"); /* Child comment's parent comment ID */
+                                }
+                                
+                                let result_1 = expandedCommentID.replace("down", "replies"); /* reply box to display */
+                                let result_2 = expandedCommentID.replace("down", "up"); /* arrow replies to display */
+                                // alert(result_1);
+                                // alert(result_2);
+                                // alert(expandedCommentID);
+
+                                $('#'+result_1).css("display","grid");
+                                $('#'+expandedCommentID).css("display","none");
+                                $('#'+result_2).css("display","block");
+
+                                /* get the newly added reply div */
+                                var newReplyID = "div-replies-inner-" + document.querySelector('.p-newCommentID').innerText;
+                                // alert(newReplyID);
+                                var divNewReplyInner = document.getElementById(newReplyID);
+                                divNewReplyInner.scrollIntoView();
+                            },
+                            error: function(result){
+                                // alert("addReply_3: error");
+                            }   
+                        })
+                    },
+                    error: function(result){
+                        // alert("addReply_2: error");
+                    }
+                })
+            });
+        }
+
+        $('.btn.cancel-reply').off('click').on('click', function(){
+                // alert("hi 7");
+                $('.div-bg-modal-1').css("display","none");
+        });
+
+        function add_reply_1(repliedParentID, repliedChildID, repliedTo) {
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'blog:view-post' user_type user_id post_id %}",
+                data: {
+                    'repliedParentID': repliedParentID,
+                    'repliedChildID': repliedChildID,
+                    'repliedTo': repliedTo,
+                    'requestType': 'addReply_1'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    // alert("addReply_1: success");
+                    $('.div-modal-header').text("Balas kepada " + result.repliedUsername);
+                    $('.p-repliedParentID').text(result.repliedParentID); /* Parent comment ID (available for both repliedTo Parent or Child) */
+                    $('.p-repliedChildID').text(result.repliedChildID); /* Child comment ID (repliedTo Parent: 0, repliedTo Child: available) */
+                    $('.p-repliedTo').text(result.repliedTo);
+                    $('.div-reply-details').text(result.repliedText);
+                    var newPlaceholder = 'Balas kepada @' + result.repliedUsername + '...';
+                    $('#new-reply').attr("placeholder", newPlaceholder);
+
+                    $('.div-bg-modal-1').css("display","flex");
+                    add_reply_2();
+                },
+                error: function(result){
+                    // alert("addReply_1: error");
+                }
+            });
+        }
+
+        $('.div-comment-most-outer').on('click', '.btn.parent-reply', function(){
+            // alert("hi 3");
+            var repliedParentID = $(this).attr("value");
+            var repliedChildID = 0;
+            var repliedTo = 'Parent';
+            add_reply_1(repliedParentID, repliedChildID, repliedTo);
+        });
+
+        $('.div-comment-most-outer').on('click', '.btn.child-reply', function(){
+            // alert("hi 4");
+            // var repliedParentID = $('.p-currParentID').attr("id");
+            var repliedParentID= "";
+            var repliedChildID = $(this).attr("value");
+            repliedParentID = $('#p-currParentID-' + repliedChildID).attr("class");
+            var repliedTo = 'Child';
+            add_reply_1(repliedParentID, repliedChildID, repliedTo);
         });
     </script>
 {% endblock %}

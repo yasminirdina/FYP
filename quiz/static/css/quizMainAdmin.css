@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(121, 85, 118);
-    border-radius: 50px;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -20,8 +20,8 @@
 /*On mouse-over*/
 .btn:hover{
     background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
     transform: scale(1.03);
 }
@@ -65,8 +65,9 @@
     padding: 10px;
     position: relative;
     font-size: 1.1rem;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     color: black;
+    line-height: normal;
 }
 
 .div-inner .div-grid {
@@ -158,7 +159,8 @@
     flex-direction: row;
     box-sizing: border-box;
     font-size: 3rem;
-    color: rgb(179, 97, 173);
+    /* color: rgb(179, 97, 173); */
+    color: rgb(250, 188, 54);
 }
 
 #TotalQuestionsbyDifficulty .div-data-value{
@@ -174,7 +176,8 @@
 }
 
 #TotalFields .div-data-value .div-data-right, #TotalQuestions  .div-data-value .div-data-right{
-    color: rgb(253, 108, 108);
+    /* color: rgb(253, 108, 108); */
+    color: rgb(250, 127, 56);
 }
 
 .div-data-subtitle{

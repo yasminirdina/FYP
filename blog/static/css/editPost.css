@@ -1,0 +1,191 @@
+/* ul addQuestion tips */
+/* .ul-addQuestion {
+    list-style-position: inside; */
+    /* background-color: darkgoldenrod; */
+/*     padding-left: 0;
+}
+
+.ul-addQuestion-inner {
+    padding-left: 2vw;
+} */
+
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}  
+  
+/*On mouse-over*/
+.btn:hover{
+    background-color: #eee;
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.cancel-for-editPost, .upload-for-editPost {
+    background-color: rgb(250, 127, 56);
+}
+
+.cancel-for-editPost:hover, .upload-for-editPost:hover{
+    background-color: #eee;
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
+}
+
+.upload-for-editPost {
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: 100%;
+}
+
+/* hyperlink path and button 1 */
+.a-main-for-editPost, .a-back-for-editPost {color: rgb(250, 127, 56);}
+
+.a-for-editPost{
+    text-decoration: none;
+    color: inherit;
+}
+
+/* form fields */
+form{
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+    gap: 10px;
+    justify-items: center;
+    box-sizing: border-box;
+}
+
+.title, .category, .new_category, .description, .content, .isDraft {
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    border-radius: 10px;
+    border: 1px solid lightgray;
+    padding: 5px 10px;
+    /* width: fit-content; */
+    box-sizing: border-box;
+}
+
+/* div */
+.div-main-header{
+    /* background-color: darksalmon; */
+    position: relative;
+    margin: 10px auto;
+    width: 90%;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+/* .div-quesTips {
+    font-family: "Poppins";
+    font-size: 16px;
+    text-align: left;
+    padding: 0 1vw;
+    border: 2px solid lightgray;
+    background-color: #eee;
+    border-radius: 5px;
+    width: 90%;
+    box-sizing: border-box;
+} */
+
+.div-outer{
+    display: grid;
+    grid-auto-flow: row;
+    width: 90%;
+    margin: 0 auto;
+    gap: 10px;
+    justify-items: center;
+    box-sizing: border-box;
+}
+
+.div-form-name, .div-form-category-outer, .div-form-new-category, .div-form-desc, .div-form-content, .div-form-category-choice, .div-category-input, .div-form-isDraft, .div-buttons{
+    display: grid;
+    grid-auto-flow: row;
+    width: fit-content;
+    gap: 10px;
+    justify-items: left;
+    align-items: center;
+    text-align: left;
+    font-weight: bold;
+    box-sizing: border-box;
+}
+
+.div-form-isDraft{
+    grid-auto-flow: column;
+    justify-self: left;
+}
+
+.div-form-name, .title, .new_category, .description{
+    width: 100%;
+}
+
+.div-form-category-choice, .div-category-input{
+    /* background-color: burlywood; */
+    gap: 5px;
+    font-weight: normal;
+    grid-auto-flow: column;
+}
+
+.div-form-desc, .div-form-content, .div-form-category-outer, .div-form-category-choice, .div-form-new-category{
+    /* background-color: antiquewhite; */
+    width: 100%;
+}
+
+.div-form-category-choice{
+    /* background-color: lightblue; */
+    justify-content: left;
+    overflow: auto;
+    /* grid-template-columns: repeat(5, auto); */
+}
+
+.div-category-input label{
+    width: fit-content;
+    white-space: nowrap;
+}
+
+.span-category-error, .span-new-category, .span-new-category-error, .span-desc, .span-content{
+    font-size: 12px;
+    font-weight: normal;
+    font-style: italic;
+    line-height: 20px;
+}
+
+.span-category-error{
+    color: rgb(207, 61, 61);
+    display: none;
+}
+
+.span-new-category-error{
+    color: rgb(207, 61, 61);
+}
+
+.div-form-new-category{
+    display: none;
+}
+
+.div-buttons{
+    /* background-color: gray; */
+    justify-items: center;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(2, auto);
+    margin: 10px 0;
+}
+
+.div-space{
+    position: relative;
+    height: 30px;
+    /* background-color: yellowgreen; */
+}

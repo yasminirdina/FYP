@@ -249,7 +249,7 @@
                                 {% if chosenAnswerText == answer.choice_label %}
                                     <div class="choice-container no-hover">
                                         <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
-                                        <div class="choice-prefix" style="background-color: rgb(235, 43, 43);">
+                                        <div class="choice-prefix" style="background-color: rgb(207, 61, 61);">
                                             {% if forloop.counter == 1 %}
                                                 A
                                             {% elif forloop.counter == 2 %}
@@ -260,7 +260,7 @@
                                                 D
                                             {% endif %}
                                         </div>
-                                        <div class="choice-text" style="background-color: rgb(235, 43, 43);">
+                                        <div class="choice-text" style="background-color: rgb(207, 61, 61);">
                                             <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
                                         </div>
                                     </div>
@@ -288,7 +288,7 @@
                         {% else %}
                             <div class="choice-container no-hover">
                                 <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
-                                <div class="choice-prefix" style="background-color: rgb(235, 43, 43);">
+                                <div class="choice-prefix" style="background-color: rgb(207, 61, 61);">
                                     {% if forloop.counter == 1 %}
                                         A
                                     {% elif forloop.counter == 2 %}
@@ -299,7 +299,7 @@
                                         D
                                     {% endif %}
                                 </div>
-                                <div class="choice-text" style="background-color: rgb(235, 43, 43);">
+                                <div class="choice-text" style="background-color: rgb(207, 61, 61);">
                                     <label for="{{ answer.id_for_label }}">
                                         {{ answer.choice_label }}
                                     </label>
@@ -329,7 +329,7 @@
                     {% else %}
                         <div class="choice-container no-hover">
                             <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
-                            <div class="choice-prefix" style="background-color: rgb(235, 43, 43);">
+                            <div class="choice-prefix" style="background-color: rgb(207, 61, 61);">
                                 {% if forloop.counter == 1 %}
                                     A
                                 {% elif forloop.counter == 2 %}
@@ -340,7 +340,7 @@
                                     D
                                 {% endif %}
                             </div>
-                            <div class="choice-text" style="background-color: rgb(235, 43, 43);">
+                            <div class="choice-text" style="background-color: rgb(207, 61, 61);">
                                 <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
                             </div>
                         </div>

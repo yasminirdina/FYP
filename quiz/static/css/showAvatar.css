@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     border-radius: 35px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -15,17 +15,17 @@
   
 /*On mouse-over*/
 .btn:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
     transition: transform 150ms;
     transform: scale(1.03);
 }
   
 .back{
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .back:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
 }
 
 .music {
@@ -42,7 +42,7 @@
 
 .btn2-label{
     border: none;
-    background-color: rgb(245, 118, 59);
+    background-color: rgb(250, 127, 56);
     border-radius: 10px;
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
@@ -51,7 +51,7 @@
     width: 100%;
     height: fit-content;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 0.2vw;
     cursor: unset;
@@ -62,7 +62,7 @@
 
 .btn2-details{
     border: none;
-    background-color: rgb(121, 85, 118);
+    background-color: rgb(250, 188, 54);
     border-radius: 10px;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
@@ -71,7 +71,7 @@
     width: 100%;
     height: fit-content;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     letter-spacing: 0.2vw;
     cursor: unset;
     display: inline-block;
@@ -134,7 +134,8 @@
     align-items: center;
     width: 11vw;
     height: 11vw;
-    background-color: bisque;
+    /* background-color: bisque; */
+    background-color: rgba(250, 207, 207);
     border: solid white;
     border-width: 1vw;
     border-radius: 7vw;
@@ -196,7 +197,7 @@
 
 .div-credit-text p {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-style: italic; 
     text-align: center;
     margin: 10px 0;

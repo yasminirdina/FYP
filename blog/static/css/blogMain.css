@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(121, 85, 118);
+    background-color: rgb(250, 188, 54);
     border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -17,21 +17,21 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    background-color: white;
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .write{
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 127, 56);
 }
 
 .write:hover{
-    background-color: #eee;
-    color: rgb(250, 159, 159);
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+    background-color: white;
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(250, 127, 56, 0.658);
 }
 
 .submit-for-blogMain{
@@ -41,13 +41,26 @@
 .tag{
     pointer-events: none;
     padding: 5px;
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 127, 56);
 }
 
 /* hyperlink style */
 .a-for-blogMain {
     text-decoration: none;
     color: inherit;
+}
+
+.a-for-title{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.a-for-title:hover{
+    color: rgb(250, 127, 56);
+    /* background-color: white; */
+    /* text-shadow: white 1px 0 10px; */
+    text-decoration: underline;
 }
 
 /* div */
@@ -150,7 +163,7 @@ form{
 /* input search */
 #title, #category {
     font-size: 16px;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     border-radius: 5px;
     border: 1px solid lightgray;
     padding: 10px;
@@ -191,8 +204,9 @@ input:focus::placeholder {color: transparent}
     font-weight: normal;
     font-style: italic;
     text-align: justify;
-    color: rgb(235, 43, 43);
+    color: rgb(207, 61, 61);
     display: grid;
+    line-height: 20px;
 }
 
 #span-error-2{
@@ -269,7 +283,7 @@ input:focus::placeholder {color: transparent}
     box-sizing: border-box;
 }
 
-.div-overlay{
+.div-overlay, .div-overlay-default{
     background-color: rgb(0, 0, 0, 0.3);
     position: absolute;
     top: 0;
@@ -279,6 +293,10 @@ input:focus::placeholder {color: transparent}
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+}
+
+.div-overlay-default{
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .div-image, .div-image-default{

@@ -1,8 +1,8 @@
 /* h1 */
 h1 {
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     letter-spacing: 3px;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     text-align: center;
     color: white;
     line-height: normal;
@@ -22,11 +22,11 @@ h1 {
 /* button */
 .btn {
     border: none;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     border-radius: 35px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -38,7 +38,7 @@ h1 {
   
 /*On mouse-over*/
 .btn:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
     transition: transform 150ms;
     transform: scale(1.03);
 }
@@ -49,7 +49,7 @@ h1 {
 }
 
 .next, .next2, .showResult{
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .quit-for-quizPlay, .useHint-for-quizPlay{
@@ -58,11 +58,11 @@ h1 {
 
 .cancelQuit-for-quizPlay, .cancelHint1-for-quizPlay, .cancelHint2-for-quizPlay{
     font-size: 1.1rem;
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .next:hover, .next2:hover, .showResult:hover, .cancelQuit-for-quizPlay:hover, .cancelHint1-for-quizPlay:hover,.cancelHint2-for-quizPlay:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
 }
 
 .music {
@@ -107,7 +107,7 @@ h1 {
     display: grid;
     grid-template-columns: 30% 35% 35%;
     float: right;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     font-weight: bold;
     letter-spacing: 3px;
@@ -139,7 +139,7 @@ h1 {
     justify-content: space-between;
     width: 100%;
     height: fit-content;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     letter-spacing: 3px;
     box-sizing: border-box;
 }
@@ -163,8 +163,9 @@ h1 {
     width: 100%;
     text-align: center;
     font-weight: bold;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     box-sizing: border-box;
+    line-height: normal;
 }
 
 .hud-main-text {
@@ -189,11 +190,11 @@ h1 {
     width: 0%;
     height: 100%;
     border: none;
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .score, .cntHint-wrapper{
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: bold;
 }
 
@@ -203,7 +204,7 @@ h1 {
         text-shadow: none;
     }
     to {
-        text-shadow: 0 0 15px rgb(169, 163, 248), 0 0 15px rgb(169, 163, 248), 0 0 15px rgb(169, 163, 248), 0 0 15px rgb(169, 163, 248);
+        text-shadow: 0 0 15px rgb(121, 85, 118), 0 0 15px rgb(121, 85, 118), 0 0 15px rgb(121, 85, 118), 0 0 15px rgb(121, 85, 118);
     }
 }
 
@@ -223,7 +224,7 @@ h1 {
 
 #progressBarFull {
     height: 100%;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     width: 0%;
 }
 
@@ -286,12 +287,12 @@ h1 {
 }
 
 .choice-prefix {
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 127, 56);
     box-sizing: border-box;
     padding: 1vw;
     color: white;
     font-size: 1.4rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     width: 100%;
@@ -299,13 +300,13 @@ h1 {
 }
 
 .choice-text{
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 127, 56);
     box-sizing: border-box;
     text-align: left;
     padding: 1vw;
     width: 100%;
     font-size: 1.4rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     border-radius: 0 4px 4px 0;
@@ -326,7 +327,7 @@ h1 {
 
 .choice-container input[type="radio"]:checked ~ .choice-prefix, .choice-container input[type="radio"]:checked ~ .choice-text{
     border: 3px solid white;
-    background-color: rgb(253, 108, 108);
+    background-color: rgb(250, 188, 54);
 }
 
 .choice-container input[type="radio"]:checked ~ .choice-prefix {
@@ -378,7 +379,8 @@ h1 {
     position: relative;
     margin: 0 auto;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    line-height: normal;
+    font-family: 'Varela Round', sans-serif;
     color: black;
 }
 
@@ -393,7 +395,7 @@ h1 {
     margin-bottom: 2vw;
     z-index: 1;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     box-sizing: border-box;
     /* background-color: rgb(121, 85, 118); */
@@ -451,11 +453,12 @@ h1 {
     height: 1.5rem;
     border: none;
     border-radius: 15px;
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(231, 189, 228);
 }
 
 /* span */
 .span-title-totalScore{
+    font-size: 20px;
     word-break: normal;
     padding-top: 4px;
     height: 100%;
@@ -463,7 +466,7 @@ h1 {
 }
 
 .span-value-totalScore{
-    font-size: 35px;
+    font-size: 40px;
     padding-top: 4px;
     height: 100%;
     box-sizing: border-box;
@@ -475,7 +478,7 @@ h1 {
     text-transform: uppercase;
     font-size: 0.8rem;
     font-style: italic;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     box-sizing: border-box;
     height: 100%;
     padding: 5px 10px;
@@ -626,7 +629,7 @@ h1 {
 @media screen and (max-width: 450px), (max-height: 450px) {
     @media screen and (max-width: 390px) {
         .div-totalScore {
-            width: 260px;
+            width: 300px;
             grid-template-columns: 35% 38% 27%;
             justify-items: right;
             right: 10px;

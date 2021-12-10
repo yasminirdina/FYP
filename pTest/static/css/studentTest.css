@@ -1,93 +1,180 @@
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(224, 224, 224);
+    border-radius: 50px;
+    /* border: 3px solid orange; */
+}
+
 body {
     color: white;
 }
 
-/* .choice-container{
-    display: flex;
-    margin-bottom: 1rem;
-    width:100%;
-    border-radius: 4px;
-    background: rgb(18, 93, 255);
-    font-size: 2.5rem;
-    min-width: 70rem;
+/* ---------------------------------edit--------------------------------------- */
+.progress-navbar{
+    font-family: 'Varela Round', sans-serif;
+    /* font-weight: 100; */
+    font-size: 2rem;
 }
 
-.choice-container:hover{
-    cursor: pointer;
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(6, 103, 247,0.5);
-    transform: scale(1.02);
-    transform: transfom 100ms;
-} */
+.sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Stay on top */
+    top: 0; /* Stay at the top */
+    left: 0;
+    background-color: #111; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+  
+/* The navigation menu links */
+.sidenav p{
+    font-family: 'Varela Round', sans-serif;
+    font-size: 25px;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+    color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+/* ---------------------endedit---------------------- */
+
+.container-test{
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 4rem 2rem 4rem;
+  }
+
+.row{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 7%;
+}
+
 .choice-container-1{
-    display: flex;
-    margin-bottom: 1rem;
-    width:100%;
-    border-radius: 4px;
-    background: rgb(15, 223, 60);
-    font-size: 2.5rem;
-    min-width: 70rem;
+    background: rgb(192, 129, 13);
+    height: 5rem;
+    border-radius: 30px;
+    margin-left: 5rem;
 }
 
 .choice-container-1:hover{
     cursor: pointer;
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(15, 223, 60,0.5);
-    transform: scale(1.02);
+    transform: scale(1.07);
     transform: transfom 100ms;
 }
 
 .choice-container-2{
-    display: flex;
-    margin-bottom: 1rem;
-    width:100%;
-    border-radius: 4px;
-    background: rgb(255, 34, 18);
-    font-size: 2.5rem;
-    min-width: 70rem;
+    background: rgb(192, 129, 13);
+    height: 5rem;
+    border-radius: 30px;
+    margin-right: 5rem;
 }
 
 .choice-container-2:hover{
     cursor: pointer;
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 34, 18,0.5);
-    transform: scale(1.02);
+    transform: scale(1.07);
     transform: transfom 100ms;
 }
 
-.choice-text {
-    padding: 1rem;
+
+.choice-text{
+    font-family: 'Varela Round', sans-serif;
+    font-size: 1.7rem;
+    font-weight: 100;
+    text-align: center;
+}
+
+.prev-container {
+    background: rgb(66, 109, 189);
+    margin: 2rem 30rem 0 27rem;
+    padding: 0 1rem 0 0;
+    font-size: 1.7rem;
+    border-radius: 100px;
+}
+
+.prev-container:hover{
+    cursor: pointer;
+    transform: scale(1.04);
+    transform: transfom 100ms;
+}
+
+.prev-text {
+    font-family: 'Varela Round', sans-serif;
+    padding: 0.5rem;
     width: 100%;
     text-align: center;
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
-/* kiv */
-/* .correct{
-    background: linear-gradient(32deg, rgba(11, 223, 36) 0%, rgb(41, 232, 111) 100%)
+#quest-section{
+    font-family: 'Varela Round', sans-serif;
+    font-size: 1.7rem;
+    text-align: center;
+    color: white;
 }
 
-.incorrect{
-    background: linear-gradient(32deg, rgba(230, 29, 29, 1) 0%, rgb(224, 11, 11, 1) 100%);
-} */
+#question{
+    margin: 3rem 0rem 3.5rem;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 2.7rem;
+    text-align: center;
+    color: white;
+}
 
 /* Heads of Display */
-#hud{
+/* #hud{
     display: flex;
     justify-content: space-between;
-}
+} */
 
 .hud-prefix {
-    text-align: center;
     font-size: 2rem;
 }
 
 .hud-main-text {
-    text-align: center;
+    font-size: 2rem;
 }
 
+/* #progressText{
+    font-size: 1.3rem;
+} */
+
 #progressBar {
-    width:20rem;
-    height: 3rem;
+    width:10rem;
+    height: 1rem;
     border: 0.2rem solid rgb(223, 60, 11);
-    margin-top: 2rem;
+    margin-top: 1rem;
     border-radius: 50px;
     overflow: hidden;
 }

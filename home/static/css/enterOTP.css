@@ -2,10 +2,10 @@
 .btn {
     border: none;
     background-color: rgb(121, 85, 118);
-    border-radius: 25px;
+    border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -51,7 +51,7 @@ form{
 .OTP{
     background-color: white;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     border-radius: 5px;
     border: 1px solid lightgray;
     padding: 1vw;
@@ -78,7 +78,7 @@ form{
 }
 
 .div-label {
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     text-align: center;
     margin: 0 auto;

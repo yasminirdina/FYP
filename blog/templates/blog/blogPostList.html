@@ -12,120 +12,21 @@
 
 {% block content %}
     <div class="div-buttons-1">
-        <button class="btn all"><a class="a-for-blogPostList" href="{% url 'blog:post-list' user_type user_id %}">Lihat Semua Artikel</a></button>
-        {% if user_type == 'admin' %}
-            <button class="btn write"><a class="a-for-blogPostList" href="">Tulis Artikel</a></button>
-        {% endif %}
+        {% include 'blog/updateDivButtons1.html' %}
     </div>
 
     <!-- for mobile vertical -->
     <div class="div-buttons-2">
-        <button class="btn all"><a class="a-for-blogPostList" href="{% url 'blog:post-list' user_type user_id %}">
-            <i class="fas fa-folder-open"></i>
-        </a></button>
-        {% if user_type == 'admin' %}
-            <button class="btn write"><a class="a-for-blogPostList" href="">
-                <i class="fas fa-plus"></i>
-            </a></button>
-        {% endif %}
+        {% include 'blog/updateDivButtons2.html' %}
     </div>
 
     <div class="div-outer">
         <div class="div-side-navbar">
-            <form type="get" action="." class="form-filter">
+            <form method="POST" action="{% url 'blog:post-list' user_type user_id %}" class="form-filter">
+                {% csrf_token %}
+                {{ form.media.js }}
                 <div class="div-search">
-                    <div class="div-search-box">
-                        Tajuk :
-                        {% if title_text %} <!-- have searched title from blogMain/this page -->
-                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..." value="{{ title_text }}">
-                        {% else %} <!-- have not searched title form blogMain/this page OR cleared search -->
-                            <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..."> 
-                        {% endif %}
-                    </div>
-
-                    <div class="div-dropdown-cat">
-                        Kategori :
-                        <select name="kategori" id="category">
-                            {% for cat in allCategoriesByName %}
-                                {% if cat_selected %} <!-- have filtered category from blogMain/this page -->
-                                    {% if cat_selected == 'Semua' %}
-                                        {% if forloop.counter0 == 0 %}
-                                            <option value="Semua" selected="selected">Semua</option>
-                                        {% endif %}
-
-                                        <option value="{{ cat.name }}">{{ cat.name }}</option>
-                                    {% else %}
-                                        {% if forloop.counter0 == 0 %}
-                                            <option value="Semua">Semua</option>
-                                        {% endif %}
-
-                                        {% if cat.name == cat_selected %}
-                                            <option value="{{ cat.name }}" selected="selected">{{ cat.name }}</option>
-                                        {% else %}
-                                            <option value="{{ cat.name }}">{{ cat.name }}</option>
-                                        {% endif %}
-                                    {% endif %}
-                                {% else %} <!-- cleared search -->
-                                    {% if forloop.counter0 == 0 %}
-                                        <option value="Semua">Semua</option>
-                                    {% endif %}
-                                    <option value="{{ cat.name }}">{{ cat.name }}</option>
-                                {% endif %}
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="div-checkbox-date">
-                        <span>
-                            Tahun
-                            <span class="span-scroll">
-                                (Skrol ke bawah &#128899;)
-                            </span>:
-                        </span>
-                        <span id="span-error-1"></span>
-                        {% for year in allYearList %}
-                            {% if yearSelectedList %} <!-- have checked year from blogMain/this page -->
-                                {% if year in yearSelectedList %}
-                                    <div class="div-input">
-                                        {% if year == '0' %}
-                                            <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
-                                            <label for="select-all">Semua</label>
-                                        {% else %}
-                                            <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" checked="checked" class="checkbox">
-                                            <label for="year[]">{{ year }}</label>
-                                        {% endif %}
-                                    </div>
-                                {% else %}
-                                    <div class="div-input">
-                                        {% if year == '0' %}
-                                            <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}">
-                                            <label for="select-all">Semua</label>
-                                        {% else %}
-                                            <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" class="checkbox">
-                                            <label for="year[]">{{ year }}</label>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% else %}
-                                <div class="div-input"> <!-- clicked "Lihat Semua Artikel" -->
-                                    {% if year == '0' %}
-                                        <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
-                                        <label for="select-all">Semua</label>
-                                    {% else %}
-                                        <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" class="checkbox" checked="checked">
-                                        <label for="year[]">{{ year }}</label>
-                                    {% endif %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-
-                    <span id="span-error-2"></span>
-
-                    <div class="div-form-buttons">
-                        <button class="btn submit-for-blogPostList" type="submit">Cari</button>
-                        <button class="btn clear-for-blogPostList"><a class="a-for-blogPostList" href="{% url 'blog:index' user_type user_id %}">Padam Carian</a></button>
-                    </div>
+                    {% include 'blog/updateFormSidebar.html' %}
                 </div>
             </form>
                 
@@ -141,107 +42,7 @@
 
         <div class="div-result-outer">
             <div class="div-result-inner">
-                <div class="div-title">
-                    Senarai Artikel
-                </div>
-                <div class="div-result-heading">
-                    {% if title_text or cat_selected or yearSelectedList %}
-                        Keputusan carian bagi
-                    {% endif %}
-
-                    {% if title_text %}
-                        {% if cat_selected and yearSelectedList %}
-                            <span>kata kunci tajuk "{{ title_text }}", </span>
-                        {% elif cat_selected or yearSelectedList %}
-                            <span>kata kunci tajuk "{{ title_text }}" dan </span>
-                        {% else %}
-                            <span>kata kunci tajuk "{{ title_text }}":</span>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if cat_selected %}
-                        {% if yearSelectedList %}
-                            <span>kategori "{{ cat_selected }}" dan </span>
-                        {% else %}
-                            <span>kategori "{{ cat_selected }}":</span>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if yearSelectedList %}
-                        <span>tahun </span>
-                        {% if '0' in yearSelectedList %}
-                            <span>"Semua":</span>
-                        {% else %}
-                            {% for year in yearSelectedList %}
-                                {% if forloop.last %}
-                                    <span>{{ year }}:</span>
-                                {% else %}
-                                    <span>{{ year }},</span>
-                                {% endif %}
-                            {% endfor %}
-                        {% endif %}
-                    {% endif %}
-                </div>
-
-                {% if allBlogPostsCount == 0 %}
-                    <div class="div-error">
-                        <span class="p-found">Tiada artikel dijumpai.</span>
-                        <ul>
-                            <li>Pastikan ejaan tajuk anda betul.</li>
-                            <li>Tarikh artikel yang boleh dicari adalah tarikh artikel diterbitkan, dan bukan tarikh suntingan terkini.</li>
-                        </ul>
-                        Jika masih tidak berjaya, sila lihat senarai penuh artikel di
-                        <span><a class="a-allPosts" href="{% url 'blog:post-list' user_type user_id %}">sini.</a></span>
-                    </div>
-                {% else %}
-                    <div class="div-non-error">
-                        <span class="p-found">{{ allBlogPostsCount }} artikel dijumpai.</span>
-                        <div class="div-outer-posts">
-                            {% for post in allBlogPosts %}
-                                <div class="div-inner-posts">
-                                    {% if post.id in postIDswithImageList %}
-                                        {% for image in postIDswithImageList %}
-                                            {% if image.blogPostID_id == post.id %}
-                                                <div class="div-image">
-                                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="div-image-default">
-                                            <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
-                                            <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
-                                        </div>
-                                    {% endif %}
-
-                                    <div class="div-details">
-                                        <div class="div-post-title">
-                                            <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
-                                                {{ post.title|truncatechars:100 }}
-                                            </a>
-                                        </div>
-                                        <div class="div-date-published">
-                                            {{ post.datePublished|date:"d/m/Y" }}
-                                        </div>
-                                        <div class="div-views">
-                                            <i class="fas fa-eye"></i>
-                                            <div class="div-views-text">
-                                                {{ post.noOfViews }}
-                                            </div>
-                                        </div>
-                                        <div class="div-content">
-                                            {{ post.content|truncatechars:200 }}
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-
-                            <p class="p-break" style="display: none;"></p>
-
-                            <div id="nav"></div>
-                        </div>
-                    </div>
-                {% endif %}
+                {% include 'blog\updateContent.html' %}
             </div>
         </div>
 
@@ -283,58 +84,63 @@
 
 {% block js2 %}
     <script type="text/javascript">
-        var select_all = document.getElementById("select-all"); //select all checkbox
-        var checkboxes = document.getElementsByClassName("checkbox");
-        //checkbox items
+        function formSidebarError (){
+            var select_all = document.getElementById("select-all"); //select all checkbox
+            var checkboxes = document.getElementsByClassName("checkbox");
+            //checkbox items
 
-        //select all checkboxes
-        select_all.addEventListener("change", function(e){
-            for (i = 0; i < checkboxes.length; i++) { 
-                checkboxes[i].checked = select_all.checked;
-            }
-
-            if(document.querySelectorAll('.checkbox:checked').length == 0){
-                // alert("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
-                $("#span-error-1").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
-                $("#span-error-2").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
-                select_all.checked = true;
+            // alert("select_all.checked? before: " + select_all.checked.toString()); //Test
+            //select all checkboxes
+            select_all.addEventListener("change", function(e){
+                // alert("select_all.checked? after: " + select_all.checked.toString()); //Test
                 for (i = 0; i < checkboxes.length; i++) { 
-                    checkboxes[i].checked = true;
-                }
-            }
-            else{
-                $("#span-error-1").text("");
-                $("#span-error-2").text("");
-            }
-        });
-
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].addEventListener('change', function(e){ //".checkbox" change 
-                //uncheck "select all", if one of the listed checkbox item is unchecked
-                if(this.checked == false){
-                    select_all.checked = false;
-                    $("#span-error-1").text("");
-                    $("#span-error-2").text("");
-                }
-                //check "select all" if all checkbox items are checked
-                if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
-                    select_all.checked = true;
-                    $("#span-error-1").text("");
-                    $("#span-error-2").text("");
+                    checkboxes[i].checked = select_all.checked;
                 }
 
                 if(document.querySelectorAll('.checkbox:checked').length == 0){
-                    $("#span-error-1").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
-                    $("#span-error-2").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
-                    this.checked = true;
+                    // alert("hi"); //Test
+                    $("#span-error-1").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    $("#span-error-2").text("Membuang tanda '/' pada pilihan 'Semua' akan membatalkan semua pilihan untuk tahun lain. Anda mesti memilih sekurang-kurangnya satu tahun.");
+                    select_all.checked = true;
+                    for (i = 0; i < checkboxes.length; i++) { 
+                        checkboxes[i].checked = true;
+                    }
+                }
+                else{
+                    $("#span-error-1").text("");
+                    $("#span-error-2").text("");
                 }
             });
-        }
 
-        $(document).ready(function () {
-            var rowsShown = 1; /* nanti change to 5 */
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener('change', function(e){ //".checkbox" change 
+                    //uncheck "select all", if one of the listed checkbox item is unchecked
+                    if(this.checked == false){
+                        select_all.checked = false;
+                        $("#span-error-1").text("");
+                        $("#span-error-2").text("");
+                    }
+                    //check "select all" if all checkbox items are checked
+                    if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
+                        select_all.checked = true;
+                        $("#span-error-1").text("");
+                        $("#span-error-2").text("");
+                    }
+
+                    if(document.querySelectorAll('.checkbox:checked').length == 0){
+                        $("#span-error-1").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                        $("#span-error-2").text("Anda mesti memilih sekurang-kurangnya satu tahun.");
+                        this.checked = true;
+                    }
+                });
+            }
+        };
+
+        function pagination(blogPostCount){
+            var rowsShown = 3; /* nanti change to 5 */
             var numLimit = 2; /* nanti change to 3 */
-            var rowsTotal = $('.div-inner-posts').length;
+            var rowsTotal = parseInt(blogPostCount);
+            // alert("rowsTotal: " + rowsTotal.toString()); // Test
             var numPages = rowsTotal / rowsShown;
             for (var i = 0; i < numPages; i++) {
                 var pageNum = i + 1;
@@ -432,6 +238,203 @@
                     }
                 }
             }).find('a.active').trigger('click');
+
+            formSidebarError();
+        };
+
+        pagination($('.p-blogPostCount').text());
+
+        function updateContent(filledTitle, filledCategory, filledYear, filledType){
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'blog:post-list' user_type user_id %}",
+                data: {
+                    'requestType': 'updateContent',
+                    'title_text': filledTitle,
+                    'cat_selected': filledCategory,
+                    'yearSelectedList': filledYear,
+                    'typeSelected': filledType
+                },
+                success: function(result) {
+                    // alert("updateContent: success"); // Test
+                    $('.div-result-inner').html(result);
+
+                    // alert("blogPostCount: " + $('.p-blogPostCount').text()); // Test
+                    pagination($('.p-blogPostCount').text());
+                },
+                error: function(result) {
+                    // alert("updateContent: error"); // Test
+                }
+            })
+        };
+
+        $('.div-buttons-1').on('change', '#post-type', function(){
+            // alert("masuk 1"); // Test
+            var filledTitle_1 = $('#title').val();
+            // alert("filledTitle_1: " + filledTitle_1); // Test
+
+            var filledCategory_1 = $('#category').find('option:selected').val();
+            // alert("filledCategory_1: " + filledCategory_1); // Test
+
+            var filledYear_1 = $('input[name="tahun[]"]:checked').map( function () { 
+                return $(this).val(); 
+            }).get();
+            // alert("filledYear_1: " + filledYear_1.toString()); // Test
+
+            var filledType_1 = $(this).find('option:selected').val();
+            // alert("filledType_1: " + filledType_1); //Test
+                
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'blog:post-list' user_type user_id %}",
+                data: {
+                    'requestType': 'submitFormPostType_1',
+                    'title_text': filledTitle_1,
+                    'cat_selected': filledCategory_1,
+                    'yearSelectedList': filledYear_1,
+                    'typeSelected': filledType_1
+                },
+                success: function(result) {
+                    // alert("submitFormPostType_1: success"); // Test
+                    $('.div-buttons-1').html(result);
+
+                    var filledTitle_upd_1 = $('#title').val();
+                    // alert("filledTitle_upd_1: " + filledTitle_upd_1); // Test
+
+                    var filledCategory_upd_1 = $('#category').find('option:selected').val();
+                    // alert("filledCategory_upd_1: " + filledCategory_upd_1); // Test
+
+                    var filledYear_upd_1 = $('input[name="tahun[]"]:checked').map( function () { 
+                        return $(this).val(); 
+                    }).get();
+                    // alert("filledYear_upd_1: " + filledYear_upd_1.toString()); // Test
+
+                    var filledType_upd_1 = $('#post-type').find('option:selected').val();
+                    // alert("filledType_upd_1: " + filledType_upd_1); //Test
+
+                    updateContent(filledTitle_upd_1, filledCategory_upd_1, filledYear_upd_1, filledType_upd_1);
+                },
+                error: function(result) {
+                    // alert("submitFormPostType_1: error"); // Test
+                }
+            })
+        });
+
+        $('.div-buttons-2').on('change', '#post-type-2', function(){
+            // alert("masuk 2"); // Test
+            var filledTitle_2 = $('#title').val();
+            // alert("filledTitle_2: " + filledTitle_2); // Test
+
+            var filledCategory_2 = $('#category').find('option:selected').val();
+            // alert("filledCategory_2: " + filledCategory_2); // Test
+
+            var filledYear_2 = $('input[name="tahun[]"]:checked').map( function () { 
+                return $(this).val(); 
+            }).get();
+            // alert("filledYear_2: " + filledYear_2.toString()); // Test
+
+            var filledType_2 = $(this).find('option:selected').val();
+            // alert("filledType_2: " + filledType_2); //Test
+                
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'blog:post-list' user_type user_id %}",
+                data: {
+                    'requestType': 'submitFormPostType_2',
+                    'title_text': filledTitle_2,
+                    'cat_selected': filledCategory_2,
+                    'yearSelectedList': filledYear_2,
+                    'typeSelected': filledType_2
+                },
+                success: function(result) {
+                    // alert("submitFormPostType_2: success"); // Test
+                    $('.div-buttons-2').html(result);
+
+                    var filledTitle_upd_2 = $('#title').val();
+                    // alert("filledTitle_upd_2: " + filledTitle_upd_2); // Test
+
+                    var filledCategory_upd_2 = $('#category').find('option:selected').val();
+                    // alert("filledCategory_upd_2: " + filledCategory_upd_2); // Test
+
+                    var filledYear_upd_2 = $('input[name="tahun[]"]:checked').map( function () { 
+                        return $(this).val(); 
+                    }).get();
+                    // alert("filledYear_upd_2: " + filledYear_upd_2.toString()); // Test
+
+                    var filledType_upd_2 = $('#post-type-2').find('option:selected').val();
+                    // alert("filledType_upd_2: " + filledType_upd_2); //Test
+
+                    updateContent(filledTitle_upd_2, filledCategory_upd_2, filledYear_upd_2, filledType_upd_2);
+                },
+                error: function(result) {
+                    // alert("submitFormPostType_2: error"); // Test
+                }
+            })
+        });
+        
+        $('.form-filter').on('click', '.btn.submit-for-blogPostList', function(e){
+            e.preventDefault();
+            // alert('masuk 3'); // Test
+
+            var filledTitle_3 = $('#title').val();
+            // alert("filledTitle_3: " + filledTitle_3); // Test
+
+            var filledCategory_3 = $('#category').find('option:selected').val();
+            // alert("filledCategory_3: " + filledCategory_3); // Test
+
+            var filledYear_3 = $('input[name="tahun[]"]:checked').map( function () { 
+                return $(this).val(); 
+            }).get();
+            // alert("filledYear_3: " + filledYear_3.toString()); // Test
+
+            if($('.div-buttons-1').css('display') == 'grid'){
+                var filledType_3 = $('#post-type').find('option:selected').val();
+            }
+            else if($('.div-buttons-2').css('display') == 'grid'){
+                var filledType_3 = $('#post-type-2').find('option:selected').val();
+            }
+            // alert("filledType_3: " + filledType_3); //Test
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                url: "{% url 'blog:post-list' user_type user_id %}",
+                data: {
+                    'requestType': 'submitFormSidebar',
+                    'title_text': filledTitle_3,
+                    'cat_selected': filledCategory_3,
+                    'yearSelectedList': filledYear_3,
+                    'typeSelected': filledType_3
+                },
+                type: 'POST',
+                success: function(result) {
+                    // alert("submitFormSidebar: success"); // Test
+                    $('.div-search').html(result);
+
+                    var filledTitle_upd_3 = $('#title').val();
+                    // alert("filledTitle_upd_3: " + filledTitle_upd_3); // Test
+
+                    var filledCategory_upd_3 = $('#category').find('option:selected').val();
+                    // alert("filledCategory_upd_3: " + filledCategory_upd_3); // Test
+
+                    var filledYear_upd_3 = $('input[name="tahun[]"]:checked').map( function () { 
+                        return $(this).val(); 
+                    }).get();
+                    // alert("filledYear_upd_3: " + filledYear_upd_3.toString()); // Test
+
+                    if($('.div-buttons-1').css('display') == 'grid'){
+                        var filledType_upd_3 = $('#post-type').find('option:selected').val();
+                    }
+                    else if($('.div-buttons-2').css('display') == 'grid'){
+                        var filledType_upd_3 = $('#post-type-2').find('option:selected').val();
+                    }
+                    // alert("filledType_upd_3: " + filledType_upd_3); //Test
+
+                    updateContent(filledTitle_upd_3, filledCategory_upd_3, filledYear_upd_3, filledType_upd_3);
+                },
+                error: function(result) {
+                    // alert("submitFormSidebar: error"); // Test
+                }
+            })
         });
     </script>
 {% endblock %}

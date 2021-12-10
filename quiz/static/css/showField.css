@@ -1,11 +1,11 @@
 /* button 1 - outside table */
 .btn {
     border: none;
-    background-color: rgb(121, 85, 118);
-    border-radius: 50px;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -18,8 +18,8 @@
 /*On mouse-over*/
 .btn:hover{
     background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
     transform: scale(1.03);
 }
@@ -30,17 +30,17 @@
 }
 
 .clear-for-showField, .main-for-showField{
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 127, 56);
 }
 
 .clear-for-showField:hover, .main-for-showField:hover{
     background-color: #eee;
-    color: rgb(250, 159, 159);
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(250, 127, 56, 0.658);
 }
 
 /* hyperlink path and button 1 */
-.a-main1-for-showField {color: rgb(121, 85, 118);}
+.a-main1-for-showField {color: rgb(250, 127, 56);}
 
 .a-for-showField{
     text-decoration: none;
@@ -54,7 +54,7 @@
     border-radius: 5px;
     padding: 5px 10px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -102,7 +102,7 @@
 /* input search */
 #search_box {
     font-size: 16px;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     border-radius: 25px;
     border: 1px solid lightgray;
     padding: 10px;
@@ -135,7 +135,7 @@ input:focus::placeholder {color: transparent}
 }
 
 .div-fieldTips {
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     text-align: center;
     padding: 1vw;
@@ -192,7 +192,7 @@ input:focus::placeholder {color: transparent}
 
 .div-credit-text p {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-style: italic; 
     text-align: center;
     color: black;
@@ -274,7 +274,7 @@ th {
     padding: 20px;
     text-align: center;
     letter-spacing: 1px;
-    background-color: palevioletred;
+    background-color: rgb(250, 127, 56);
     color: white;
 }
   

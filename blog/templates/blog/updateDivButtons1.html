@@ -1,0 +1,31 @@
+{% if user_type == 'admin' %}
+    <form type="get" action="." class="form-post-filter">
+        <select name="jenis-artikel" id="post-type">
+            {% if typeSelected %}
+                {% if typeSelected == 'Semua Artikel' %}
+                    <option value="Semua Artikel" selected="selected">Semua Artikel</option>
+                    <option value="Telah Diterbitkan">Telah Diterbitkan</option>
+                    <option value="Draf">Draf</option>
+                {% elif typeSelected == 'Telah Diterbitkan' %}
+                    <option value="Semua Artikel">Semua Artikel</option>
+                    <option value="Telah Diterbitkan" selected="selected">Telah Diterbitkan</option>
+                    <option value="Draf">Draf</option>
+                {% elif typeSelected == 'Draf' %}
+                    <option value="Semua Artikel">Semua Artikel</option>
+                    <option value="Telah Diterbitkan">Telah Diterbitkan</option>
+                    <option value="Draf" selected="selected">Draf</option>
+                {% endif %}
+            {% else %}
+                <option value="Semua Artikel">Semua Artikel</option>
+                <option value="Telah Diterbitkan">Telah Diterbitkan</option>
+                <option value="Draf">Draf</option>
+            {% endif %}
+        </select>
+    </form>
+{% endif %}
+
+<button class="btn all"><a class="a-for-blogPostList" href="{% url 'blog:post-list' user_type user_id %}">Lihat Semua Artikel</a></button>
+
+{% if user_type == 'admin' %}
+    <button class="btn write"><a class="a-for-blogPostList" href="{% url 'blog:add-post' user_type user_id %}">Tulis Artikel</a></button>
+{% endif %}

@@ -9,14 +9,18 @@
     <title>Future Cruise: Halaman Utama</title>
     <style>
         body {
-            background-image: url("{% static 'images/homepage/2-space.jpg' %}");
+            /* background-image: url("{% static 'images/homepage/2-space.jpg' %}"); */
+            background-image: url("{% static 'images/homepage/4-yellow_bg_2.png' %}");
             background-repeat: no-repeat;
             background-attachment: fixed;
-            background-size: 100% 100%;
+            background-size: 100%;
+            /* image-rendering: pixelated; */
+            /* background-size: cover; */
+            background-position: 50% 50%;
         }
     </style>
 
-    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
 
     {% block styles %}{% endblock %}
 </head>

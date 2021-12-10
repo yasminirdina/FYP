@@ -163,7 +163,7 @@
                                     {% for answer in allGameQuesAns %}
                                         {% if answer.questionID_id == question.id %}
                                             {% if answer.isCorrect == True %}
-                                                <li style="font-weight: bold; background-color: peachpuff; border-radius: 5px;">{{ answer.answerText|truncatechars:20 }}</li>
+                                                <li style="font-weight: bold; background-color: rgb(250, 188, 54); border-radius: 5px;">{{ answer.answerText|truncatechars:20 }}</li>
                                             {% else %}
                                                 <li>{{ answer.answerText|truncatechars:20 }}</li>
                                             {% endif %}

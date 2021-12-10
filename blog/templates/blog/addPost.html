@@ -1,0 +1,229 @@
+{% extends "blog/base.html" %}
+{% load static %}
+{% load blog_tags %}
+
+{% block title %}
+    <title>Future Cruise: Blog Pengajian Tinggi dan Kerjaya | Tulis Artikel</title>
+{% endblock %}
+
+{% block styles %}
+    <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'js/tinymce/prism/prism.css' %}">
+    <script src="{% static 'js/tinymce/prism/prism.js' %}"></script>
+    <!-- <pre class="language-markup"><code>...</code></pre> -->
+    <link rel="stylesheet" href="{% static 'css/addPost.css' %}">
+    {{ form.media }}
+{% endblock %}
+
+{% block header %}
+    <div class="div-main-header">
+        <h1>Tetapan Kandungan Blog</h1>
+        <h2>Artikel Baharu</h2>
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="div-outer">
+        <form action="{% url 'blog:add-post' user_type user_id %}" method="post" class="AddPostForm">
+            {% csrf_token %}
+    
+            <div class="div-form-name">
+                Tajuk: 
+                {{ form.title }}
+            </div>
+    
+            <div class="div-form-category-outer">
+                Kategori:
+    
+                <span class="span-category-error"></span>
+    
+                <div class="div-form-category-choice">
+                    {% for category in form.category %}
+                        <div class="div-category-input">
+                            {% if filledCategoriesIDList %}
+                                {% if category.data.value in filledCategoriesIDList %}
+                                    <input type="checkbox" id="{{ category.id_for_label }}" name="category" value="{{ category.data.value }}" checked="checked">
+                                {% else %}
+                                    <input type="checkbox" id="{{ category.id_for_label }}" name="category" value="{{ category.data.value }}">
+                                {% endif %}
+                            {% else %}
+                                <input type="checkbox" id="{{ category.id_for_label }}" name="category" value="{{ category.data.value }}">
+                            {% endif %}
+
+                            <label for="{{ category.id_for_label }}">
+                                {{ category.choice_label }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+    
+            <div class="div-form-new-category">
+                Kategori Baharu:
+
+                <span class="span-new-category">
+                    <span style="font-weight: bold;">
+                        Arahan:
+                    </span>
+                    <span>
+                        Untuk menambah lebih daripada satu kategori, sila pisahkan setiap kategori dengan tanda koma dan jarak (Contoh: Biasiswa, Kerjaya, Perakaunan).
+                        Anda hanya dibenarkan untuk menambah maksimum 
+                    </span>
+                    <span class="span-new-category-available"></span>
+                    <span>
+                        kategori baharu.
+                    </span>
+                </span>
+
+                {% if errorNewCat %}
+                    <span class="span-new-category-error">{{ errorNewCat }}</span>
+                {% endif %}
+
+                {{ form.new_category }}
+            </div>
+    
+            <div class="div-form-desc">
+                Rumusan Ringkas:
+
+                <span class="span-desc">
+                    Ringkasan artikel untuk dipaparkan di dalam senarai artikel.
+                </span>
+
+                {{ form.description }}
+            </div>
+    
+            <div class="div-form-content">
+                Kandungan:
+                
+                <span class="span-content">
+                    Isi kandungan penuh artikel. Format adalah bebas. Sila maklum bahawa semua menu di dalam editor di bawah adalah dalam Bahasa Inggeris.
+                </span>
+
+                <textarea class="content" name="content" id="{{ form.content.id_for_label }}"></textarea>
+            </div>
+    
+            <div class="div-form-isDraft">
+                Simpan sebagai draf
+                {{ form.isDraft }}
+            </div>
+    
+            <div class="div-buttons">
+                <button class="btn" type="submit">Simpan</button>
+                <button class="btn cancel-for-addPost">
+                    <a class="a-for-addPost" href="{% url 'blog:post-list' user_type user_id %}">Batal</a>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="div-space"></div>
+{% endblock %}
+
+{% block js2 %}
+    <script>
+        tinyMCE.init({
+            selector: "#id_content",  // change this value according to your HTML
+            height: "80vh",
+            width: "100%",
+            plugins: "advlist autolink lists link image charmap print preview searchreplace visualblocks code fullscreen media table paste code help wordcount autosave codesample emoticons hr",
+            toolbar: "undo redo searchreplace | restoredraft | bold italic underline strikethrough | fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | charmap emoticons hr | fullscreen preview print | insertfile image media link codesample code",
+            advlist_bullet_styles: 'disc',
+            autosave_retention: '60m',
+            // image_prepend_url: 'https://www.futurecruise.com/blog/gambar',
+            image_uploadtab: true,
+            images_upload_url: '/blog/upload_image/'
+        });
+
+        var checkedCategories_for_error = $('input[name="category"]:checked').map(function () { 
+            return $(this).val(); 
+        }).get();
+
+        if($.inArray("1", checkedCategories_for_error) != -1){
+            $('.span-new-category-available').text((3-checkedCategories_for_error.length+1).toString());
+            $('.div-form-new-category').css("display", "grid");
+        }
+
+        $('input[name="category"]').on('click', function(){
+            // alert("masuk click category");
+
+            var checkedCategories = $('input[name="category"]:checked').map(function () { 
+                return $(this).val(); 
+            }).get();
+
+            // alert("checkCategories: " + checkedCategories.toString());
+
+            if($(this).prop('checked') == true){
+                var currentCheckCategoryValue = $(this).val();
+                // alert("current checked category: " + currentCheckCategoryValue);
+                var currentCheckCategoryID = $(this).attr("id");
+                // alert("current checked category ID: " + currentCheckCategoryID);
+            }
+            else{
+                var currentUncheckedCategoryValue = $(this).val();
+                // alert("current unchecked category: " + currentUncheckedCategoryValue);
+                var currentUncheckedCategoryID = $(this).attr("id");
+                // alert("current unchecked category ID: " + currentUncheckedCategoryID);
+
+                if(currentUncheckedCategoryValue == 1){
+                    $('.div-form-new-category').css("display", "none");
+                }
+                else{
+                    if($('.div-form-new-category').css("display") == "grid"){
+                        // alert("[3 uncheck category selain others]");
+                        $('.span-new-category-available').text((3-checkedCategories.length+1).toString());
+                    }
+                }
+            }
+
+            if(checkedCategories.length > 3) {
+                // alert("checkedCategories length: " + checkedCategories.length.toString());
+
+                $('.span-category-error').css("display", "block");
+                $('.span-category-error').text("Bilangan maksimum kategori yang boleh dipilih adalah 3.");
+
+                // alert("(current) category " + currentCheckCategoryID + " checked?: " + $('#' + currentCheckCategoryID).prop('checked').toString());
+                $('#' + currentCheckCategoryID).prop('checked', false);
+                $('#' + currentCheckCategoryID).change();
+                // alert("(after) category " + currentCheckCategoryID + " checked?: " + $('#' + currentCheckCategoryID).prop('checked').toString());
+
+                var allUncheckedCategoriesID = $('input[name="category"]:not(:checked)').map(function () { 
+                    return $(this).attr("id"); 
+                }).get();
+
+                for (i = 0; i < allUncheckedCategoriesID.length; i++) {
+                    $('#' + allUncheckedCategoriesID[i]).prop("disabled", true);
+                }
+            }
+            else{
+                // alert("checkedCategories length: " + checkedCategories.length.toString());
+
+                $('.span-category-error').text("");
+                $('.span-category-error').css("display", "none");
+
+                if(currentCheckCategoryValue){
+                    if(currentCheckCategoryValue == 1){
+                        $('.span-new-category-available').text((3-checkedCategories.length+1).toString());
+                        $('.div-form-new-category').css("display", "grid");
+                    }
+                    else{
+                        if($('.div-form-new-category').css("display") == "grid"){
+                            $('.span-new-category-available').text((3-checkedCategories.length+1).toString());
+                        }
+                    }
+                }
+
+                var allUncheckedCategoriesID = $('input[name="category"]:not(:checked)').map(function () { 
+                    return $(this).attr("id"); 
+                }).get();
+
+                // alert("unchecked categories ID: " + allUncheckedCategoriesID.toString());
+
+                for (i = 0; i < allUncheckedCategoriesID.length; i++) {
+                    if($('#' + allUncheckedCategoriesID[i]).prop("disabled") == true){
+                        $('#' + allUncheckedCategoriesID[i]).prop("disabled", false);
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% load static %}
+
+<p class="p-newCommentID" style="display: none;">{{ newCommentID }}</p> <!-- Parent or child comment -->
+
+{% if allCurrentPostComments %}
+    <div class="div-comment-outer">
+        {% for comment in allCurrentPostComments %}
+            {% if comment.parentCommentID_id == null %}
+                <div class="div-comment-inner" id="div-comment-inner-{{ comment.id }}">
+                    <div class="div-user">
+                        {% if comment.userID.ID == 'A1' %}
+                            <img class="img-user-comment" src="{% static 'images/avatar/1-default_avatar_admin.png' %}">
+                        {% elif 'P' in comment.userID.ID %}
+                            <img class="img-user-comment" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                        {% elif 'T' in comment.userID.ID %}
+                            <img class="img-user-comment" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                        {% else %} <!-- student -->
+                            {% for player in allPlayerRecords %}
+                                {% if player.ID_id == comment.userID.ID %}
+                                    <img class="img-user-comment" src="{% static 'images/quiz_avatar/' %}{{ player.avatarID.imageURL }}">
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+
+                        <div class="div-user-details">
+                            <div class="div-username-type">
+                                {{ comment.userID.username }}
+                                {% if comment.userID.ID == 'A1' %}
+                                    <button class="btn admin">Admin</button>
+                                {% elif 'S' in comment.userID.ID %}
+                                    <button class="btn student">Pelajar</button>
+                                {% elif 'P' in comment.userID.ID %}
+                                    <button class="btn parents">Penjaga</button>
+                                {% elif 'T' in comment.userID.ID %}
+                                    <button class="btn teacher">Guru</button>
+                                {% endif %}
+                            </div>
+                            <div class="div-comment-datetime">
+                                <div class="div-comment-date">
+                                    {{ comment.dateTimeComment|date:"d/m/Y" }}, 
+                                </div>
+                                <div class="div-comment-date">
+                                    {{ comment.dateTimeComment|date:"h:i A" }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="div-body">
+                        <div class="div-body-text">
+                            {{ comment.text }}
+                        </div>
+                        <div class="div-body-buttons">
+                            <button class="btn parent-reply" value="{{ comment.id }}">Balas</button>
+
+                            {% if user_id == 'A1' %}
+                                <button class="btn delete-comment" value="{{ comment.id }}">Buang</button>
+                            {% endif %}
+
+                            {% if comment.id in parentCmtIDsWithReplies %}
+                                <a class="a-for-replies down" id="down-{{ comment.id }}">
+                                    &#128899; Lihat respons
+                                </a>
+                                <a class="a-for-replies up" id="up-{{ comment.id }}">
+                                    &#128897; Tutup respons
+                                </a>
+                            {% endif %}
+                        </div>
+
+                        {% if comment.id in parentCmtIDsWithReplies %}
+                            <div class="div-replies-outer" id="replies-{{ comment.id }}">
+                                {% for reply in allCurrentPostComments %}
+                                    {% if reply.parentCommentID_id == comment.id %}
+                                        <div class="div-replies-inner" id="div-replies-inner-{{ reply.id }}">
+                                            <p style="display: none;" id="p-currParentID-{{ reply.id }}" class="{{ comment.id }}" ></p> <!-- Current parent comment ID -->
+                                            
+                                            <div class="div-user">
+                                                {% if reply.userID.ID == 'A1' %}
+                                                    <img class="img-user-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                                                {% elif 'P' in reply.userID.ID %}
+                                                    <!-- change with parent icon (in dashboard/static/images/user_avatar/default_parent.png) -->
+                                                    <img class="img-user-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                                                {% elif 'T' in reply.userID.ID %}
+                                                    <!-- change with teacher icon (in dashboard/static/images/user_avatar/default_teacher.png) -->
+                                                    <img class="img-user-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                                                {% else %} <!-- student -->
+                                                    {% for player in allPlayerRecords %}
+                                                        {% if player.ID_id == reply.userID.ID %}
+                                                            <img class="img-user-reply" src="{% static 'images/quiz_avatar/' %}{{ player.avatarID.imageURL }}">
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                <div class="div-user-details">
+                                                    <div class="div-username-type">
+                                                        {{ reply.userID.username }}
+                                                        {% if reply.userID.ID == 'A1' %}
+                                                            <button class="btn admin">Admin</button>
+                                                        {% elif 'S' in reply.userID.ID %}
+                                                            <button class="btn student">Pelajar</button>
+                                                        {% elif 'P' in reply.userID.ID %}
+                                                            <button class="btn parents">Penjaga</button>
+                                                        {% elif 'T' in reply.userID.ID %}
+                                                            <button class="btn teacher">Guru</button>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    <div class="div-comment-datetime">
+                                                        <div class="div-comment-date">
+                                                            {{ reply.dateTimeComment|date:"d/m/Y" }}
+                                                        </div>
+                                                        <div class="div-comment-date">
+                                                            {{ reply.dateTimeComment|date:"h:i A" }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+    
+                                            <div class="div-body">
+                                                <div class="div-body-text">
+                                                    {% if reply.childCommentID %}
+                                                        <span class="span-replied-child-username">@{{ reply.childCommentID.userID.username }}</span>
+                                                    {% endif %}
+
+                                                    {{ reply.text }}
+                                                </div>
+                                                <div class="div-body-buttons">
+                                                    <button class="btn child-reply" value="{{ reply.id }}">Balas</button>
+                                                    {% if user_id == 'A1' %}
+                                                        <button class="btn delete-reply" value="{{ reply.id }}">Buang</button>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}

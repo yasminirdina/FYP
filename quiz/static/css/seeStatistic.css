@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     border-radius: 50px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -17,17 +17,17 @@
   
 /*On mouse-over*/
 .btn:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .main, .quit{
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .main:hover, .quit:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
 }
 
 .music {
@@ -46,11 +46,11 @@
 
 .btn2{
     border: none;
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(88, 126, 196);
     border-radius: 35px 35px 0 0;
     padding: 1vw 2vw;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -65,7 +65,7 @@
     border: solid white;
     /* top | horizontal | bottom */
     border-width: 3px 3px 0;
-    background-color: rgb(253, 108, 108);
+    background-color: rgb(103, 149, 235);
 }
 
 /* hyperlink */
@@ -81,7 +81,7 @@
     display: grid;
     grid-template-columns: 30% 35% 35%;
     float: right;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     font-weight: bold;
     letter-spacing: 3px;
@@ -129,7 +129,8 @@
     padding: 1vw;
     position: relative;
     font-size: 1.1rem;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
+    line-height: normal;
     color: black;
 }
 
@@ -158,7 +159,7 @@
 }
 
 .div-game-perf .div-grid > article {
-    height: 180px;
+    height: 160px;
 }
 
 .div-game-perf .div-grid .div-chart-container > canvas {
@@ -222,23 +223,26 @@
     /* background-color: rgb(250, 159, 159); */
     position: relative;
     padding-top: 20px;
-    height: 60%;
+    height: 70%;
     vertical-align: bottom;
     box-sizing: border-box;
     font-size: 3rem;
-    color: rgb(179, 97, 173);
+    /* color: rgb(86, 103, 136); */
+    /* color: rgb(179, 97, 173); */
+    color: rgb(121, 85, 118);
 }
 
 #LastPlayedTime .div-data-value,
 #AvgSessionTimeTaken .div-data-value{
     padding: 0 10px;
     word-break: break-word;
+    height: 60%;
 }
 
 .div-data-subtitle{
     /* background-color: rgb(208, 122, 248); */
     position: relative;
-    height: 40%;
+    height: 30%;
     box-sizing: border-box;
     color: black;
     font-size: 1.1rem;
@@ -247,6 +251,7 @@
 #LastPlayedTime .div-data-subtitle,
 #AvgSessionTimeTaken .div-data-subtitle{
     display: none;
+    height: 40%;
 }
 
 .div-career-rec #podium-box{
@@ -280,7 +285,7 @@
     border-radius: 60px;
     width: 70%;
     align-self: center;
-    background-color: rgb(211, 162, 206);
+    background-color: rgb(231, 189, 228);
     text-decoration: underline;
 }
 
@@ -322,7 +327,7 @@
 }
 
 .more-info:hover{
-    color: rgb(211, 162, 206);
+    color: rgb(231, 189, 228);
 }
 
 .img-field{
@@ -332,7 +337,7 @@
 
 .div-ind-step{
     color: white;
-    font-size: 3rem;
+    font-size: 4.5rem;
     background-color: rgb(121, 85, 118);
     text-align: center;
 }
@@ -380,7 +385,7 @@
 
 .div-credit-text p {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-style: italic; 
     text-align: center;
     margin: 10px 0;
@@ -428,6 +433,7 @@
 
 /* span */
 .span-title-totalScore{
+    font-size: 20px;
     word-break: normal;
     padding-top: 4px;
     height: 100%;
@@ -435,7 +441,7 @@
 }
 
 .span-value-totalScore{
-    font-size: 35px;
+    font-size: 40px;
     padding-top: 4px;
     height: 100%;
     box-sizing: border-box;
@@ -480,7 +486,7 @@
     .div-game-perf .div-grid > article:nth-child(2),
     .div-game-perf .div-grid > article:nth-child(3),
     .div-game-perf .div-grid > article:nth-child(4){
-        height: 180px;
+        height: 160px;
     }
 
     .div-game-perf .div-grid > article:nth-child(1),
@@ -614,7 +620,7 @@
     .div-game-perf .div-grid > article:nth-child(2),
     .div-game-perf .div-grid > article:nth-child(3),
     .div-game-perf .div-grid > article:nth-child(4){
-        height: 150px;
+        height: 140px;
     }
 
     .div-game-perf .div-grid > div:nth-child(7),
@@ -625,12 +631,12 @@
     }
 
     .div-data-value{
-        height: 50%;
+        height: 60%;
         font-size: 1.5rem;
     }
 
     .div-data-subtitle{
-        height: 50%;
+        height: 40%;
     }
 
     #AvgSessionScore .div-data-value, #TotalNoOfPlays .div-data-value, #AvgSessionHintsUsed .div-data-value{
@@ -652,6 +658,11 @@
     #LastPlayedTime .div-data-value, #AvgSessionTimeTaken .div-data-value{
         font-size: 1.5rem;
         line-height: 2rem;
+        height: 70%;
+    }
+
+    #LastPlayedTime .div-data-subtitle, #AvgSessionTimeTaken .div-data-subtitle{
+        height: 30%;
     }
 
     .back, .download, .main {
@@ -667,7 +678,7 @@
 
 @media screen and (max-width: 390px) {
     .div-totalScore {
-        width: 260px;
+        width: 300px;
         grid-template-columns: 35% 38% 27%;
         justify-items: right;
         right: 10px;
@@ -701,6 +712,14 @@
 
     .div-game-perf .div-grid{
         grid-template-columns: repeat(4, 22.5%);
+    }
+
+    #LastPlayedTime, #AvgSessionTimeTaken{
+        height: 200px;
+    }
+
+    #AvgSessionTimeTaken .div-data-value, #AvgSessionTimeTaken .div-data-subtitle{
+        height: 50%;
     }
 
     #AvgSessionHintsUsed .div-data-value{

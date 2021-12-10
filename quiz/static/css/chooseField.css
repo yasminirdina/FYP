@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     border-radius: 35px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -16,17 +16,17 @@
   
 /*On mouse-over*/
 .btn:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .back-for-chooseField{
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .back-for-chooseField:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
 }
 
 .cancel-for-chooseField{
@@ -105,7 +105,7 @@
     height: 100%;
     border-radius: 10px;
     border: 3px solid #ffffff;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(121, 85, 118);
     align-items: center;
     justify-items: center;
     padding: 0.5vw;
@@ -115,7 +115,7 @@
     /* background-color: darkseagreen; */
     position: relative;
     width: 100%;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 1.1rem;
     font-weight: normal;
     word-break: break-all;
@@ -136,14 +136,14 @@
 }
 
 .div-choice input[type="radio"]:hover:not(:checked) ~ .div-img-label{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .div-choice input[type="radio"]:checked ~ .div-img-label{
     border: 3px solid black;
-    background-color: rgb(245, 118, 59);
+    background-color: rgb(250, 188, 54);
 }
 
 .div-coming-soon{
@@ -156,7 +156,7 @@
     left: 0;
     padding: 1vw 0;
     background-color: rgb(90, 90, 90);
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 1.1rem;
     font-weight: bolder;
 }
@@ -203,7 +203,7 @@
     position: relative;
     margin: 0 auto;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     color: black;
     box-sizing: border-box;
 }
@@ -215,7 +215,7 @@
     margin-bottom: 2vw;
     z-index: 1;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     box-sizing: border-box;
     /* background-color: rgb(121, 85, 118); */
@@ -245,7 +245,7 @@
     min-height: 1.5rem;
     border: none;
     border-radius: 15px;
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(231, 189, 228);
 }
 
 .div-cancel-button{
@@ -264,6 +264,7 @@
 
 /* p */
 .p-scroll{
+    color: black;
     position: relative;
     font-style: italic;
     font-size: 12px;
@@ -272,6 +273,7 @@
     width: 60%;
     text-align: right;
     display: block;
+    line-height: normal;
 }
 
 /* Tablet & mobile vertical

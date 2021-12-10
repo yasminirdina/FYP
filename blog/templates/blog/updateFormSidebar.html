@@ -1,0 +1,92 @@
+<div class="div-search-box">
+    Tajuk :
+    {% if title_text %} <!-- have searched title from blogMain/this page -->
+        <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..." value="{{ title_text }}">
+    {% else %} <!-- have not searched title form blogMain/this page OR cleared search -->
+        <input id="title" type="text" name="tajuk" placeholder="Cari Tajuk Artikel..."> 
+    {% endif %}
+</div>
+
+<div class="div-dropdown-cat">
+    Kategori :
+    <select name="kategori" id="category">
+        {% for cat in allCategoriesByName %}
+            {% if cat_selected %} <!-- have filtered category from blogMain/this page -->
+                {% if cat_selected == 'Semua' %}
+                    {% if forloop.counter0 == 0 %}
+                        <option value="Semua" selected="selected">Semua</option>
+                    {% endif %}
+
+                    <option value="{{ cat.name }}">{{ cat.name }}</option>
+                {% else %}
+                    {% if forloop.counter0 == 0 %}
+                        <option value="Semua">Semua</option>
+                    {% endif %}
+
+                    {% if cat.name == cat_selected %}
+                        <option value="{{ cat.name }}" selected="selected">{{ cat.name }}</option>
+                    {% else %}
+                        <option value="{{ cat.name }}">{{ cat.name }}</option>
+                    {% endif %}
+                {% endif %}
+            {% else %} <!-- cleared search -->
+                {% if forloop.counter0 == 0 %}
+                    <option value="Semua">Semua</option>
+                {% endif %}
+                <option value="{{ cat.name }}">{{ cat.name }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</div>
+
+<div class="div-checkbox-date">
+    <span>
+        Tahun
+        <span class="span-scroll">
+            (Skrol ke bawah &#128899;)
+        </span>:
+    </span>
+    <span id="span-error-1"></span>
+    {% for year in allYearList %}
+        {% if yearSelectedList %} <!-- have checked year from blogMain/this page -->
+            {% if year in yearSelectedList %}
+                <div class="div-input">
+                    {% if year == '0' %}
+                        <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
+                        <label for="select-all">Semua</label>
+                    {% else %}
+                        <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" checked="checked" class="checkbox">
+                        <label for="year[]">{{ year }}</label>
+                    {% endif %}
+                </div>
+            {% else %}
+                <div class="div-input">
+                    {% if year == '0' %}
+                        <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}">
+                        <label for="select-all">Semua</label>
+                    {% else %}
+                        <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" class="checkbox">
+                        <label for="year[]">{{ year }}</label>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="div-input"> <!-- clicked "Lihat Semua Artikel" -->
+                {% if year == '0' %}
+                    <input type="checkbox" id="select-all" name="tahun[]" value="{{ year }}" checked="checked">
+                    <label for="select-all">Semua</label>
+                {% else %}
+                    <input type="checkbox" id="year[]" name="tahun[]" value="{{ year }}" class="checkbox" checked="checked">
+                    <label for="year[]">{{ year }}</label>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>
+
+<span id="span-error-2"></span>
+
+<div class="div-form-buttons">
+    <button class="btn submit-for-blogPostList">Cari</button>
+    <button class="btn clear-for-blogPostList"><a class="a-for-blogPostList" href="{% url 'blog:index' user_type user_id %}">Padam Carian</a></button>
+</div>

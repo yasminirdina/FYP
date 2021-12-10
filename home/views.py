@@ -54,11 +54,15 @@ def signUp(request):
 
     def getLatestSpecificUserTypeID(AllUserTypeAInUserIDList):
         length = len(AllUserTypeAInUserIDList)
-        latestID = AllUserTypeAInUserIDList[length-1]
-        latestID_no = ""
-        for i in range(1, len(latestID)):
-            latestID_no += latestID[i]
-        return int(latestID_no)
+        noOnly = []
+
+        for id in AllUserTypeAInUserIDList:
+            number = re.sub('[^0-9]+', '', id)
+            noOnly.append(int(number))
+
+        noOnly.sort()
+        latestID_no = noOnly[length-1]
+        return latestID_no
 
     def checkEmailFormat(email):
         regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'

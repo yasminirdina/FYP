@@ -24,7 +24,7 @@ def search(request, user_type, user_id):
 
     currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
     username = currentUserRecord.username
-    urlTest = 'dashboard:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
     urlBlog = 'blog:index-nonadmin'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'

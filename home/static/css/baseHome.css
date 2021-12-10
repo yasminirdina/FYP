@@ -1,5 +1,29 @@
+@viewport {
+    width: device-width;
+    height: device-height;
+    zoom: 1;
+    /* iniial-scale: 1.0; */
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+  
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+  
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(224, 224, 224);
+    border-radius: 50px;
+    /* border: 3px solid orange; */
+}
+
 body {
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
+    font-size: 16px;
+    line-height: 30px;
 }
 
 h1 {

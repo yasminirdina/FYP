@@ -48,7 +48,7 @@ class ResetPasswordFormC(forms.Form):
 
 class SignUpForm(forms.Form):
     userType = forms.CharField(label="Daftar sebagai", widget=forms.Select(choices=NONADMIN_SIGNUP_CHOICES), required=True)
-    email = forms.EmailField(label="Sila masukkan alamat emel", max_length=254, required=True)
+    email = forms.EmailField(label="Sila masukkan alamat emel yang sah", max_length=254, required=True)
     username = forms.CharField(label="Sila masukkan nama panggilan", max_length=10, required=True)
     password = forms.CharField(label="Sila masukkan kata laluan", widget=forms.PasswordInput, max_length=10, required=True)
     userType.widget.attrs.update({'class' : 'usertype'})

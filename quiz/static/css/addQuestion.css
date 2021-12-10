@@ -3,6 +3,7 @@
     list-style-position: inside;
     /* background-color: darkgoldenrod; */
     padding-left: 0;
+    line-height: 25px;
 }
 
 .ul-addQuestion-inner {
@@ -12,11 +13,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(121, 85, 118);
-    border-radius: 50px;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -29,30 +30,29 @@
 /*On mouse-over*/
 .btn:hover{
     background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
-.cancel-for-addQuestion, .upload-for-addQuestion {
-    background-color: rgb(250, 159, 159);
+.cancel-for-addQuestion{
+    background-color: rgb(250, 127, 56);
 }
 
-.cancel-for-addQuestion:hover, .upload-for-addQuestion:hover{
+.cancel-for-addQuestion:hover{
     background-color: #eee;
-    color: rgb(250, 159, 159);
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
 
 .upload-for-addQuestion {
-    border-radius: 5px;
     padding: 5px 10px;
     width: 100%;
 }
 
 /* hyperlink path and button 1 */
-.a-nav-addQuestion {color: rgb(121, 85, 118);}
+.a-nav-addQuestion {color: rgb(250, 127, 56);}
 
 .a-for-addQuestion{
     text-decoration: none;
@@ -62,7 +62,7 @@
 /* form fields */
 .difficulty, .isCorrect, .value {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     border-radius: 10px;
     border: 1px solid lightgray;
     padding: 5px 10px;
@@ -72,7 +72,7 @@
 
 .questionText, .answerText, .hintText {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     border-radius: 10px;
     border: 1px solid lightgray;
     padding: 5px 10px;
@@ -82,7 +82,7 @@
 
 #id_questionImageName, #id_hintImageName0, #id_hintImageName1, #id_hintImageName2 {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     border-radius: 25px;
     border: 1px solid lightgray;
     padding: 5px 10px;
@@ -125,7 +125,7 @@
 }
 
 .div-quesTips {
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     text-align: left;
     padding: 0 1vw;
@@ -142,7 +142,7 @@
     width: 90%;
     margin: 1vw auto;
     padding: 0.5vw 1vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     font-weight: bold;
     text-decoration: underline;
@@ -189,6 +189,7 @@ table {
     width: 100%;
     position: relative;
     box-sizing: border-box;
+    line-height: 25px;
 }
 
 /* Set header to stick to the top of the container. */
@@ -205,7 +206,7 @@ th {
     padding: 20px;
     text-align: center;
     letter-spacing: 1px;
-    background-color: palevioletred;
+    background-color: rgb(250, 127, 56);
     color: white;
     white-space: nowrap;
 }
@@ -234,7 +235,7 @@ tr:hover {
 .p-error{
     position: relative;
     font-style: italic;
-    color: rgb(235, 43, 43);
+    color: rgb(207, 61, 61);
     width: 90%;
 }
 

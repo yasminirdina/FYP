@@ -13,7 +13,7 @@
     <div class="div-buttons-1">
         <button class="btn all"><a class="a-for-blogMain" href="{% url 'blog:post-list' user_type user_id %}">Lihat Semua Artikel</a></button>
         {% if user_type == 'admin' %}
-            <button class="btn write"><a class="a-for-blogMain" href="">Tulis Artikel</a></button>
+            <button class="btn write"><a class="a-for-blogMain" href="{% url 'blog:add-post' user_type user_id %}">Tulis Artikel</a></button>
         {% endif %}
     </div>
 
@@ -23,7 +23,7 @@
             <i class="fas fa-folder-open"></i>
         </a></button>
         {% if user_type == 'admin' %}
-            <button class="btn write"><a class="a-for-blogMain" href="">
+            <button class="btn write"><a class="a-for-blogMain" href="{% url 'blog:add-post' user_type user_id %}">
                 <i class="fas fa-plus"></i>
             </a></button>
         {% endif %}
@@ -120,7 +120,7 @@
                                     {% endif %}
                                 {% endfor %}
                             {% else %}
-                                <div class="div-overlay">
+                                <div class="div-overlay-default">
                                     <div class="div-image-default">
                                         <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
                                     </div>
@@ -129,7 +129,9 @@
 
                             <div class="div-details">
                                 <div class="div-post-title">
-                                    {{ post.title|truncatechars:50 }}
+                                    <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                        {{ post.title|truncatechars:50 }}
+                                    </a>
                                 </div>
                                 <div class="div-date-published">
                                     {{ post.datePublished|date:"d/m/Y" }}
@@ -180,16 +182,20 @@
                                     <div class="div-image">
                                         <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}">
                                     </div>
-                                    <!-- later when admin is able to add post, use the below code for image -->
-                                    <!-- <div class="div-image-default">
-                                        <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
-                                    </div> -->
                                 </div>
+                                <!-- later when admin is able to add post, use the below code for image -->
+                                <!-- <div class="div-overlay-default">
+                                    <div class="div-image-default">
+                                        <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                                    </div>
+                                </div> -->
                             {% endif %}
 
                             <div class="div-details">
                                 <div class="div-post-title">
-                                    {{ post.title|truncatechars:50 }}
+                                    <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                        {{ post.title|truncatechars:50 }}
+                                    </a>
                                 </div>
                                 <div class="div-date-published">
                                     {{ post.datePublished|date:"d/m/Y" }}

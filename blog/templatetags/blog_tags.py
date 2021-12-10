@@ -10,7 +10,7 @@ def divide(value, arg):
         return int(value / arg)
     else:
         return math.ceil(value / arg)
-    """ try:
-        return int(int(value) / int(arg))
-    except (ValueError, ZeroDivisionError):
-        return None """
+
+@register.filter
+def index(indexable, i):
+    return indexable[i]

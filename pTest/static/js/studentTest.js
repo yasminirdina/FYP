@@ -4,6 +4,7 @@ const choices = Array.from(document.querySelectorAll('.choice-text'))
 const progressText = document.querySelector('#progressText')
 const scoreText = document.querySelector('#score')
 const progressBarFull = document.querySelector('#progressBarFull')
+const previous = document.querySelector('.prev-text')
 
 // introducing new var
 let currentQuestion = {}
@@ -12,67 +13,106 @@ let score = 0
 let questionCounter = 0
 let questionsIndex = 0
 let availableQuestions = []
-
-let questions = [
-    {
-        question: 'Adakah anda seorang yang Praktikal',
-        choice1: 'Ya',
-        choice2: 'Tidak',
-        answer: 1,
-    },
-    {
-        question: 'Adakah anda seorang yang Mahir Dalam Sukan Tertentu',
-        choice1: 'Ya',
-        choice2: 'Tidak',
-        answer: 1,
-    },
-    {
-        question: 'Adakah anda seorang yang Berterus Terang',
-        choice1: 'Ya',
-        choice2: 'Tidak',
-        answer: 1,
-    },
-    {
-        question: 'Adakah anda seorang yang Cenderung Bidang Mekanikal',
-        choice1: 'Ya',
-        choice2: 'Tidak',
-        answer: 1,
-    },
-    {
-        question: 'Adakah anda seorang yang Pecinta Alam',
-        choice1: 'Ya',
-        choice2: 'Tidak',
-        answer: 1,
-    },
-    {
-        question: 'Adakah anda seorang yang Ingin Tahu Tentang Dunia Fizikal',
-        choice1: 'Ya',
-        choice2: 'Tidak',
-        answer: 1,
-    }
-]
+let questions = []
+let MAX_QUESTIONS = 0
 
 const SCORE_POINTS = 1
-const MAX_QUESTIONS = 6
+// let questions = [
+//     {
+//         question: '1 Adakah anda seorang yang Praktikal',
+//         choice1: 'Ya',
+//         choice2: 'Tidak',
+//         answer: 1,
+//     },
+//     {
+//         question: '2 Adakah anda seorang yang Mahir Dalam Sukan Tertentu',
+//         choice1: 'Ya',
+//         choice2: 'Tidak',
+//         answer: 1,
+//     },
+//     {
+//         question: '3 Adakah anda seorang yang Berterus Terang',
+//         choice1: 'Ya',
+//         choice2: 'Tidak',
+//         answer: 1,
+//     },
+//     {
+//         question: '4 Adakah anda seorang yang Cenderung Bidang Mekanikal',
+//         choice1: 'Ya',
+//         choice2: 'Tidak',
+//         answer: 1,
+//     },
+//     {
+//         question: '5 Adakah anda seorang yang Pecinta Alam',
+//         choice1: 'Ya',
+//         choice2: 'Tidak',
+//         answer: 1,
+//     },
+//     {
+//         question: '6 Adakah anda seorang yang Ingin Tahu Tentang Dunia Fizikal',
+//         choice1: 'Ya',
+//         choice2: 'Tidak',
+//         answer: 1,
+//     }
+// ]
 
-// function expression declaration...functionName = (variable) => value
-// function to start overall test
-startTest = () => {
-    questionCounter = 0
-    questionsIndex = 0
-    score = 0
-    availableQuestions = [...questions]
-    // calling out each question
-    getNewQuestion()
-}
+// getQuestR = () => {
+//     questions = [
+//         {
+//             question: '1 Adakah anda seorang yang Praktikal',
+//             choice1: 'Ya',
+//             choice2: 'Tidak',
+//             answer: 1,
+//         },
+//         {
+//             question: '2 Adakah anda seorang yang Mahir Dalam Sukan Tertentu',
+//             choice1: 'Ya',
+//             choice2: 'Tidak',
+//             answer: 1,
+//         },
+//         {
+//             question: '3 Adakah anda seorang yang Berterus Terang',
+//             choice1: 'Ya',
+//             choice2: 'Tidak',
+//             answer: 1,
+//         },
+//         {
+//             question: '4 Adakah anda seorang yang Cenderung Bidang Mekanikal',
+//             choice1: 'Ya',
+//             choice2: 'Tidak',
+//             answer: 1,
+//         },
+//         {
+//             question: '5 Adakah anda seorang yang Pecinta Alam',
+//             choice1: 'Ya',
+//             choice2: 'Tidak',
+//             answer: 1,
+//         },
+//         {
+//             question: '6 Adakah anda seorang yang Ingin Tahu Tentang Dunia Fizikal',
+//             choice1: 'Ya',
+//             choice2: 'Tidak',
+//             answer: 1,
+//         }
+//     ]
+
+//     MAX_QUESTIONS = 6
+//     questionCounter = 0
+//     questionsIndex = 0
+//     score = 0
+//     availableQuestions = [...questions]
+//     // calling out each question
+//     getNewQuestion()
+//     scoreR = score
+// }
 
 getNewQuestion = () => {
     // if reached end of question Array, go to result page
     if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS) {
         // Store/save the current score in web browser inefinitely
-        localStorage.setItem('mostRecentScore', score)
-
+        localStorage.setItem('saveCurrentScore', score)
         return window.location.assign('/endTest.html')
+        // return score
     }
 
     questionCounter++
@@ -93,11 +133,11 @@ getNewQuestion = () => {
         const number = choice.dataset['number']
         choice.innerText = currentQuestion['choice' + number]
     })
-
     // splice remove the question in the array and replace it with the next one
     availableQuestions.splice(questionsIndex, 1)
+    // questionCounter++
+    // questionsIndex++
     acceptingAnswers = true
-    questionIndex++
 }
 
 // loop choice
@@ -139,5 +179,115 @@ incrementScore = num => {
     score += num
     scoreText.innerText = score
 }
+
+getQuestR = () => {
+    questions = [
+        {
+            question: 'Adakah anda seorang yang Praktikal',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        },
+        {
+            question: 'Adakah anda seorang yang Mahir Dalam Sukan Tertentu',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        },
+        {
+            question: 'Adakah anda seorang yang Berterus Terang',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        },
+        {
+            question: 'Adakah anda seorang yang Cenderung Bidang Mekanikal',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        },
+        {
+            question: 'Adakah anda seorang yang Pecinta Alam',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        },
+        {
+            question: 'Adakah anda seorang yang Ingin Tahu Tentang Dunia Fizikal',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        }
+    ]
+
+    MAX_QUESTIONS = 6
+    questionCounter = 0
+    questionsIndex = 0
+    score = 0
+    availableQuestions = [...questions]
+    getNewQuestion()
+    // var scoreR = getNewQuestion()
+    // alert(scoreR)
+}
+
+getQuestA = () => {
+    questions = [
+        {
+            question: '1 Test',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        },
+        {
+            question: '2 Test',
+            choice1: 'Ya',
+            choice2: 'Tidak',
+            answer: 1,
+        }
+    ]
+
+    MAX_QUESTIONS = 2
+    questionCounter = 0
+    questionsIndex = 0
+    score = 0
+    availableQuestions = [...questions]
+    // calling out each question
+    getNewQuestion()
+}
+// function expression declaration...functionName = (variable) => value
+// function to start overall test
+startTest = () => {
+    getQuestR()
+    // questionCounter = 0
+    // questionsIndex = 0
+    // score = 0
+    // availableQuestions = [...questions]
+    // // calling out each question
+    // getNewQuestion()
+}
+
+//-------------------------------------edit-----------------------------------------------
+// previous.addEventListener('click', e=> {
+    // if(previous.clicked==true){
+    // questionCounter--
+    // questionsIndex--
+    // var choice = confirm(questionCounter)
+
+    // progressText.innerText = `Soalan ${questionCounter} daripada ${MAX_QUESTIONS}`
+    // progressBarFull.style.width = `${(questionCounter/MAX_QUESTIONS) * 100}%`
+    
+    // let tempIndex = questionsIndex--
+    // questionsIndex = tempIndex
+    // currentQuestion = availableQuestions[questionsIndex]
+    // question.innerText = currentQuestion.question
+
+    // choices.forEach(choice => {
+    //     const number = choice.dataset['number']
+    //     choice.innerText = currentQuestion['choice' + number]
+    // })
+
+    // getNewQuestion()
+// })
+
 
 startTest()

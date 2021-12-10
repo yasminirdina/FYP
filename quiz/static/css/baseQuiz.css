@@ -3,12 +3,29 @@
     height: device-height;
     zoom: 1;
     /* iniial-scale: 1.0; */
-} 
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+  
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+  
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(224, 224, 224);
+    border-radius: 50px;
+    /* border: 3px solid orange; */
+}
   
 body {
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
+    font-size: 16px;
     position: relative;
     margin: 0;
+    line-height: 30px;
 }
   
 h1 {
@@ -23,54 +40,18 @@ h2 {
 h3 {
     font-size: 16px;
 }
-  
-/* navbar */
-/* .ul-navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: palevioletred;
-    border-bottom-right-radius: 1vw;
-    border-bottom-left-radius: 1vw;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    width: 100%;
-} 
-  
-.li-navbar{
-    float: left;
-}
-  
-.li-a-navbar{
-    display: block;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    letter-spacing: 1px;
-    text-align: center;
-    padding: 1vw 1.25vw;
-    text-decoration: none;
-}
-  
-.li-a-navbar:hover:not(.active) {
-    background-color: grey;
-    border-radius: 10px;
-} */
 
 .div-navbar {
     display: flex;
     flex-direction: row;
-    background-color: palevioletred;
-    /* position: -webkit-sticky;
-    position: sticky; */
+    background-color: rgb(250, 127, 56);
     position: unset;
     top: 0;
     width: 100%;
     height: auto;
+    font-family: 'Varela Round', sans-serif;
 }
-
+  
 .div-navbar.admin{
     border-bottom-right-radius: 10px;
     border-bottom-left-radius: 10px;
@@ -105,35 +86,35 @@ h3 {
 }
 
 .p-a-navbar:hover:not(.active) {
-    background-color: grey;
+    background-color: rgb(250, 151, 37);
     border-radius: 10px;
 }
 
 .icon{
     display: none;
 }
-  
+
 .active{
-    background-color: coral;
+    background-color: rgb(250, 188, 54);
     border-radius: 10px;
 }
-  
+
 .logout {
     float: right;
-    background-color: crimson;
+    background-color: rgb(207, 61, 61);
 }
 
 .div-navbar.admin .logout{
     border-radius: 10px;
 }
-  
+
 .username {
     float: right;
     font-style: italic;
 }
 
 .logout:hover{
-    background-color: inherit;
+    background-color: rgb(207, 61, 61);
 }
 
 p {

@@ -3,14 +3,39 @@
 
 {% block styles %}   
 <link rel="stylesheet" href="{% static 'css/studentMain.css' %}">
+<!-- <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet"/> -->
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<!-- <div class="container">
     <div id="home" class="flex-column flex-center">
-        <h1>Ketahui personaliti dan bidang kerjaya yang sesuai dengan anda!</h1>
-        <a href="{% url 'test:test-nonadmin' user_type user_id %}" class="btn">Mula</a>
-        <a href="/studentResult.html" id="result-btn" class="btn">Keputusan Ujian</a>
+        <h1>Ujian Kerjaya</h1>
+        <h2>Ketahui personaliti dan bidang kerjaya yang sesuai dengan anda!</h2>
+        <div class = "row">
+            <a href="{% url 'test:test-student' user_type user_id %}" class="btn">Mula Ujian</a>
+            <a href="/studentResult.html" id="result-btn" class="btn">Keputusan Ujian</a>
+        </div>
+    </div>
+</div> -->
+
+<div class="wrapper">
+    <div class="parallax__group hero-container">
+        <!-- <div class="parallax__layer bg1"></div> -->
+
+        <div class="parallax__layer hero-text">
+            <h1>Ketahui personaliti dan bidang kerjaya yang sesuai dengan anda!</h1>
+            <!-- <h2><a href=#test>test</a></h2> -->
+        </div>
+        
+    </div>
+    <div class="parallax__group info-container">
+        <div class="text-container">
+            <h1>Ujian Kerjaya</h1>
+            <div class = "row">
+                <a href="{% url 'test:test-student' user_type user_id %}" class="btn">Mula Ujian</a>
+                <a href="/studentResult.html" id="result-btn" class="btn">Keputusan Ujian</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock%}

@@ -1,0 +1,108 @@
+{% load static %}
+
+<p class="p-blogPostCount" style="display: none;">{{ allBlogPostsCount }}</p>
+
+<div class="div-title">
+    Senarai Artikel
+</div>
+<div class="div-result-heading">
+    {% if title_text or cat_selected or yearSelectedList %}
+        Keputusan carian bagi
+    {% endif %}
+
+    {% if title_text %}
+        {% if cat_selected and yearSelectedList %}
+            <span>kata kunci tajuk "{{ title_text }}", </span>
+        {% elif cat_selected or yearSelectedList %}
+            <span>kata kunci tajuk "{{ title_text }}" dan </span>
+        {% else %}
+            <span>kata kunci tajuk "{{ title_text }}":</span>
+        {% endif %}
+    {% endif %}
+
+    {% if cat_selected %}
+        {% if yearSelectedList %}
+            <span>kategori "{{ cat_selected }}" dan </span>
+        {% else %}
+            <span>kategori "{{ cat_selected }}":</span>
+        {% endif %}
+    {% endif %}
+
+    {% if yearSelectedList %}
+        <span>tahun </span>
+        {% if '0' in yearSelectedList %}
+            <span>"Semua":</span>
+        {% else %}
+            {% for year in yearSelectedList %}
+                {% if forloop.last %}
+                    <span>{{ year }}:</span>
+                {% else %}
+                    <span>{{ year }},</span>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+</div>
+
+{% if allBlogPostsCount == 0 %}
+    <div class="div-error">
+        <span class="p-found">Tiada artikel dijumpai.</span>
+        <ul>
+            <li>Pastikan ejaan tajuk anda betul.</li>
+            <li>Tarikh artikel yang boleh dicari adalah tarikh artikel diterbitkan, dan bukan tarikh suntingan terkini.</li>
+        </ul>
+        Jika masih tidak berjaya, sila lihat senarai penuh artikel di
+        <span><a class="a-allPosts" href="{% url 'blog:post-list' user_type user_id %}">sini.</a></span>
+    </div>
+{% else %}
+    <div class="div-non-error">
+        <span class="p-found">{{ allBlogPostsCount }} artikel dijumpai.</span>
+        <div class="div-outer-posts">
+            {% for post in allBlogPosts %}
+                <div class="div-inner-posts">
+                    {% if post.id in postIDswithImageList %}
+                        {% for image in postIDswithImageList %}
+                            {% if image.blogPostID_id == post.id %}
+                                <div class="div-image">
+                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="div-image-default">
+                            <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
+                            <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                        </div>
+                    {% endif %}
+
+                    <div class="div-details">
+                        <div class="div-post-title">
+                            <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                {{ post.title|truncatechars:100 }}
+                            </a>
+                            {% if post.show == False %}
+                                <button class="btn draft">Draf</button>
+                            {% endif %}
+                        </div>
+                        <div class="div-date-published">
+                            {{ post.datePublished|date:"d/m/Y" }}
+                        </div>
+                        <div class="div-views">
+                            <i class="fas fa-eye"></i>
+                            <div class="div-views-text">
+                                {{ post.noOfViews }}
+                            </div>
+                        </div>
+                        <div class="div-content">
+                            {{ post.description }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <p class="p-break" style="display: none;"></p>
+
+            <div id="nav"></div>
+        </div>
+    </div>
+{% endif %}

@@ -3,6 +3,7 @@
     list-style-position: inside;
     /* background-color: darkgoldenrod; */
     padding-left: 0;
+    line-height: 25px;
 }
 
 .ul-addField-inner {
@@ -12,11 +13,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(121, 85, 118);
-    border-radius: 50px;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -29,20 +30,20 @@
 /*On mouse-over*/
 .btn:hover{
     background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .cancel-for-addField {
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 127, 56);
 }
 
 .cancel-for-addField:hover{
     background-color: #eee;
-    color: rgb(250, 159, 159);
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
 
 /* hyperlink */
@@ -51,12 +52,12 @@
     color: inherit;
 }
 
-.a-main-for-addField, .a-back-for-addField {color: rgb(121, 85, 118);}
+.a-main-for-addField, .a-back-for-addField {color: rgb(250, 127, 56);}
 
 /* form fields */
 .name {
     font-size: 16px;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     border-radius: 25px;
     border: 1px solid lightgray;
     padding: 10px;
@@ -81,7 +82,7 @@
 }
 
 .div-tips {
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     text-align: left;
     padding: 0 1vw;
@@ -96,7 +97,7 @@
 
 .div-form-name, .div-form-image-label{
     /* background-color: indianred; */
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     font-weight: bold;
     text-align: left;
@@ -162,7 +163,7 @@
     height: 100%;
     border-radius: 10px;
     border: 3px solid #ffffff;
-    background-color: rgb(168, 148, 167);
+    background-color: rgb(250, 127, 56);
     align-items: center;
     justify-items: center;
     padding: 1vw;
@@ -193,13 +194,13 @@
 }
 
 .div-choice input[type="radio"]:hover:not(:checked) ~ .div-img-label{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .div-choice input[type="radio"]:checked ~ .div-img-label{
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(250, 188, 54);
 }
 
 .div-buttons{
@@ -239,7 +240,7 @@
 
 .div-credit-text p {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-style: italic; 
     text-align: center;
     color: black;
@@ -290,7 +291,7 @@
 .p-error{
     width: 90%;
     font-style: italic;
-    color: rgb(235, 43, 43);
+    color: rgb(207, 61, 61);
 }
 
 /* Tablet & mobile vertical

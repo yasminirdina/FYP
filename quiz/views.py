@@ -1,5 +1,6 @@
 from datetime import datetime
 from operator import itemgetter
+from re import I
 import dashboard.models
 import quiz.models
 import json
@@ -104,10 +105,10 @@ def quizMainAdmin(request, user_id):
     # END color designation
 
     if request.is_ajax():
-        # Card 4
+        # Card 5
         # return fieldNameList, countQuesByFieldList, fieldColorList
 
-        # Card 5
+        # Card 6
         dist_ques_difficulty_chart_data = {
             "labels": fieldNameList,
             "datasets":[{
@@ -1693,24 +1694,32 @@ def seeStatistic(request, user_id, field_id):
             percEasy = round((totalCurrentFieldEasyCorrectDict['countEasyCorrect__sum']/totalCurrentFieldEasyDict['countEasy__sum'])*100, 2)
         else:
             percEasy = 0
+
+        print("id: " + str(i) + ", percEasy: " + str(percEasy))
         fieldEasyCorrectList.append(percEasy)
 
         #Medium
         totalCurrentFieldMediumDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countMedium'))
         totalCurrentFieldMediumCorrectDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countMediumCorrect'))
+        
         if totalCurrentFieldMediumCorrectDict['countMediumCorrect__sum'] > 0:
             percMedium = round((totalCurrentFieldMediumCorrectDict['countMediumCorrect__sum']/totalCurrentFieldMediumDict['countMedium__sum'])*100, 2)
         else:
             percMedium = 0
+
+        print("id: " + str(i) + ", percMedium: " + str(percMedium))
         fieldMediumCorrectList.append(percMedium)
 
         #Hard
         totalCurrentFieldHardDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countHard'))
         totalCurrentFieldHardCorrectDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countHardCorrect'))
+        
         if totalCurrentFieldHardCorrectDict['countHardCorrect__sum'] > 0:
             percHard = round((totalCurrentFieldHardCorrectDict['countHardCorrect__sum']/totalCurrentFieldHardDict['countHard__sum'])*100, 2)
         else:
             percHard = 0
+
+        print("id: " + str(i) + ", percHard: " + str(percHard))
         fieldHardCorrectList.append(percHard)
 
     # Card 9, 10 & 11

@@ -1,11 +1,11 @@
 /* button */
-.btn {
+.btn, .nums.active {
     border: none;
-    background-color: rgb(121, 85, 118);
+    background-color: rgb(250, 188, 54);
     border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 1px;
     cursor: pointer;
@@ -16,10 +16,10 @@
 }  
   
 /*On mouse-over*/
-.btn:hover{
+.btn:hover, .nums.active:hover{
     background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
     transform: scale(1.03);
 }
@@ -28,19 +28,35 @@
     width: 100%;
 }
 
-.nums, .next, .prev, .last, .pg-first{
+.nums, .nums.active, .next, .prev, .last, .pg-first{
     width: 30px;
     padding: 10px;
 }
 
-.write, .clear-for-blogPostList, .nums.active{
-    background-color: rgb(250, 159, 159);
+.nums.active{
+    background-color: rgb(250, 188, 54);
 }
 
-.write:hover, .clear-for-blogPostList:hover, .nums.active:hover{
+.write, .all{
+    height: 100%;
+}
+
+.draft{
+    border-radius: 25px;
+    padding: 5px 10px;
+    pointer-events: none;
+    font-size: 12px;
+    color: white;
+}
+
+.write, .clear-for-blogPostList, .nums, .next, .prev, .last, .pg-first, .draft{
+    background-color: rgb(250, 127, 56);
+}
+
+.write:hover, .clear-for-blogPostList:hover, .nums:hover, .next:hover, .prev:hover, .last:hover, .pg-first:hover, .draft:hover{
     background-color: #eee;
-    color: rgb(250, 159, 159);
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
 
 /* hyperlink style */
@@ -50,7 +66,7 @@
 }
 
 .a-allPosts{
-    color: rgb(121, 85, 118);
+    color: rgb(250, 188, 54);
     font-weight: bold;
 }
 
@@ -66,7 +82,7 @@
 }
 
 .a-for-title:hover{
-    color: rgb(121, 85, 118);
+    color: rgb(250, 127, 56);
 }
 
 /* div */
@@ -135,12 +151,24 @@
     display: none;
 }
 
-form{
+.form-filter{
     /* background-color: antiquewhite; */
     position: relative;
     width: 100%;
     height: fit-content;
     justify-content: center;
+    box-sizing: border-box;
+}
+
+.form-post-filter, .form-post-filter-2{
+    background-color: antiquewhite;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: center;
+    align-items: center;
     box-sizing: border-box;
 }
 
@@ -167,9 +195,9 @@ form{
 }
 
 /* input search */
-#title, #category {
+#title, #category, #post-type, #post-type-2 {
     font-size: 16px;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     border-radius: 5px;
     border: 1px solid lightgray;
     padding: 10px;
@@ -210,8 +238,9 @@ input:focus::placeholder {color: transparent}
     font-weight: normal;
     font-style: italic;
     text-align: justify;
-    color: rgb(235, 43, 43);
+    color: rgb(207, 61, 61);
     display: grid;
+    line-height: 20px;
 }
 
 #span-error-2{
@@ -382,6 +411,13 @@ input:focus::placeholder {color: transparent}
 
 .div-post-title{
     /* background-color: darkcyan; */
+    width: fit-content;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: column;
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
     font-size: 20px;
     font-weight: bold;
     word-wrap: break-word;
@@ -575,19 +611,23 @@ input:focus::placeholder {color: transparent}
 }
 
 @media screen and (max-width: 450px), (max-height: 450px) {
-    .btn{
+    .btn,  #post-type, #post-type-2{
         font-size: 12px;
     }
 
-    @media screen and (max-width:450px){
-        .div-buttons-1{
-            display: none;
-        }
-    
-        .div-buttons-2{
-            display: grid;
-        }
+    .draft{
+        padding: 3px 10px;
+    }
 
+    .div-buttons-1{
+        display: none;
+    }
+
+    .div-buttons-2{
+        display: grid;
+    }
+
+    @media screen and (max-width:450px){
         .nums, .next, .prev, .last, .pg-first{
             width: 16px;
             padding: 5px;
@@ -626,7 +666,7 @@ input:focus::placeholder {color: transparent}
         padding: 10px 5px 0;
     }
 
-    .div-result-heading{
+    .div-result-heading, .div-error{
         font-size: 12px;
     }
 

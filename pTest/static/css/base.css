@@ -2,75 +2,138 @@
     width: device-width;
     height: device-height;
     zoom: 1;
-  }  
-  
-  :root{
-    background-color: rgb(37, 37, 37);
-  }
+}
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: "DM Sans";
-  }
-  
-  .ul-navbar {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: palevioletred;
-    border-bottom-right-radius: 1vw;
-    border-bottom-left-radius: 1vw;
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    width: 100%;
-  } 
-  
-  .li-navbar{
+body {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 16px;
+  position: relative;
+  margin: 0;
+  background-color: rgb(235, 189, 189);
+}
+
+.div-navbar {
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(250, 127, 56);
+  position: unset;
+  top: 0;
+  width: 100%;
+  height: auto;
+  font-family: 'Varela Round', sans-serif;
+}
+
+.div-navbar.admin{
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.div-navbar-left{
+    max-width: 80%;
     float: left;
-  }
-  
-  .li-a-navbar{
+}
+
+.div-navbar-right{
+    position: absolute;
+    max-width: 30%;
+    float: right;
+    right: 0;
+}
+
+.p-navbar{
+    float: left;
+    margin: 0;
+}
+
+.p-a-navbar{
     display: block;
     color: white;
     font-weight: bold;
     font-size: 16px;
+    letter-spacing: 1px;
     text-align: center;
     padding: 1vw 1.25vw;
     text-decoration: none;
-  }
-  
-  .li-a-navbar:hover:not(.active) {
-    background-color: grey;
+}
+
+.p-a-navbar:hover:not(.active) {
+    background-color: rgb(250, 151, 37);
     border-radius: 10px;
-  }
+}
+
+.icon{
+    display: none;
+}
   
-  .active{
-    background-color: coral;
+.active{
+    background-color: rgb(250, 188, 54);
     border-radius: 10px;
-  }
+}
   
-  .logout {
+.logout {
     float: right;
-    background-color: crimson;
+    background-color: rgb(207, 61, 61);
+}
+
+.div-navbar.admin .logout{
     border-radius: 10px;
-  }
+}
   
-  .username {
+.username {
     float: right;
     font-style: italic;
-  }
-  
-  .settings {color: purple;}
-  .bookmark {color: purple;}
-  .report {color: purple;}
-  .chat {color: purple;}
-  .suggestion {color: purple;}
-  .test {color: purple;}
-  .blog {color: purple;}
-  .quiz {color: purple;}
-  .search {color: purple;}
-  .logout {color: crimson;}
+}
+
+.logout:hover{
+    background-color: rgb(207, 61, 61);
+}
+
+p {
+    font-size: 16px;
+}
+
+@media screen and (max-width: 1010px) {
+    .div-navbar-left{
+        width: 80%;
+    }
+    
+    .div-navbar-right{
+        width: 20%;
+    }
+
+    .div-navbar-left.admin-left{
+        width: 60%;
+        float: left;
+    }
+    
+    .div-navbar-right.admin-right{
+        width: 40%;
+        float: right;
+    }
+
+    .p-a-navbar{
+        padding: 5px 10px;
+    }
+
+    .no-icon{
+        display: none;
+    }
+
+    .icon{
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .div-navbar-left{
+        width: 70%;
+    }
+    
+    .div-navbar-right{
+        width: 30%;
+    }
+
+    .admin-right .username{
+        display: none;
+    }
+}

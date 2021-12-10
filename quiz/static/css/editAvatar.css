@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     border-radius: 35px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -16,22 +16,22 @@
   
 /*On mouse-over*/
 .btn:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .cancel-for-editAvatar{
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .cancelSubmit-for-editAvatar{
     font-size: 1.1rem;
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .cancel-for-editAvatar:hover, .cancelSubmit-for-editAvatar:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
 }
 
 .submit-for-editAvatar, .back-for-editAvatar{
@@ -60,7 +60,7 @@
 .avatarid, .workplace, .avatargender{
     background-color: white;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     /* top-left | top-right | bottom-right | bottom-left */
     border-radius: 25px 10px 10px 25px;
     border: 1px solid lightgray;
@@ -71,10 +71,10 @@
 }
 
 .avatarid:focus, .workplace:focus, .avatargender:focus{
-    color: white;
-    background-color: rgb(121, 85, 118);
-    border: 3px solid rgb(255, 200, 250);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(255, 200, 250);
+    color: black;
+    background-color: rgb(253, 228, 146);
+    border: 3px solid rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
 }
 
 /* table */
@@ -93,12 +93,12 @@ tr{
 }
 
 th{
-    background-color: rgb(245, 118, 59);
+    background-color: rgb(250, 127, 56);
     /* top-left | top-right | bottom-right | bottom-left */
     border-radius: 10px 25px 25px 10px;
     font-style: italic;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 0.2vw;
     padding: 0.5vw 1vw;
@@ -178,7 +178,7 @@ td{
     position: relative;
     margin: 0 auto;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     color: black;
     box-sizing: border-box;
 }
@@ -190,7 +190,7 @@ td{
     margin-bottom: 2vw;
     z-index: 1;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     box-sizing: border-box;
     /* background-color: rgb(121, 85, 118); */
@@ -218,7 +218,7 @@ td{
     top: 0;
     right: 13px;
     font-size: 2rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     color: black;
     transform: rotate(45deg); /* will make it look like x */
     cursor: pointer;

@@ -6,7 +6,7 @@
 <p>{{ playerFieldRecords }}</p> -->
 
 <form type="get" action="." class="form-field">
-    <label for="field" style="margin-right: 5px; letter-spacing: 1px;">Bidang Kerjaya:</label>
+    <label for="field" style="margin-right: 5px; letter-spacing: 1px; color: black;">Bidang Kerjaya:</label>
     <select name="field" id="field">
         {% for field in shownFields %}
             {% if field_selected %} <!--after ajax request for select field-->

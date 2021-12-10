@@ -1,11 +1,11 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(130, 124, 225);
+    background-color: rgb(88, 126, 196);
     border-radius: 50px;
     padding: 1vw 2vw;
     font-size: 2vw;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -17,17 +17,17 @@
   
 /*On mouse-over*/
 .btn:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(152, 144, 252);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .main{
-    background-color: rgb(52, 202, 152);
+    background-color: rgb(121, 85, 118);
 }
 
 .main:hover{
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(0, 255, 171, 0.6);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
 }
 
 .music {
@@ -46,11 +46,11 @@
 
 .btn2{
     border: none;
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(88, 126, 196);
     border-radius: 35px 35px 0 0;
     padding: 1vw 2vw;
     font-size: 1.1rem;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     letter-spacing: 3px;
     cursor: pointer;
@@ -63,7 +63,7 @@
     border: solid white;
     /* top | horizontal | bottom */
     border-width: 3px 3px 0;
-    background-color: rgb(253, 108, 108);
+    background-color: rgb(103, 149, 235);
 }
 
 /* hyperlink */
@@ -100,7 +100,7 @@
     display: grid;
     grid-template-columns: 30% 35% 35%;
     float: right;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     font-weight: bold;
     letter-spacing: 3px;
@@ -145,7 +145,7 @@
     padding-bottom: 1vw;
     position: relative;
     font-size: 1.1rem;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     box-sizing: border-box;
 }
 
@@ -156,7 +156,7 @@
 
 #field {
     font-size: 1.1rem;
-    font-family: "Poppins";
+    font-family: 'Varela Round', sans-serif;
     border-radius: 25px;
     border: 1px solid lightgray;
     padding: 0 5px;
@@ -164,9 +164,9 @@
 }
 
 #field:focus{
-    color: white;
-    background-color: rgb(250, 159, 159);
-    border: 3px solid white;
+    color: black;
+    background-color: rgb(253, 228, 146);
+    border: 3px solid rgb(250, 188, 54);
 }
 
 /* Set a fixed scrollable wrapper */
@@ -215,7 +215,7 @@
 
 .div-credit-text p {
     font-size: 16px;
-    font-family: 'Poppins';
+    font-family: 'Varela Round', sans-serif;
     font-style: italic; 
     text-align: center;
     margin: 10px 0;
@@ -335,12 +335,13 @@ tr:nth-child(odd) {
 }
   
 tr:hover {
-    background-color: rgb(196, 168, 193);
+    background-color: rgb(231, 189, 228);
     cursor: pointer;
 }
 
 /* span */
 .span-title-totalScore{
+    font-size: 20px;
     word-break: normal;
     padding-top: 4px;
     height: 100%;
@@ -348,7 +349,7 @@ tr:hover {
 }
 
 .span-value-totalScore{
-    font-size: 35px;
+    font-size: 40px;
     padding-top: 4px;
     height: 100%;
     box-sizing: border-box;
@@ -364,6 +365,8 @@ tr:hover {
     width: 100%;
     text-align: right;
     display: block;
+    line-height: normal;
+    color: black;
 }
 
 /* Tablet & mobile vertical
@@ -431,7 +434,7 @@ tr:hover {
 
     @media screen and (max-width: 390px) {
         .div-totalScore {
-            width: 260px;
+            width: 300px;
             grid-template-columns: 35% 38% 27%;
             justify-items: right;
             right: 10px;
