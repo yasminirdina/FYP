@@ -1,5 +1,5 @@
 // Connect with html
-const question = document.querySelector('#question')
+const question = document.querySelector('#questionText')
 const choices = Array.from(document.querySelectorAll('.choice-text'))
 const progressText = document.querySelector('#progressText')
 const scoreText = document.querySelector('#score')
@@ -55,46 +55,6 @@ const SCORE_POINTS = 1
 //         answer: 1,
 //     }
 // ]
-
-// getQuestR = () => {
-//     questions = [
-//         {
-//             question: '1 Adakah anda seorang yang Praktikal',
-//             choice1: 'Ya',
-//             choice2: 'Tidak',
-//             answer: 1,
-//         },
-//         {
-//             question: '2 Adakah anda seorang yang Mahir Dalam Sukan Tertentu',
-//             choice1: 'Ya',
-//             choice2: 'Tidak',
-//             answer: 1,
-//         },
-//         {
-//             question: '3 Adakah anda seorang yang Berterus Terang',
-//             choice1: 'Ya',
-//             choice2: 'Tidak',
-//             answer: 1,
-//         },
-//         {
-//             question: '4 Adakah anda seorang yang Cenderung Bidang Mekanikal',
-//             choice1: 'Ya',
-//             choice2: 'Tidak',
-//             answer: 1,
-//         },
-//         {
-//             question: '5 Adakah anda seorang yang Pecinta Alam',
-//             choice1: 'Ya',
-//             choice2: 'Tidak',
-//             answer: 1,
-//         },
-//         {
-//             question: '6 Adakah anda seorang yang Ingin Tahu Tentang Dunia Fizikal',
-//             choice1: 'Ya',
-//             choice2: 'Tidak',
-//             answer: 1,
-//         }
-//     ]
 
 //     MAX_QUESTIONS = 6
 //     questionCounter = 0

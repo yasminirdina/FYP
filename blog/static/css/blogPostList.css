@@ -418,6 +418,7 @@ input:focus::placeholder {color: transparent}
     gap: 10px;
     justify-items: center;
     align-items: center;
+    vertical-align: middle;
     font-size: 20px;
     font-weight: bold;
     word-wrap: break-word;

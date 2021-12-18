@@ -1,0 +1,255 @@
+@viewport {
+    width: device-width;
+    height: device-height;
+    zoom: 1;
+    /* iniial-scale: 1.0; */
+}
+
+/* Works on Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px;
+}
+  
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+  
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(224, 224, 224);
+    border-radius: 50px;
+    /* border: 3px solid orange; */
+}
+
+body {
+    font-family: 'Varela Round', sans-serif;
+    font-size: 16px;
+    position: relative;
+    margin: 0;
+    line-height: 30px;
+}
+
+h1 {
+    font-size: 40px;
+    line-height: 1.25em;
+}
+
+h2 {
+    font-size: 30px;
+}
+
+/* .h2a {
+    color: purple;
+} */
+
+h3 {
+    font-size: 16px;
+}
+
+/* div navbar & sidebar */
+.div-navbar {
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(250, 127, 56);
+    position: unset;
+    top: 0;
+    width: 100%;
+    height: auto;
+    font-family: 'Varela Round', sans-serif;
+}
+  
+.div-navbar.admin{
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.div-navbar-left{
+    max-width: 80%;
+    float: left;
+}
+
+.div-navbar-right{
+    position: absolute;
+    max-width: 30%;
+    float: right;
+    right: 0;
+}
+
+.div-outer{
+    /* background-color: lightblue; */
+    position: relative;
+    width: 95%;
+    height: fit-content;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    justify-content: center;
+    margin: 10px auto 0;
+    gap: 10px;
+    padding: 0 5px;
+    border-radius: 10px;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.div-sidebar-outer, .div-sidebar-menulist, .div-main-outer{
+    background-color: rgb(240, 240, 240);
+    width: 100%;
+    height: fit-content;
+    display: grid;
+    grid-auto-flow: row;
+    gap: 5px;
+    box-sizing: border-box;
+}
+
+.div-sidebar-outer, .div-main-outer{
+    border-radius: 10px;
+    padding: 0 10px 10px;
+    gap: 0;
+}
+
+.div-sidebar-menulist{
+    background-color: rgb(250, 127, 56); /* Test */
+    gap: 0;
+}
+
+/* .div-main-outer{
+    gap: 0;
+    padding: 0 10px 10px;
+} */
+
+/* p for navbar & sidebar*/
+.p-navbar{
+    float: left;
+    margin: 0;
+}
+
+.p-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+}
+
+.p-a-navbar:hover:not(.active) {
+    background-color: rgb(250, 151, 37);
+    border-radius: 10px;
+}
+
+.icon{
+    display: none;
+}
+  
+.active{
+    background-color: rgb(250, 188, 54);
+    border-radius: 10px;
+}
+  
+.logout {
+    float: right;
+    background-color: rgb(207, 61, 61);
+}
+
+.div-navbar.admin .logout{
+    border-radius: 10px;
+}
+  
+.username {
+    float: right;
+    font-style: italic;
+}
+
+.logout:hover{
+    background-color: rgb(207, 61, 61);
+}
+
+p {
+    font-size: 16px;
+}
+
+.p-sidebar{
+    margin: 0;
+    border: solid lightgray;
+    border-width: 1px 0;
+}
+
+.p-a-sidebar{
+    display: block;
+    color: white;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: left;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.p-a-sidebar.sb-active:hover {
+    cursor: pointer;
+}
+
+.p-a-sidebar:hover:not(.sb-active) {
+    background-color: rgb(250, 151, 37);
+    cursor: pointer;
+}
+
+.sb-active{
+    background-color: rgb(250, 188, 54);
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1010px) {
+    .div-navbar-left{
+        width: 60%;
+        float: left;
+    }
+    
+    .div-navbar-right{
+        width: 40%;
+        float: right;
+    }
+
+    .p-a-navbar{
+        padding: 5px 10px;
+    }
+
+    .no-icon{
+        display: none;
+    }
+
+    .icon{
+        display: flex;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 30px;
+        /* line-height: 28px; */
+    }
+      
+    h2 {
+      font-size: 20px;
+      /* line-height: 19px; */
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .div-navbar-left{
+        width: 70%;
+    }
+    
+    .div-navbar-right{
+        width: 30%;
+    }
+
+    .username{
+        display: none;
+    }
+}
+
+/* .a-back-for-successUpdate {
+    text-decoration: none;
+    color: inherit;
+} */

@@ -137,10 +137,13 @@
                 </div>
 
                 <div class="div-post-title">
-                    {{ currentBlogPost.title }}
-                    {% if currentBlogPost.show == False %}
-                        <button class="btn draft">Draf</button>
-                    {% endif %}
+                    <span class="span-title-draft">
+                        {{ currentBlogPost.title }}
+
+                        {% if currentBlogPost.show == False %}
+                            <button class="btn draft">Draf</button>
+                        {% endif %}
+                    </span>
                 </div>
 
                 <div class="div-author-datetime">

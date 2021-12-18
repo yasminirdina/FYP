@@ -1,36 +1,35 @@
+{% extends "dashboard/baseDashboardNonAdmin.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/dashboardIndex.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise:{{ title }}</title>
-</head>
-<body>
-<center>
-    <ul class="ul-navbar">
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
-        <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard user_type user_id %}">
-            <span style="font-style: italic;">Dashboard </span>
-            <span>{{ dashboardNav }}</span></a></li>
-        <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-        <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
-    </ul>
-    <h1>
-        <span style="font-style: italic;">Future Cruise</span>
-        :{{ title }}
-    </h1>
-    <h2>{{ subtitle }}</h2>
-    <h3 style="font-style:italic; color: green;">{{ successMessage }}</h3>
-        <button class="btn back-to-showProfile2">
-            <a class="a-back-for-successUpdate" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Kembali ke Profil</a>
-        </button>
-    </form>
-</center>
+{% endblock %}
 
-</body>
-</html>
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/indexError.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            {{ title }}
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        <h2 style="font-style: italic;">
+            <i class="fas fa-check-circle"></i>
+            <span class=span-success>{{ successMessage }}</span>
+        </h2>
+
+        <button class="btn back-to-showProfile">
+            <a class="a-for-error" href="{% url 'dashboard:profile-settings' user_type user_id %}">Kembali ke Profil</a>
+        </button>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.profile-settings .p-a-sidebar').addClass('sb-active');
+    </script>
+{% endblock %}

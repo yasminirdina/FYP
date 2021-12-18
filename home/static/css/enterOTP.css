@@ -1,7 +1,7 @@
 /* button */
 .btn {
     border: none;
-    background-color: rgb(121, 85, 118);
+    background-color: rgb(240, 91, 4);
     border-radius: 5px;
     padding: 10px 15px;
     font-size: 16px;
@@ -17,21 +17,21 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
-    color: rgb(121, 85, 118);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(121, 85, 118);
+    background-color: white;
+    color: rgb(240, 91, 4);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(240, 91, 4);
     transition: transform 150ms;
     transform: scale(1.03);
 }
 
 .cancel {
-    background-color: rgb(250, 159, 159);
+    background-color: rgb(207, 61, 61);
 }
 
 .cancel:hover{
-    background-color: #eee;
-    color: rgb(250, 159, 159);
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(255, 173, 173, 0.76);
+    background-color: white;
+    color: rgb(207, 61, 61);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(207, 61, 61);
 }
 
 /* hyperlink style */
@@ -62,9 +62,9 @@ form{
 
 .OTP:focus{
     color: white;
-    background-color: rgb(121, 85, 118);
-    border: 3px solid rgb(255, 200, 250);
-    box-shadow: 0 0.4rem 1.4rem 0 rgb(255, 200, 250);
+    background-color: rgb(240, 91, 4);
+    border: 3px solid white;
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(240, 91, 4);
 }
 
 /* div */
@@ -93,7 +93,7 @@ form{
     text-align: center;
     font-size: 16px;
     font-style: italic;
-    color: rgb(235, 43, 43);
+    color: rgb(207, 61, 61);
     margin: 2vw auto 0;
 }
 
@@ -131,7 +131,7 @@ form{
 .p-error{
     width: 90%;
     font-style: italic;
-    color: rgb(235, 43, 43);
+    color: rgb(207, 61, 61);
 }
 
 .p-input{

@@ -1,0 +1,28 @@
+{% extends "dashboard/baseDashboardAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Future Cruise: Notifikasi</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/adminNotif.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            Notifikasi
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        {% include 'dashboard/adminNotifContent.html' %}
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.notification .p-a-sidebar').addClass('sb-active');
+    </script>
+{% endblock %}

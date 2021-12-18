@@ -1,0 +1,92 @@
+{% extends "dashboard/baseDashboardAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Future Cruise: Tetapan Maklumat Kelas</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/adminClassSettings.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            Tetapan Maklumat Kelas
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        {% include 'dashboard/adminClassSettingsContent.html' %}
+
+        <form method="POST" action="{% url settings user_id %}" class="AddClassForm">
+            {% csrf_token %}
+            {{ form.media.js }}
+        
+            {% if error %}
+                <span class="span-error">
+                    {{ error }}
+                </span>
+            {% endif %}
+
+            <label for="classname">
+                <i class="fas fa-plus"></i>
+                <span>Tambah kelas baharu:</span>
+            </label>
+        
+            <div class="div-form-content">
+                <!-- <input type="text" id="classname" name="classname" maxlength="25"> -->
+                {{ form.classname }}
+                <button class="btn add-class" type="submit">Tambah</button>
+            </div> 
+        </form>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.class-settings .p-a-sidebar').addClass('sb-active');
+    
+        $('.div-content-outer').on('click', '.delete', function(){
+            // alert('hi delete open');
+
+            $('.confirm-delete').val($(this).val());
+            $('.div-bg-modal-1').css("display","flex");
+        });
+
+        function redirect(){
+            $('.div-bg-modal-2').css("display","none");
+            window.location.href = "/papan-pemuka/admin/A1/tetapan-maklumat-kelas/";
+        }
+
+        $('.confirm-delete').on('click', function(){
+            // alert('hi confirm delete click');
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:class-settings' user_id %}",
+                data: {
+                    'className': $(this).val(),
+                    'requestType': 'deleteClass'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    // alert("deleteClass: success");
+
+                    $('.div-bg-modal-1').css("display","none");
+                    $('.div-bg-modal-2').css("display","flex");
+
+                    setTimeout(redirect, 5000);
+                },
+                error: function(result){
+                    // alert("deleteClass: failure");
+                }
+            })
+        });
+
+        $('.cancel-delete').on('click', function(){
+            $('.div-bg-modal-1').css("display","none");
+        });
+    </script>
+{% endblock %}

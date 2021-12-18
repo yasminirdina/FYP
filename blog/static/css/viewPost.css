@@ -461,6 +461,7 @@ input:focus::placeholder {color: transparent}
     width: 100%;
     display: grid;
     text-align: justify;
+    line-height: 25px;
     box-sizing: border-box;
 }
 

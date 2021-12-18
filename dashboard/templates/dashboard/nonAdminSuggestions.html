@@ -1,0 +1,28 @@
+{% extends "dashboard/baseDashboardNonAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Future Cruise: Senarai Cadangan Penambahbaikan</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/nonAdminSuggestions.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            Senarai Cadangan Penambahbaikan
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        {% include 'dashboard/nonAdminSuggestionsContent.html' %}
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.suggestion .p-a-sidebar').addClass('sb-active');
+    </script>
+{% endblock %}

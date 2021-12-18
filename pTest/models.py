@@ -13,10 +13,15 @@ class Questions(models.Model):
 
     def __str__(self):
         return self.questionText
+        # return self.questionText, str(self.section.id)
 
-class StudentTestResult(models.Model):
+class Student(models.Model):
     ID = models.OneToOneField('dashboard.Student', on_delete=models.CASCADE, primary_key=True)
-    personality = models.ForeignKey(Personality, on_delete=models.CASCADE)
-
+    
     def __str__(self):
         return self.ID
+
+class StudentPersonalitySession(models.Model):
+    studentID = models.ForeignKey(Student, on_delete=models.PROTECT)
+    personalityID = models.ForeignKey(Personality, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)

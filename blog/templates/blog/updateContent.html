@@ -79,10 +79,10 @@
                         <div class="div-post-title">
                             <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
                                 {{ post.title|truncatechars:100 }}
+                                {% if post.show == False %}
+                                    <button class="btn draft">Draf</button>
+                                {% endif %}
                             </a>
-                            {% if post.show == False %}
-                                <button class="btn draft">Draf</button>
-                            {% endif %}
                         </div>
                         <div class="div-date-published">
                             {{ post.datePublished|date:"d/m/Y" }}

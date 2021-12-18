@@ -557,7 +557,7 @@ def resetPassword(request):
                     'Hai ' + currentName + '. Berikut merupakan nombor pin OTP untuk reset kata laluan anda. ' +
                     'OTP: ' + randomOTP +
                     '. Sila abaikan emel ini jika anda tidak berhasrat untuk menukar kata laluan anda.',
-                    'ddalgihwa304@gmail.com',
+                    'futurecruisesite@outlook.com',
                     [request.session['email']],
                     fail_silently=False,
                 )
@@ -613,7 +613,7 @@ def resetPassword(request):
                 'Hai ' + currentName + '. Berikut merupakan nombor pin OTP untuk reset kata laluan anda. ' +
                 'OTP: ' + randomOTP +
                 '. Nombor pin OTP ini akan luput dalam 3 minit. Sila abaikan emel ini jika anda tidak berhasrat untuk menukar kata laluan anda.',
-                'ddalgihwa304@gmail.com',
+                'futurecruisesite@outlook.com',
                 [currentEmail],
                 fail_silently=False,
             )

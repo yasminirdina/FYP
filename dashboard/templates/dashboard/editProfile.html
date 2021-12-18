@@ -1,65 +1,151 @@
+{% extends "dashboard/baseDashboardNonAdmin.html" %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'css/dashboardIndex.css' %}">
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+{% block title %}
     <title>Future Cruise:{{ title }}</title>
-</head>
-<body>
-<center>
-    <ul class="ul-navbar">
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></li>
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></li>
-        {% if user_type == "pelajar" %}
-                <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/editProfile.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            Kemaskini Biodata
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        {% if errorMessage %}
+            <span class="span-error">
+                {{ errorMessage }}
+            </span>
         {% endif %}
-        <li class="li-navbar"><a class="li-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></li>
-        <li class="li-navbar"><a class="li-a-navbar active" href="{% url dashboard user_type user_id %}">
-            <span style="font-style: italic;">Dashboard </span>
-            <span>{{ dashboardNav }}</span></a></li>
-        <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-        <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></li>
-    </ul>
-    <h1>
-        <span style="font-style: italic;">Future Cruise</span>
-        :{{ title }}
-    </h1>
-    <h2>{{ subtitle }}</h2>
-    <p style="font-style: italic; color: crimson;">{{ errorMessage }}</p>
-    {% if user_type == 'pelajar' %}
+
+        {% if user_type == 'pelajar' %}
         <form action="{% url 'dashboard:edit-profile' user_type user_id %}" class="EditProfileStudentForm" method="post">
             {% csrf_token %}
             {{ form.media.js }}
-            {{ form.as_p }}
-            <button class="btn edit-for-editProfile" type="submit">Simpan</button>
-            <button class="btn back-to-showProfile3">
-                <a class="a-back-for-editProfile" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Batal</a>
-            </button>
+
+            <div class="div-form-content">
+                <div class="div-form-content-ind">
+                    Sila masukkan nama penuh anda (Format: Ali Bin Abu):
+                    {{ form.name }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila kemaskini tahun semasa:
+                    {{ form.year }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih kelas anda:
+                    {{ form.studentClass }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila masukkan bidang kerjaya yang anda minati sekarang:
+                    {{ form.interest }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih nama penuh ibu bapa/penjaga anda:
+                    {{ form.parentID }}
+                </div>
+            </div>
+
+            <div class="div-form-buttons">
+                <button class="btn submit" type="submit">Simpan</button>
+                <button class="btn back-to-showProfile">
+                    <a class="a-for-editProfile" href="{% url 'dashboard:profile-settings' user_type user_id %}">Batal</a>
+                </button>
+            </div>
         </form>
     {% elif user_type == 'penjaga' %}
         <form action="{% url 'dashboard:edit-profile' user_type user_id %}" class="EditProfileParentForm" method="post">
             {% csrf_token %}
             {{ form.media.js }}
-            {{ form.as_p }}
-            <button class="btn edit-for-editProfile" type="submit">Simpan</button>
-            <button class="btn back-to-showProfile3">
-                <a class="a-back-for-editProfile" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Batal</a>
-            </button>
+            
+            <div class="div-form-content">
+                <div class="div-form-content-ind">
+                    Sila masukkan nama penuh anda (Format: Ali Bin Abu):
+                    {{ form.name }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih gelaran anda:
+                    {{ form.salutation }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila masukkan umur anda (Format: 48):
+                    {{ form.age }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila masukkan pekerjaan semasa anda (Format: Pegawai Perubatan):
+                    {{ form.job }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih hubungan dengan pelajar:
+                    {{ form.relation }}
+                </div>
+            </div>
+
+            <div class="div-form-buttons">
+                <button class="btn submit" type="submit">Simpan</button>
+                <button class="btn back-to-showProfile">
+                    <a class="a-for-editProfile" href="{% url 'dashboard:profile-settings' user_type user_id %}">Batal</a>
+                </button>
+            </div>
         </form>
     {% elif user_type == 'guru' %}
         <form action="{% url 'dashboard:edit-profile' user_type user_id %}" class="EditProfileTeacherForm" method="post">
             {% csrf_token %}
             {{ form.media.js }}
-            {{ form.as_p }}
-            <button class="btn edit-for-editProfile" type="submit">Simpan</button>
-            <button class="btn back-to-showProfile3">
-                <a class="a-back-for-editProfile" href="{% url 'dashboard:profile-settings-nonadmin' user_type user_id %}">Batal</a>
-            </button>
+            
+            <div class="div-form-content">
+                <div class="div-form-content-ind">
+                    Sila masukkan nama penuh anda (Format: Ali Bin Abu):
+                    {{ form.name }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih gelaran anda:
+                    {{ form.salutation }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih jawatan anda di sekolah:
+                    {{ form.role }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila kemaskini tahun semasa yang selaras dengan jawatan di atas:
+                    {{ form.year }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    (Untuk Guru Kelas sahaja) Sila pilih kelas jagaan anda
+                    {{ form.homeroomClass }}
+                </div>
+            </div>
+
+            <div class="div-form-buttons">
+                <button class="btn submit" type="submit">Simpan</button>
+                <button class="btn back-to-showProfile">
+                    <a class="a-for-editProfile" href="{% url 'dashboard:profile-settings' user_type user_id %}">Batal</a>
+                </button>
+            </div>
         </form>
     {% endif %}
-</center>
+    </div>
+{% endblock %}
 
-</body>
-</html>
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.profile-settings .p-a-sidebar').addClass('sb-active');
+    </script>
+{% endblock %}

@@ -1,0 +1,141 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}{% endblock %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+
+    {% block js1 %}{% endblock %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/baseDashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/baseAdminModal.css' %}">
+
+    {% block styles %}{% endblock %}
+</head>
+    <body>
+        <center>
+            <div class="div-navbar admin">
+                <div class="div-navbar-left admin-left">
+                    <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></p>
+                    <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
+                    <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                    <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></p>
+                    <p class="p-navbar no-icon"><a class="p-a-navbar active" href="{% url dashboard user_id %}">
+                        <span style="font-style: italic;">Dashboard</span>
+                        <span> Admin</span></a>
+                    </p>
+            
+                    <!--mobile-->
+                    <p class="p-navbar icon"><a class="p-a-navbar" href="{% url test user_id %}">
+                        <i class="fas fa-edit"></i>
+                    </a></p>
+                    <p class="p-navbar icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">
+                        <i class="fas fa-blog"></i>
+                    </a></p>
+                    <p class="p-navbar icon"><a class="p-a-navbar" href="{% url quiz user_id %}">
+                        <i class="fas fa-gamepad"></i>
+                    </a></p>
+                    <p class="p-navbar icon"><a class="p-a-navbar" href="{% url search user_id %}">
+                        <i class="fas fa-search"></i>
+                    </a></p>
+                    <p class="p-navbar icon"><a class="p-a-navbar active" href="{% url dashboard user_id %}">
+                        <i class="fas fa-user"></i>
+                    </a></p>
+                </div>
+                <div class="div-navbar-right admin-right">
+                    <p class="p-navbar logout no-icon"><a class="p-a-navbar" href="{% url logout user_id %}">Log Keluar</a></p>
+                    <p class="p-navbar username no-icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></p>
+            
+                    <!--mobile-->
+                    <p class="p-navbar logout icon"><a class="p-a-navbar" href="{% url logout user_id %}">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a></p>
+                    <p class="p-navbar username icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></p>
+                </div>
+            </div>
+
+            <!-- Put sidebar for buttons (see dashboardIndex admin) -->
+            <div class="div-outer">
+                <div class="div-sidebar-outer">
+                    <h2>
+                        Menu:
+                    </h2>
+
+                    <div class="div-sidebar-menulist">
+                        <!-- if got UNREAD notification for blog/chat/suggestion, put circle icon on notification and chat/suggestion (where applicable) -->
+                        <p class="p-sidebar notification">
+                            <a class="p-a-sidebar" href="{% url dashboard user_id %}">
+                                <i class="fas fa-circle"></i>
+                                Notifikasi
+                            </a>
+                        </p>
+                        <p class="p-sidebar class-settings"><a class="p-a-sidebar" href="{% url settings user_id %}">Tetapan Maklumat Kelas</a></p>
+                        <p class="p-sidebar chat"><a class="p-a-sidebar" href="{% url chat user_id %}">Ruang Bual Kaunseling</a></p>
+                        <p class="p-sidebar suggestion">
+                            <a class="p-a-sidebar" href="{% url suggestions user_id %}">
+                                <i class="fas fa-circle"></i>
+                                Cadangan Penambahbaikan
+                            </a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="div-main-outer">
+                    {% block header %}{% endblock %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+
+            <!-- Modal for adminClassSettings -->
+            <div class="div-bg-modal-1">
+                <div class="div-modal-content-1">
+                    <div class="div-modal-header-1">
+                        Padam Kelas
+                    </div>
+        
+                    Adakah anda pasti ingin memadam kelas ini?
+        
+                    <div class="div-confirm-delete-buttons">
+                        <button class="btn confirm-delete" value="">Ya</button> 
+                        <button class="btn cancel-delete">Tidak</button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="div-bg-modal-2">
+                <div class="div-modal-content-2">
+                    <div class="div-modal-header-2">
+                        Kelas Telah Dipadam
+                    </div>
+        
+                    Mengemaskini senarai kelas...
+                </div>
+            </div>
+
+            <!-- Modal for adminSuggestions -->
+            <div class="div-bg-modal-3">
+                <div class="div-modal-content-3">
+                    <div class="div-modal-header-3">
+                        Subjek Cadangan
+                    </div>
+        
+                    <div class="div-suggestion-content">
+                        ...
+                    </div>
+        
+                    <div class="div-suggestion-buttons">
+                        <button class="btn close-suggestion">Tutup</button>
+                    </div>
+                </div>
+            </div>
+
+            {% block js2 %}{% endblock %}
+        </center>
+    </body>
+</html>

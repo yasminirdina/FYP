@@ -1,0 +1,28 @@
+{% extends "dashboard/baseDashboardNonAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Future Cruise: Penanda Isi Kandungan</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/nonAdminBookmark.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            Penanda Isi Kandungan
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        {% include 'dashboard/nonAdminBookmarkContent.html' %}
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.bookmark .p-a-sidebar').addClass('sb-active');
+    </script>
+{% endblock %}

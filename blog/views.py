@@ -986,9 +986,15 @@ def addPost(request, user_type, user_id):
                     newCatSplit = re.split(" ", newCat)
                     for i in range(len(newCatSplit)):
                         if i != len(newCatSplit)-1:
-                            newCat_2 += newCatSplit[i].capitalize() + " "
+                            if newCatSplit[i].isupper() == True:
+                                newCat_2 += newCatSplit[i] + " "
+                            else:
+                                newCat_2 += newCatSplit[i].capitalize() + " "
                         else:
-                            newCat_2 += newCatSplit[i].capitalize()
+                            if newCatSplit[i].isupper() == True:
+                                newCat_2 += newCatSplit[i]
+                            else:
+                                newCat_2 += newCatSplit[i].capitalize()
 
                     newCategory = blog.models.Category.objects.create(name=newCat_2)
                     newCategoriesIDList.append(newCategory.id)
@@ -1008,11 +1014,12 @@ def addPost(request, user_type, user_id):
             for catID in finalCategoriesIDList:
                 blog.models.BlogPostCategory.objects.create(blogPostID_id=newPost.id, categoryID_id=catID)
 
-            """ blogPostImageTempURLs = list(blog.models.BlogPostImageTemp.objects.values_list('blogPostImage', flat=True))
+            # Saving image
+            blogPostImageTempURLs = list(blog.models.BlogPostImageTemp.objects.values_list('blogPostImage', flat=True))
 
             for imageTempURL in blogPostImageTempURLs:
                 if str(newPost.id) in imageTempURL:
-                    blog.models.BlogPostImage.objects.create(blogPostImage=imageTempURL, blogPostID_id=newPost.id) """
+                    blog.models.BlogPostImage.objects.create(blogPostImage=imageTempURL, blogPostID_id=newPost.id)
 
             return redirect('blog:view-post', user_type, user_id, newPost.id)
         else: #Test
@@ -1147,9 +1154,15 @@ def editPost(request, user_type, user_id, post_id):
                     newCatSplit = re.split(" ", newCat)
                     for i in range(len(newCatSplit)):
                         if i != len(newCatSplit)-1:
-                            newCat_2 += newCatSplit[i].capitalize() + " "
+                            if newCatSplit[i].isupper() == True:
+                                newCat_2 += newCatSplit[i] + " "
+                            else:
+                                newCat_2 += newCatSplit[i].capitalize() + " "
                         else:
-                            newCat_2 += newCatSplit[i].capitalize()
+                            if newCatSplit[i].isupper() == True:
+                                newCat_2 += newCatSplit[i]
+                            else:
+                                newCat_2 += newCatSplit[i].capitalize()
 
                     newCategory = blog.models.Category.objects.create(name=newCat_2)
                     newCategoriesIDList.append(newCategory.id)

@@ -1,0 +1,54 @@
+{% extends "pTest/base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>FutureCruise: Ujian Kerjaya | Soalan {{ cnt_quest }}</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/studentTest.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- -------------------------------edit--------------------------------- -->
+<div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <!-- <div id="hud">
+        <div class="hud-item">
+            <p id="progressText" class="hud-prefix">
+               Soalan 
+            </p>
+            <div id="progressBar">
+                <div id="progressBarFull"></div>
+            </div>
+        </div>
+        <div class="hud-item">
+            <p class="hud-prefix">
+                Score
+            </p>
+            <h1 class="hud-main-text" id="score">
+                0
+            </h1>
+        </div>
+    </div> -->
+    <p>Bahagian Personaliti:</p>
+    <a href="#">Realistic</a>
+    <a href="#">Artistic</a>
+    <a href="#">Investigatif</a>
+    <a href="#">Social</a>
+    <a href="#">Enterprising</a>
+    <a href="#">Conventional</a>
+</div>
+<!-- Use any element to open the sidenav -->
+<span class="progress-navbar" onclick="openNav()">Progress</span>
+<!-- ----------------------------endedit-------------------------------- -->
+
+<div id="div-wrapper">
+    {% include 'test/testPlay2.html' %}
+</div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript" src="{% static 'js/indexTest.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/KivStudentTest.js' %}"></script>
+{% endblock%}

@@ -4,19 +4,24 @@ from . import models
 from django.utils.translation import ugettext_lazy as _
 from tinymce.widgets import TinyMCE
 
-allCategories = blog.models.Category.objects.exclude(name='Tiada').order_by('name')
-catNameList = list(allCategories.values_list('name', flat=True))
-catIDList = list(allCategories.values_list('id', flat=True))
-CATEGORY_CHOICES = []
+def get_category_choices():
+    allCategories = blog.models.Category.objects.exclude(name='Tiada').order_by('name')
+    catNameList = list(allCategories.values_list('name', flat=True))
+    catIDList = list(allCategories.values_list('id', flat=True))
+    CATEGORY_CHOICES = []
 
-for i in range(len(catNameList)):
-    CATEGORY_CHOICES.append((catIDList[i], catNameList[i]))
+    for i in range(len(catNameList)):
+        CATEGORY_CHOICES.append((catIDList[i], catNameList[i]))
 
-CATEGORY_CHOICES.append((1, 'Lain-lain (Kategori baharu)'))
+    CATEGORY_CHOICES.append((1, 'Lain-lain (Kategori baharu)'))
+
+    return CATEGORY_CHOICES
+
+# print(str(CATEGORY_CHOICES)) #Test
 
 class AddPostForm(forms.Form):
     title = forms.CharField(label="Tajuk artikel:", max_length=500, required=True)
-    category = forms.ChoiceField(label="Kategori:", choices=CATEGORY_CHOICES, required=True)
+    category = forms.ChoiceField(label="Kategori:", choices=get_category_choices, required=True)
     new_category = forms.CharField(label="Kategori baharu:", max_length=154, required=False)
     description = forms.CharField(label="Rumusan ringkas:", max_length=200, required=True)
     content = forms.CharField(label="Kandungan artikel:", widget=TinyMCE(attrs={'cols': 80, 'rows': 30}), required=True)
@@ -30,7 +35,7 @@ class AddPostForm(forms.Form):
 
 class EditPostForm(forms.Form):
     title = forms.CharField(label="Tajuk artikel:", max_length=500, required=True)
-    category = forms.ChoiceField(label="Kategori:", choices=CATEGORY_CHOICES, required=True)
+    category = forms.ChoiceField(label="Kategori:", choices=get_category_choices, required=True)
     new_category = forms.CharField(label="Kategori baharu:", max_length=154, required=False)
     description = forms.CharField(label="Rumusan ringkas:", max_length=200, required=True)
     content = forms.CharField(label="Kandungan artikel:", widget=TinyMCE(attrs={'cols': 80, 'rows': 30}), required=True)

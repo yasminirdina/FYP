@@ -1,0 +1,120 @@
+.btn {
+    border: none;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}
+
+/* On mouse-over */
+.btn:hover{
+    /* background: #eee; */
+    background-color: white;
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.back-to-showProfile {
+    background-color: rgb(250, 127, 56);
+}
+
+.back-to-showProfile:hover {
+    background-color: white;
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(250, 127, 56, 0.658);
+}
+
+.a-for-editProfile {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* form fields */
+form{
+    display: grid;
+    grid-auto-flow: row;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.name, .year, .studentclass, .interest, .parentid, .salutation, .age, .job, .relation, .role, .homeroomclass {
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+  
+input:focus::placeholder {color: transparent}
+
+/* div */
+.div-section-header, .div-content-outer{
+    /* background-color: darksalmon; */
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.div-section-header{
+    margin: -10px 0 -15px;
+}
+
+.div-content-outer{
+    grid-auto-flow: row;
+    max-height: 70vh;
+    overflow: auto;
+    border-radius: 10px;
+    padding: 10px 10px 15px;
+    border: 1px solid lightgray;
+}
+
+.div-form-content, .div-form-content-ind{
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+    height: fit-content;
+    justify-items: left;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.div-form-content-ind{
+    width: 100%;
+    grid-auto-flow: column;
+    grid-template-columns: 30% auto;
+    align-items: flex-start;
+}
+
+.div-form-buttons{
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: fit-content;
+    height: fit-content;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+/* span */
+.span-error{
+    font-style: italic;
+    color: rgb(207, 61, 61);
+}

@@ -1,3 +1,4 @@
+import re
 from django import forms, http
 from django.forms.widgets import Select
 from django.http import request
@@ -13,6 +14,12 @@ class ChangePasswordForm(forms.Form):
     currentPass.widget.attrs.update({'class' : 'currentpass'})
     newPass.widget.attrs.update({'class' : 'newpass'})
     newPassConfirm.widget.attrs.update({'class' : 'newpassconfirm'})
+
+class AddClassForm(forms.Form):
+    classname = forms.CharField(label="Tambah kelas baharu", max_length=25, required=True)
+
+    classname.widget.attrs.update({'class' : 'classname'})
+    
 """
 class EditProfileStudentForm(forms.Form):
     name = forms.CharField(label="Sila masukkan nama penuh anda (Format: Ali Bin Abu)", max_length=50),
@@ -44,6 +51,8 @@ class EditProfileStudentForm(forms.ModelForm):
         self.fields['studentClass'].widget.attrs.update({'class' : 'studentclass'})
         self.fields['interest'].widget.attrs.update({'class' : 'interest'})
         self.fields['parentID'].widget.attrs.update({'class' : 'parentid'})
+        self.fields['studentClass'].queryset = self.fields['studentClass'].queryset.order_by('className')
+        self.fields['parentID'].queryset = self.fields['parentID'].queryset.exclude(name="Tidak Dikemaskini")
 
     class Meta:
         model = models.Student

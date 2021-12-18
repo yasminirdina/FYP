@@ -39,7 +39,7 @@ body {
 /* The navigation menu links */
 .sidenav p{
     font-family: 'Varela Round', sans-serif;
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .sidenav a {
@@ -78,32 +78,38 @@ body {
 .row{
     display: grid;
     grid-template-columns: auto auto;
-    grid-column-gap: 7%;
+    grid-column-gap: 6%;
 }
 
 .choice-container-1{
-    background: rgb(192, 129, 13);
+    background: rgb(240, 127, 62);
     height: 5rem;
     border-radius: 30px;
     margin-left: 5rem;
+    width: 25rem;
+    transition: 0.4s;
 }
 
 .choice-container-1:hover{
     cursor: pointer;
     transform: scale(1.07);
+    width: 30rem;
     transform: transfom 100ms;
 }
 
 .choice-container-2{
-    background: rgb(192, 129, 13);
+    background: rgb(240, 127, 62);
     height: 5rem;
     border-radius: 30px;
     margin-right: 5rem;
+    width: 25rem;
+    transition: 0.4s;
 }
 
 .choice-container-2:hover{
     cursor: pointer;
     transform: scale(1.07);
+    width: 30rem;
     transform: transfom 100ms;
 }
 
@@ -116,7 +122,7 @@ body {
 }
 
 .prev-container {
-    background: rgb(66, 109, 189);
+    background: rgb(255, 146, 56);
     margin: 2rem 30rem 0 27rem;
     padding: 0 1rem 0 0;
     font-size: 1.7rem;
@@ -144,7 +150,7 @@ body {
     color: white;
 }
 
-#question{
+#questionText{
     margin: 3rem 0rem 3.5rem;
     font-family: 'Varela Round', sans-serif;
     font-size: 2.7rem;

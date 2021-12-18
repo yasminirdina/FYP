@@ -1,0 +1,64 @@
+.btn {
+    border: none;
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}
+
+/* On mouse-over */
+.btn:hover{
+    /* background: #eee; */
+    background-color: white;
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.a-for-error {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* div */
+.div-navbar, .div-sidebar-menulist{
+    pointer-events: none;
+}
+
+.div-section-header, .div-content-outer{
+    /* background-color: darksalmon; */
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.div-section-header{
+    margin: -10px 0 -15px;
+}
+
+.div-content-outer{
+    max-height: 75vh;
+    overflow: auto;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.div-content-outer h2 .span-error{
+    color: rgb(250, 127, 56);
+}
+
+.div-content-outer h2 .span-success{
+    color: rgb(41, 165, 41);
+}

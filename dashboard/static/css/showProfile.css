@@ -1,24 +1,212 @@
-ul {
-    list-style-type: none;
-    font-family: "DM Sans";
-}
-
-li {
-    font-family: "DM Sans";
+/* ul/ol */
+.ol-parent-student, .ol-teacher-student {
+    width: 100%;
+    font-family: 'Varela Round', sans-serif;
+    text-align: left;
+    padding-left: 0;
+    list-style-position: inside;
+    line-height: 25px;
+    box-sizing: border-box;
 }
 
 .btn {
     border: none;
-    background-color: inherit;
-    padding: 14px 28px;
-    font-size: 1.25vw;
-    font-family: "DM Sans";
+    background-color: rgb(250, 188, 54);
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
     font-weight: bold;
+    letter-spacing: 1px;
     cursor: pointer;
-    display: inline-block;
-    }
-    
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}
+
 /* On mouse-over */
 .btn:hover{
-    background: #eee;
-    }
+    /* background: #eee; */
+    background-color: white;
+    color: rgb(250, 188, 54);
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.a-for-showProfile {
+    text-decoration: none;
+    color: inherit;
+}
+
+.a-with-underline{
+    text-decoration: underline;
+    color: inherit;
+}
+
+.a-for-showProfile:hover, .a-with-underline:hover {
+    font-weight: bold;
+}
+
+.a-with-underline:hover {
+    color:rgb(250, 127, 56);
+}
+
+/* div */
+.div-section-header, .div-content-outer{
+    /* background-color: darksalmon; */
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
+.div-section-header{
+    margin: -10px 0 -15px;
+}
+
+.div-content-outer{
+    grid-auto-flow: row;
+    max-height: 70vh;
+    overflow: auto;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid lightgray;
+}
+
+.div-privacy-outer, .div-profile-outer, .div-privacy-header, .div-profile-header, .div-privacy-buttons, .div-profile-buttons{
+    position: relative;
+    display: grid;
+    grid-auto-flow: row;
+    width: 100%;
+    height: fit-content;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.div-privacy-header, .div-profile-header{
+    gap: 0;
+    font-weight: bold;
+    border-bottom: 1px solid lightgray;
+}
+
+.div-privacy-content, .div-profile-content{
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.div-privacy-buttons, .div-profile-buttons{
+    justify-items: right;
+}
+
+.div-modal-content-1, .div-modal-content-2 {
+    max-width: 50%;
+    /* max-height: 80vh;
+    overflow: auto; */
+    background-color: white;
+    border: none; 
+    border-radius: 15px;
+    padding: 10px 15px;
+    position: relative;
+    margin: 0 auto;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    color: black;
+    box-sizing: border-box;
+}
+
+.div-modal-header-1, .div-modal-header-2 {
+    position: relative;
+    width: 80%;
+    height: fit-content;
+    z-index: 1;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+    /* background-color: rgb(121, 85, 118); */
+}
+
+.div-modal-header-2{
+    width: fit-content;
+}
+
+.div-parent-student-content, .div-parent-student-buttons, .div-teacher-student-content, .div-teacher-student-buttons{
+    /* background-color: antiquewhite; */
+    position: relative;
+    width: fit-content;
+    display: grid;
+    grid-auto-flow: column;
+    justify-items: center;
+    align-items: center;
+    gap: 0;
+    box-sizing: border-box;
+}
+
+.div-parent-student-content, .div-teacher-student-content{
+    max-height: 50vh;
+    overflow: auto;
+}
+
+.div-parent-student-buttons, .div-teacher-student-buttons{
+    height: fit-content;
+    /* top | horizontal | bottom */
+    margin: 0 0 5px;
+}
+
+/* table */
+table {
+    /* border: 1px solid whitesmoke; */
+    /* border-collapse: separate !important; */
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 16px;
+    width: 100%;
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+}
+
+/* Set header to stick to the top of the container. */
+tr th {
+    position: sticky;
+    left: 0;
+}
+
+th {
+    padding: 10px;
+    letter-spacing: 1px;
+    background-color: rgb(250, 127, 56);
+    color: white;
+    width: 30%;
+}
+  
+td {
+    padding: 10px;
+    width: 70%;
+}
+
+tr {
+    background-color: #fff;
+    border: 1px solid lightgray;
+    vertical-align: top;
+}
+  
+tr:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+}
+
+/* span */
+.span-error{
+    font-style: italic;
+    color: rgb(207, 61, 61);
+}

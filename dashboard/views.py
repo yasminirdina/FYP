@@ -1,88 +1,14 @@
+from datetime import datetime
 from django import http
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, response
-from .forms import ChangePasswordForm, EditProfileStudentForm, EditProfileParentForm, EditProfileTeacherForm
+from django.http import HttpResponse, JsonResponse
+from .forms import ChangePasswordForm, AddClassForm, EditProfileStudentForm, EditProfileParentForm, EditProfileTeacherForm
 import dashboard.models
 import string, re
+from django.contrib.auth.hashers import make_password, check_password
 
 # Create your views here.
-def dashboardMain(request, user_type, user_id):
-    #response = "Hai! Anda berada di "
-    userRecord = dashboard.models.User.objects.get(ID=user_id)
-
-    #check logged in or not
-    if userRecord.isActive == False:
-        return redirect('home:login')
-        #login_warn =  "Sila log masuk terlebih dahulu."
-        #context = {'login_warn': login_warn}
-        #return render(request, 'home/loginIndex.html', context)
-
-    userRecord = dashboard.models.User.objects.get(ID=user_id)
-    username = userRecord.username
-    urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index'
-    urlQuiz = 'quiz:index-student'
-    urlSearch = 'search:index-nonadmin'
-    urlDashboard = 'dashboard:index-nonadmin'
-    urlLogout = 'dashboard:logout-confirm'
-    urlProfile = ''
-    urlBookmark = ''
-    urlReport = ''
-    urlChat = ''
-    urlSuggestion = ''
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = " Pelajar"
-        urlProfile = 'dashboard:profile-settings-nonadmin' #same view for any nonadmin user (display setting)
-        urlBookmark = 'dashboard:bookmarks' #same view for any nonadmin user (display bookmark list)
-        urlReport = 'dashboard:reports-student' #so far i think report have diff view for every nonadmin type (student view and download, parent view childrens', homeroom teacher can filter, view, dl)
-        urlChat = 'dashboard:chat-student' #tbc same view or not, if yes, omit 'student' use same url pattern for all nonadmin
-        urlSuggestion = 'dashboard:suggestions-nonadmin' #same view for any nonadmin user (display suggestion list)
-        context = {'dashboardNav': dashboardNav, 'user_type': user_type, 'user_id': user_id, 'username': username,
-        'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout, 'profile': urlProfile,
-        'bookmark': urlBookmark, 'report': urlReport, 'chat': urlChat, 'suggestion': urlSuggestion} 
-        return render(request, 'dashboard\dashboardIndex.html', context)
-    elif user_type == "penjaga" and 'P' in user_id:
-        dashboardNav = " Penjaga"
-        urlProfile = 'dashboard:profile-settings-nonadmin'
-        urlBookmark = 'dashboard:bookmarks'
-        urlReport = 'dashboard:reports-parent'
-        urlChat = 'dashboard:chat-parent'
-        urlSuggestion = 'dashboard:suggestions-nonadmin'
-        context = {'dashboardNav': dashboardNav, 'user_type': user_type, 'user_id': user_id, 'username': username,
-        'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout, 'profile': urlProfile,
-        'bookmark': urlBookmark, 'report': urlReport, 'chat': urlChat, 'suggestion': urlSuggestion} 
-        return render(request, 'dashboard\dashboardIndex.html', context)
-    elif user_type == "guru" and 'T' in user_id:
-        dashboardNav = " Guru"
-        urlProfile = 'dashboard:profile-settings-nonadmin'
-        urlBookmark = 'dashboard:bookmarks'
-        urlReport = 'dashboard:reports-teacher'
-        urlChat = 'dashboard:chat-teacher'
-        urlSuggestion = 'dashboard:suggestions-nonadmin'
-        context = {'dashboardNav': dashboardNav, 'user_type': user_type, 'user_id': user_id, 'username': username,
-        'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout, 'profile': urlProfile,
-        'bookmark': urlBookmark, 'report': urlReport, 'chat': urlChat, 'suggestion': urlSuggestion} 
-        return render(request, 'dashboard\dashboardIndex.html', context)
-    else: #no match between user type and user ID huruf part (cth: 'pelajar' and 'A1') OR english user types OR typo
-        if user_type == 'pelajar':
-            dashboardNav = " Pelajar"
-            response = "Halaman ini hanya boleh diakses oleh pelajar."
-        elif user_type == 'penjaga':
-            dashboardNav = " Penjaga"
-            response = "Halaman ini hanya boleh diakses oleh ibu bapa atau penjaga."
-        elif user_type == 'guru':
-            dashboardNav = " Guru"
-            response = "Halaman ini hanya boleh diakses oleh guru."
-        else: #user type in english/invalid e.g. student, parent, teacher, typos
-            dashboardNav = " Pengguna"
-            response = "Halaman ini tidak wujud." 
-        #pass url navbar nonadmin to error template
-        context = {'dashboardNav': dashboardNav, 'response': response, 'user_type': user_type, 'user_id': user_id,
-        'username': username, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout}
-        #context = {'title': title, 'response': response, 'nonadmin_id': user_id}
-        return render(request, 'dashboard\dashboardIndexNonAdminError.html', context)
-
-def dashboardMainAdmin(request, user_id):
+def adminNotif(request, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
     
     #check logged in or not
@@ -96,60 +22,395 @@ def dashboardMainAdmin(request, user_id):
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
     user_type= "admin"
+
+    urlClassSettings = 'dashboard:class-settings'
+    urlSuggestions = 'dashboard:suggestions-admin'
+    urlChat = 'dashboard:chat-admin'
+
     if user_id == 'A1': #betul ni admin, render dashboard index admin
         #response = "Hai! Anda berada di "
-        context = {'admin_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard':urlDashboard, 'logout': urlLogout, "user_type": user_type}
-        return render(request, 'dashboard\dashboardIndexAdmin.html', context)
+        context = {
+            'user_id': user_id,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard': urlDashboard,
+            'logout': urlLogout,
+            'user_type': user_type,
+            'settings': urlClassSettings,
+            'suggestions': urlSuggestions,
+            'chat': urlChat
+        }
+        return render(request, 'dashboard/adminNotif.html', context)
     else: #url jadi admin/Sx @ Tx @ Px - manual enter
         response = "Halaman ini hanya boleh diakses oleh admin."
         #pass url navbar admin to error template
-        context = {'response': response, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard':urlDashboard, 'logout': urlLogout}
-        return render(request, 'dashboard\dashboardIndexAdminError.html', context)
+        context = {
+            'response': response,
+            'user_type': user_type,
+            'user_id': user_id,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard': urlDashboard,
+            'logout': urlLogout,
+            'settings': urlClassSettings,
+            'suggestions': urlSuggestions,
+            'chat': urlChat
+        }
+        return render(request, 'dashboard/adminIndexError.html', context)
 
-def logoutConfirm(request, user_id):
-    currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
-    username = currentUserRecord.username
-    context = {'username': username, 'user_id': user_id}
-    return render(request, 'dashboard\logoutConfirm.html', context)
+def adminClassSettings(request, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
 
-def loggingOut(request, user_id):
-    currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
-    currentUserRecord.isActive = False
-    currentUserRecord.save()
-    response = "Jumpa lagi! Ke halaman utama dalam 3, 2, 1... "
-    return render(request, 'dashboard\loggingOut.html', {'response': response})
-
-#profile settings - show current details
-"""
-def showProfile(request, user_id):
-    response = "Profil Akaun Pengguna %s"
-    return HttpResponse(response % user_id)
-"""
-
-"""
-def showProfileAdmin(request, user_id):
-    urlTest = 'dashboard:index-admin'
+    urlTest = 'test:index-admin'
     urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-admin'
-    urlSearch = 'dashboard:index-admin'
+    urlSearch = 'search:index-admin'
     urlDashboard = 'dashboard:index-admin'
     urlLogout = 'dashboard:logout-confirm'
-    if user_id == 'A1': 
-        adminDetail = dashboard.models.Admin.objects.get(ID=user_id)
-        response = "Profil Akaun Admin %s: %s" 
-        return HttpResponse(response % (user_id, adminDetail.ID.username))
-    else: #bukan admin
-        title = "Future Cruise: Tetapan Akaun Admin"
-        response = "Halaman ini hanya boleh diakses oleh admin."
-        #pass url navbar admin to error template
-        context = {'title': title, 'response': response, 'user_id': user_id, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard':urlDashboard, 'logout': urlLogout}
-        return render(request, 'dashboard\dashboardIndexAdminError.html', context)
-"""
+    user_type= "admin"
 
-#test try cuba untuk guna multiple user group, diff render html
+    urlClassSettings = 'dashboard:class-settings'
+    urlSuggestions = 'dashboard:suggestions-admin'
+    urlChat = 'dashboard:chat-admin'
+
+    allClass = dashboard.models.HomeroomTeacherClass.objects.exclude(className='NA').order_by('className')
+
+    if request.method == 'POST':
+        print("hi POST")
+        if request.is_ajax():
+            if request.POST['requestType'] == 'deleteClass':
+                print("hi POST ajax deleteClass") # Test
+                classToDelete = request.POST['className']
+
+                print("classToDelete: " + classToDelete) #Test
+
+                allTeacherClassList = list(dashboard.models.Teacher.objects.exclude(homeroomClass='NA').values_list('homeroomClass', flat=True))
+
+                if classToDelete in allTeacherClassList:
+                    currentHomeroomTeacher = dashboard.models.Teacher.objects.get(homeroomClass=classToDelete)
+                    currentHomeroomTeacher.role = "NA"
+                    currentHomeroomTeacher.homeroomClass = "NA"
+                    currentHomeroomTeacher.save()
+
+                dashboard.models.ClassList.objects.get(name=classToDelete).delete()
+                dashboard.models.HomeroomTeacherClass.objects.get(className=classToDelete).delete()
+
+                context = {
+                    'doneDeleteClass': "Yes"
+                }
+                
+                return JsonResponse(context)
+        else:
+            form = AddClassForm(request.POST)
+            if form.is_valid():
+                filledList = form.cleaned_data
+                newClass = filledList['classname']
+
+                allClassList = list(allClass.values_list('className', flat=True))
+
+                print("newClassCap: " + newClass.upper()) #Test
+
+                if newClass.upper() not in allClassList:
+                    dashboard.models.HomeroomTeacherClass.objects.create(className=newClass.upper(), lastDateEdited=datetime.now().date())
+                    dashboard.models.ClassList.objects.create(name=newClass.upper())
+                    form = AddClassForm()
+        
+                    context = {
+                        'user_id': user_id,
+                        'test': urlTest,
+                        'blog': urlBlog,
+                        'quiz': urlQuiz,
+                        'search': urlSearch,
+                        'dashboard':urlDashboard,
+                        'logout': urlLogout,
+                        'user_type': user_type,
+                        'settings': urlClassSettings,
+                        'suggestions': urlSuggestions,
+                        'chat': urlChat,
+                        'allClass': allClass,
+                        'form': form
+                    }
+                else:
+                    context = {
+                        'user_id': user_id,
+                        'test': urlTest,
+                        'blog': urlBlog,
+                        'quiz': urlQuiz,
+                        'search': urlSearch,
+                        'dashboard':urlDashboard,
+                        'logout': urlLogout,
+                        'user_type': user_type,
+                        'settings': urlClassSettings,
+                        'suggestions': urlSuggestions,
+                        'chat': urlChat,
+                        'allClass': allClass,
+                        'form': form,
+                        'error': "Nama kelas yang dimasukkan telah wujud. Sila masukkan nama kelas yang lain."
+                    }
+                
+                return render(request, 'dashboard/adminClassSettings.html', context)
+    else:
+        form = AddClassForm()
+        
+        context = {
+            'user_id': user_id,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'user_type': user_type,
+            'settings': urlClassSettings,
+            'suggestions': urlSuggestions,
+            'chat': urlChat,
+            'allClass': allClass,
+            'form': form
+        }
+
+        return render(request, 'dashboard/adminClassSettings.html', context)
+
+def adminSuggestions(request, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    urlTest = 'test:index-admin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-admin'
+    urlSearch = 'search:index-admin'
+    urlDashboard = 'dashboard:index-admin'
+    urlLogout = 'dashboard:logout-confirm'
+    user_type= "admin"
+
+    urlClassSettings = 'dashboard:class-settings'
+    urlSuggestions = 'dashboard:suggestions-admin'
+    urlChat = 'dashboard:chat-admin'
+
+    statusList = ['Dihantar', 'Sedang Diproses', 'Ditutup']
+    allSuggestions = dashboard.models.Suggestion.objects.all().order_by('-dateIssued', '-timeIssued', 'title')
+    allCategory = dashboard.models.SuggestionType.objects.all().order_by('name')
+
+    if request.method == 'POST':
+        print("hi POST")
+        if request.is_ajax():
+            if request.POST['requestType'] == 'updateStatus':
+                print("hi POST ajax updateStatus") # Test
+                newStatus = request.POST['newStatus']
+                suggestionID = request.POST['suggestionID']
+
+                print("newStatus: " + newStatus) #Test
+                print("suggestionID: " + str(suggestionID)) #Test
+
+                currentSuggestion = dashboard.models.Suggestion.objects.get(id=suggestionID)
+                currentSuggestion.status = newStatus
+                currentSuggestion.save()
+
+                context = {
+                    'doneUpdateStatus': "Yes"
+                }
+
+                return JsonResponse(context)
+    else:      
+        if request.is_ajax():
+            cat_selected = request.GET.get('cat_selected', None)
+
+            if cat_selected != 'Semua':
+                for category in allCategory:
+                    if category.name == cat_selected:
+                        allSuggestions = allSuggestions.filter(typeID_id=category.id)
+            
+            context = {
+                'statusList': statusList,
+                'allSuggestions': allSuggestions,
+                'allCategory': allCategory
+            }
+
+            return render(request, 'dashboard/adminSuggestionsContent.html', context)
+        else:
+            context = {
+                'user_id': user_id,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard': urlDashboard,
+                'logout': urlLogout,
+                'user_type': user_type,
+                'settings': urlClassSettings,
+                'suggestions': urlSuggestions,
+                'chat': urlChat,
+                'statusList': statusList,
+                'allSuggestions': allSuggestions,
+                'allCategory': allCategory
+            }
+
+            return render(request, 'dashboard/adminSuggestions.html', context)
+
+def adminChat(request, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    urlTest = 'test:index-admin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-admin'
+    urlSearch = 'search:index-admin'
+    urlDashboard = 'dashboard:index-admin'
+    urlLogout = 'dashboard:logout-confirm'
+    user_type= "admin"
+
+    urlClassSettings = 'dashboard:class-settings'
+    urlSuggestions = 'dashboard:suggestions-admin'
+    urlChat = 'dashboard:chat-admin'
+
+    context = {
+        'user_id': user_id,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'user_type': user_type,
+        'settings': urlClassSettings,
+        'suggestions': urlSuggestions,
+        'chat': urlChat
+    }
+
+    return render(request, 'dashboard/adminChat.html', context)
+
+def nonAdminNotif(request, user_type, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    username = userRecord.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    if user_type == "pelajar" and 'S' in user_id:
+        dashboardNav = " Pelajar"
+
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminNotif.html', context)
+    elif user_type == "penjaga" and 'P' in user_id:
+        dashboardNav = " Penjaga"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminNotif.html', context)
+    elif user_type == "guru" and 'T' in user_id:
+        dashboardNav = " Guru"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminNotif.html', context)
+    else: #no match between user type and user ID huruf part (cth: 'pelajar' and 'A1') OR english user types OR typo
+        if user_type == 'pelajar':
+            dashboardNav = " Pelajar"
+            response = "Halaman ini hanya boleh diakses oleh pelajar."
+        elif user_type == 'penjaga':
+            dashboardNav = " Penjaga"
+            response = "Halaman ini hanya boleh diakses oleh ibu bapa atau penjaga."
+        elif user_type == 'guru':
+            dashboardNav = " Guru"
+            response = "Halaman ini hanya boleh diakses oleh guru."
+        else: #user type in english/invalid e.g. student, parent, teacher, typos
+            dashboardNav = " Pengguna"
+            response = "Halaman ini tidak wujud." 
+
+        #pass url navbar nonadmin to error template
+        context = {
+            'response': response,
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminIndexError.html', context)
+
 def showProfileNonAdmin(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
 
@@ -164,6 +425,13 @@ def showProfileNonAdmin(request, user_type, user_id):
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+    
     #if user_id is admin
         #response = admin id
         #get admin profile detail
@@ -178,41 +446,137 @@ def showProfileNonAdmin(request, user_type, user_id):
         title = " Tetapan Akaun Pelajar"
         dashboardNav = " Pelajar"
         studentDetail = dashboard.models.Student.objects.get(ID=user_id)
-        response = "Profil Pelajar"
-        #response = "User ID: " + user_id + " student class: " + studentDetail.studentClass.className #test
-        context = {'title': title, 'dashboardNav': dashboardNav, 'userDetail': studentDetail, 'response': response, 'user_id': user_id, 'user_type': user_type,
-        'username': username, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard':urlDashboard, 'logout': urlLogout}
-        #return HttpResponse(response)
+        subtitle = "Biodata Pelajar"
+
+        context = {
+            'title': title,
+            'dashboardNav': dashboardNav,
+            'userDetail': studentDetail,
+            'subtitle': subtitle,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        }
+
         return render(request, 'dashboard\showProfile.html', context)
     elif user_type == 'penjaga' and 'P' in user_id:
         title = " Tetapan Akaun Penjaga"
         dashboardNav = " Penjaga"
         parentDetail = dashboard.models.Parent.objects.get(ID=user_id)
         studentDetailQuery = dashboard.models.Student.objects.filter(parentID=parentDetail).order_by('name')
-        response = "Profil Penjaga"
-        context = {'title': title, 'dashboardNav': dashboardNav, 'userDetail': parentDetail, 'studentDetail': studentDetailQuery, 'response': response, 'user_id': user_id,
-        'user_type': user_type, 'username': username, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-        'dashboard':urlDashboard, 'logout': urlLogout} 
-        #return HttpResponse(response)
+        subtitle = "Biodata Penjaga"
+
+        context = {
+            'title': title,
+            'dashboardNav': dashboardNav,
+            'userDetail': parentDetail,
+            'studentDetail': studentDetailQuery,
+            'studentDetailCount': studentDetailQuery.count(),
+            'subtitle': subtitle,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        }
+
         return render(request, 'dashboard\showProfile.html', context)
     elif user_type == 'guru' and 'T' in user_id:
         title = " Tetapan Akaun Guru"
         dashboardNav = " Guru"
-        response = "Profil Guru"
+        subtitle = "Biodata Guru"
         teacherDetail = dashboard.models.Teacher.objects.get(ID=user_id)
+
         if teacherDetail.role == "Guru Kelas":
-            homeroomDetail = dashboard.models.HomeroomTeacherClass.objects.get(teacherID=teacherDetail)
-            studentDetailQuery = dashboard.models.Student.objects.filter(studentClass=homeroomDetail.className)
-            context = {'title': title,'dashboardNav': dashboardNav, 'userDetail': teacherDetail,
-            'studentDetail': studentDetailQuery, 'response': response, 'user_id': user_id, 'user_type': user_type,
-            'username': username, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard,
-            'logout': urlLogout}
+            if teacherDetail.homeroomClass != 'NA':
+                homeroomDetail = dashboard.models.HomeroomTeacherClass.objects.get(teacherID=teacherDetail)
+                studentDetailQuery = dashboard.models.Student.objects.filter(studentClass=homeroomDetail.className)
+
+                context = {
+                    'title': title,
+                    'dashboardNav': dashboardNav,
+                    'userDetail': teacherDetail,
+                    'studentDetail': studentDetailQuery,
+                    'studentDetailCount': studentDetailQuery.count(),
+                    'subtitle': subtitle,
+                    'user_type': user_type,
+                    'user_id': user_id,
+                    'username': username,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion
+                }
+            else:
+                context = {
+                    'title': title,
+                    'dashboardNav': dashboardNav,
+                    'userDetail': teacherDetail,
+                    'subtitle': subtitle,
+                    'user_type': user_type,
+                    'user_id': user_id,
+                    'username': username,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion
+                }
         else:
-            context = {'title': title,'dashboardNav': dashboardNav, 'userDetail': teacherDetail,
-            'response': response, 'user_id': user_id, 'user_type': user_type, 'username': username, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch,
-            'dashboard':urlDashboard, 'logout': urlLogout}
-        #return HttpResponse(response % (user_id, teacherDetail))
+            context = {
+                'title': title,
+                'dashboardNav': dashboardNav,
+                'userDetail': teacherDetail,
+                'subtitle': subtitle,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion
+            }
+
         return render(request, 'dashboard\showProfile.html', context)
 
 #showProfile.changePassword
@@ -243,6 +607,12 @@ def changePassword(request, user_type, user_id):
     urlLogout = 'dashboard:logout-confirm'
     subtitle = "Tukar Kata Laluan" #h2 tag
 
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
     if user_type == 'pelajar' and 'S' in user_id:
         currentUserTypeDetail = dashboard.models.Student.objects.get(ID=user_id)
         title = " Tetapan Akaun Pelajar"
@@ -258,9 +628,27 @@ def changePassword(request, user_type, user_id):
 
     def errorMessageDisplay(request, form, errorMessage):
         #redirect to refreshed form with error message on top
-        context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type, 
-        'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-        'subtitle': subtitle, 'errorMessage': errorMessage, 'form': form}
+        context = {
+            'title': title,
+            'dashboardNav': dashboardNav,
+            'username': username,
+            'user_id': user_id,
+            'user_type': user_type, 
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard': urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion,
+            'subtitle': subtitle,
+            'errorMessage': errorMessage,
+            'form': form
+        }
         return render(request, 'dashboard/changePassword.html', context)
 
     def checkChar(firstPass):
@@ -288,7 +676,11 @@ def changePassword(request, user_type, user_id):
         if form.is_valid():
             filledList = form.cleaned_data
             #if filled current password is the same as that user's record in Student/Parent/Teacher table
-            if filledList['currentPass'] == currentUserTypeDetail.password:
+            print("filledpassraw: " + filledList['currentPass']) #Test
+            print("filledpasshash: " + make_password(filledList['currentPass'])) #Test
+            print("currentpassraw: " + currentUserTypeDetail.password) #Test
+            print("currentpasshash: " + make_password(currentUserTypeDetail.password)) #Test
+            if check_password(filledList['currentPass'], currentUserTypeDetail.password) == True:
                 #if first and second entered password is the same
                 if filledList['newPass'] == filledList['newPassConfirm']:
                     #if entered password length is 10
@@ -296,14 +688,33 @@ def changePassword(request, user_type, user_id):
                         #if has at least 1 upper, lower, special and number characters
                         if checkChar(filledList['newPass']) == True:
                             #update password in that usertype's table record for the entered email
-                            currentUserTypeDetail.password = filledList['newPassConfirm']
+                            currentUserTypeDetail.password = make_password(filledList['newPassConfirm'])
                             currentUserTypeDetail.save()   
+                            
                             #render successUpdate.html - with context for navbar, title, subtitle,
                             #successmsg, variable for views url in template
                             successMessage = "Kata laluan berjaya dikemaskini!"
-                            context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type, 
-                            'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-                            'subtitle': subtitle, 'successMessage': successMessage}
+                            
+                            context = {
+                                'title': title,
+                                'dashboardNav': dashboardNav,
+                                'username': username,
+                                'user_id': user_id,
+                                'user_type': user_type,
+                                'test': urlTest,
+                                'blog': urlBlog,
+                                'quiz': urlQuiz,
+                                'search': urlSearch,
+                                'dashboard': urlDashboard,
+                                'logout': urlLogout,
+                                'settings': urlProfile,
+                                'bookmark': urlBookmark,
+                                'report': urlReport,
+                                'chat': urlChat,
+                                'suggestions': urlSuggestion,
+                                'subtitle': subtitle,
+                                'successMessage': successMessage
+                            }
                             return render(request, 'dashboard/successUpdate.html', context)
                         #if either has no upper/lower/special/number characters
                         else:
@@ -327,11 +738,27 @@ def changePassword(request, user_type, user_id):
     else: 
         form = ChangePasswordForm()
 
-    context = {'title': title,'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type,
-    'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-    'subtitle': subtitle, 'form': form}
+    context = {
+        'title': title,
+        'dashboardNav': dashboardNav, 
+        'username': username,
+        'user_id': user_id,
+        'user_type': user_type,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard':urlDashboard,
+        'logout': urlLogout,
+        'settings': urlProfile,
+        'bookmark': urlBookmark,
+        'report': urlReport,
+        'chat': urlChat,
+        'suggestions': urlSuggestion,
+        'subtitle': subtitle,
+        'form': form
+    }
     return render(request, 'dashboard/changePassword.html', context)
-
 
 #showProfile.editProfile
 def editProfile(request, user_type, user_id):
@@ -351,6 +778,12 @@ def editProfile(request, user_type, user_id):
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
     subtitle = "Kemaskini Profil" #h2 tag
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     if request.method == 'POST':
         #if student
@@ -388,12 +821,30 @@ def editProfile(request, user_type, user_id):
                 if filledList['parentID'] != currentUserTypeDetail.parentID:
                     currentUserTypeDetail.parentID = filledList['parentID']
                     currentUserTypeDetail.save()
+
                 #render successUpdate.html - with context for navbar, title, subtitle,
                 #successmsg, variable for views url in template
                 successMessage = "Profil berjaya dikemaskini!"
-                context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type, 
-                'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-                'subtitle': subtitle, 'successMessage': successMessage}
+                context = {
+                    'title': title,
+                    'dashboardNav': dashboardNav,
+                    'username': username,
+                    'user_id': user_id,
+                    'user_type': user_type,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion,
+                    'subtitle': subtitle,
+                    'successMessage': successMessage
+                }
                 return render(request, 'dashboard/successUpdate.html', context)
         #if parent
         elif user_type == 'penjaga' and 'P' in user_id:
@@ -429,12 +880,30 @@ def editProfile(request, user_type, user_id):
                 if filledList['relation'] != currentUserTypeDetail.relation:
                     currentUserTypeDetail.relation = filledList['relation']
                     currentUserTypeDetail.save()
+
                 #render successUpdate.html - with context for navbar, title, subtitle,
                 #successmsg, variable for views url in template
                 successMessage = "Profil berjaya dikemaskini!"
-                context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type, 
-                'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-                'subtitle': subtitle, 'successMessage': successMessage}
+                context = {
+                    'title': title,
+                    'dashboardNav': dashboardNav,
+                    'username': username,
+                    'user_id': user_id,
+                    'user_type': user_type,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion,
+                    'subtitle': subtitle,
+                    'successMessage': successMessage
+                }
                 return render(request, 'dashboard/successUpdate.html', context)
         #if teacher
         elif user_type == 'guru' and 'T' in user_id:
@@ -478,13 +947,35 @@ def editProfile(request, user_type, user_id):
                             NATeacherUserDetail = dashboard.models.User.objects.get(ID='NA')
                             NATeacherDetail = dashboard.models.Teacher.objects.get(ID=NATeacherUserDetail)
                             currentHTCforUserDetail.teacherID = NATeacherDetail
+                            currentHTCforUserDetail.lastDateEdited = datetime.now().date()
                             currentHTCforUserDetail.save()
                         currentUserTypeDetail.homeroomClass = 'NA'
                         currentUserTypeDetail.year = filledList['year'] #tak kisah tukar year tak sebab nak keluar dah lepas if ni
                         currentUserTypeDetail.save()
-                        response = 'Profil berjaya dikemaskini!'
-                        return HttpResponse(response)
-                #if new/unchanged role = Guru Kelas #MEMANG GURU KElAS or NEW GURU KELAS
+                        
+                        successMessage = "Profil berjaya dikemaskini!"
+                        context = {
+                            'title': title,
+                            'dashboardNav': dashboardNav,
+                            'username': username,
+                            'user_id': user_id,
+                            'user_type': user_type,
+                            'test': urlTest,
+                            'blog': urlBlog,
+                            'quiz': urlQuiz,
+                            'search': urlSearch,
+                            'dashboard':urlDashboard,
+                            'logout': urlLogout,
+                            'settings': urlProfile,
+                            'bookmark': urlBookmark,
+                            'report': urlReport,
+                            'chat': urlChat,
+                            'suggestions': urlSuggestion,
+                            'subtitle': subtitle,
+                            'successMessage': successMessage
+                        }
+                        return render(request, 'dashboard/successUpdate.html', context)
+                #if new/unchanged role = Guru Kelas #MEMANG GURU KELAS or NEW GURU KELAS
                 if currentUserTypeDetail.role == 'Guru Kelas':
                     #if filled class dah tukar (dont save yet)
                     if currentUserTypeDetail.homeroomClass != filledList['homeroomClass']:
@@ -513,11 +1004,13 @@ def editProfile(request, user_type, user_id):
                                 currentHTCforUserDetail = dashboard.models.HomeroomTeacherClass.objects.get(teacherID=currentUserTypeDetail)
                                 currentHTCforUserDetail.teacherID = NATeacherDetail
                                 currentHTCforUserDetail.year = filledList['year']
+                                currentHTCforUserDetail.lastDateEdited = datetime.now().date()
                                 currentHTCforUserDetail.save()
                             #change teacherID in HTC to current user_id and SAVE (apply for both changed year or not)
                             #change role prev guru kelas (in Teacher table) to "NA"
                             #change homeroomClass of prev guru kelas to "NA" and SAVE record prev teacher
                             currentHTCforClassDetail.teacherID = currentUserTypeDetail
+                            currentHTCforClassDetail.lastDateEdited = datetime.now().date()
                             currentHTCforClassDetail.save()
                             prevTeacherDetail.role = 'NA'
                             NAHTCDetail = dashboard.models.HomeroomTeacherClass.objects.get(className='NA')
@@ -539,6 +1032,7 @@ def editProfile(request, user_type, user_id):
                                 currentHTCforUserDetail = dashboard.models.HomeroomTeacherClass.objects.get(teacherID=currentUserTypeDetail)
                                 currentHTCforUserDetail.teacherID = NATeacherDetail
                                 currentHTCforUserDetail.year = filledList['year']
+                                currentHTCforUserDetail.lastDateEdited = datetime.now().date()
                                 currentHTCforUserDetail.save()
                                 #response = str(NATeacherDetail) + ",,, " + str(currentHTCforUserDetail)
                                 #return HttpResponse(response)
@@ -546,6 +1040,7 @@ def editProfile(request, user_type, user_id):
                             #currentTeacherUserDetail = dashboard.models.User.objects.get(ID=user_id)
                             #currentTeacherDetail = dashboard.models.Teacher.objects.get(ID=currentTeacherUserDetail)
                             currentHTCforClassDetail.teacherID = currentUserTypeDetail
+                            currentHTCforClassDetail.lastDateEdited = datetime.now().date()
                             currentHTCforClassDetail.save()
                         #change current teacher.class and year in Teacher table to filled
                         #SAVE record current user_id in Teacher table
@@ -566,6 +1061,7 @@ def editProfile(request, user_type, user_id):
                             if user_id in HTCTeacherIDlist:
                                 currentHTCforUserDetail = dashboard.models.HomeroomTeacherClass.objects.get(teacherID=currentUserTypeDetail)
                                 currentHTCforUserDetail.year = filledList['year']
+                                currentHTCforUserDetail.lastDateEdited = datetime.now().date()
                                 currentHTCforUserDetail.save()
                             currentUserTypeDetail.year = filledList['year']
                             currentUserTypeDetail.save()
@@ -576,15 +1072,30 @@ def editProfile(request, user_type, user_id):
                             currentUserTypeDetail.year = filledList['year']
                             currentUserTypeDetail.save()
                     #---PASS--- for tukar role to GK ONLY, not class and year
-                    #render successpage
-                    #response = 'Profil berjaya dikemaskini!'
-                    #return HttpResponse(response)
+
                     #render successUpdate.html - with context for navbar, title, subtitle,
                     #successmsg, variable for views url in template
                     successMessage = "Profil berjaya dikemaskini!"
-                    context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type, 
-                    'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-                    'subtitle': subtitle, 'successMessage': successMessage}
+                    context = {
+                        'title': title,
+                        'dashboardNav': dashboardNav,
+                        'username': username,
+                        'user_id': user_id,
+                        'user_type': user_type,
+                        'test': urlTest,
+                        'blog': urlBlog,
+                        'quiz': urlQuiz,
+                        'search': urlSearch,
+                        'dashboard':urlDashboard,
+                        'logout': urlLogout,
+                        'settings': urlProfile,
+                        'bookmark': urlBookmark,
+                        'report': urlReport,
+                        'chat': urlChat,
+                        'suggestions': urlSuggestion,
+                        'subtitle': subtitle,
+                        'successMessage': successMessage
+                    }
                     return render(request, 'dashboard/successUpdate.html', context)
 
                 #---PASS---
@@ -607,17 +1118,55 @@ def editProfile(request, user_type, user_id):
                     form = EditProfileTeacherForm(initial={'name': name, 'salutation': salutation, 'role': role,
                     'year': year, 'homeroomClass': homeroomClass})
                     errorMessage = "Kelas hanya boleh ditukar oleh Guru Kelas sahaja."
-                    context = {'title': title,'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type,
-                    'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-                    'subtitle': subtitle, 'errorMessage': errorMessage,'form': form}
+
+                    context = {
+                        'title': title,
+                        'dashboardNav': dashboardNav,
+                        'username': username,
+                        'user_id': user_id,
+                        'user_type': user_type,
+                        'test': urlTest,
+                        'blog': urlBlog,
+                        'quiz': urlQuiz,
+                        'search': urlSearch,
+                        'dashboard': urlDashboard,
+                        'logout': urlLogout,
+                        'settings': urlProfile,
+                        'bookmark': urlBookmark,
+                        'report': urlReport,
+                        'chat': urlChat,
+                        'suggestions': urlSuggestion,
+                        'subtitle': subtitle,
+                        'errorMessage': errorMessage,
+                        'form': form
+                    }
+
                     return render(request, 'dashboard/editProfile.html', context)
 
                 #render successUpdate.html - with context for navbar, title, subtitle,
                 #successmsg, variable for views url in template
                 successMessage = "Profil berjaya dikemaskini!"
-                context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_id': user_id, 'user_type': user_type, 
-                'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-                'subtitle': subtitle, 'successMessage': successMessage}
+                
+                context = {
+                    'title': title,
+                    'dashboardNav': dashboardNav,
+                    'username': username,
+                    'user_id': user_id,
+                    'user_type': user_type,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion,
+                    'subtitle': subtitle,
+                    'successMessage': successMessage
+                }
                 return render(request, 'dashboard/successUpdate.html', context)
     else:
         if user_type == 'pelajar' and 'S' in user_id:
@@ -655,11 +1204,470 @@ def editProfile(request, user_type, user_id):
             form = EditProfileTeacherForm(initial={'name': name, 'salutation': salutation, 'role': role,
             'year': year, 'homeroomClass': homeroomClass})
 
-    context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_type': user_type, 'user_id': user_id,
+    context = {
+        'title': title,
+        'dashboardNav': dashboardNav,
+        'username': username,
+        'user_id': user_id,
+        'user_type': user_type,
+        'test': urlTest,
+        'blog': urlBlog,
+        'quiz': urlQuiz,
+        'search': urlSearch,
+        'dashboard': urlDashboard,
+        'logout': urlLogout,
+        'settings': urlProfile,
+        'bookmark': urlBookmark,
+        'report': urlReport,
+        'chat': urlChat,
+        'suggestions': urlSuggestion,
+        'subtitle': subtitle,
+        # 'errorMessage': errorMessage,
+        'form': form
+    }
+
+    """ context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_type': user_type, 'user_id': user_id,
     'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-    'subtitle': subtitle, 'form': form}
+    'subtitle': subtitle, 'form': form} """
     return render(request, 'dashboard/editProfile.html', context)
 
+def nonAdminBookmark(request, user_type, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    username = userRecord.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    if user_type == "pelajar" and 'S' in user_id:
+        dashboardNav = " Pelajar"
+
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminBookmark.html', context)
+    elif user_type == "penjaga" and 'P' in user_id:
+        dashboardNav = " Penjaga"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminBookmark.html', context)
+    elif user_type == "guru" and 'T' in user_id:
+        dashboardNav = " Guru"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminBookmark.html', context)
+
+def nonAdminReport(request, user_type, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    username = userRecord.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    if user_type == "pelajar" and 'S' in user_id:
+        dashboardNav = " Pelajar"
+
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminReport.html', context)
+    elif user_type == "penjaga" and 'P' in user_id:
+        dashboardNav = " Penjaga"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminReport.html', context)
+    elif user_type == "guru" and 'T' in user_id:
+        dashboardNav = " Guru"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminReport.html', context)
+
+def nonAdminChat(request, user_type, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    username = userRecord.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    if user_type == "pelajar" and 'S' in user_id:
+        dashboardNav = " Pelajar"
+
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminChat.html', context)
+    elif user_type == "penjaga" and 'P' in user_id:
+        dashboardNav = " Penjaga"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminChat.html', context)
+    elif user_type == "guru" and 'T' in user_id:
+        dashboardNav = " Guru"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminChat.html', context)
+
+def nonAdminSuggestions(request, user_type, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    username = userRecord.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    if user_type == "pelajar" and 'S' in user_id:
+        dashboardNav = " Pelajar"
+
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminSuggestions.html', context)
+    elif user_type == "penjaga" and 'P' in user_id:
+        dashboardNav = " Penjaga"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminSuggestions.html', context)
+    elif user_type == "guru" and 'T' in user_id:
+        dashboardNav = " Guru"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/nonAdminSuggestions.html', context)
+
+def addSuggestion(request, user_type, user_id):
+    userRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if userRecord.isActive == False:
+        return redirect('home:login')
+
+    username = userRecord.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    urlProfile = 'dashboard:profile-settings'
+    urlBookmark = 'dashboard:bookmark'
+    urlReport = 'dashboard:report'
+    urlChat = 'dashboard:chat-nonadmin'
+    urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    if user_type == "pelajar" and 'S' in user_id:
+        dashboardNav = " Pelajar"
+
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/addSuggestion.html', context)
+    elif user_type == "penjaga" and 'P' in user_id:
+        dashboardNav = " Penjaga"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/addSuggestion.html', context)
+    elif user_type == "guru" and 'T' in user_id:
+        dashboardNav = " Guru"
+        
+        context = {
+            'dashboardNav': dashboardNav,
+            'user_type': user_type,
+            'user_id': user_id,
+            'username': username,
+            'test': urlTest,
+            'blog': urlBlog,
+            'quiz': urlQuiz,
+            'search': urlSearch,
+            'dashboard':urlDashboard,
+            'logout': urlLogout,
+            'settings': urlProfile,
+            'bookmark': urlBookmark,
+            'report': urlReport,
+            'chat': urlChat,
+            'suggestions': urlSuggestion
+        } 
+        return render(request, 'dashboard/addSuggestion.html', context)
+
+def logoutConfirm(request, user_id):
+    currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    username = currentUserRecord.username
+    context = {'username': username, 'user_id': user_id}
+    return render(request, 'dashboard\logoutConfirm.html', context)
+
+def loggingOut(request, user_id):
+    currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    currentUserRecord.isActive = False
+    currentUserRecord.save()
+    response = "Jumpa lagi! Ke halaman utama dalam 3, 2, 1... "
+    return render(request, 'dashboard\loggingOut.html', {'response': response})
 
 #bookmarks
 def showBookmarks(request, user_type, user_id):

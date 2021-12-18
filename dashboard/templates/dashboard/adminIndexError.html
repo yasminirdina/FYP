@@ -1,0 +1,43 @@
+{% extends "dashboard/baseDashboardAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Future Cruise: Dashboard Admin</title>
+{% endblock %}
+
+{% block styles %}   
+    <link rel="stylesheet" href="{% static 'css/indexError.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="div-section-header">
+        <h1>
+            <span style="font-style: italic;">Future Cruise</span>
+            :
+            <span style="font-style: italic;">Dashboard </span>
+            <span>Admin</span>
+        </h1>
+    </div>
+
+    <div class="div-content-outer">
+        <h2 style="font-style: italic; color: rgb(207, 61, 61);">
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="span-error">{{ response }}</span>
+        </h2>
+
+        <p>Sila tunggu sebentar...</p>
+        <script>
+            function redirect(){
+            window.location.href = history.back();
+            }
+
+            setTimeout(redirect, 5000);
+        </script>
+    </div>
+{% endblock %}
+
+{% block js2 %}
+    <script type="text/javascript">
+        $('.p-sidebar.notification .p-a-sidebar').addClass('sb-active');
+    </script>
+{% endblock %}
