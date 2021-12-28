@@ -7,7 +7,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dashboard', '0020_alter_teacher_homeroomclass'),
+        ('dashboard', '0024_suggestion_status'),
         ('pTest', '0004_studentpersonalitysession'),
     ]
 
