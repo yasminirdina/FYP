@@ -35,7 +35,12 @@
             </div>
     
             <div class="div-form-category-outer">
-                Kategori:
+                <span>
+                    Kategori
+                    <span class="span-scroll">
+                        (Skrol ke kanan &#128898;)
+                    </span>:
+                </span>
     
                 <span class="span-category-error"></span>
     
@@ -118,6 +123,50 @@
 
 {% block js2 %}
     <script>
+        function example_image_upload_handler (blobInfo, success, failure, progress) {
+            var xhr, formData;
+
+            xhr = new XMLHttpRequest();
+            xhr.withCredentials = false;
+            xhr.open('POST', 'http://127.0.0.1:8000/blog/' + '{{ user_type }}' + '/' + '{{ user_id }}' + '/senarai-artikel/artikel/' + '{{ post_id }}' + '/gambar/');
+
+            xhr.upload.onprogress = function (e) {
+                progress(e.loaded / e.total * 100);
+            };
+
+            xhr.onload = function() {
+                var json;
+
+                if (xhr.status === 403) {
+                    failure('HTTP Error: ' + xhr.status, { remove: true });
+                    return;
+                }
+
+                if (xhr.status < 200 || xhr.status >= 300) {
+                    failure('HTTP Error: ' + xhr.status);
+                    return;
+                }
+
+                json = JSON.parse(xhr.responseText);
+
+                if (!json || typeof json.location != 'string') {
+                    failure('Amaran: ' + json.message); // Invalid JSON
+                    return;
+                }
+
+                success(json.location);
+            };
+
+            xhr.onerror = function () {
+                failure('Image upload failed due to a XHR Transport error. Code: ' + xhr.status);
+            };
+
+            formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+
+            xhr.send(formData);
+        };
+
         tinyMCE.init({
             selector: "#content",  // change this value according to your HTML
             height: "80vh",
@@ -126,9 +175,11 @@
             toolbar: "undo redo searchreplace | restoredraft | bold italic underline strikethrough | fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent | numlist bullist checklist | forecolor backcolor casechange permanentpen formatpainter removeformat | charmap emoticons hr | fullscreen preview print | insertfile image media link codesample code",
             advlist_bullet_styles: 'disc',
             autosave_retention: '60m',
-            // image_prepend_url: 'https://www.futurecruise.com/blog/gambar',
+            // image_prepend_url: 'http://127.0.0.1:8000/blog',
             image_uploadtab: true,
-            images_upload_url: '/blog/upload_image/'
+            // Change with website domain
+            images_upload_url: 'http://127.0.0.1:8000/blog/' + '{{ user_type }}' + '/' + '{{ user_id }}' + '/senarai-artikel/artikel/' + '{{ post_id }}' + '/gambar/',
+            images_upload_handler: example_image_upload_handler
         });
 
         var checkedCategories_for_error = $('input[name="category"]:checked').map(function () { 

@@ -24,11 +24,10 @@ import pTest.views
 
 class TestForm(forms.Form):
     isClicked = forms.CharField(widget=forms.HiddenInput(), max_length=5, required=False)
-    answer_choices = forms.ChoiceField(label="Pilih jawapan yang betul:", widget=forms.RadioSelect, choices=[], required=False)
+    answer_choices = forms.ChoiceField(widget=forms.RadioSelect, choices=[], required=False)
     answer_choices.widget.attrs.update({'class' : 'answer_choices'})
 
     def __init__(self, answers=None, *args, **kwargs):
         super(TestForm, self).__init__(*args, **kwargs)
         if answers:
-            # for answer in answers:
-            self.fields['answer_choices'].choices = answers
+                self.fields['answer_choices'].choices = answers

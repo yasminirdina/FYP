@@ -53,28 +53,12 @@ class BlogPostImage(models.Model):
     def __str__(self):
         return "Image ID: " + str(self.id) + ", Post ID: " + str(self.blogPostID.id)
 
-class BlogPostVideo(models.Model):
-    #default id
-    blogPostID = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
-    # contentFileURL = models.URLField(max_length=200)
-    blogPostVideo = models.FileField(upload_to='images/admin_post_videos', blank=True)
-
-    def __str__(self):
-        return "Video ID: " + str(self.id) + ", Post ID: " + str(self.blogPostID.id)
-
 class BlogPostImageTemp(models.Model):
     #default id
     blogPostImage = models.ImageField(upload_to='images/admin_post_images_temp', blank=True)
 
     def __str__(self):
         return "Image temp ID: " + str(self.id) + ", Image temp URL: " + self.blogPostImage
-
-class BlogPostVideoTemp(models.Model):
-    #default id
-    blogPostVideo = models.FileField(upload_to='images/admin_post_videos_temp', blank=True)
-
-    def __str__(self):
-        return "Video temp ID: " + str(self.id) + ", Video temp URL: " + self.blogPostVideo
 
 class BlogPostViewsUser(models.Model):
     #default id

@@ -424,6 +424,14 @@ input:focus::placeholder {color: transparent}
     word-wrap: break-word;
 }
 
+.span-draft{
+    /* background-color: lightpink; */
+    display: inline-block;
+    line-height: 10px;
+    vertical-align: middle;
+    padding-bottom: 2.5px;
+}
+
 .div-date-published{
     font-size: 16px;
 }
@@ -587,7 +595,7 @@ input:focus::placeholder {color: transparent}
         margin: 10px auto 0;
     }
 
-    .nums, .next, .prev, .last, .pg-first{
+    .nums, .nums.active, .next, .prev, .last, .pg-first{
         width: 25px;
     }
 }
@@ -612,7 +620,7 @@ input:focus::placeholder {color: transparent}
 }
 
 @media screen and (max-width: 450px), (max-height: 450px) {
-    .btn,  #post-type, #post-type-2{
+    .btn, .nums.active, #post-type, #post-type-2{
         font-size: 12px;
     }
 
@@ -629,7 +637,7 @@ input:focus::placeholder {color: transparent}
     }
 
     @media screen and (max-width:450px){
-        .nums, .next, .prev, .last, .pg-first{
+        .nums, .nums.active, .next, .prev, .last, .pg-first{
             width: 16px;
             padding: 5px;
         }
@@ -685,6 +693,11 @@ input:focus::placeholder {color: transparent}
 
     .div-post-title{
         font-size: 16px;
+    }
+
+    .span-draft{
+        line-height: 16px;
+        padding-bottom: 4px;
     }
     
     .div-date-published, .div-views, .div-content{

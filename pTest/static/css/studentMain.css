@@ -66,7 +66,6 @@ h2 {
 } */
 
 /* ------------------------------------------------------------------------------------------ */
-
 .wrapper {
   height: 92.5vh;
   overflow-x: hidden;
@@ -96,6 +95,41 @@ h2 {
   z-index: 4;
 } */
 
+.main-icon {
+  width:15rem;
+  height:15rem;
+}
+
+.icon1{
+  display: inline-block;
+  margin-top: 1rem;
+  margin-left: 23rem;
+  animation: fadeicon1 1.5s;
+  -webkit-animation: fadeicon1 1.5s; /*Safari, Chrome and Opera > 12.1*/
+
+     /* -moz-animation: fadein 1s; Firefox < 16
+      -ms-animation: fadein 1s; Internet Explorer
+       -o-animation: fadein 1s; Opera < 12.1 */
+}
+
+.icon2{
+  display: inline-block;
+  margin-top: 1rem;
+  margin-left: 5rem;
+  animation: fadeicon2 1.5s;
+  -webkit-animation: fadeicon2 1.5s; /*Safari, Chrome and Opera > 12.1*/
+
+     /* -moz-animation: fadein 1s; Firefox < 16
+      -ms-animation: fadein 1s; Internet Explorer
+       -o-animation: fadein 1s; Opera < 12.1 */
+}
+
+.icon3{
+  width:5rem;
+  height:10rem;
+  display: inline-block;
+}
+
 .hero-text {
   background: linear-gradient(
     rgba(252, 218, 105, 0.432) 0%,
@@ -112,7 +146,7 @@ h2 {
   font-weight: 100;
   position: absolute;
   font-size: 4rem;
-  margin: 15rem 5rem 5rem 5rem;
+  margin: 1rem 5rem 5rem 5rem;
   animation: fadein 1s;
   -webkit-animation: fadein 1s; /*Safari, Chrome and Opera > 12.1*/
 
@@ -133,19 +167,20 @@ h2 {
 }
 
 .text-container{
-  margin: 0 0 0 -2rem;
+  margin: 0 0 0 -3.3rem;
   opacity: 0;
   animation: fadePg2 1s;
   -webkit-animation: fadePg2 1s;
   animation-fill-mode: forwards;
-  animation-delay: 2s;
+  animation-delay: 3s;
 }
 
 .text-container h1 {
   font-family: 'Varela Round', sans-serif;
   font-weight: 100;
-  font-size: 4rem;
+  font-size: 4.5rem;
   margin-bottom: 3rem;
+  margin-left: 3.5rem;
 }
 
 /* --------------------------------------------------------------------------------- */
@@ -159,8 +194,8 @@ h2 {
 
 .btn{
   font-family: 'Varela Round', sans-serif;
-  font-size: 2.4rem;
-  padding: 1.5rem 0;
+  font-size: 2rem;
+  padding: 1rem 0;
   width: 25rem;
   border-radius: 5rem;
   text-align: center;
@@ -173,8 +208,7 @@ h2 {
 
 .btn:hover{
   cursor: pointer;
-  width: 30rem;
-  transform: scale(1.05);
+  transform: scale(1.1);
   background: rgb(190, 0, 190);
 }
 
@@ -192,27 +226,37 @@ h2 {
   background: rgba(207, 1, 207, 0.63);
 }
 
-@keyframes fadein {
+@keyframes fadeicon1 {
   0% {
     opacity: 0;
-    margin: 13rem 5rem 5rem 5rem;
+    margin-left: 21rem;
   }
   /* You could think of as "step 2" */
   100% {
     opacity: 1;
-    margin: 15rem 5rem 5rem 5rem;
+    margin-left: 23rem;
   }
 }
 
-/* Safari, Chrome and Opera > 12.1 */
-@-webkit-keyframes fadein {
+@keyframes fadeicon2 {
   0% {
     opacity: 0;
-    margin: 13rem 5rem 5rem 5rem;
+    margin-left: 9rem;
   }
   100% {
     opacity: 1;
-    margin: 15rem 5rem 5rem 5rem;
+    margin-left: 5rem;
+  }
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+    margin: 0.1rem 5rem 5rem 5rem;
+  }
+  100% {
+    opacity: 1;
+    margin: 1rem 5rem 5rem 5rem;
   }
 }
 
@@ -224,6 +268,40 @@ h2 {
   100% {
     opacity: 1;
     margin-top: 5rem;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadeicon1 {
+  0% {
+    opacity: 0;
+    margin: 0.1rem 5rem 5rem 5rem;
+  }
+  100% {
+    opacity: 1;
+    margin: 1rem 5rem 5rem 5rem;
+  }
+}
+
+@-webkit-keyframes fadeicon2 {
+  0% {
+    opacity: 0;
+    margin: 0.1rem 5rem 5rem 5rem;
+  }
+  100% {
+    opacity: 1;
+    margin: 1rem 5rem 5rem 5rem;
+  }
+}
+
+@-webkit-keyframes fadein {
+  0% {
+    opacity: 0;
+    margin: 0.1rem 5rem 5rem 5rem;
+  }
+  100% {
+    opacity: 1;
+    margin: 1rem 5rem 5rem 5rem;
   }
 }
 

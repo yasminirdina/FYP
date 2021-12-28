@@ -141,7 +141,9 @@
                         {{ currentBlogPost.title }}
 
                         {% if currentBlogPost.show == False %}
-                            <button class="btn draft">Draf</button>
+                            <span class="span-draft">
+                                <button class="btn draft">Draf</button>
+                            </span>
                         {% endif %}
                     </span>
                 </div>
@@ -154,11 +156,11 @@
                         </div>
                     </div>
 
-                    <span>&#8226;</span>
+                    <span class="span-dot">&#8226;</span>
 
                     <div class="div-datetime">
-                        <i class="far fa-calendar-alt"></i>
                         <div class="div-datetime-text">
+                            <i class="far fa-calendar-alt"></i>
                             {{ currentBlogPost.datePublished|date:"d/m/Y" }}, {{ currentBlogPost.timePublished|date:"h:i A" }}
                         </div>
                         
@@ -204,45 +206,47 @@
                 </div>
             </div>
 
-            <div class="div-related-posts">
-                Artikel Berkaitan:
-                    {% if relatedPostIDsList %}
-                        <div class="div-related-outer">
-                            {% for post in relatedPosts %}
-                                <div class="div-related-ind">
-                                    {% if post.id in postIDswithImageList %}
-                                        {% for image in postIDswithImageList %}
-                                            {% if image.blogPostID_id == post.id %}
-                                                <div class="div-image">
-                                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
-                                                </div>
-                                            {% endif %}
-                                        {% endfor %}
-                                    {% else %}
-                                        <div class="div-image-default">
-                                            <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
-                                            <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
-                                        </div>
-                                    {% endif %}
+            {% if relatedPosts %}
+                <div class="div-related-posts">
+                    Artikel Berkaitan:
+                        {% if relatedPostIDsList %}
+                            <div class="div-related-outer">
+                                {% for post in relatedPosts %}
+                                    <div class="div-related-ind">
+                                        {% if post.id in postIDswithImageList %}
+                                            {% for image in postIDswithImageList %}
+                                                {% if image.blogPostID_id == post.id %}
+                                                    <div class="div-image">
+                                                        <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                                    </div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <div class="div-image-default">
+                                                <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
+                                                <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
+                                            </div>
+                                        {% endif %}
 
-                                    <div class="div-related-title">
-                                        <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
-                                            {{ post.title|truncatechars:50 }}
-                                        </a>
+                                        <div class="div-related-title">
+                                            <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
+                                                {{ post.title|truncatechars:50 }}
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="div-related-outer no-post">
-                            <span>
-                                Tiada artikel berkaitan. Klik di
-                                <span><a class="a-all" href="{% url 'blog:post-list' user_type user_id %}">sini</a></span>
-                                untuk melihat semua artikel, atau cari artikel tertentu menggunakan fungsi carian disediakan.
-                            </span>
-                        </div>
-                    {% endif %}
-            </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="div-related-outer no-post">
+                                <span>
+                                    Tiada artikel berkaitan. Klik di
+                                    <span><a class="a-all" href="{% url 'blog:post-list' user_type user_id %}">sini</a></span>
+                                    untuk melihat semua artikel, atau cari artikel tertentu menggunakan fungsi carian disediakan.
+                                </span>
+                            </div>
+                        {% endif %}
+                </div>
+            {% endif %}
 
             <div class="div-facebook-2">
                 Ikuti SMK Damansara Damai 1 di Facebook:

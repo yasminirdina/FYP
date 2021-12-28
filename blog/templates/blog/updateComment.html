@@ -51,10 +51,18 @@
                             {{ comment.text }}
                         </div>
                         <div class="div-body-buttons">
-                            <button class="btn parent-reply" value="{{ comment.id }}">Balas</button>
+                            <button class="btn parent-reply no-icon" value="{{ comment.id }}">Balas</button>
+                            <!-- mobile -->
+                            <button class="btn parent-reply icon" value="{{ comment.id }}">
+                                <i class="fas fa-reply"></i>
+                            </button>
 
                             {% if user_id == 'A1' %}
-                                <button class="btn delete-comment" value="{{ comment.id }}">Buang</button>
+                                <button class="btn delete-comment no-icon" value="{{ comment.id }}">Buang</button>
+                                <!-- mobile -->
+                                <button class="btn delete-comment icon" value="{{ comment.id }}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             {% endif %}
 
                             {% if comment.id in parentCmtIDsWithReplies %}
@@ -125,9 +133,18 @@
                                                     {{ reply.text }}
                                                 </div>
                                                 <div class="div-body-buttons">
-                                                    <button class="btn child-reply" value="{{ reply.id }}">Balas</button>
+                                                    <button class="btn child-reply no-icon" value="{{ reply.id }}">Balas</button>
+                                                    <!-- mobile -->
+                                                    <button class="btn child-reply icon" value="{{ reply.id }}">
+                                                        <i class="fas fa-reply"></i>
+                                                    </button>
+
                                                     {% if user_id == 'A1' %}
-                                                        <button class="btn delete-reply" value="{{ reply.id }}">Buang</button>
+                                                        <button class="btn delete-reply no-icon" value="{{ reply.id }}">Buang</button>
+                                                        <!-- mobile -->
+                                                        <button class="btn delete-reply icon" value="{{ reply.id }}">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
                                                     {% endif %}
                                                 </div>
                                             </div>

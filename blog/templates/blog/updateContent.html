@@ -61,10 +61,10 @@
             {% for post in allBlogPosts %}
                 <div class="div-inner-posts">
                     {% if post.id in postIDswithImageList %}
-                        {% for image in postIDswithImageList %}
+                        {% for image in blogPostImages %}
                             {% if image.blogPostID_id == post.id %}
                                 <div class="div-image">
-                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
+                                    <img class="img-post" src="{% get_media_prefix %}images/admin_post_images/{{ image.blogPostImage.name }}">
                                 </div>
                             {% endif %}
                         {% endfor %}
@@ -80,7 +80,9 @@
                             <a class="a-for-title" href="{% url 'blog:view-post' user_type user_id post.id %}">
                                 {{ post.title|truncatechars:100 }}
                                 {% if post.show == False %}
-                                    <button class="btn draft">Draf</button>
+                                    <span class="span-draft">
+                                        <button class="btn draft">Draf</button>
+                                    </span>
                                 {% endif %}
                             </a>
                         </div>

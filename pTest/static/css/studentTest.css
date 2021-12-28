@@ -13,6 +13,13 @@
 }
 
 body {
+    background: linear-gradient(
+        rgba(255, 190, 93, 0.664) 0%,
+        rgba(253, 174, 110, 0.658) 20%,
+        rgba(255, 87, 87, 0.459) 90%
+    );
+    /* background-size: 100%; */
+    padding-bottom: 100px;
     color: white;
 }
 
@@ -68,21 +75,100 @@ body {
 }
 
 /* ---------------------endedit---------------------- */
-
-.container-test{
+#div-wrapper{
     justify-content: center;
     align-items: center;
-    padding: 2rem 4rem 2rem 4rem;
-  }
-
-.row{
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-column-gap: 6%;
 }
 
-.choice-container-1{
-    background: rgb(240, 127, 62);
+#hud{
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-column-gap: 50%;
+    justify-content: center;
+}
+
+.hud-item p, h1{
+    font-size: 20px;
+}
+
+.personality {
+    font-family: 'Varela Round', sans-serif;
+    font-size: 30px;
+    font-weight: 10;
+    text-align: center;
+    padding-top:50px;
+}
+
+#question{
+    font-family: 'Varela Round', sans-serif;
+    font-size: 50px;
+    font-weight: 50;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.test-container, .TestForm{
+    background: rgba(214, 102, 181, 0.445);
+    padding: 4px 0 4px 0;
+    margin-left: 6rem;
+    margin-right: 6rem;
+}
+
+.test-container{
+    border-radius: 40px 40px 0 0;
+}
+
+.TestForm{
+    border-radius: 0 0 40px 40px;
+}
+
+/* button */
+.btn {
+    border: none;
+    background-color: rgb(88, 126, 196);
+    border-radius: 35px;
+    padding: 1vw 2vw;
+    font-size: 2vw;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+    color: white;
+    width: fit-content;
+    height: 100%;
+    text-align: center;
+}
+  
+/*On mouse-over*/
+.btn:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(103, 149, 235);
+    transition: transform 150ms;
+    transform: scale(1.03);
+}
+
+.next, .showResult{
+    background-color: rgb(121, 85, 118);
+}
+
+.next:hover, .showResult:hover{
+    box-shadow: 0 0.4rem 1.4rem 0 rgb(211, 110, 204);
+}
+
+.div-outer-choice{
+    /* background-color: rgb(213, 248, 172); */
+    display: grid;
+    box-sizing: border-box;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    gap: 1vw;
+    padding: 0 1vw;
+    margin-top: 1vw;
+}
+
+.choice-container{
+    /* background: rgb(240, 127, 62); */
     height: 5rem;
     border-radius: 30px;
     margin-left: 5rem;
@@ -90,50 +176,78 @@ body {
     transition: 0.4s;
 }
 
-.choice-container-1:hover{
+.choice-container:hover{
     cursor: pointer;
     transform: scale(1.07);
     width: 30rem;
     transform: transfom 100ms;
 }
-
-.choice-container-2{
-    background: rgb(240, 127, 62);
-    height: 5rem;
-    border-radius: 30px;
-    margin-right: 5rem;
-    width: 25rem;
-    transition: 0.4s;
-}
-
-.choice-container-2:hover{
-    cursor: pointer;
-    transform: scale(1.07);
-    width: 30rem;
-    transform: transfom 100ms;
-}
-
 
 .choice-text{
-    font-family: 'Varela Round', sans-serif;
-    font-size: 1.7rem;
-    font-weight: 100;
+    background-color: rgb(250, 127, 56);
+    box-sizing: border-box;
     text-align: center;
+    padding: 1vw;
+    width: 100%;
+    font-size: 1.4rem;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border-radius: 10px;
+    /* border-radius: 0 4px 4px 0; */
 }
 
-.prev-container {
-    background: rgb(255, 146, 56);
-    margin: 2rem 30rem 0 27rem;
-    padding: 0 1rem 0 0;
-    font-size: 1.7rem;
-    border-radius: 100px;
+.choice-container input[type="radio"]:empty{
+    display: none;
 }
 
-.prev-container:hover{
+.choice-container input[type="radio"]:empty ~ .choice-text label{
+    position: relative;
     cursor: pointer;
-    transform: scale(1.04);
-    transform: transfom 100ms;
+    -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
+
+.choice-container input[type="radio"]:checked ~ .choice-container input[type="radio"]:checked ~ .choice-text{
+    border: 3px solid white;
+    background-color: rgb(178, 54, 250);
+}
+
+.choice-container input[type="radio"]:checked ~ .choice-text {
+    border-left: none;
+}
+
+.div-buttons{
+    /* background-color: plum; */
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    width: 100%;
+    /* top | horizontal | bottom */
+    margin: 1vw 0 2vw;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 1vw;
+}
+
+.div-quit-button{
+    /* background-color: peachpuff; */
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: fit-content;
+    height: fit-content;
+    margin: 2vw auto;
+    margin-bottom: 0;
+    align-items: center;
+    justify-items: center;
+    gap: 1vw;
+    box-sizing: border-box;
+}
+
+
 
 .prev-text {
     font-family: 'Varela Round', sans-serif;

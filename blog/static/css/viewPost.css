@@ -84,6 +84,14 @@
     padding: 5px 10px;
 }
 
+.div-body-buttons .icon{
+    display: none;
+}
+
+.div-body-buttons .no-icon{
+    display: none;
+}
+
 /* hyperlink style */
 .a-for-viewPost {
     text-decoration: none;
@@ -138,9 +146,9 @@
     display: grid;
     grid-template-columns: 20% 80%;
     justify-content: center;
-    margin: 0 auto 1vw;
-    gap: 1vw;
-    padding: 1vw 1.5vw;
+    margin: 0 auto 10px;
+    gap: 10px;
+    padding: 10px 15px;
     border-radius: 10px;
     box-sizing: border-box;
 }
@@ -151,14 +159,14 @@
     height: fit-content;
     display: grid;
     grid-auto-flow: row;
-    gap: 1vw;
+    gap: 10px;
     box-sizing: border-box;
 }
 
 .div-side-navbar{
     background-color: rgb(240, 240, 240);
     border-radius: 10px;
-    padding: 1vw;
+    padding: 10px;
     justify-content: center;
 }
 
@@ -167,17 +175,16 @@
     /* background-color: rgb(240, 240, 240); */
     position: relative;
     width: 100%;
-    padding: 1vw;
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid lightgray;
 }
 
 .div-facebook-2{
-    background-color: rgb(240, 240, 240);
-    border-radius: 10px;
-    padding: 1vw;
+    /* background-color: rgb(240, 240, 240); */
+    padding-bottom: 10px;
     display: none;
-    justify-items: center;
+    justify-items: left;
     text-align: left;
     font-weight: bold;
 }
@@ -202,7 +209,7 @@
     height: fit-content;
     display: grid;
     grid-auto-flow: row;
-    gap: 1vw;
+    gap: 10px;
     box-sizing: border-box;
 }
 
@@ -295,7 +302,6 @@ input:focus::placeholder {color: transparent}
     position: relative;
     width: 100%;
     height: fit-content;
-    /* padding: 0 1vw 1vw; */
     display: grid;
     grid-auto-flow: row;
     gap: 5px;
@@ -313,7 +319,6 @@ input:focus::placeholder {color: transparent}
     display: grid;
     grid-auto-flow: row;
     grid-template-columns: 100%;
-    /* gap: 5px; */
     justify-content: center;
     justify-items: center;
     align-items: center;
@@ -336,7 +341,7 @@ input:focus::placeholder {color: transparent}
     border-bottom: none;
 }
 
-.div-inner-post, .div-related-posts, .div-comment{
+.div-inner-post, .div-related-posts, .div-facebook-2, .div-comment{
     /* background-color: white; */
     /* background-color: khaki; */
     border-bottom: 1px solid lightgray;
@@ -416,6 +421,14 @@ input:focus::placeholder {color: transparent}
     height: fit-content;
 }
 
+.span-draft{
+    /* background-color: lightpink; */
+    display: inline-block;
+    line-height: 22.5px;
+    vertical-align: middle;
+    padding-bottom: 7.5px;
+}
+
 .div-author-datetime, .div-views-share{
     /* background-color: burlywood; */
     width: fit-content;
@@ -443,6 +456,10 @@ input:focus::placeholder {color: transparent}
     box-sizing: border-box;
 }
 
+.div-datetime-text{
+    gap: 10px;
+}
+
 .div-datetime-text-edited{
     font-style: italic;
     /* font-size: 12px; */
@@ -462,6 +479,24 @@ input:focus::placeholder {color: transparent}
     display: grid;
     text-align: justify;
     line-height: 25px;
+    box-sizing: border-box;
+}
+
+.div-content img, .div-content ul{
+    max-width: 100%;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.div-content ul, .div-content a{
+    text-align: left;
+    word-break: break-all;
+    padding-left: 15px;
+}
+
+.div-content a{
+    background-color: lightcyan;
+    padding: 0;
     box-sizing: border-box;
 }
 
@@ -713,10 +748,6 @@ textarea:focus::placeholder {color: transparent}
     padding: 5px 5px 5px 0;
 }
 
-/* .img-user-comment, .img-user-reply{
-    background-color: wheat;
-} */
-
 .div-username-type, .div-comment-datetime, .div-body-text, .div-body-buttons{
     /* background-color: plum; */
     gap: 5px;
@@ -732,11 +763,6 @@ textarea:focus::placeholder {color: transparent}
     /* background-color: coral; */
     gap: 10px;
 }
-
-/* jap */
-/* .div-comment-datetime{
-    background-color: teal;
-} */
 
 .div-body-text{
     /* background-color: lightgreen; */
@@ -789,7 +815,7 @@ textarea:focus::placeholder {color: transparent}
     padding: 10px 15px;
 }
 
-.div-modal-header, .div-modal-header-5, .div-modal-header-6{
+.div-modal-header, .div-modal-header-5, .div-modal-header-6 {
     position: relative;
     width: 80%;
     height: fit-content;
@@ -839,4 +865,336 @@ textarea:focus::placeholder {color: transparent}
     gap: 5px;
     font-weight: normal;
     display: none;
+}
+
+@media screen and (max-width: 1200px){
+    .div-outer{
+        grid-template-columns: 100%;
+        grid-auto-flow: row;
+        margin: 0 auto 10px;
+        gap: 10px;
+        padding: 10px 15px;
+    }
+
+    .div-facebook-1{
+        display: none;
+    }
+
+    .div-facebook-2{
+        display: grid;
+    }
+
+    .div-side-navbar{
+        padding: 10px;
+        justify-content: stretch;
+    }
+
+    .div-search{
+        grid-auto-flow: row;
+        grid-template-columns: 35% 35% 30%;
+        width: 100%;
+        justify-content: center;
+        padding: 0 10px;
+        gap: 10px;
+    }
+
+    .div-search-box, .div-dropdown-cat{
+        height: 100%;
+        align-content: flex-start;
+    }
+
+    #title, #category{
+        height: 65px;
+    }
+
+    .div-checkbox-date{
+        height: 100px;
+        overflow: auto;
+    }
+
+    .span-scroll{
+        display: contents;
+    }
+
+    .div-input{
+        gap: 5px;
+    }
+
+    #span-error-1{
+        display: none;
+    }
+
+    #span-error-2{
+        display: block;
+    }
+
+    .div-search > #span-error-2, .div-search > .div-form-buttons{
+        grid-column: 1/4;
+    }
+
+    .div-form-buttons{
+        margin-top: -20px;
+    }
+
+    .div-author-datetime{
+        grid-auto-flow: row;
+    }
+
+    .div-author{
+        width: fit-content;
+    }
+
+    .span-dot{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 930px){
+    .a-for-title{
+        text-decoration: underline;
+    }
+
+    .div-add-comment, .div-add-reply{
+        grid-template-columns: 7% 93%;
+    }
+
+    .div-add-reply{
+        gap: 15px;
+        padding: 0 20px 0 10px;
+    }
+
+    .div-modal-content-1{
+        width: 80%;
+    }
+
+    .div-modal-header{
+        width: 100%;
+    }
+
+    .div-user{
+        grid-template-columns: 8% 92%;
+    }
+
+    .div-body{
+        padding-left: calc(8% + 5px);
+    }
+}
+
+@media screen and (max-width: 450px), (max-height: 450px) {
+    .btn, .close, .div-outer-tiles, .div-inner-post,
+    .div-content p, .div-related-title, .div-count-sort, .div-add-comment, .div-comment-most-outer,
+    #comment, #new-comment, #new-reply,
+    .div-modal-content-1, .div-modal-content-2, .div-modal-content-3, .div-modal-content-4, .div-modal-content-5, .div-modal-content-6,
+    .div-modal-header, .div-modal-header-5, .div-modal-header-6 {
+        font-size: 12px;
+    }
+
+    .btn{
+        padding: 5px 10px;
+    }
+
+    .submit-for-viewPost{
+        padding: 10px 15px;
+    }
+
+    .admin, .student, .parents, .teacher{
+        padding: 0 5px;
+    }
+
+    .draft {
+        padding: 3px 10px;
+    }
+
+    .div-search{
+        font-size: 16px;
+        grid-template-columns: 100%;
+        padding: 0 5px;
+    }
+
+    .div-search > #span-error-2, .div-search > .div-form-buttons{
+        grid-column: unset;
+    }
+    
+    .div-search-box, .div-dropdown-cat{
+        align-content: unset;
+    }
+
+    .div-input, #title, #category{
+        font-size: 12px;
+    }
+
+    #title, #category, #comment, #new-comment, #new-reply{
+        height: fit-content;
+    }
+
+    .div-ind-tiles{
+        padding: 0 0 0 5px;
+    }
+
+    .div-inner-post, .div-author-datetime, .div-views-share, .div-author, .div-views, .div-social{
+        gap: 5px;
+    }
+
+    .div-datetime-text{
+        gap: 0;
+    }
+
+    .div-outer-tags{
+        /* background-color: lightblue; */
+        grid-auto-flow: row;
+        gap: 10px;
+    }
+
+    .div-edit-bookmark{
+        gap: 5px;
+    }
+
+    .div-post-title{
+        font-size: 25px;
+    }
+
+    .span-draft{
+        /* background-color: lightpink; */
+        display: inline-block;
+        line-height: 16.75px;
+        vertical-align: middle;
+        padding-bottom: 6.25px;
+    }
+
+    .div-datetime{
+        grid-auto-flow: row;
+        gap: 0;
+    }
+
+    .div-related-outer{
+        grid-auto-flow: row;
+        grid-template-columns: 100%;
+        padding-right: 0;
+        padding-bottom: 5px;
+    }
+
+    .div-related-ind{
+        width: 100%;
+    }
+
+    .div-related-title{
+        height: fit-content;
+    }
+
+    .div-add-reply{
+        grid-template-columns: 10% 90%;
+    }
+
+    .img-user-add-comment, .img-user-comment, .img-user-reply, .img-user-add-reply{
+        height: 30px;
+        width: 30px;
+    }
+
+    .img-user-add-comment, .img-user-add-reply{
+        padding-top: 5px;
+    }
+
+    .div-reply-details{
+        max-width: 90%;
+    }
+
+    .div-comment-inner, .div-replies-inner{
+        gap: 0;
+    }
+
+    .div-user{
+        align-items: flex-start;
+    }
+
+    .div-user-details{
+        gap: 0;
+    }
+
+    .div-body-text{
+        line-height: normal;
+    }
+
+    .div-comment-inner .div-body-buttons button, .div-replies-inner .div-body-buttons button{
+        padding: 10px;
+    }
+
+    .div-body-buttons .icon{
+        display: grid;
+    }
+
+    .div-body-buttons > a{
+        line-height: normal;
+    }
+
+    @media screen and (max-width: 450px) {
+        .div-add-comment, .div-add-reply{
+            grid-template-columns: 10% 90%;
+        }
+
+        .div-user{
+            grid-template-columns: 12% 88%;
+        }
+
+        .div-body{
+            padding-left: calc(12% + 5px);
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .div-add-comment{
+            grid-template-columns: 12% 88%;
+        }
+
+        .div-user{
+            grid-template-columns: 15% 85%;
+        }
+    
+        .div-body{
+            padding-left: calc(15% + 5px);
+        }
+    }
+
+    @media screen and (min-height: 360px) and (max-height: 450px) {
+        .div-add-comment, .div-add-reply{
+            grid-template-columns: 4% 96%;
+        }
+
+        .div-user{
+            grid-template-columns: 6% 94%;
+        }
+
+        .div-body{
+            padding-left: calc(6% + 5px);
+        }
+    }
+
+    @media screen and (max-height: 320px){
+        .fb-page.second{
+            display: none;
+        }
+    
+        .fb-page.third{
+            display: grid;
+        }
+    }
+
+    @media screen and (max-width: 450px) and (min-width: 361px){
+        .fb-page.second{
+            display: none;
+        }
+    
+        .fb-page.fourth{
+            display: grid;
+        }
+    }
+
+    @media screen and (max-width: 360px){
+        .fb-page.second{
+            display: none;
+        }
+    
+        .fb-page.fifth{
+            display: grid;
+        }
+    }
 }
