@@ -43,7 +43,7 @@
 form{
     display: grid;
     grid-auto-flow: row;
-    padding: ;
+    padding: 0;
     gap: 10px;
     box-sizing: border-box;
 }
