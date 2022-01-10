@@ -54,6 +54,11 @@
     color: white;
 }
 
+.no-hover{
+    pointer-events: none;
+    opacity: 0.6;
+}
+
 /* noAccessError.html */
 .back-to-dashboard {color: white;}
 

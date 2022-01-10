@@ -36,9 +36,17 @@
                     <button class="btn avatar">
                         <a class ="a-settings-for-quizMain" href="{% url 'quiz:show-avatar' user_id %}">Tetapan Avatar</a>
                     </button>
-                    <button class="btn statistic">
-                        <a class ="a-statistic-for-quizMain" href="{% url 'quiz:quiz-statistic' user_id 1 %}">Statistik Pemain</a>
-                    </button>
+
+                    {% if playCount > 0 %}
+                        <button class="btn statistic">
+                            <a class ="a-statistic-for-quizMain" href="{% url 'quiz:quiz-statistic' user_id 1 %}">Statistik Pemain</a>
+                        </button>
+                    {% else %}
+                        <button class="btn statistic no-hover">
+                            <a class ="a-statistic-for-quizMain" href="{% url 'quiz:quiz-statistic' user_id 1 %}">Statistik Pemain</a>
+                        </button>
+                    {% endif %}
+
                     <button class="btn play">
                         <a class="a-play-for-quizMain" href="{% url 'quiz:choose-field' user_id %}">PILIH BIDANG</a>
                     </button>

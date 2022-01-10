@@ -24,9 +24,31 @@
     transform: scale(1.03);
 }
 
+.sent, .processing, .closed {
+    width: 100%;
+    border-radius: 25px;
+    padding: 5px 10px;
+    pointer-events: none;
+    color: white;
+}
+
+.sent{background-color: rgb(250, 188, 54);}
+.processing{background-color: rgb(52, 202, 152);}
+.closed{background-color: lightslategray;}
+
 .a-for-nonAdminSuggestions {
     text-decoration: none;
     color: inherit;
+}
+
+.a-with-underline {
+    text-decoration: underline;
+    color: inherit;
+}
+
+.a-with-underline:hover{
+    color: rgb(250, 127, 56);
+    font-weight: bold;
 }
 
 /* div */
@@ -46,52 +68,150 @@
 
 .div-content-outer{
     grid-auto-flow: row;
-    max-height: 70vh;
+    max-height: 75vh;
     overflow: auto;
     border-radius: 10px;
+    gap: 10px;
+    padding: 10px 0;
     border: 1px solid lightgray;
 }
 
-/* .div-notif-ind{
+.div-table{
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    max-height: 60vh;
+    overflow: auto;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.div-add-suggestion{
+    display: grid;
+    grid-auto-flow: column;
+    width: fit-content;
+    align-self: center;
+    justify-self: center;
+    box-sizing: border-box;
+}
+
+.div-modal-content-3 {
+    width: 50%;
+    /* max-height: 80vh;
+    overflow: auto; */
     background-color: white;
+    border: none; 
+    border-radius: 15px;
+    padding: 10px 15px;
     position: relative;
+    margin: 0 auto;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    color: black;
+    box-sizing: border-box;
+}
+
+.div-modal-header-3{
+    position: relative;
+    width: 80%;
+    height: fit-content;
+    margin-bottom: 10px;
+    z-index: 1;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    font-weight: bold;
+    box-sizing: border-box;
+    /* background-color: rgb(121, 85, 118); */
+}
+
+.div-suggestion-content, .div-suggestion-buttons{
+    /* background-color: antiquewhite; */
+    position: relative;
+    width: fit-content;
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 3% 97%;
-    width: 100%;
-    height: fit-content;
-    padding: 5px 10px 5px 5px;
-    gap: 5px;
-    align-items: flex-start;
     justify-items: center;
-    justify-content: space-between;
-    border: solid lightgray;
-    border-width: 0 0 1px 0;
-    padding: 15px 10px 10px;
+    align-items: center;
+    gap: 0;
     box-sizing: border-box;
 }
 
-.div-notif-ind:last-child{
-    border-width: 0;
+.div-suggestion-content{
+    max-height: 50vh;
+    overflow: auto;
 }
 
-.unread{
-    background-color: rgb(250, 188, 54);
+.div-suggestion-buttons{
+    height: fit-content;
+    /* top | horizontal | bottom */
+    margin: 10px 0 5px;
 }
 
-.fas fa-reply, .fas fa-comment-alt, .fas fa-lightbulb {
+/* table */
+table {
+    /* border: 1px solid whitesmoke; */
+    border-collapse: separate !important;
+    border-spacing: 0;
+    font-size: 16px;
     width: 100%;
-    height: 100%;
+    position: relative;
+    box-sizing: border-box;
 }
 
-.div-text{
+/* Set header to stick to the top of the container. */
+thead tr th {
+    position: sticky;
+    top: 0;
+}
+
+th {
+    padding: 20px;
+    text-align: center;
+    letter-spacing: 1px;
+    background-color: rgb(250, 127, 56);
+    color: white;
+}
+  
+td {
+    padding: 10px;
+    text-align: center;
+}
+  
+tr:nth-child(even) {
+    background-color: #eee;
+}
+  
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+  
+tr:hover {
+    background-color: lightsteelblue;
+    cursor: pointer;
+}
+
+/* form */
+.form-suggestion-filter{
+    /* background-color: white; */
     position: relative;
+    width: fit-content;
+    height: fit-content;
     display: grid;
     grid-auto-flow: column;
-    width: 100%;
-    height: fit-content;
-    text-align: left;
-    line-height: 25px;
-    margin-top: -5px;
+    justify-self: right;
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
+    margin-right: 10px;
     box-sizing: border-box;
-} */
+}
+
+/* input search */
+#category {
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    box-sizing: border-box;
+}

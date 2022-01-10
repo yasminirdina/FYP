@@ -1,105 +1,117 @@
-<!-- 1 - new reply to comment/reply -->
-<div class="div-notif-ind">
-    <!-- Temp -->
-    <i class="fas fa-reply"></i>
+{% if allNotif %}
+    {% for notif in allNotif %}
+        {% if notif.isOpen == False %}
+            <div class="div-notif-ind unread">
+                <!-- Type 2: New reply -->
+                {% if notif.typeID_id == 2 %}
+                    <i class="fas fa-reply"></i>
 
-    <div class="div-text">
-        <!-- Temp -->
-        Komen anda pada artikel (tajuk) menerima balasan daripada pelajar (username).
-        Komen anda pada artikel (tajuk) menerima balasan daripada pelajar (username).
-        Komen anda pada artikel (tajuk) menerima balasan daripada pelajar (username).
+                    <div class="div-text">
+                        Komen anda pada artikel 
+                        <span>
+                            <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'blog:view-post' user_type user_id notif.blogPostID.id %}">{{ notif.blogPostID.title }}</a>
+                        </span> menerima balasan daripada 
+                        <span>
+                            {% if 'S' in notif.senderID_id %}
+                                pelajar <span class="span-bold">{{ notif.senderID.username }}</span>.
+                            {% elif 'P' in notif.senderID_id %}
+                                penjaga <span class="span-bold">{{ notif.senderID.username }}</span>.
+                            {% elif 'T' in notif.senderID_id %}
+                                guru <span class="span-bold">{{ notif.senderID.username }}</span>.
+                            {% elif 'A' in notif.senderID_id %}
+                                admin.
+                            {% endif %}
+                        </span>
+                    </div>
+                <!-- Type 3: New Message -->
+                {% elif notif.typeID_id == 3 %}
+                    <i class="fas fa-comment-alt"></i>
+
+                    <div class="div-text">
+                        <!-- Temp -->
+                        Terdapat mesej baharu daripada admin.
+                        Terdapat mesej baharu daripada admin.
+                        Terdapat mesej baharu daripada admin.
+                        Terdapat mesej baharu daripada admin.
+                    </div>
+                <!-- Type 5: Status Change (for non-admin ONLY) -->
+                {% elif notif.typeID_id == 5 %}
+                    <i class="fas fa-lightbulb"></i>
+
+                    <div class="div-text">
+                        Cadangan penambahbaikan anda bertajuk 
+                        <span>
+                            <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'dashboard:suggestions-nonadmin' user_type user_id %}">{{ notif.suggestionID.title }}</a>
+                        </span>
+                        
+                        {% if notif.suggestionStatus == 'Dihantar' %}
+                            belum diproses.
+                        {% elif notif.suggestionStatus == 'Sedang Diproses'%}
+                            sedang diproses.
+                        {% elif notif.suggestionStatus == 'Ditutup'%}
+                            telah ditutup.
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% else %}
+            <div class="div-notif-ind">
+                <!-- Type 2: New reply -->
+                {% if notif.typeID_id == 2 %}
+                    <i class="fas fa-reply"></i>
+
+                    <div class="div-text">
+                        Komen anda pada artikel 
+                        <span>
+                            <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'blog:view-post' user_type user_id notif.blogPostID.id %}">{{ notif.blogPostID.title }}</a>
+                        </span> menerima balasan daripada 
+                        <span>
+                            {% if 'S' in notif.senderID_id %}
+                                pelajar <span class="span-bold">{{ notif.senderID.username }}</span>.
+                            {% elif 'P' in notif.senderID_id %}
+                                penjaga <span class="span-bold">{{ notif.senderID.username }}</span>.
+                            {% elif 'T' in notif.senderID_id %}
+                                guru <span class="span-bold">{{ notif.senderID.username }}</span>.
+                            {% elif 'A' in notif.senderID_id %}
+                                admin.
+                            {% endif %}
+                        </span>
+                    </div>
+                <!-- Type 3: New Message -->
+                {% elif notif.typeID_id == 3 %}
+                    <i class="fas fa-comment-alt"></i>
+
+                    <div class="div-text">
+                        <!-- Temp -->
+                        Terdapat mesej baharu daripada admin.
+                        Terdapat mesej baharu daripada admin.
+                        Terdapat mesej baharu daripada admin.
+                        Terdapat mesej baharu daripada admin.
+                    </div>
+                <!-- Type 5: Status Change (for non-admin ONLY) -->
+                {% elif notif.typeID_id == 5 %}
+                    <i class="fas fa-lightbulb"></i>
+
+                    <div class="div-text">
+                        Cadangan penambahbaikan anda bertajuk 
+                        <span>
+                            <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'dashboard:suggestions-nonadmin' user_type user_id %}">{{ notif.suggestionID.title }}</a>
+                        </span>
+                        
+                        {% if notif.suggestionStatus == 'Dihantar' %}
+                            belum diproses.
+                        {% elif notif.suggestionStatus == 'Sedang Diproses'%}
+                            sedang diproses.
+                        {% elif notif.suggestionStatus == 'Ditutup'%}
+                            telah ditutup.
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% else %}
+    <div class="div-no-notif">
+        Tiada notifikasi diterima.
     </div>
-</div>
-
-<!-- Temp -->
-<!-- new message from admin -->
-<div class="div-notif-ind">
-    <!-- Temp -->
-    <i class="fas fa-comment-alt"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Terdapat mesej baharu daripada admin.
-        Terdapat mesej baharu daripada admin.
-        Terdapat mesej baharu daripada admin.
-        Terdapat mesej baharu daripada admin.
-    </div>
-</div>
-
-<!-- suggestion status changed -->
-<div class="div-notif-ind unread">
-    <!-- Temp -->
-    <i class="fas fa-lightbulb"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Status terkini cadangan penambahbaikan anda: Sedang Diproses.
-        Status terkini cadangan penambahbaikan anda: Sedang Diproses.
-        Status terkini cadangan penambahbaikan anda: Sedang Diproses.
-        Status terkini cadangan penambahbaikan anda: Sedang Diproses.
-    </div>
-</div>
-
-<div class="div-notif-ind">
-    <!-- Temp -->
-    <i class="fas fa-comment-alt"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Terdapat mesej baharu daripada admin.
-        Terdapat mesej baharu daripada admin.
-        Terdapat mesej baharu daripada admin.
-        Terdapat mesej baharu daripada admin.
-    </div>
-</div>
-
-<div class="div-notif-ind">
-    <!-- Temp -->
-    <i class="fas fa-reply"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Komen anda pada artikel (tajuk) menerima balasan daripada pelajar (username).
-        Komen anda pada artikel (tajuk) menerima balasan daripada pelajar (username).
-        Komen anda pada artikel (tajuk) menerima balasan daripada pelajar (username).
-    </div>
-</div>
-
-<div class="div-notif-ind">
-    <!-- Temp -->
-    <i class="fas fa-comment-alt"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-        Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-        Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-    </div>
-</div>
-
-<div class="div-notif-ind unread">
-    <!-- Temp -->
-    <i class="fas fa-lightbulb"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Status terkini cadangan penambahbaikan anda: Ditutup.
-        Status terkini cadangan penambahbaikan anda: Ditutup.
-        Status terkini cadangan penambahbaikan anda: Ditutup.
-        Status terkini cadangan penambahbaikan anda: Ditutup.
-    </div>
-</div>
-
-<div class="div-notif-ind">
-    <!-- Temp -->
-    <i class="fas fa-comment-alt"></i>
-
-    <div class="div-text">
-        <!-- Temp -->
-        Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-        Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-        Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-    </div>
-</div>
-<!-- {% for notif in allNotif %} -->
-<!-- {% endfor %} -->
+{% endif %}

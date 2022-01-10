@@ -172,28 +172,6 @@ def quizMain(request, user_id):
     dashboardNav = ' Pelajar'
     user_type = 'pelajar'
 
-    #comment out bawah ni sebab dah disable tab "Permainan Kuiz" for non-student
-    """if 'S' not in user_id: #meaning actualy not student id (can be Px, Tx, A1)
-        #if admin, redirect to quizMainAdmin
-        #if parent, response: "Kuiz hanya boleh dimain oleh pelajar. Kembali ke papan pemuka untuk melihat laporan visual kuiz anak anda."
-        #if teacher, response: "Kuiz hanya boleh dimain oleh pelajar. Kembali ke papan pemuka untuk melihat laporan individu dan analisis keseluruhan kuiz pelajar."
-        #anything must pass url navbar nonadmin, user type yg salah, student_id as 'user_id' to redirected template
-        if 'A' in user_id:
-            return redirect('quiz:index-admin', user_id)
-        elif 'P' in user_id:
-            dashboardNav = " Penjaga"
-            user_type = "penjaga"
-        elif 'T' in user_id:
-            dashboardNav = " Guru"
-            user_type = "guru"
-        currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
-        username = currentUserRecord.username
-        title = "Future Cruise: Permainan Kuiz Penerokaan Kerjaya"
-        response = "Kuiz hanya boleh dimain oleh pelajar. Klik butang di bawah untuk melihat laporan kuiz pelajar."
-        context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'response': response,
-        'user_id': user_id, 'user_type': user_type, 'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz,
-        'search': urlSearch, 'dashboard': urlDashboard, 'logout': urlLogout}
-        return render(request, 'quiz/noAccessError.html', context)"""
     request.session['student_id'] = user_id
 
     currentStudentDetails = dashboard.models.Student.objects.get(ID=user_id)
@@ -210,10 +188,14 @@ def quizMain(request, user_id):
         currentPlayerUsername = currentPlayerRecord.ID.ID.username
 
     currentAvatarDetailsObject = currentPlayerRecord.avatarID
+
+    currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
+    playCount = currentPlayerAllFieldRecords.count()
+
     response = "Anda berada di muka utama permainan kuiz."
     context = {'dashboardNav': dashboardNav, 'response': response, 'username': currentPlayerUsername, 'user_type': user_type, 'user_id': user_id,
     'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-    'currentAvatarDetailsObject': currentAvatarDetailsObject}
+    'currentAvatarDetailsObject': currentAvatarDetailsObject, 'playCount': playCount}
     return render(request, 'quiz/quizMainNonAdmin.html', context)
 
 def showAvatar(request, user_id):
@@ -1622,6 +1604,11 @@ def seeStatistic(request, user_id, field_id):
     currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
     currentPlayerTotalScoreAllFieldList = list(currentPlayerAllFieldRecords.values_list('currentPointsEarned', flat=True))
 
+    # From main page, bcs we use field id = 1, but the player did not have any record with field id 1 (they have others),
+    # we take the last record in fieldplayersession for that player (no matter what field)
+    if currentFieldPlayerSession == None:
+        currentFieldPlayerSession = currentPlayerAllFieldRecords.last()
+
     #For DIV 1: game-perf
     #Card 1: Total No of Plays
     playCount = currentPlayerAllFieldRecords.count()
@@ -1929,7 +1916,8 @@ def seeStatistic(request, user_id, field_id):
         'lastPlayedTime': lastPlayedTime,
         'avgSessionTimeTaken': avgSessionTimeTaken,
         'three_highest_fieldName': three_highest_fieldName,
-        'three_highest_fieldImage': three_highest_fieldImage
+        'three_highest_fieldImage': three_highest_fieldImage,
+        'recCnt': len(three_highest_fieldName)
     }
 
     return render(request, 'quiz/seeStatistic.html', context)

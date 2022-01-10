@@ -17,12 +17,237 @@
     </div>
 
     <div class="div-content-outer">
-        {% include 'dashboard/nonAdminBookmarkContent.html' %}
+        <div class="div-type">
+            <button class="btn2 post clicked">Artikel Blog</button>
+            <button class="btn2 info">Maklumat Pendidikan Tinggi/Kerjaya</button>
+        </div>
+
+        <!--for by post-->
+        <div class="div-post">
+            <form type="get" action="." class="form-post">
+                {% if search_post %}
+                    <input id="post-title" type="text" name="tajuk-artikel" placeholder="Cari Tajuk Artikel..." value="{{ search_post }}">
+                {% else %}
+                    <input id="post-title" type="text" name="tajuk-artikel" placeholder="Cari Tajuk Artikel..."> 
+                {% endif %}
+
+                Susun tarikh penanda:
+                <select name="tarikh-isi-kandungan-artikel" id="date-post">
+                    <option value="Terkini" selected="selected">Terkini</option>
+                    <option value="Paling Lama">Paling Lama</option>
+                </select>
+            </form>
+            
+            <p class="p-scroll">Skrol jadual ke bawah &#128899;</p>
+
+            <div class="div-table-post">
+                {% include 'dashboard/nonAdminBookmarkContent1.html' %}
+            </div>
+        </div>
+
+        <!--for by info-->
+        <div class="div-info">
+            <form type="get" action="." class="form-info">
+                Pilih kategori maklumat:
+                <select name="kategori-maklumat" id="info-category">
+                    <option value="Pendidikan Tinggi" selected="selected">Pendidikan Tinggi</option>
+                    <option value="Kerjaya">Kerjaya</option>
+                </select>
+
+                Susun tarikh penanda:
+                <select name="tarikh-isi-kandungan-info" id="date-info">
+                    <option value="Terkini" selected="selected">Terkini</option>
+                    <option value="Paling Lama">Paling Lama</option>
+                </select>
+            </form>
+
+            <p class="p-scroll">Skrol jadual ke bawah &#128899;</p>
+
+            <div class="div-table-info">
+                {% include 'dashboard/nonAdminBookmarkContent2.html' %}
+            </div>
+        </div>
     </div>
 {% endblock %}
 
 {% block js2 %}
     <script type="text/javascript">
         $('.p-sidebar.bookmark .p-a-sidebar').addClass('sb-active');
+
+        $('.div-type').on('click', '.info', function(){
+            $('.post').removeClass('clicked');
+            $(this).addClass('clicked');
+            $('.div-post').css("display", "none");
+            $('.div-info').css("display", "grid");
+        });
+
+        $('.div-type').on('click', '.post', function(){
+            $('.info').removeClass('clicked');
+            $(this).addClass('clicked');
+            $('.div-info').css("display", "none");
+            $('.div-post').css("display", "grid");
+        });
+
+        $('.form-post').on('input', '#post-title', function(){
+            var search_post = $(this).val();
+            var date_selected = $('#date-post').val();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:bookmark' user_type user_id %}",
+                data: {
+                    'search_post': search_post,
+                    'sort_order': date_selected,
+                    'requestType': 'findPostTitle'
+                },
+                success: function(result) {
+                    // alert("findPostTitle: success");
+                    $('.div-table-post').html(result);
+                },
+                error: function(result) {
+                    // alert("findPostTitle: error");
+                }
+            })
+        });
+
+        $('.form-post').on('change', '#date-post', function(){
+            alert('hi form-post sortPostDate');
+            var search_post = $('#post-title').val();
+            var date_selected = $(this).val();
+            alert('search_post: ' + search_post);
+            alert('date_selected: ' + date_selected);
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:bookmark' user_type user_id %}",
+                data: {
+                    'search_post': search_post,
+                    'sort_order': date_selected,
+                    'requestType': 'sortPostDate'
+                },
+                success: function(result) {
+                    alert("sortPostDate: success");
+                    $('.div-table-post').html(result);
+                },
+                error: function(result) {
+                    alert("sortPostDate: error");
+                }
+            })
+        });
+
+        $('.form-info').on('change', '#info-category', function(){
+            alert('hi form-post sortInfoCat');
+            var cat_selected = $(this).val();
+            var date_selected = $('#date-info').val();
+            alert('cat_selected: ' + cat_selected);
+            alert('date_selected: ' + date_selected);
+
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:bookmark' user_type user_id %}",
+                data: {
+                    'cat_selected': cat_selected,
+                    'sort_order': date_selected,
+                    'requestType': 'sortInfoCategory'
+                },
+                success: function(result) {
+                    alert("sortInfoCategory: success");
+                    $('.div-table-info').html(result);
+                },
+                error: function(result) {
+                    alert("sortInfoCategory: error");
+                }
+            })
+        });
+
+        $('.form-info').on('change', '#date-info', function(){
+            alert('hi form-post sortInfoDate');
+            var cat_selected = $('#info-category').val();
+            var date_selected = $(this).val();
+            alert('cat_selected: ' + cat_selected);
+            alert('date_selected: ' + date_selected);
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:bookmark' user_type user_id %}",
+                data: {
+                    'cat_selected': cat_selected,
+                    'sort_order': date_selected,
+                    'requestType': 'sortInfoDate'
+                },
+                success: function(result) {
+                    alert("sortInfoDate: success");
+                    $('.div-table-info').html(result);
+                },
+                error: function(result) {
+                    alert("sortInfoDate: error");
+                }
+            })
+        });
+
+        $('.div-table-post').on('click', '.delete', function(){
+            alert('hi delete post bookmark open');
+
+            $('.confirm-delete').val($(this).val());
+
+            alert('post bookmark id to delete: ' + $('.confirm-delete').val());
+
+            $('.div-bg-modal-4').css("display","flex");
+        });
+
+        $('.div-table-info').on('click', '.delete', function(){
+            alert('hi delete info bookmark open');
+
+            $('.confirm-delete').val($(this).val());
+
+            alert('info bookmark id to delete: ' + $('.confirm-delete').val());
+
+            $('.div-bg-modal-4').css("display","flex");
+        });
+
+        $('.confirm-delete').on('click', function(){
+            alert('hi confirm delete click');
+            var bookmarkType = '';
+            var bookmarkTypeID = $(this).val();
+            var bookmarkID = 0;
+
+            if (bookmarkTypeID.indexOf("post-") >= 0) {
+                alert("hi type post");
+                bookmarkType = "post";
+                bookmarkID = parseInt(bookmarkTypeID.replace("post-", ""));
+                alert("bookmarkType: " + bookmarkType);
+                alert("bookmarkID: " + bookmarkID.toString());
+            }
+            else if (bookmarkTypeID.indexOf("info-") >= 0) {
+                alert("hi type info");
+                bookmarkType = "info";
+                bookmarkID = parseInt(bookmarkTypeID.replace("info-", ""));
+                alert("bookmarkType: " + bookmarkType);
+                alert("bookmarkID: " + bookmarkID.toString());
+            }
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:bookmark' user_type user_id %}",
+                data: {
+                    'bookmarkType': bookmarkType,
+                    'bookmarkID': bookmarkID,
+                    'requestType': 'deleteBookmark'
+                },
+                type: 'POST',
+                success: function(result){
+                    alert("deleteBookmark: success");
+
+                    $('.div-bg-modal-4').css("display","none");
+                    $('.div-table-post').html(result);
+                },
+                error: function(result){
+                    alert("deleteBookmark: failure");
+                }
+            })
+        });
+
+        $('.cancel-delete').on('click', function(){
+            $('.div-bg-modal-4').css("display","none");
+        });
     </script>
 {% endblock %}

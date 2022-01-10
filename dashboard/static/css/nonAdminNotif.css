@@ -24,9 +24,22 @@
     transform: scale(1.03);
 }
 
-.a-for-nonAdminNotif {
+.a-for-nonAdminNotif, .a-for-linkto {
     text-decoration: none;
     color: inherit;
+}
+
+.a-for-linkto{
+    font-weight: bold;
+}
+
+.a-for-linkto:hover{
+    text-decoration: underline;
+    color: rgb(250, 127, 56);
+}
+
+.div-notif-ind.unread .a-for-linkto:hover{
+    color: white;
 }
 
 /* div */
@@ -50,6 +63,16 @@
     overflow: auto;
     border-radius: 10px;
     border: 1px solid lightgray;
+}
+
+.div-no-notif{
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    padding: 10px;
+    height: fit-content;
+    box-sizing: border-box;
 }
 
 .div-notif-ind{
@@ -92,7 +115,14 @@
     width: 100%;
     height: fit-content;
     text-align: left;
+    justify-content: left;
+    gap: 4px;
     line-height: 25px;
     margin-top: -5px;
     box-sizing: border-box;
+}
+
+/* span */
+.span-bold{
+    font-weight: bold;
 }

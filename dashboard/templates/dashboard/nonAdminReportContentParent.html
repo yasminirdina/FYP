@@ -1,0 +1,112 @@
+{% load static %}
+{% load dashboard_index %}
+
+{% if parentStudentsCnt > 1 %}
+    <div class="div-filter">
+        {% if recCnt == 3 %}
+            <span style="font-weight: bold;">
+                3 bidang kerjaya yang paling sesuai untuk pelajar 
+                <span style="color:rgb(250, 127, 56)">
+                    {{ filtered_student.name }}
+                </span>
+                adalah seperti berikut:
+            </span>
+        {% endif %}
+
+        <form type="get" action="." class="form-career-parent">
+            Pilih pelajar:
+            <select name="nama-pelajar" id="student-name">
+                {% if filtered_student %}
+                    {% for student in parentStudents %}
+                        {% if student.ID == filtered_student.ID %}
+                            <option value="{{ student.ID.ID }}" selected="selected">{{ student.name }}</option>
+                        {% else %}
+                            <option value="{{ student.ID.ID }}">{{ student.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% for student in parentStudents %}
+                        {% if forloop.counter0 == 0 %}
+                            <option value="{{ student.ID.ID }}" selected="selected">{{ student.name }}</option>
+                        {% else %}
+                            <option value="{{ student.ID.ID }}">{{ student.name }}</option>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </form>
+    </div>
+{% else %}
+    {% if recCnt == 3 %}
+        <span style="font-weight: bold;">
+            3 bidang kerjaya yang paling sesuai untuk pelajar 
+            <span style="color:rgb(250, 127, 56)">
+                {{ filtered_student.name }}
+            </span>
+            adalah seperti berikut:
+        </span>
+    {% endif %}
+{% endif %}
+
+<div id="podium-box">
+    {% if three_highest_fieldName %}
+        {% if recCnt == 3 %}
+            <div class="div-step-container">
+                <div>
+                    <img class="img-field" src="{% static 'images/quiz_field/' %}{{ three_highest_fieldImage|index:0 }}"> 
+                    <br>
+                    {{ three_highest_fieldName|index:0 }}
+                    <div class="div-tooltip-text">
+                        <!-- Change link with direct career field info page -->
+                        <a class="a-for-seeStatistic more-info" href="{% url search user_type user_id %}">
+                            Klik untuk info lanjut
+                        </a>
+                    </div>
+                </div>
+                <div id="second-step" class="div-ind-step">
+                    2
+                </div>
+            </div>
+            <div class="div-step-container">
+                <div>
+                    <img class="img-field" src="{% static 'images/quiz_field/' %}{{ three_highest_fieldImage|index:1 }}"> 
+                    <br>
+                    {{ three_highest_fieldName|index:1 }}
+                    <div class="div-tooltip-text">
+                        <!-- Change link with direct career field info page -->
+                        <a class="a-for-seeStatistic more-info" href="{% url search user_type user_id %}">
+                            Klik untuk info lanjut
+                        </a>
+                    </div>
+                </div>
+                <div id="first-step" class="div-ind-step">
+                    1
+                </div>
+            </div>
+            <div class="div-step-container">
+                <div>
+                    <img class="img-field" src="{% static 'images/quiz_field/' %}{{ three_highest_fieldImage|index:2 }}"> 
+                    <br>
+                    {{ three_highest_fieldName|index:2 }}
+                    <div class="div-tooltip-text">
+                        <!-- Change link with direct career field info page -->
+                        <a class="a-for-seeStatistic more-info" href="{% url search user_type user_id %}">
+                            Klik untuk info lanjut
+                        </a>
+                    </div>
+                </div>
+                <div id="third-step" class="div-ind-step">
+                    3
+                </div>
+            </div>
+        {% else %}
+            <div class="div-no-career">
+                Untuk melihat cadangan kerjaya bagi pelajar ini, pelajar mestilah telah bermain permainan kuiz dalam paling kurang 3 jenis bidang kerjaya.
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="div-no-career">
+            Tiada rekod kuiz permainan bagi pelajar ini. Untuk melihat cadangan kerjaya bagi pelajar, pelajar itu mestilah mempunyai rekod bermain dalam permainan kuiz di laman web ini.
+        </div>
+    {% endif %}
+</div>

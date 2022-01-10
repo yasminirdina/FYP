@@ -17,12 +17,94 @@
     </div>
 
     <div class="div-content-outer">
-        {% include 'dashboard/nonAdminSuggestionsContent.html' %}
+        <form type="get" action="." class="form-suggestion-filter">
+            Kategori:
+            <select name="kategori-cadangan" id="category">
+                <option value="Semua" selected="selected">Semua</option>
+                {% for category in allCategory %}
+                    <option value="{{ category.name }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <div class="div-table">
+            {% include 'dashboard/nonAdminSuggestionsContent.html' %}
+        </div>
+
+        <div class="div-add-suggestion">
+            <button class="btn add-suggestion" href="{}">
+                <a class="a-for-nonAdminSuggestions" href="{% url 'dashboard:add-suggestion' user_type user_id %}">
+                    <i class="fas fa-plus"></i>
+                    Tambah Cadangan
+                </a>
+            </button>
+        </div>
     </div>
 {% endblock %}
 
 {% block js2 %}
     <script type="text/javascript">
         $('.p-sidebar.suggestion .p-a-sidebar').addClass('sb-active');
+
+        $('.form-suggestion-filter').on('change', '#category', function(){
+            var selected = $(this).val();
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:suggestions-nonadmin' user_type user_id %}",
+                data: {
+                    cat_selected: selected
+                },
+                success: function(result) {
+                    // alert("filter-category: success");
+                    $('.div-table').html(result);
+                },
+                error: function(result) {
+                    // alert("filter-category: error");
+                }
+            })
+        });
+        
+        $('.div-table').on('change', '.select-status', function(){
+            // alert('hi select-status click/change'); // Test
+
+            var suggestionID = $(this).attr("id");
+            var newStatus = $('#'+suggestionID).val();
+
+            // alert('suggestionID: ' + suggestionID); // Test
+            // alert('newStatus: ' + newStatus); // Test
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:suggestions-nonadmin' user_type user_id %}",
+                data: {
+                    'suggestionID': suggestionID,
+                    'newStatus': newStatus,
+                    'requestType': 'updateStatus'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    // alert("updateStatus: success");
+                },
+                error: function(result){
+                    // alert("updateStatus: failure");
+                }
+            })
+        });
+
+        $('.div-table').on('click', '.a-with-underline', function(){
+            var clickedSuggestionID_full = $(this).attr("id");
+            var clickedSuggestionID = clickedSuggestionID_full.replace("a-","");
+            var suggestionTitle = $('#title-' + clickedSuggestionID).text();
+            var suggestionContent = $('#content-' + clickedSuggestionID).text();
+
+            $('.div-modal-header-3').text(suggestionTitle);
+            $('.div-suggestion-content').text(suggestionContent);
+            $('.div-bg-modal-3').css("display","flex");
+        });
+
+        $('.close-suggestion').on('click', function(){
+            $('.div-bg-modal-3').css("display","none");
+        });
     </script>
 {% endblock %}

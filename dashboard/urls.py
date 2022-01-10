@@ -19,15 +19,9 @@ urlpatterns = [
     path('<user_type>/<user_id>/penanda-isi-kandungan/', views.nonAdminBookmark, name='bookmark'),
     #reports (non-admin)
     path('<user_type>/<user_id>/laporan-visual/', views.nonAdminReport, name='report'), #KIV
-    # path('pelajar/<user_id>/laporan/', views.showReports, name='reports-student'), #KIV
-    # path('penjaga/<user_id>/laporan/', views.showReports, name='reports-parent'), #KIV
-    # path('guru/<user_id>/laporan/', views.showReports, name='reports-teacher'), #KIV
     #chat
     path('admin/<user_id>/ruang-bual-kaunseling/', views.adminChat, name='chat-admin'),
     path('<user_type>/<user_id>/ruang-bual-kaunseling/', views.nonAdminChat, name='chat-nonadmin'), #KIV
-    # path('pelajar/<user_id>/ruang-bual-kaunseling/', views.showChat, name='chat-student'), #KIV
-    # path('penjaga/<user_id>/ruang-bual-kaunseling/', views.showChat, name='chat-parent'), #KIV
-    # path('guru/<user_id>/ruang-bual-kaunseling/', views.showChat, name='chat-teacher'), #KIV
     #suggestions
     path('admin/<user_id>/cadangan/', views.adminSuggestions, name='suggestions-admin'),
     path('<user_type>/<user_id>/cadangan/', views.nonAdminSuggestions, name='suggestions-nonadmin'),

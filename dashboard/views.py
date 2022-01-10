@@ -1,11 +1,15 @@
 from datetime import datetime
 from django import http
+from django.db.models.expressions import F
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, JsonResponse
-from .forms import ChangePasswordForm, AddClassForm, EditProfileStudentForm, EditProfileParentForm, EditProfileTeacherForm
-import dashboard.models
+from .forms import AddSuggestionForm, ChangePasswordForm, AddClassForm, EditProfileStudentForm, EditProfileParentForm, EditProfileTeacherForm
+import dashboard.models, blog.models, quiz.models
 import string, re
 from django.contrib.auth.hashers import make_password, check_password
+from datetime import timedelta
+from django.db.models import Sum
+from collections import Counter
 
 # Create your views here.
 def adminNotif(request, user_id):
@@ -28,21 +32,48 @@ def adminNotif(request, user_id):
     urlChat = 'dashboard:chat-admin'
 
     if user_id == 'A1': #betul ni admin, render dashboard index admin
-        #response = "Hai! Anda berada di "
-        context = {
-            'user_id': user_id,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard': urlDashboard,
-            'logout': urlLogout,
-            'user_type': user_type,
-            'settings': urlClassSettings,
-            'suggestions': urlSuggestions,
-            'chat': urlChat
-        }
-        return render(request, 'dashboard/adminNotif.html', context)
+        allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+        unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'updateNotifStatus':
+                    print("hi POST ajax updateNotifStatus") # Test
+                    notifID = request.POST['notifID']
+
+                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    print("classToDelete: " + notifID) #Test
+
+                    justReadNotif = allNotif.get(id=notifID)
+                    justReadNotif.isOpen = True
+                    justReadNotif.save()
+
+                    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+                    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+                    context = {
+                        'doneUpdateNotifStatus': "Yes",
+                        'unreadNotifCnt': unreadNotifCnt
+                    }
+                    
+                    return JsonResponse(context)
+        else:
+            context = {
+                'user_id': user_id,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard': urlDashboard,
+                'logout': urlLogout,
+                'user_type': user_type,
+                'settings': urlClassSettings,
+                'suggestions': urlSuggestions,
+                'chat': urlChat,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
+            }
+            return render(request, 'dashboard/adminNotif.html', context)
     else: #url jadi admin/Sx @ Tx @ Px - manual enter
         response = "Halaman ini hanya boleh diakses oleh admin."
         #pass url navbar admin to error template
@@ -82,6 +113,9 @@ def adminClassSettings(request, user_id):
     urlChat = 'dashboard:chat-admin'
 
     allClass = dashboard.models.HomeroomTeacherClass.objects.exclude(className='NA').order_by('className')
+    
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
     if request.method == 'POST':
         print("hi POST")
@@ -136,7 +170,9 @@ def adminClassSettings(request, user_id):
                         'suggestions': urlSuggestions,
                         'chat': urlChat,
                         'allClass': allClass,
-                        'form': form
+                        'form': form,
+                        'allNotif': allNotif,
+                        'unreadNotifCnt': unreadNotifCnt
                     }
                 else:
                     context = {
@@ -153,7 +189,9 @@ def adminClassSettings(request, user_id):
                         'chat': urlChat,
                         'allClass': allClass,
                         'form': form,
-                        'error': "Nama kelas yang dimasukkan telah wujud. Sila masukkan nama kelas yang lain."
+                        'error': "Nama kelas yang dimasukkan telah wujud. Sila masukkan nama kelas yang lain.",
+                        'allNotif': allNotif,
+                        'unreadNotifCnt': unreadNotifCnt
                     }
                 
                 return render(request, 'dashboard/adminClassSettings.html', context)
@@ -173,7 +211,9 @@ def adminClassSettings(request, user_id):
             'suggestions': urlSuggestions,
             'chat': urlChat,
             'allClass': allClass,
-            'form': form
+            'form': form,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         }
 
         return render(request, 'dashboard/adminClassSettings.html', context)
@@ -201,6 +241,9 @@ def adminSuggestions(request, user_id):
     allSuggestions = dashboard.models.Suggestion.objects.all().order_by('-dateIssued', '-timeIssued', 'title')
     allCategory = dashboard.models.SuggestionType.objects.all().order_by('name')
 
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
     if request.method == 'POST':
         print("hi POST")
         if request.is_ajax():
@@ -214,7 +257,12 @@ def adminSuggestions(request, user_id):
 
                 currentSuggestion = dashboard.models.Suggestion.objects.get(id=suggestionID)
                 currentSuggestion.status = newStatus
+                currentSuggestion.dateUpdated = datetime.now().date()
+                currentSuggestion.timeUpdated = datetime.now().time()
                 currentSuggestion.save()
+
+                #create notification (Type id 5 - Status change (for non-admin ONLY))
+                dashboard.models.Notification.objects.create(senderID_id='A1', recipientID_id=currentSuggestion.creatorID_id, suggestionID_id=currentSuggestion.id, suggestionStatus=currentSuggestion.status, typeID_id=5)
 
                 context = {
                     'doneUpdateStatus': "Yes"
@@ -252,7 +300,9 @@ def adminSuggestions(request, user_id):
                 'chat': urlChat,
                 'statusList': statusList,
                 'allSuggestions': allSuggestions,
-                'allCategory': allCategory
+                'allCategory': allCategory,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
             }
 
             return render(request, 'dashboard/adminSuggestions.html', context)
@@ -276,6 +326,9 @@ def adminChat(request, user_id):
     urlSuggestions = 'dashboard:suggestions-admin'
     urlChat = 'dashboard:chat-admin'
 
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
     context = {
         'user_id': user_id,
         'test': urlTest,
@@ -287,7 +340,9 @@ def adminChat(request, user_id):
         'user_type': user_type,
         'settings': urlClassSettings,
         'suggestions': urlSuggestions,
-        'chat': urlChat
+        'chat': urlChat,
+        'allNotif': allNotif,
+        'unreadNotifCnt': unreadNotifCnt
     }
 
     return render(request, 'dashboard/adminChat.html', context)
@@ -315,67 +370,148 @@ def nonAdminNotif(request, user_type, user_id):
 
     if user_type == "pelajar" and 'S' in user_id:
         dashboardNav = " Pelajar"
+        allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+        unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminNotif.html', context)
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'updateNotifStatus':
+                    print("hi POST ajax updateNotifStatus") # Test
+                    notifID = request.POST['notifID']
+
+                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    print("notifToDelete: " + notifID) #Test
+
+                    justReadNotif = allNotif.get(id=notifID)
+                    justReadNotif.isOpen = True
+                    justReadNotif.save()
+
+                    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+                    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+                    context = {
+                        'doneUpdateNotifStatus': "Yes",
+                        'unreadNotifCnt': unreadNotifCnt
+                    }
+                    
+                    return JsonResponse(context)
+        else:
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
+            } 
+            return render(request, 'dashboard/nonAdminNotif.html', context)
     elif user_type == "penjaga" and 'P' in user_id:
         dashboardNav = " Penjaga"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminNotif.html', context)
+        allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+        unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'updateNotifStatus':
+                    print("hi POST ajax updateNotifStatus") # Test
+                    notifID = request.POST['notifID']
+
+                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    print("notifToDelete: " + notifID) #Test
+
+                    justReadNotif = allNotif.get(id=notifID)
+                    justReadNotif.isOpen = True
+                    justReadNotif.save()
+
+                    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+                    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+                    context = {
+                        'doneUpdateNotifStatus': "Yes",
+                        'unreadNotifCnt': unreadNotifCnt
+                    }
+                    
+                    return JsonResponse(context)
+        else:
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
+            } 
+            return render(request, 'dashboard/nonAdminNotif.html', context)
     elif user_type == "guru" and 'T' in user_id:
         dashboardNav = " Guru"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminNotif.html', context)
+        allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+        unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'updateNotifStatus':
+                    print("hi POST ajax updateNotifStatus") # Test
+                    notifID = request.POST['notifID']
+
+                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    print("notifToDelete: " + notifID) #Test
+
+                    justReadNotif = allNotif.get(id=notifID)
+                    justReadNotif.isOpen = True
+                    justReadNotif.save()
+
+                    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+                    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+                    context = {
+                        'doneUpdateNotifStatus': "Yes",
+                        'unreadNotifCnt': unreadNotifCnt
+                    }
+                    
+                    return JsonResponse(context)
+        else:
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
+            } 
+            return render(request, 'dashboard/nonAdminNotif.html', context)
     else: #no match between user type and user ID huruf part (cth: 'pelajar' and 'A1') OR english user types OR typo
         if user_type == 'pelajar':
             dashboardNav = " Pelajar"
@@ -432,16 +568,9 @@ def showProfileNonAdmin(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
     
-    #if user_id is admin
-        #response = admin id
-        #get admin profile detail
-        #render dashboard\showProfile.html pass context (response, profile detail) to display in html
-    #if student
-        #same as admin but change to student id
-    #if parent
-        #^^
-    #if teacher
-        #^^
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
     if user_type == 'pelajar' and 'S' in user_id:
         title = " Tetapan Akaun Pelajar"
         dashboardNav = " Pelajar"
@@ -466,7 +595,9 @@ def showProfileNonAdmin(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         }
 
         return render(request, 'dashboard\showProfile.html', context)
@@ -497,7 +628,9 @@ def showProfileNonAdmin(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         }
 
         return render(request, 'dashboard\showProfile.html', context)
@@ -532,7 +665,9 @@ def showProfileNonAdmin(request, user_type, user_id):
                     'bookmark': urlBookmark,
                     'report': urlReport,
                     'chat': urlChat,
-                    'suggestions': urlSuggestion
+                    'suggestions': urlSuggestion,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt
                 }
             else:
                 context = {
@@ -553,7 +688,9 @@ def showProfileNonAdmin(request, user_type, user_id):
                     'bookmark': urlBookmark,
                     'report': urlReport,
                     'chat': urlChat,
-                    'suggestions': urlSuggestion
+                    'suggestions': urlSuggestion,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt
                 }
         else:
             context = {
@@ -574,7 +711,9 @@ def showProfileNonAdmin(request, user_type, user_id):
                 'bookmark': urlBookmark,
                 'report': urlReport,
                 'chat': urlChat,
-                'suggestions': urlSuggestion
+                'suggestions': urlSuggestion,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
             }
 
         return render(request, 'dashboard\showProfile.html', context)
@@ -613,6 +752,9 @@ def changePassword(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
     if user_type == 'pelajar' and 'S' in user_id:
         currentUserTypeDetail = dashboard.models.Student.objects.get(ID=user_id)
         title = " Tetapan Akaun Pelajar"
@@ -647,7 +789,9 @@ def changePassword(request, user_type, user_id):
             'suggestions': urlSuggestion,
             'subtitle': subtitle,
             'errorMessage': errorMessage,
-            'form': form
+            'form': form,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         }
         return render(request, 'dashboard/changePassword.html', context)
 
@@ -713,7 +857,9 @@ def changePassword(request, user_type, user_id):
                                 'chat': urlChat,
                                 'suggestions': urlSuggestion,
                                 'subtitle': subtitle,
-                                'successMessage': successMessage
+                                'successMessage': successMessage,
+                                'allNotif': allNotif,
+                                'unreadNotifCnt': unreadNotifCnt
                             }
                             return render(request, 'dashboard/successUpdate.html', context)
                         #if either has no upper/lower/special/number characters
@@ -756,7 +902,9 @@ def changePassword(request, user_type, user_id):
         'chat': urlChat,
         'suggestions': urlSuggestion,
         'subtitle': subtitle,
-        'form': form
+        'form': form,
+        'allNotif': allNotif,
+        'unreadNotifCnt': unreadNotifCnt
     }
     return render(request, 'dashboard/changePassword.html', context)
 
@@ -784,6 +932,9 @@ def editProfile(request, user_type, user_id):
     urlReport = 'dashboard:report'
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
     if request.method == 'POST':
         #if student
@@ -843,7 +994,9 @@ def editProfile(request, user_type, user_id):
                     'chat': urlChat,
                     'suggestions': urlSuggestion,
                     'subtitle': subtitle,
-                    'successMessage': successMessage
+                    'successMessage': successMessage,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt
                 }
                 return render(request, 'dashboard/successUpdate.html', context)
         #if parent
@@ -902,7 +1055,9 @@ def editProfile(request, user_type, user_id):
                     'chat': urlChat,
                     'suggestions': urlSuggestion,
                     'subtitle': subtitle,
-                    'successMessage': successMessage
+                    'successMessage': successMessage,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt
                 }
                 return render(request, 'dashboard/successUpdate.html', context)
         #if teacher
@@ -972,7 +1127,9 @@ def editProfile(request, user_type, user_id):
                             'chat': urlChat,
                             'suggestions': urlSuggestion,
                             'subtitle': subtitle,
-                            'successMessage': successMessage
+                            'successMessage': successMessage,
+                            'allNotif': allNotif,
+                            'unreadNotifCnt': unreadNotifCnt
                         }
                         return render(request, 'dashboard/successUpdate.html', context)
                 #if new/unchanged role = Guru Kelas #MEMANG GURU KELAS or NEW GURU KELAS
@@ -1094,7 +1251,9 @@ def editProfile(request, user_type, user_id):
                         'chat': urlChat,
                         'suggestions': urlSuggestion,
                         'subtitle': subtitle,
-                        'successMessage': successMessage
+                        'successMessage': successMessage,
+                        'allNotif': allNotif,
+                        'unreadNotifCnt': unreadNotifCnt
                     }
                     return render(request, 'dashboard/successUpdate.html', context)
 
@@ -1138,7 +1297,9 @@ def editProfile(request, user_type, user_id):
                         'suggestions': urlSuggestion,
                         'subtitle': subtitle,
                         'errorMessage': errorMessage,
-                        'form': form
+                        'form': form,
+                        'allNotif': allNotif,
+                        'unreadNotifCnt': unreadNotifCnt
                     }
 
                     return render(request, 'dashboard/editProfile.html', context)
@@ -1165,7 +1326,9 @@ def editProfile(request, user_type, user_id):
                     'chat': urlChat,
                     'suggestions': urlSuggestion,
                     'subtitle': subtitle,
-                    'successMessage': successMessage
+                    'successMessage': successMessage,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt
                 }
                 return render(request, 'dashboard/successUpdate.html', context)
     else:
@@ -1222,13 +1385,11 @@ def editProfile(request, user_type, user_id):
         'chat': urlChat,
         'suggestions': urlSuggestion,
         'subtitle': subtitle,
-        # 'errorMessage': errorMessage,
-        'form': form
+        'form': form,
+        'allNotif': allNotif,
+        'unreadNotifCnt': unreadNotifCnt
     }
 
-    """ context = {'title': title, 'dashboardNav': dashboardNav, 'username': username, 'user_type': user_type, 'user_id': user_id,
-    'test': urlTest, 'blog': urlBlog, 'quiz': urlQuiz, 'search': urlSearch, 'dashboard':urlDashboard, 'logout': urlLogout,
-    'subtitle': subtitle, 'form': form} """
     return render(request, 'dashboard/editProfile.html', context)
 
 def nonAdminBookmark(request, user_type, user_id):
@@ -1252,69 +1413,103 @@ def nonAdminBookmark(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = " Pelajar"
+    allPostBookmarks = blog.models.BlogPostBookmark.objects.filter(userID_id=user_id).order_by('-dateTimeAdded')
+    #[KIV] get allInfoBookmarks for current user_id
 
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminBookmark.html', context)
-    elif user_type == "penjaga" and 'P' in user_id:
-        dashboardNav = " Penjaga"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminBookmark.html', context)
-    elif user_type == "guru" and 'T' in user_id:
-        dashboardNav = " Guru"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminBookmark.html', context)
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+    if request.method == 'POST':
+        print("hi POST")
+        if request.is_ajax():
+            if request.POST['requestType'] == 'deleteBookmark':
+                print("hi POST ajax deleteBookmark") # Test
+                bookmarkType = request.POST['bookmarkType']
+                bookmarkID = int(request.POST['bookmarkID'])
+
+                print("bookmarkType: " + bookmarkType) #Test
+                print("bookmarkID: " + str(bookmarkID)) #Test
+
+                context = {}
+
+                if bookmarkType == 'post':
+                    print("bookmarkType is post") #Test
+                    blog.models.BlogPostBookmark.objects.get(id=bookmarkID).delete()
+                    allPostBookmarks = blog.models.BlogPostBookmark.objects.filter(userID_id=user_id).order_by('-dateTimeAdded')
+                    print("allPostBookmarks: " + str(allPostBookmarks)) #Test
+
+                    context = {
+                        'allPostBookmarks': allPostBookmarks
+                    }
+                    return render(request, 'dashboard/nonAdminBookmarkContent1.html', context)
+                #[KIV] EDIT WITH AIN's PART
+                #elif bookmarkType == 'info':
+                    #delete info bookmark record of the selected id
+                    #update allInfoBookmarks for current user_id
+                    #return render(request, 'dashboard/nonAdminBookmarkContent2.html', context)
+    else:      
+        if request.is_ajax():
+            if request.GET.get('requestType') == 'findPostTitle' or request.GET.get('requestType') == 'sortPostDate':
+                search_post = request.GET.get('search_post', None)
+                sort_order = request.GET.get('sort_order', None)
+            
+                if search_post is not None:
+                    allPostIDsinUserBookmark = list(allPostBookmarks.values_list('blogPostID_id', flat=True))
+                    print("allPostIDsinUserBookmark: " + str(allPostIDsinUserBookmark)) #Test
+                    allBookmarkedPosts = blog.models.BlogPost.objects.filter(id__in=allPostIDsinUserBookmark)
+                    print("allBookmarkedPosts: " + str(allBookmarkedPosts)) #Test
+                    filteredPosts = allBookmarkedPosts.filter(title__icontains=search_post)
+                    print("filteredPosts: " + str(filteredPosts)) #Test
+                    filteredPostIDs = list(filteredPosts.values_list('id', flat=True))
+                    print("filteredPostIDs: " + str(filteredPostIDs)) #Test
+                    allPostBookmarks = allPostBookmarks.filter(blogPostID_id__in=filteredPostIDs)
+                    print("allPostBookmarks: " + str(allPostBookmarks)) #Test
+
+                if sort_order == 'Terkini':
+                    allPostBookmarks = allPostBookmarks.order_by('-dateTimeAdded')
+                elif sort_order == 'Paling Lama':
+                    allPostBookmarks = allPostBookmarks.order_by('dateTimeAdded')
+                
+                print("allPostBookmarks: " + str(allPostBookmarks)) #Test
+                    
+                context = {
+                    'allPostBookmarks': allPostBookmarks
+                }
+
+                return render(request, 'dashboard/nonAdminBookmarkContent1.html', context)
+            #[KIV] sortInfoCategory/sortInfoDate
+            #else if request.GET.get('requestType') == 'sortInfoCategory' or request.GET.get('requestType') == 'sortInfoDate':
+                #do the same for info filtering
+                #return render(request, 'dashboard/nonAdminBookmarkContent2.html', context)
+        else:
+            if user_type == "pelajar" and 'S' in user_id:
+                dashboardNav = " Pelajar"
+            elif user_type == "penjaga" and 'P' in user_id:
+                dashboardNav = " Penjaga"
+            elif user_type == "guru" and 'T' in user_id:
+                dashboardNav = " Guru"
+                
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion,
+                'allPostBookmarks': allPostBookmarks,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
+            } 
+            return render(request, 'dashboard/nonAdminBookmark.html', context)
 
 def nonAdminReport(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
@@ -1337,8 +1532,86 @@ def nonAdminReport(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
     if user_type == "pelajar" and 'S' in user_id:
         dashboardNav = " Pelajar"
+
+        # div-career-student
+        currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
+        fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+        criteria_score_list = []
+        criteria_hint_list = []
+        criteria_time_list = []
+        final_field_criteria_dict = {}
+
+        for i in range(len(fieldIDList)):
+            currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
+            currentFieldSessionCount = currentIterFieldRecords.count()
+
+            #for criteria_score_list
+            fullScoreEasyDict = currentIterFieldRecords.aggregate(Sum('countEasy'))
+            fullScoreEasy = fullScoreEasyDict['countEasy__sum']*6
+            fullScoreMediumDict = currentIterFieldRecords.aggregate(Sum('countMedium'))
+            fullScoreMedium = fullScoreMediumDict['countMedium__sum']*8
+            fullScoreHardDict = currentIterFieldRecords.aggregate(Sum('countHard'))
+            fullScoreHard = fullScoreHardDict['countHard__sum']*10
+            totalFullScore = fullScoreEasy + fullScoreMedium + fullScoreHard
+
+            #deducted hint already because took from currentPointsEarned
+            earnedScoreDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+            earnedScore = earnedScoreDict['currentPointsEarned__sum']
+
+            if totalFullScore > 0:
+                criteria_score_list.append(round((earnedScore/totalFullScore)*45, 2))
+            else:
+                criteria_score_list.append(0)
+
+            #for criteria_hint_list
+            fullHintCount = 30*currentFieldSessionCount
+            usedHintCountDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+            usedHintCount = usedHintCountDict['hintsUsedCount__sum']
+
+            criteria_hint_list.append(round(((fullHintCount-usedHintCount)/fullHintCount)*30, 2))
+
+            #for criteria_time_list (in seconds)
+            fullTimeEasy = fullScoreEasyDict['countEasy__sum']*10
+            fullTimeMedium = fullScoreMediumDict['countMedium__sum']*20
+            fullTimeHard = fullScoreHardDict['countHard__sum']*30
+            totalFullTime = fullTimeEasy + fullTimeMedium + fullTimeHard
+
+            timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+            totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList)).total_seconds()
+
+            #rasanya no totalFullTime should be 0? Sebab mesti time akan running at least 1s. But this one happened sebab
+            #while debugging something dulu it didnt manage to track time but now should be ok
+            if totalFullTime > 0:
+                criteria_time_list.append(round(((totalFullTime-totalTimeTaken)/totalFullTime)*25, 2))
+            else:
+                criteria_time_list.append(0)
+
+            final_field_criteria_dict[fieldIDList[i]] = criteria_score_list[i] + criteria_hint_list[i] + criteria_time_list[i]
+        
+        k = Counter(final_field_criteria_dict)
+    
+        # Finding 3 highest values
+        three_highest_fields = k.most_common(3) #returns list = [(fieldID_1, perc_1), (fieldID_2, perc_2), (fieldID_3, perc_3)]
+        three_highest_fieldIDs = list(field[0] for field in three_highest_fields)
+        three_highest_fieldPerc = list(field[1] for field in three_highest_fields)
+        three_highest_fieldImage = []
+        three_highest_fieldName = []
+
+        #append image URL into imageURLList following the order of gameFields
+        for fieldID in three_highest_fieldIDs:
+            for field in quiz.models.GameField.objects.all():
+                if fieldID == field.id:
+                    three_highest_fieldName.append(field.name)
+                    for image in quiz.models.ImageField.objects.all():
+                        if field.imageURL_id == image.id:
+                            three_highest_fieldImage.append(image.imageURL)
+                            break
+                    break
 
         context = {
             'dashboardNav': dashboardNav,
@@ -1355,11 +1628,206 @@ def nonAdminReport(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt,
+            'three_highest_fieldName': three_highest_fieldName,
+            'three_highest_fieldImage': three_highest_fieldImage,
+            'recCnt': len(three_highest_fieldName)
         } 
         return render(request, 'dashboard/nonAdminReport.html', context)
     elif user_type == "penjaga" and 'P' in user_id:
         dashboardNav = " Penjaga"
+
+        parentStudents = dashboard.models.Student.objects.filter(parentID_id=user_id).order_by('name')
+        parentStudentsCnt = parentStudents.count()
+
+        # div-career-parent
+        if request.is_ajax():
+            if request.GET.get('requestType') == 'filterStudentName':
+                filteredStudentID = request.GET.get('filteredStudentID', None)
+            
+                if filteredStudentID is not None:
+                    filtered_student = parentStudents.get(ID_id=filteredStudentID)
+                    print("filtered_student: " + str(filtered_student)) #Test
+
+                currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=filtered_student.ID_id, isFinish=True)
+                fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+                criteria_score_list = []
+                criteria_hint_list = []
+                criteria_time_list = []
+                final_field_criteria_dict = {}
+
+                for i in range(len(fieldIDList)):
+                    currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
+                    currentFieldSessionCount = currentIterFieldRecords.count()
+
+                    #for criteria_score_list
+                    fullScoreEasyDict = currentIterFieldRecords.aggregate(Sum('countEasy'))
+                    fullScoreEasy = fullScoreEasyDict['countEasy__sum']*6
+                    fullScoreMediumDict = currentIterFieldRecords.aggregate(Sum('countMedium'))
+                    fullScoreMedium = fullScoreMediumDict['countMedium__sum']*8
+                    fullScoreHardDict = currentIterFieldRecords.aggregate(Sum('countHard'))
+                    fullScoreHard = fullScoreHardDict['countHard__sum']*10
+                    totalFullScore = fullScoreEasy + fullScoreMedium + fullScoreHard
+
+                    #deducted hint already because took from currentPointsEarned
+                    earnedScoreDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+                    earnedScore = earnedScoreDict['currentPointsEarned__sum']
+
+                    if totalFullScore > 0:
+                        criteria_score_list.append(round((earnedScore/totalFullScore)*45, 2))
+                    else:
+                        criteria_score_list.append(0)
+
+                    #for criteria_hint_list
+                    fullHintCount = 30*currentFieldSessionCount
+                    usedHintCountDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+                    usedHintCount = usedHintCountDict['hintsUsedCount__sum']
+
+                    criteria_hint_list.append(round(((fullHintCount-usedHintCount)/fullHintCount)*30, 2))
+
+                    #for criteria_time_list (in seconds)
+                    fullTimeEasy = fullScoreEasyDict['countEasy__sum']*10
+                    fullTimeMedium = fullScoreMediumDict['countMedium__sum']*20
+                    fullTimeHard = fullScoreHardDict['countHard__sum']*30
+                    totalFullTime = fullTimeEasy + fullTimeMedium + fullTimeHard
+
+                    timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+                    totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList)).total_seconds()
+
+                    #rasanya no totalFullTime should be 0? Sebab mesti time akan running at least 1s. But this one happened sebab
+                    #while debugging something dulu it didnt manage to track time but now should be ok
+                    if totalFullTime > 0:
+                        criteria_time_list.append(round(((totalFullTime-totalTimeTaken)/totalFullTime)*25, 2))
+                    else:
+                        criteria_time_list.append(0)
+
+                    final_field_criteria_dict[fieldIDList[i]] = criteria_score_list[i] + criteria_hint_list[i] + criteria_time_list[i]
+                
+                k = Counter(final_field_criteria_dict)
+            
+                # Finding 3 highest values
+                three_highest_fields = k.most_common(3) #returns list = [(fieldID_1, perc_1), (fieldID_2, perc_2), (fieldID_3, perc_3)]
+                three_highest_fieldIDs = list(field[0] for field in three_highest_fields)
+                three_highest_fieldPerc = list(field[1] for field in three_highest_fields)
+                three_highest_fieldImage = []
+                three_highest_fieldName = []
+
+                #append image URL into imageURLList following the order of gameFields
+                for fieldID in three_highest_fieldIDs:
+                    for field in quiz.models.GameField.objects.all():
+                        if fieldID == field.id:
+                            three_highest_fieldName.append(field.name)
+                            for image in quiz.models.ImageField.objects.all():
+                                if field.imageURL_id == image.id:
+                                    three_highest_fieldImage.append(image.imageURL)
+                                    break
+                            break
+            
+                context = {
+                    'dashboardNav': dashboardNav,
+                    'user_type': user_type,
+                    'user_id': user_id,
+                    'username': username,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt,
+                    'parentStudents': parentStudents,
+                    'parentStudentsCnt': parentStudentsCnt,
+                    'filtered_student': filtered_student,
+                    'three_highest_fieldName': three_highest_fieldName,
+                    'three_highest_fieldImage': three_highest_fieldImage,
+                    'recCnt': len(three_highest_fieldName)
+                }
+
+                return render(request, 'dashboard/nonAdminReportContentParent.html', context)
+        else:
+            filtered_student = parentStudents.first()
+
+            currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=filtered_student.ID_id, isFinish=True)
+            fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+            criteria_score_list = []
+            criteria_hint_list = []
+            criteria_time_list = []
+            final_field_criteria_dict = {}
+
+            for i in range(len(fieldIDList)):
+                currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
+                currentFieldSessionCount = currentIterFieldRecords.count()
+
+                #for criteria_score_list
+                fullScoreEasyDict = currentIterFieldRecords.aggregate(Sum('countEasy'))
+                fullScoreEasy = fullScoreEasyDict['countEasy__sum']*6
+                fullScoreMediumDict = currentIterFieldRecords.aggregate(Sum('countMedium'))
+                fullScoreMedium = fullScoreMediumDict['countMedium__sum']*8
+                fullScoreHardDict = currentIterFieldRecords.aggregate(Sum('countHard'))
+                fullScoreHard = fullScoreHardDict['countHard__sum']*10
+                totalFullScore = fullScoreEasy + fullScoreMedium + fullScoreHard
+
+                #deducted hint already because took from currentPointsEarned
+                earnedScoreDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+                earnedScore = earnedScoreDict['currentPointsEarned__sum']
+
+                if totalFullScore > 0:
+                    criteria_score_list.append(round((earnedScore/totalFullScore)*45, 2))
+                else:
+                    criteria_score_list.append(0)
+
+                #for criteria_hint_list
+                fullHintCount = 30*currentFieldSessionCount
+                usedHintCountDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+                usedHintCount = usedHintCountDict['hintsUsedCount__sum']
+
+                criteria_hint_list.append(round(((fullHintCount-usedHintCount)/fullHintCount)*30, 2))
+
+                #for criteria_time_list (in seconds)
+                fullTimeEasy = fullScoreEasyDict['countEasy__sum']*10
+                fullTimeMedium = fullScoreMediumDict['countMedium__sum']*20
+                fullTimeHard = fullScoreHardDict['countHard__sum']*30
+                totalFullTime = fullTimeEasy + fullTimeMedium + fullTimeHard
+
+                timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+                totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList)).total_seconds()
+
+                #rasanya no totalFullTime should be 0? Sebab mesti time akan running at least 1s. But this one happened sebab
+                #while debugging something dulu it didnt manage to track time but now should be ok
+                if totalFullTime > 0:
+                    criteria_time_list.append(round(((totalFullTime-totalTimeTaken)/totalFullTime)*25, 2))
+                else:
+                    criteria_time_list.append(0)
+
+                final_field_criteria_dict[fieldIDList[i]] = criteria_score_list[i] + criteria_hint_list[i] + criteria_time_list[i]
+            
+            k = Counter(final_field_criteria_dict)
+        
+            # Finding 3 highest values
+            three_highest_fields = k.most_common(3) #returns list = [(fieldID_1, perc_1), (fieldID_2, perc_2), (fieldID_3, perc_3)]
+            three_highest_fieldIDs = list(field[0] for field in three_highest_fields)
+            three_highest_fieldPerc = list(field[1] for field in three_highest_fields)
+            three_highest_fieldImage = []
+            three_highest_fieldName = []
+
+            #append image URL into imageURLList following the order of gameFields
+            for fieldID in three_highest_fieldIDs:
+                for field in quiz.models.GameField.objects.all():
+                    if fieldID == field.id:
+                        three_highest_fieldName.append(field.name)
+                        for image in quiz.models.ImageField.objects.all():
+                            if field.imageURL_id == image.id:
+                                three_highest_fieldImage.append(image.imageURL)
+                                break
+                        break
         
         context = {
             'dashboardNav': dashboardNav,
@@ -1376,12 +1844,69 @@ def nonAdminReport(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt,
+            'parentStudents': parentStudents,
+            'parentStudentsCnt': parentStudentsCnt,
+            'filtered_student': filtered_student,
+            'three_highest_fieldName': three_highest_fieldName,
+            'three_highest_fieldImage': three_highest_fieldImage,
+            'recCnt': len(three_highest_fieldName)
         } 
+
         return render(request, 'dashboard/nonAdminReport.html', context)
     elif user_type == "guru" and 'T' in user_id:
         dashboardNav = " Guru"
         
+        currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
+        fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+
+        # For ALL CHARTS(field colors)
+        colors = [
+                "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
+                "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
+                "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
+                "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
+                "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
+                "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
+                "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
+                "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
+                "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
+                "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
+            ]
+
+        allGameFieldColorsDict = {}
+
+        fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+        allGameFields = quiz.models.GameField.objects.filter(id__in=fieldIDList).order_by('id')
+
+        fieldPlayedCountList = []
+        fieldNameList = []
+        fieldName_CountDict = {}
+
+        for fieldID in fieldIDList:
+            fieldPlayedCountList.append(0)
+
+        for session in currentPlayerAllFieldRecords:
+            for i in range(len(fieldIDList)):
+                if session.fieldID_id == fieldIDList[i]:
+                    fieldPlayedCountList[i] += 1
+                    break
+
+        for i in range(len(fieldIDList)):
+            for field in allGameFields:
+                if fieldIDList[i] == field.id:
+                    fieldNameList.append(field.name)
+                    fieldName_CountDict[field.name] = fieldPlayedCountList[i]
+                    break
+
+        for i in range(len(allGameFields)):
+            allGameFieldColorsDict[allGameFields[i].name] = colors[i]
+        
+        playedFieldColorList = colors[:len(fieldNameList)]
+        # END color designation
+
         context = {
             'dashboardNav': dashboardNav,
             'user_type': user_type,
@@ -1397,7 +1922,9 @@ def nonAdminReport(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         } 
         return render(request, 'dashboard/nonAdminReport.html', context)
 
@@ -1422,6 +1949,9 @@ def nonAdminChat(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
     if user_type == "pelajar" and 'S' in user_id:
         dashboardNav = " Pelajar"
 
@@ -1440,7 +1970,9 @@ def nonAdminChat(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         } 
         return render(request, 'dashboard/nonAdminChat.html', context)
     elif user_type == "penjaga" and 'P' in user_id:
@@ -1461,7 +1993,9 @@ def nonAdminChat(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         } 
         return render(request, 'dashboard/nonAdminChat.html', context)
     elif user_type == "guru" and 'T' in user_id:
@@ -1482,7 +2016,9 @@ def nonAdminChat(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         } 
         return render(request, 'dashboard/nonAdminChat.html', context)
 
@@ -1507,69 +2043,80 @@ def nonAdminSuggestions(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = " Pelajar"
+    statusList = ['Dihantar', 'Sedang Diproses', 'Ditutup']
+    allSuggestions = dashboard.models.Suggestion.objects.filter(creatorID_id=user_id).order_by('-dateIssued', '-timeIssued', 'title')
+    allCategory = dashboard.models.SuggestionType.objects.all().order_by('name')
 
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminSuggestions.html', context)
-    elif user_type == "penjaga" and 'P' in user_id:
-        dashboardNav = " Penjaga"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminSuggestions.html', context)
-    elif user_type == "guru" and 'T' in user_id:
-        dashboardNav = " Guru"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/nonAdminSuggestions.html', context)
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
+
+    if request.method == 'POST':
+        print("hi POST")
+        if request.is_ajax():
+            if request.POST['requestType'] == 'updateStatus':
+                print("hi POST ajax updateStatus") # Test
+                newStatus = request.POST['newStatus']
+                suggestionID = request.POST['suggestionID']
+
+                print("newStatus: " + newStatus) #Test
+                print("suggestionID: " + str(suggestionID)) #Test
+
+                currentSuggestion = dashboard.models.Suggestion.objects.get(id=suggestionID)
+                currentSuggestion.status = newStatus
+                currentSuggestion.save()
+
+                context = {
+                    'doneUpdateStatus': "Yes"
+                }
+
+                return JsonResponse(context)
+    else:      
+        if request.is_ajax():
+            cat_selected = request.GET.get('cat_selected', None)
+
+            if cat_selected != 'Semua':
+                for category in allCategory:
+                    if category.name == cat_selected:
+                        allSuggestions = allSuggestions.filter(typeID_id=category.id)
+            
+            context = {
+                'statusList': statusList,
+                'allSuggestions': allSuggestions,
+                'allCategory': allCategory
+            }
+
+            return render(request, 'dashboard/nonAdminSuggestionsContent.html', context)
+        else:
+            if user_type == "pelajar" and 'S' in user_id:
+                dashboardNav = " Pelajar"
+            elif user_type == "penjaga" and 'P' in user_id:
+                dashboardNav = " Penjaga"
+            elif user_type == "guru" and 'T' in user_id:
+                dashboardNav = " Guru"
+                
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion,
+                'statusList': statusList,
+                'allSuggestions': allSuggestions,
+                'allCategory': allCategory,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt
+            } 
+            return render(request, 'dashboard/nonAdminSuggestions.html', context)
 
 def addSuggestion(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
@@ -1592,9 +2139,41 @@ def addSuggestion(request, user_type, user_id):
     urlChat = 'dashboard:chat-nonadmin'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = " Pelajar"
+    allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+    unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
+    if request.method == 'POST':
+        form = AddSuggestionForm(request.POST)
+        if form.is_valid():
+            filledList = form.cleaned_data
+            filledSubject = filledList['subject']
+            filledCategory = filledList['category']
+            filledContent = filledList['content']
+
+            print("filledSubject: " + filledSubject) #Test
+            print("filledCategory is String?: " + str(isinstance(filledCategory, str))) #Test
+            print("filledCategory: " + filledCategory) #Test
+            print("filledContent: " + filledContent) #Test
+
+            newSuggestion = dashboard.models.Suggestion.objects.create(creatorID_id=user_id, typeID_id=int(filledCategory), dateUpdated=datetime.now().date(), timeUpdated=datetime.now().time(), title=filledSubject, subjectContent=filledContent, status='Dihantar')
+            newSuggestion.dateUpdated = newSuggestion.dateIssued
+            newSuggestion.timeUpdated = newSuggestion.timeIssued
+            newSuggestion.save()
+
+            #create notification (Type id 4 - New suggestion (for admin ONLY))
+            dashboard.models.Notification.objects.create(senderID_id=newSuggestion.creatorID_id, recipientID_id='A1', suggestionID_id=newSuggestion.id, typeID_id=4)
+
+            return redirect('dashboard:suggestions-nonadmin', user_type, user_id)
+    else:
+        form = AddSuggestionForm()
+
+        if user_type == "pelajar" and 'S' in user_id:
+            dashboardNav = " Pelajar"
+        elif user_type == "penjaga" and 'P' in user_id:
+            dashboardNav = " Penjaga"
+        elif user_type == "guru" and 'T' in user_id:
+            dashboardNav = " Guru"
+            
         context = {
             'dashboardNav': dashboardNav,
             'user_type': user_type,
@@ -1610,49 +2189,10 @@ def addSuggestion(request, user_type, user_id):
             'bookmark': urlBookmark,
             'report': urlReport,
             'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/addSuggestion.html', context)
-    elif user_type == "penjaga" and 'P' in user_id:
-        dashboardNav = " Penjaga"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
-        } 
-        return render(request, 'dashboard/addSuggestion.html', context)
-    elif user_type == "guru" and 'T' in user_id:
-        dashboardNav = " Guru"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion
+            'suggestions': urlSuggestion,
+            'form': form,
+            'allNotif': allNotif,
+            'unreadNotifCnt': unreadNotifCnt
         } 
         return render(request, 'dashboard/addSuggestion.html', context)
 
@@ -1668,59 +2208,3 @@ def loggingOut(request, user_id):
     currentUserRecord.save()
     response = "Jumpa lagi! Ke halaman utama dalam 3, 2, 1... "
     return render(request, 'dashboard\loggingOut.html', {'response': response})
-
-#bookmarks
-def showBookmarks(request, user_type, user_id):
-    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
-
-    #check logged in or not
-    if currentUserDetail.isActive == False:
-        return redirect('home:login')
-
-    response = "Penanda Pengguna %s"
-    return HttpResponse(response % user_id)
-
-#reports
-def showReports(request, user_id):
-    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
-
-    #check logged in or not
-    if currentUserDetail.isActive == False:
-        return redirect('home:login')
-
-    response = "Laporan Visual Pengguna %s"
-    return HttpResponse(response % user_id)
-
-#chat
-def showChat(request, user_id):
-    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
-
-    #check logged in or not
-    if currentUserDetail.isActive == False:
-        return redirect('home:login')
-
-    response = "Ruang Mesej Pengguna %s bersama Guru Kaunseling"
-    return HttpResponse(response % user_id)
-
-#suggestions
-def showSuggestionsNonAdmin(request, user_type, user_id):
-    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
-
-    #check logged in or not
-    if currentUserDetail.isActive == False:
-        return redirect('home:login')
-
-    response = "%s, kongsikan cadangan penambahbaikan kandungan portal!"
-    return HttpResponse(response % user_id)
-
-def showSuggestionsAdmin(request, user_id):
-    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
-
-    #check logged in or not
-    if currentUserDetail.isActive == False:
-        return redirect('home:login')
-
-    response = "Cadangan Penambahbaikan Kandungan Portal oleh Pengguna"
-    return HttpResponse(response)
-
-#notifications

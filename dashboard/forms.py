@@ -109,6 +109,28 @@ class EditProfileTeacherForm(forms.ModelForm):
             'homeroomClass': _('(Untuk Guru Kelas sahaja) Sila pilih kelas jagaan anda'),
         }
 
+def get_category_choices():
+    allCategories = dashboard.models.SuggestionType.objects.exclude(name='Lain-lain').order_by('name')
+    catNameList = list(allCategories.values_list('name', flat=True))
+    catIDList = list(allCategories.values_list('id', flat=True))
+    CATEGORY_CHOICES = []
+
+    for i in range(len(catNameList)):
+        CATEGORY_CHOICES.append((catIDList[i], catNameList[i]))
+
+    CATEGORY_CHOICES.append((4, 'Lain-lain'))
+
+    return CATEGORY_CHOICES
+
+class AddSuggestionForm(forms.Form):
+    subject = forms.CharField(label="Tajuk:", max_length=100, required=True)
+    category = forms.ChoiceField(label="Kategori:", choices=get_category_choices, required=True)
+    content = forms.CharField(label="Isi kandungan:", max_length=500, required=True)
+
+    subject.widget.attrs.update({'class' : 'subject'})
+    category.widget.attrs.update({'class' : 'category'})
+    content.widget.attrs.update({'class' : 'content'})
+
 """
 class AvatarForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

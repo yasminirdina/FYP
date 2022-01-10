@@ -24,5 +24,32 @@
 {% block js2 %}
     <script type="text/javascript">
         $('.p-sidebar.notification .p-a-sidebar').addClass('sb-active');
+
+        $('.unread').on('click', '.a-for-linkto', function(){
+            alert("notifID: " + $(this).attr("id")); // Test
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                url: "{% url 'dashboard:index-admin' user_id %}",
+                data: {
+                    'notifID': $(this).attr("id"),
+                    'requestType': 'updateNotifStatus'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result) {
+                    alert("updateNotifStatus: success"); // Test
+
+                    $('.p-unreadNotifCnt').text(result.unreadNotifCnt);
+
+                    alert("updated unreadNotifCnt: " + parseInt($('.p-unreadNotifCnt').text())); // Test
+
+                    checkUnreadNotifCnt();
+                },
+                error: function(result) {
+                    alert("updateNotifStatus: error"); // Test
+                }
+            })
+        });
     </script>
 {% endblock %}

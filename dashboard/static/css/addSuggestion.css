@@ -24,10 +24,41 @@
     transform: scale(1.03);
 }
 
+.back-to-nonAdminSuggestions {
+    background-color: rgb(250, 127, 56);
+}
+
+.back-to-nonAdminSuggestions:hover {
+    background-color: white;
+    color: rgb(250, 127, 56);
+    box-shadow: 0 0.4rem 1.4rem 0 rgba(250, 127, 56, 0.658);
+}
+
 .a-for-addSuggestion {
     text-decoration: none;
     color: inherit;
 }
+
+/* form fields */
+form{
+    display: grid;
+    grid-auto-flow: row;
+    padding: ;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.subject, .category, .content {
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    border-radius: 5px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 100%;
+}
+  
+input:focus::placeholder {color: transparent}
 
 /* div */
 .div-section-header, .div-content-outer{
@@ -49,49 +80,37 @@
     max-height: 70vh;
     overflow: auto;
     border-radius: 10px;
+    padding: 10px 10px 15px;
     border: 1px solid lightgray;
 }
 
-/* .div-notif-ind{
-    background-color: white;
+.div-form-content, .div-form-content-ind{
     position: relative;
     display: grid;
-    grid-auto-flow: column;
-    grid-template-columns: 3% 97%;
+    grid-auto-flow: row;
     width: 100%;
     height: fit-content;
-    padding: 5px 10px 5px 5px;
-    gap: 5px;
+    justify-items: left;
+    align-items: center;
+    gap: 10px;
+    box-sizing: border-box;
+}
+
+.div-form-content-ind{
+    width: 100%;
+    grid-auto-flow: column;
+    grid-template-columns: 30% auto;
     align-items: flex-start;
-    justify-items: center;
-    justify-content: space-between;
-    border: solid lightgray;
-    border-width: 0 0 1px 0;
-    padding: 15px 10px 10px;
-    box-sizing: border-box;
 }
 
-.div-notif-ind:last-child{
-    border-width: 0;
-}
-
-.unread{
-    background-color: rgb(250, 188, 54);
-}
-
-.fas fa-reply, .fas fa-comment-alt, .fas fa-lightbulb {
-    width: 100%;
-    height: 100%;
-}
-
-.div-text{
+.div-form-buttons{
     position: relative;
     display: grid;
     grid-auto-flow: column;
-    width: 100%;
+    width: fit-content;
     height: fit-content;
-    text-align: left;
-    line-height: 25px;
-    margin-top: -5px;
+    justify-self: right;
+    align-items: center;
+    gap: 10px;
     box-sizing: border-box;
-} */
+}

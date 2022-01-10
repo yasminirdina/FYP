@@ -689,7 +689,12 @@ def viewPost(request, user_type, user_id, post_id):
             elif request.POST['requestType'] == 'addComment_1':
                 newComment = request.POST['newComment']
                 currentDateTime = datetime.now 
-                blog.models.BlogPostComment.objects.create(text=newComment, blogPostID_id=post_id, userID_id=user_id, dateTimeComment=currentDateTime)
+                newComment = blog.models.BlogPostComment.objects.create(text=newComment, blogPostID_id=post_id, userID_id=user_id, dateTimeComment=currentDateTime)
+                
+                #create notification (Type id 1 - New comment (for admin ONLY))
+                if newComment.userID_id != 'A1':
+                    dashboard.models.Notification.objects.create(senderID_id=newComment.userID_id, recipientID_id='A1', blogPostID_id=newComment.blogPostID_id, blogPostCommentID_id=newComment.id, typeID_id=1)
+
                 allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
                 commentCount = allCurrentPostComments.count()
                 print("updated comment cnt: " + str(commentCount)) #Test
@@ -760,9 +765,23 @@ def viewPost(request, user_type, user_id, post_id):
 
                 currentDateTime = datetime.now 
                 if repliedTo == 'Parent': #No need to add childCommentID_id
-                    blog.models.BlogPostComment.objects.create(text=newReply, blogPostID_id=post_id, parentCommentID_id=repliedParentID, userID_id=user_id, dateTimeComment=currentDateTime)
+                    newReply = blog.models.BlogPostComment.objects.create(text=newReply, blogPostID_id=post_id, parentCommentID_id=repliedParentID, userID_id=user_id, dateTimeComment=currentDateTime)
+
+                    #create notification (Type id 2 - New reply (to main comment))
+                    parentCommentRecord = blog.models.BlogPostComment.objects.get(id=newReply.parentCommentID_id)
+
+                    # if its not the admin replying to the admin's comment (such as correcting typos etc.)
+                    if newReply.userID_id != 'A1':
+                        dashboard.models.Notification.objects.create(senderID_id=newReply.userID_id, recipientID_id=parentCommentRecord.userID_id, blogPostID_id=newReply.blogPostID_id, blogPostCommentID_id=newReply.parentCommentID_id, blogCommentReplyID_id=newReply.id, typeID_id=2)
                 elif repliedTo == 'Child': #Need to add childCommentID_id
-                    blog.models.BlogPostComment.objects.create(text=newReply, blogPostID_id=post_id, parentCommentID_id=repliedParentID, childCommentID_id=repliedChildID, userID_id=user_id, dateTimeComment=currentDateTime)
+                    newReply = blog.models.BlogPostComment.objects.create(text=newReply, blogPostID_id=post_id, parentCommentID_id=repliedParentID, childCommentID_id=repliedChildID, userID_id=user_id, dateTimeComment=currentDateTime)
+
+                    #create notification (Type id 2 - New reply (to child comment))
+                    childCommentRecord = blog.models.BlogPostComment.objects.get(id=newReply.childCommentID_id)
+                    
+                    # if its not the admin replying to the admin's reply (such as correcting typos etc.)
+                    if newReply.userID_id != 'A1':
+                        dashboard.models.Notification.objects.create(senderID_id=newReply.userID_id, recipientID_id=childCommentRecord.userID_id, blogPostID_id=newReply.blogPostID_id, blogPostCommentID_id=newReply.parentCommentID_id, blogCommentReplyID_id=newReply.id, typeID_id=2)
 
                 allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
                 commentCount = allCurrentPostComments.count()

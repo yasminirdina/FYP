@@ -88,10 +88,6 @@
     display: none;
 }
 
-.div-body-buttons .no-icon{
-    display: none;
-}
-
 /* hyperlink style */
 .a-for-viewPost {
     text-decoration: none;
@@ -495,9 +491,14 @@ input:focus::placeholder {color: transparent}
 }
 
 .div-content a{
-    background-color: lightcyan;
+    /* background-color: lightcyan; */
+    color: rgb(250, 127, 56);
     padding: 0;
     box-sizing: border-box;
+}
+
+.div-content a:hover{
+    font-weight: bold;
 }
 
 .div-related-posts{
@@ -1120,6 +1121,10 @@ textarea:focus::placeholder {color: transparent}
 
     .div-body-buttons .icon{
         display: grid;
+    }
+
+    .div-body-buttons .with-icon{
+        display: none;
     }
 
     .div-body-buttons > a{

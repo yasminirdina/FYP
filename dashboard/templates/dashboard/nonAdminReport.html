@@ -1,8 +1,16 @@
 {% extends "dashboard/baseDashboardNonAdmin.html" %}
 {% load static %}
+{% load dashboard_index %}
 
 {% block title %}
     <title>Future Cruise: Laporan Visual</title>
+{% endblock %}
+
+{% block js1 %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js" integrity="sha512-tVYBzEItJit9HXaWTPo8vveXlkK62LbA+wez9IgzjTmFNLMBO1BEYladBw2wnM3YURZSMUyhayPCoLtjGh84NQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="{% static 'js/VarelaRound-Regular-normal.js' %}" type="module"></script>
 {% endblock %}
 
 {% block styles %}   
@@ -17,12 +25,590 @@
     </div>
 
     <div class="div-content-outer">
-        {% include 'dashboard/nonAdminReportContent.html' %}
+        {% if 'S' in user_id %}
+            <div class="div-type">
+                <button class="btn2 career-student clicked">Cadangan Kerjaya</button>
+            </div>
+
+            <div class="div-career-student">
+                {% if three_highest_fieldName %}
+                    {% if recCnt == 3 %}
+                        <span style="font-weight: bold;">3 bidang kerjaya yang paling sesuai dengan anda adalah seperti berikut:</span>
+                        <div id="podium-box">
+                            <div class="div-step-container">
+                                <div>
+                                    <img class="img-field" src="{% static 'images/quiz_field/' %}{{ three_highest_fieldImage|index:0 }}"> 
+                                    <br>
+                                    {{ three_highest_fieldName|index:0 }}
+                                    <div class="div-tooltip-text">
+                                        <!-- Change link with direct career field info page -->
+                                        <a class="a-for-seeStatistic more-info" href="{% url search user_type user_id %}">
+                                            Klik untuk info lanjut
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="second-step" class="div-ind-step">
+                                    2
+                                </div>
+                            </div>
+                            <div class="div-step-container">
+                                <div>
+                                    <img class="img-field" src="{% static 'images/quiz_field/' %}{{ three_highest_fieldImage|index:1 }}"> 
+                                    <br>
+                                    {{ three_highest_fieldName|index:1 }}
+                                    <div class="div-tooltip-text">
+                                        <!-- Change link with direct career field info page -->
+                                        <a class="a-for-seeStatistic more-info" href="{% url search user_type user_id %}">
+                                            Klik untuk info lanjut
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="first-step" class="div-ind-step">
+                                    1
+                                </div>
+                            </div>
+                            <div class="div-step-container">
+                                <div>
+                                    <img class="img-field" src="{% static 'images/quiz_field/' %}{{ three_highest_fieldImage|index:2 }}"> 
+                                    <br>
+                                    {{ three_highest_fieldName|index:2 }}
+                                    <div class="div-tooltip-text">
+                                        <!-- Change link with direct career field info page -->
+                                        <a class="a-for-seeStatistic more-info" href="{% url search user_type user_id %}">
+                                            Klik untuk info lanjut
+                                        </a>
+                                    </div>
+                                </div>
+                                <div id="third-step" class="div-ind-step">
+                                    3
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="div-no-career">
+                            Untuk melihat cadangan kerjaya anda, anda mestilah telah bermain permainan kuiz dalam paling kurang 3 jenis bidang kerjaya.
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="div-no-career">
+                        <span>
+                            Anda tidak mempunyai sebarang rekod kuiz permainan. Jom uji pengetahuan anda mengenai pelbagai jenis bidang kerjaya di 
+                            <a class="a-for-quiz" href="{% url 'quiz:index-student' user_id %}">sini</a>
+                            !
+                        </span>
+                    </div>
+                {% endif %}
+            </div>
+        {% elif 'P' in user_id %}
+            <div class="div-type">
+                <button class="btn2 career-parent clicked">Cadangan Kerjaya Pelajar</button>
+            </div>
+
+            <div class="div-career-parent">
+                {% include 'dashboard/nonAdminReportContentParent.html' %}
+            </div>
+        {% elif 'T' in user_id %}
+            <div class="div-type">
+                <button class="btn2 game-perf clicked">Prestasi Permainan Kuiz</button>
+                <button class="btn2 parent-eng">Keterlibatan Penjaga</button>
+            </div>
+
+            <div class="div-game-perf">
+                {% include 'dashboard/nonAdminReportContentTeacher1.html' %}
+
+                <div class="div-buttons">
+                    <button id="downloadPDF" class="btn download">Muat turun PDF</button>
+                </div>
+            </div>
+
+            <div class="div-parent-eng">
+                {% include 'dashboard/nonAdminReportContentTeacher2.html' %}
+
+                <div class="div-buttons">
+                    <button id="downloadPDF" class="btn download">Muat turun PDF</button>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}
 
 {% block js2 %}
     <script type="text/javascript">
         $('.p-sidebar.report .p-a-sidebar').addClass('sb-active');
+
+        // Parent report
+        $('.div-career-parent').on('change', '#student-name', function(){
+            // alert('hi div-career-parent filterStudentName');
+            var filteredStudentID = $(this).val();
+            // alert('filteredStudentID: ' + filteredStudentID);
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:report' user_type user_id %}",
+                data: {
+                    'filteredStudentID': filteredStudentID,
+                    'requestType': 'filterStudentName'
+                },
+                success: function(result) {
+                    // alert("filterStudentName: success");
+                    $('.div-career-parent').html(result);
+                },
+                error: function(result) {
+                    // alert("sortPostDate: error");
+                }
+            })
+        });
+
+        // Teacher report
+        $('.div-type').on('click', '.game-perf', function(){
+            $('.parent-eng').removeClass('clicked');
+            $(this).addClass('clicked');
+            $('.div-parent-eng').css("display", "none");
+            $('.div-game-perf').css("display", "grid");
+        });
+
+        $('.div-type').on('click', '.parent-eng', function(){
+            $('.game-perf').removeClass('clicked');
+            $(this).addClass('clicked');
+            $('.div-game-perf').css("display", "none");
+            $('.div-parent-eng').css("display", "grid");
+        });
+
+        // CHARTS AJAX
+        Chart.defaults.font.size = 17.6;
+        Chart.defaults.font.family = "Varela Round";
+        Chart.defaults.color = "#000000";
+        $(document).ready(Charts);
+
+        function Charts() {
+            $.ajax({
+                url: "{% url 'quiz:quiz-statistic' user_id field_id %}",
+                success: function(response) {
+                    MostPlayedFieldChart(response["most_played_field_chart_data"]);
+                    AvgFieldSessionScoreChart(response["avg_field_session_score_chart_data"]);
+                    AvgFieldSessionHintsChart(response["avg_field_session_hints_chart_data"]);
+                    AvgFieldSessionTimeChart(response["avg_field_session_time_chart_data"]);
+                }
+            });
+        };
+
+        function MostPlayedFieldChart(data) {
+            var ctx = document.getElementById("MostPlayedField");
+            var PieChart1 = new Chart(ctx, {
+                type: "pie",
+                data: data,
+                options: {
+                    events:["mousemove", "click", "mouseout"],
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Bidang Kerjaya Paling Kerap Dimainkan',
+                            align: 'start',
+                            font: {
+                                weight: "bold"
+                            }
+                        },
+                        legend: {
+                            labels: {
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        },
+                        tooltip: {
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 14
+                            }
+                        }
+                    }
+                }
+            })
+        };
+
+        function AvgFieldSessionScoreChart(data) {
+            var ctx = document.getElementById("AvgSessionScoreByField");
+            var BarChart1 = new Chart(ctx, {
+                type: "bar",
+                data: data,
+                options: {
+                    events:["mousemove", "click", "mouseout"],
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ['Purata Markah per Sesi berdasarkan', 'Bidang Kerjaya'],
+                            align: 'start',
+                            font: {
+                                weight: "bold"
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        barValueSpacing: 20,
+                        tooltip: {
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                callback: function(label, index, labels) {
+                                    if (this.getLabelForValue(label).length > 10) {
+                                        return this.getLabelForValue(label).substr(0, 9) + "...";
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    }              
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bidang Kerjaya',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: ['Purata Markah per', 'Sesi'],
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        };
+
+        function AvgFieldSessionHintsChart(data) {
+            var ctx = document.getElementById("AvgSessionHintsUsedByField");
+            var BarChart2 = new Chart(ctx, {
+                type: "bar",
+                data: data,
+                options: {
+                    events: ["mousemove", "click", "mouseout"],
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ['Purata Petunjuk Digunakan per', 'Sesi berdasarkan Bidang Kerjaya'],
+                            align: 'start',
+                            font: {
+                                weight: "bold"
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        barValueSpacing: 20,
+                        tooltip: {
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                callback: function(label, index, labels) {
+                                    if (this.getLabelForValue(label).length > 10) {
+                                        return this.getLabelForValue(label).substr(0, 9) + "...";
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    }           
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bidang Kerjaya',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                stepSize: 1
+                            },
+                            title: {
+                                display: true,
+                                text: ['Purata Petunjuk', 'Digunakan per Sesi'],
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        };
+
+        function AvgFieldSessionTimeChart(data) {
+            var ctx = document.getElementById("AvgSessionTimeTakenByField");
+            var LineChart1 = new Chart(ctx, {
+                type: "line",
+                data: data,
+                options: {
+                    events: ["mousemove", "click", "mouseout"],
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: ['Purata Masa Diambil per', 'Sesi berdasarkan Bidang Kerjaya'],
+                            align: 'start',
+                            font: {
+                                weight: "bold"
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 14
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += convert_formatted_2(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                callback: function(label, index, labels) {
+                                    if (/\s/.test(this.getLabelForValue(label))) {
+                                        return this.getLabelForValue(label).split(" ");
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    }   
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bidang Kerjaya',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                source: 'data',
+                                callback: function(label, index, labels) {
+                                    return convert_formatted_1(this.getLabelForValue(label));          
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: ['Purata Masa Diambil per', 'Sesi (minit & saat)'],
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        };
+
+        function convert_formatted_1(value) {
+            return Math.floor(value / 60) + ":" + (value % 60 ? value % 60 : '00')
+        }
+
+        function convert_formatted_2(value) {
+            return (Math.floor(value / 60) ? Math.floor(value / 60) + " minit " : '') + (value % 60 ? (value % 60) + " saat" : '')
+        }
+
+        $('.div-game-perf').on('click', '#downloadPDF', function() {
+            // alert("masuk");
+            let options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+            // var today = new Date().toLocaleString('en-US', options);
+            var today = new Date();
+            /* today = new Intl.DateTimeFormat('default',
+            {
+                hour12: true
+            }).format(today);
+            alert(today); */
+            
+            day = today.getDate();
+            month = (today.getMonth()+1);
+
+            day = day < 10 ? '0'+day : day;
+            month = month < 10 ? '0'+month : month;
+
+            var date = day + '-' + month + '-' + today.getFullYear();
+
+            hour = today.getHours();
+            minute = today.getMinutes();
+            second = today.getSeconds();
+
+            var ampm = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12;
+            hour = hour ? hour : 12; 
+            hour = hour < 10 ? '0'+hour : hour;
+            minute = minute < 10 ? '0'+minute : minute;
+            second = second < 10 ? '0'+second : second;
+
+            var time = hour + ":" + minute + ":" + second + " " + ampm;
+            var dateTime = date + ', ' + time;
+
+            var reportPageHeight = $('.div-grid-game').innerHeight();
+            var reportPageWidth = $('.div-grid-game').innerWidth();
+            var top_left_margin = 15;
+            var PDF_Width = reportPageWidth + (top_left_margin * 2);
+            // var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+            var PDF_Height = reportPageHeight + (top_left_margin * 6);
+            var canvas_image_width = reportPageWidth;
+            var canvas_image_height = reportPageHeight;
+
+            // var totalPDFPages = Math.ceil(reportPageHeight / PDF_Height) - 1;
+
+            html2canvas($('.div-grid')[0]).then(function (canvas) {
+                var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                const { jsPDF } = window.jspdf;
+                var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+                pdf.setFont("Poppins-Bold", "normal", 400);
+                pdf.setFontSize(20);
+                text = "Statistik Prestasi Permainan Kuiz";
+                text2 = dateTime;
+                xOffset = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / 2);
+                xOffset2 = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text2) * pdf.internal.getFontSize() / 2);
+                pdf.text(text, xOffset, top_left_margin * 2);
+                pdf.text(text2, xOffset2, top_left_margin * 4);
+                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin * 5, canvas_image_width, canvas_image_height);
+                /* for (var i = 1; i <= totalPDFPages; i++) { 
+                    pdf.addPage(PDF_Width, PDF_Height);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                } */
+                // pdf.save("Statistik.pdf");
+                window.open(pdf.output("bloburl"), "_blank");
+            });
+        });
+
+        $('.div-parent-eng').on('click', '#downloadPDF', function() {
+            // alert("masuk");
+            let options = { day: 'numeric', month: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+            // var today = new Date().toLocaleString('en-US', options);
+            var today = new Date();
+            /* today = new Intl.DateTimeFormat('default',
+            {
+                hour12: true
+            }).format(today);
+            alert(today); */
+            
+            day = today.getDate();
+            month = (today.getMonth()+1);
+
+            day = day < 10 ? '0'+day : day;
+            month = month < 10 ? '0'+month : month;
+
+            var date = day + '-' + month + '-' + today.getFullYear();
+
+            hour = today.getHours();
+            minute = today.getMinutes();
+            second = today.getSeconds();
+
+            var ampm = hour >= 12 ? 'PM' : 'AM';
+            hour = hour % 12;
+            hour = hour ? hour : 12; 
+            hour = hour < 10 ? '0'+hour : hour;
+            minute = minute < 10 ? '0'+minute : minute;
+            second = second < 10 ? '0'+second : second;
+
+            var time = hour + ":" + minute + ":" + second + " " + ampm;
+            var dateTime = date + ', ' + time;
+
+            var reportPageHeight = $('.div-grid-eng').innerHeight();
+            var reportPageWidth = $('.div-grid-eng').innerWidth();
+            var top_left_margin = 15;
+            var PDF_Width = reportPageWidth + (top_left_margin * 2);
+            // var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
+            var PDF_Height = reportPageHeight + (top_left_margin * 6);
+            var canvas_image_width = reportPageWidth;
+            var canvas_image_height = reportPageHeight;
+
+            // var totalPDFPages = Math.ceil(reportPageHeight / PDF_Height) - 1;
+
+            html2canvas($('.div-grid')[0]).then(function (canvas) {
+                var imgData = canvas.toDataURL("image/jpeg", 1.0);
+                const { jsPDF } = window.jspdf;
+                var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+                pdf.setFont("VarelaRound-Regular", "normal", 400);
+                pdf.setFontSize(20);
+                text = "Statistik Keterlibatan Penjaga";
+                text2 = dateTime;
+                xOffset = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / 2);
+                xOffset2 = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text2) * pdf.internal.getFontSize() / 2);
+                pdf.text(text, xOffset, top_left_margin * 2);
+                pdf.text(text2, xOffset2, top_left_margin * 4);
+                pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin * 5, canvas_image_width, canvas_image_height);
+                /* for (var i = 1; i <= totalPDFPages; i++) { 
+                    pdf.addPage(PDF_Width, PDF_Height);
+                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+                } */
+                // pdf.save("Statistik.pdf");
+                window.open(pdf.output("bloburl"), "_blank");
+            });
+        });
     </script>
 {% endblock %}

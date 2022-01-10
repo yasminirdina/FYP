@@ -60,6 +60,8 @@
                 </div>
             </div>
 
+            <p class="p-unreadNotifCnt" style="display: none">{{ unreadNotifCnt }}</p>
+
             <!-- Put sidebar for buttons (see dashboardIndex admin) -->
             <div class="div-outer">
                 <div class="div-sidebar-outer">
@@ -69,20 +71,10 @@
 
                     <div class="div-sidebar-menulist">
                         <!-- if got UNREAD notification for blog/chat/suggestion, put circle icon on notification and chat/suggestion (where applicable) -->
-                        <p class="p-sidebar notification">
-                            <a class="p-a-sidebar" href="{% url dashboard user_id %}">
-                                <i class="fas fa-circle"></i>
-                                Notifikasi
-                            </a>
-                        </p>
+                        <p class="p-sidebar notification"><a class="p-a-sidebar" id ="notification" href="{% url dashboard user_id %}">Notifikasi</a></p>
                         <p class="p-sidebar class-settings"><a class="p-a-sidebar" href="{% url settings user_id %}">Tetapan Maklumat Kelas</a></p>
                         <p class="p-sidebar chat"><a class="p-a-sidebar" href="{% url chat user_id %}">Ruang Bual Kaunseling</a></p>
-                        <p class="p-sidebar suggestion">
-                            <a class="p-a-sidebar" href="{% url suggestions user_id %}">
-                                <i class="fas fa-circle"></i>
-                                Cadangan Penambahbaikan
-                            </a>
-                        </p>
+                        <p class="p-sidebar suggestion"><a class="p-a-sidebar" href="{% url suggestions user_id %}">Cadangan Penambahbaikan</a></p>
                     </div>
                 </div>
 
@@ -134,6 +126,25 @@
                     </div>
                 </div>
             </div>
+
+            <script>
+                function checkUnreadNotifCnt (){
+                    var unreadNotifCnt = parseInt($('.p-unreadNotifCnt').text());
+                    alert("ori unreadNotifCnt: " + unreadNotifCnt); // Test
+
+                    if(unreadNotifCnt > 0){
+                        $('#notification').empty();
+                        $('#notification').append('<i class="fas fa-circle" id="circle-notif"></i> Notifikasi');
+                    }
+                    else{
+                        $('#circle-notif').remove();
+                    }
+                }
+
+                $(document).ready(function(){
+                    checkUnreadNotifCnt();
+                })
+            </script>
 
             {% block js2 %}{% endblock %}
         </center>

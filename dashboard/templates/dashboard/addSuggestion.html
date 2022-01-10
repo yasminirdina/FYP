@@ -17,7 +17,34 @@
     </div>
 
     <div class="div-content-outer">
-        
+        <form action="{% url 'dashboard:add-suggestion' user_type user_id %}" class="AddSuggestionForm" method="post">
+            {% csrf_token %}
+            {{ form.media.js }}
+
+            <div class="div-form-content">
+                <div class="div-form-content-ind">
+                    Sila masukkan tajuk cadangan anda:
+                    {{ form.subject }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila pilih kategori bagi cadangan anda:
+                    {{ form.category }}
+                </div>
+
+                <div class="div-form-content-ind">
+                    Sila tulis isi kandungan cadangan anda:
+                    {{ form.content }}
+                </div>
+            </div>
+
+            <div class="div-form-buttons">
+                <button class="btn submit" type="submit">Hantar</button>
+                <button class="btn back-to-nonAdminSuggestions">
+                    <a class="a-for-addSuggestion" href="{% url 'dashboard:suggestions-nonadmin' user_type user_id %}">Batal</a>
+                </button>
+            </div>
+        </form>
     </div>
 {% endblock %}
 

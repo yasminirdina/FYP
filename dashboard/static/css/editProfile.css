@@ -108,6 +108,7 @@ input:focus::placeholder {color: transparent}
     grid-auto-flow: column;
     width: fit-content;
     height: fit-content;
+    justify-self: right;
     align-items: center;
     gap: 10px;
     box-sizing: border-box;

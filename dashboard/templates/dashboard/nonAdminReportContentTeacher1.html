@@ -1,0 +1,82 @@
+<div class="div-grid-game">
+    <article id="TotalNoOfPlays">
+        <div class="div-header">
+            Jumlah Sesi Permainan
+        </div>
+        <div class="div-data">
+            <div class="div-data-value">
+                {{ playCount }}
+            </div>
+            <div class="div-data-subtitle">
+                sesi
+            </div>
+        </div>
+    </article>
+    <article id="AvgSessionScore">
+        <div class="div-header">
+            Purata Markah/Sesi
+        </div>
+        <div class="div-data">
+            <div class="div-data-value">
+                {{ avgSessionScore }}
+            </div>
+            <div class="div-data-subtitle">
+                markah
+            </div>
+        </div>
+    </article>
+    <article id="AvgSessionHintsUsed">
+        <div class="div-header">
+            Purata Petunjuk Digunakan/Sesi
+        </div>
+        <div class="div-data">
+            <div class="div-data-value">
+                {{ avgHintsUsed }}
+            </div>
+            <div class="div-data-subtitle">
+                petunjuk
+            </div>
+        </div>
+    </article>
+    <article id="AvgSessionTimeTaken">
+        <div class="div-header">
+            Purata Masa Diambil/Sesi
+        </div>
+        <div class="div-data">
+            <div class="div-data-value">
+                {{ avgSessionTimeTaken }}
+            </div>
+        </div>
+    </article>
+    <article id="LastPlayedTime">
+        <div class="div-header">
+            Sesi Terkini
+        </div>
+        <div class="div-data">
+            <div class="div-data-value">
+                <!-- 12:00PM, 29/09/2021 -->
+                {{ lastPlayedTime|date:"d/m/Y, h:iA" }}
+            </div>
+        </div>
+    </article>
+    <div class="div-chart-container">
+        <canvas id="MostPlayedField">
+            <!-- 5 Bidang Kerjaya Paling Kerap Dimainkan -->
+        </canvas>
+    </div>
+    <div class="div-chart-container">
+        <canvas id="AvgSessionScoreByField">
+            <!-- 5 Purata Markah per Sesi Tertinggi berdasarkan Bidang Kerjaya -->
+        </canvas>
+    </div>
+    <div class="div-chart-container">
+        <canvas id="AvgSessionHintsUsedByField">
+            <!-- 5 Purata Petunjuk Digunakan per Sesi Terendah berdasarkan Bidang Kerjaya -->
+        </canvas>
+    </div>
+    <div class="div-chart-container">
+        <canvas id="AvgSessionTimeTakenByField">
+            <!-- 5 Purata Masa Diambil per Sesi Terpantas berdasarkan Bidang Kerjaya -->
+        </canvas>
+    </div>
+</div>

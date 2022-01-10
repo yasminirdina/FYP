@@ -196,12 +196,15 @@ class NotificationType(models.Model):
 class Notification(models.Model):
     #default id
     senderID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_by')
-    recipientID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='is_for')
-    messageID = models.OneToOneField(Message, on_delete=models.SET_NULL, related_name='message_notif_for', null=True)
-    suggestionID = models.OneToOneField(Suggestion, on_delete=models.SET_NULL, related_name='suggestion_notif_for', null=True)
+    recipientID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='is_for', null=True)
+    messageID = models.ForeignKey(Message, on_delete=models.SET_NULL, related_name='message_notif_for', null=True)
+    suggestionID = models.ForeignKey(Suggestion, on_delete=models.SET_NULL, related_name='suggestion_notif_for', null=True)
+    suggestionStatus = models.CharField(max_length=25, null=True)
     typeID = models.ForeignKey(NotificationType, on_delete=models.SET_NULL, null=True)
-    blogCommentReplyID = models.OneToOneField('blog.BlogPostComment', on_delete=models.SET_NULL, related_name='comment_reply_notif_for', null=True)
-    isOpen = models.BooleanField()
+    blogPostID = models.ForeignKey('blog.BlogPost', on_delete=models.SET_NULL, related_name='post_notif_for', null=True)
+    blogPostCommentID = models.ForeignKey('blog.BlogPostComment', on_delete=models.SET_NULL, related_name='comment_notif_for', null=True)
+    blogCommentReplyID = models.ForeignKey('blog.BlogPostComment', on_delete=models.SET_NULL, related_name='comment_reply_notif_for', null=True)
+    isOpen = models.BooleanField(default=False)
 
 """ class ReportType(models.Model):
     #default id

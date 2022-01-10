@@ -1,0 +1,24 @@
+<table>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Tajuk</th>
+            <th>Tarikh Penanda Ditambah</th>
+            <th>Buang</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bookmark in allPostBookmarks %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ bookmark.blogPostID.title }}</td>
+                <td>{{ bookmark.dateTimeAdded |date:"d/m/Y, h:i A" }}</td>
+                <td>
+                    <button class="btn delete" value="post-{{ bookmark.id }}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
