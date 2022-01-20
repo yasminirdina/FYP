@@ -214,7 +214,7 @@
                                 {% for post in relatedPosts %}
                                     <div class="div-related-ind">
                                         {% if post.id in postIDswithImageList %}
-                                            {% for image in postIDswithImageList %}
+                                            {% for image in relatedPostImages %}
                                                 {% if image.blogPostID_id == post.id %}
                                                     <div class="div-image">
                                                         <img class="img-post" src="{{ image.blogPostImage.url }}">
@@ -223,7 +223,6 @@
                                             {% endfor %}
                                         {% else %}
                                             <div class="div-image-default">
-                                                <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
                                                 <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
                                             </div>
                                         {% endif %}

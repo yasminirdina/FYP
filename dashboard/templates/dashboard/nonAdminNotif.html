@@ -26,7 +26,7 @@
         $('.p-sidebar.notification .p-a-sidebar').addClass('sb-active');
 
         $('.unread').on('click', '.a-for-linkto', function(){
-            alert("notifID: " + $(this).attr("id")); // Test
+            // alert("notifID: " + $(this).attr("id")); // Test
 
             $.ajax({
                 headers: { "X-CSRFToken": '{{csrf_token}}' },
@@ -38,16 +38,16 @@
                 type: 'POST',
                 dataType: 'json',
                 success: function(result) {
-                    alert("updateNotifStatus: success"); // Test
+                    // alert("updateNotifStatus: success"); // Test
 
                     $('.p-unreadNotifCnt').text(result.unreadNotifCnt);
 
-                    alert("updated unreadNotifCnt: " + parseInt($('.p-unreadNotifCnt').text())); // Test
+                    // alert("updated unreadNotifCnt: " + parseInt($('.p-unreadNotifCnt').text())); // Test
 
                     checkUnreadNotifCnt();
                 },
                 error: function(result) {
-                    alert("updateNotifStatus: error"); // Test
+                    // alert("updateNotifStatus: error"); // Test
                 }
             })
         });

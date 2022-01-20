@@ -72,7 +72,7 @@
     overflow: auto;
     border-radius: 10px;
     gap: 10px;
-    padding: 10px 0;
+    padding: 10px;
     border: 1px solid lightgray;
 }
 
@@ -86,12 +86,23 @@
     box-sizing: border-box;
 }
 
+.div-no-suggestion{
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    font-size: 16px;
+    line-height: 25px;
+    height: fit-content;
+    box-sizing: border-box;
+}
+
 .div-add-suggestion{
     display: grid;
     grid-auto-flow: column;
     width: fit-content;
     align-self: center;
-    justify-self: center;
+    justify-self: left;
     box-sizing: border-box;
 }
 
@@ -202,7 +213,6 @@ tr:hover {
     justify-items: center;
     align-items: center;
     gap: 10px;
-    margin-right: 10px;
     box-sizing: border-box;
 }
 

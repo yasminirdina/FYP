@@ -61,13 +61,22 @@ def quizMainAdmin(request, user_id):
 
     #Card 5
     fieldNameList = list(allGameFields.values_list('name', flat=True))
-    countQuesByFieldList = []
+
+    fieldName_countQuesDict = {}
 
     for field in allGameFields:
-        countQuesByFieldList.append(allGameQuestions.filter(fieldID_id=field.id).count())
+        fieldName_countQuesDict[field.name] = allGameQuestions.filter(fieldID_id=field.id).count()
+
+    fieldName_countQuesDict = dict(sorted(fieldName_countQuesDict.items(), key = itemgetter(1), reverse=True))
+    # print("fieldName_countQuesDict: " + str(fieldName_countQuesDict))
+    # print("length fieldName_countQuesDict: " + str(len(fieldName_countQuesDict)))
 
     #Card 6
     fieldIDList = list(allGameFields.values_list('id', flat=True))
+    fieldEasyDict = {}
+    fieldMediumDict = {}
+    fieldHardDict = {}
+    totalCountDict = {}
     percEasyQuesList = []
     percMediumQuesList = []
     percHardQuesList = []
@@ -77,40 +86,94 @@ def quizMainAdmin(request, user_id):
 
         #Easy
         countEasy = currentFieldQues.filter(difficulty='Mudah').count()
-        percEasyQuesList.append(round((countEasy/currentFieldQues.count())*100, 2))
+
+        if countEasy > 0:
+            percEasy = round((countEasy/currentFieldQues.count())*100, 2)
+        else:
+            percEasy = 0
+        
+        # print("id: " + str(i) + ", countEasy: " + str(countEasy))
+        # print("id: " + str(i) + ", percEasy: " + str(percEasy))
+        fieldEasyDict[fieldIDList[i]] = percEasy
+        # print("id: " + str(i) + ", fieldEasyDict: " + str(fieldEasyDict[fieldIDList[i]]))
 
         #Medium
         countMedium = currentFieldQues.filter(difficulty='Sederhana').count()
-        percMediumQuesList.append(round((countMedium/currentFieldQues.count())*100, 2))
 
-        #Easy
+        if countMedium > 0:
+            percMedium = round((countMedium/currentFieldQues.count())*100, 2)
+        else:
+            percMedium = 0
+
+        # print("id: " + str(i) + ", countMedium: " + str(countMedium))
+        # print("id: " + str(i) + ", percMedium: " + str(percMedium))
+        fieldMediumDict[fieldIDList[i]] = percMedium
+        # print("id: " + str(i) + ", fieldMediumDict: " + str(fieldMediumDict[fieldIDList[i]]))
+
+        #Hard
         countHard = currentFieldQues.filter(difficulty='Sukar').count()
-        percHardQuesList.append(round((countHard/currentFieldQues.count())*100, 2))
+
+        if countHard > 0:
+            percHard = round((countHard/currentFieldQues.count())*100, 2)
+        else:
+            percHard = 0
+
+        # print("id: " + str(i) + ", countHard: " + str(countHard))
+        # print("id: " + str(i) + ", percHard: " + str(percHard))
+        fieldHardDict[fieldIDList[i]] = percHard
+        # print("id: " + str(i) + ", fieldHardDict: " + str(fieldHardDict[fieldIDList[i]]))
+
+        totalCountDict[fieldIDList[i]] = currentFieldQues.count()
+        # print("id: " + str(i) + ", totalCountDict: " + str(totalCountDict[fieldIDList[i]]))
+
+    totalCountDict = dict(sorted(totalCountDict.items(), key = itemgetter(1), reverse = True))
+    # print("totalCountDict after sorted: " + str(totalCountDict))
+    fieldName_avgDict = {}
+
+    for fieldID in list(totalCountDict.keys()):
+        for field in allGameFields:
+            if fieldID == field.id:
+                fieldName_avgDict[field.name] = totalCountDict[fieldID]
+                break
+        percEasyQuesList.append(fieldEasyDict[fieldID])
+        percMediumQuesList.append(fieldMediumDict[fieldID])
+        percHardQuesList.append(fieldHardDict[fieldID])
+
+    # print("fieldName_avgDict: " + str(fieldName_avgDict))
+    # print("percEasyQuesList: " + str(percEasyQuesList))
+    # print("percMediumQuesList: " + str(percMediumQuesList))
+    # print("percHardQuesList: " + str(percHardQuesList))
 
     # For ALL CHARTS(field colors)
     colors = [
-            "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
-            "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
-            "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
-            "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
-            "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
-            "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
-            "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
-            "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
-            "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
-            "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
+            "rgb(17,112,170)", "rgb(200,82,0)", "rgb(252,125,11)",
+            "rgb(123,132,143)", "rgb(163,172,185)", "rgb(200,208,217)",
+            "rgb(163,204,233)", "rgb(87,96,108)", "rgb(255,188,121)", "rgb(95,162,206)", "rgb(164, 1, 34)"
         ]
-    
-    fieldColorList = colors[:allGameFields.count()]
+
     # END color designation
 
     if request.is_ajax():
         # Card 5
-        # return fieldNameList, countQuesByFieldList, fieldColorList
+        # return fieldName_countQuesDict, fieldColorList
+        fieldColorList = []
+        cnt = 5
+
+        for i in range(len(list(fieldName_countQuesDict.keys()))):
+            # print("field: " + list(fieldName_countQuesDict.keys())[i]) #Test
+            if i < 5:
+                fieldColorList.append(colors[i])
+            elif i >= len(list(fieldName_countQuesDict.keys())) - 5:
+                fieldColorList.append(colors[len(colors) - cnt])
+                cnt -= 1
+            else:
+                fieldColorList.append(colors[5])
+
+        # print("fieldColorList: " + str(fieldColorList)) #Test
 
         # Card 6
         dist_ques_difficulty_chart_data = {
-            "labels": fieldNameList,
+            "labels": list(fieldName_avgDict.keys()),
             "datasets":[{
                 "label": "Mudah",
                 "data": percEasyQuesList,
@@ -127,8 +190,8 @@ def quizMainAdmin(request, user_id):
         }
 
         data_dict = {
-            "fieldNameList": fieldNameList,
-            "countQuesByFieldList": countQuesByFieldList,
+            "fieldNameList": list(fieldName_countQuesDict.keys()),
+            "countQuesByFieldList": list(fieldName_countQuesDict.values()),
             "fieldColorList": fieldColorList,
             "dist_ques_difficulty_chart_data": dist_ques_difficulty_chart_data
         }
@@ -563,6 +626,8 @@ def addQuestion(request, user_id, field_id):
             filledListQues = questionForm.cleaned_data
             questionText = filledListQues['questionText']
             questionImage = filledListQues['questionImage']
+            # print("questionImage: " + str(questionImage)) #Test
+            # print("type questionImage: " + str(type(questionImage))) #Test
             difficulty = filledListQues['difficulty']
             lastEdited = datetime.now
             points = 0
@@ -976,10 +1041,10 @@ def play(request, user_id, field_id):
             cnt_ques = request.GET.get('cnt_ques')
         elif request.method == 'POST':
             if 'requestType' not in request.POST: #after finished ajax request for when clicked "semak jawapan" (POST 1) = submit (POST 2)
-                print("???") #TEST
+                # print("???") #TEST
                 cnt_ques = request.POST['cnt_ques']
             else: #for ajax post request Next and hint update stuffs
-                print("~~~") #TEST
+                # print("~~~") #TEST
                 cnt_ques = request.session['cnt_ques']
     else:
         cnt_ques = '1' #when load (GET) ques 1
@@ -1225,7 +1290,7 @@ def play(request, user_id, field_id):
 
                 return HttpResponse("Success")
         else:
-            print("Hi")
+            # print("Hi")
             hasSubmitted = True
             form = PlayForm(data=request.POST, answers=ANSWER_CHOICES)
             if form.is_valid():
@@ -1667,7 +1732,13 @@ def seeStatistic(request, user_id, field_id):
                 fieldName_CountDict[field.name] = fieldPlayedCountList[i]
                 break
 
+    topFive_fieldName_CountDict = dict(Counter(fieldName_CountDict).most_common(5))
+
     # Card 8
+    fieldEasyCorrectDict = {}
+    fieldMediumCorrectDict = {}
+    fieldHardCorrectDict = {}
+    totalAvgPercDict = {}
     fieldEasyCorrectList = []
     fieldMediumCorrectList = []
     fieldHardCorrectList = []
@@ -1682,8 +1753,9 @@ def seeStatistic(request, user_id, field_id):
         else:
             percEasy = 0
 
-        print("id: " + str(i) + ", percEasy: " + str(percEasy))
-        fieldEasyCorrectList.append(percEasy)
+        # print("id: " + str(i) + ", percEasy: " + str(percEasy))
+        fieldEasyCorrectDict[fieldIDList[i]] = percEasy
+        # print("id: " + str(i) + ", fieldEasyCorrectDict: " + str(fieldEasyCorrectDict[fieldIDList[i]]))
 
         #Medium
         totalCurrentFieldMediumDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countMedium'))
@@ -1694,8 +1766,9 @@ def seeStatistic(request, user_id, field_id):
         else:
             percMedium = 0
 
-        print("id: " + str(i) + ", percMedium: " + str(percMedium))
-        fieldMediumCorrectList.append(percMedium)
+        # print("id: " + str(i) + ", percMedium: " + str(percMedium))
+        fieldMediumCorrectDict[fieldIDList[i]] = percMedium
+        # print("id: " + str(i) + ", fieldMediumCorrectDict: " + str(fieldMediumCorrectDict[fieldIDList[i]]))
 
         #Hard
         totalCurrentFieldHardDict = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i]).aggregate(Sum('countHard'))
@@ -1706,8 +1779,31 @@ def seeStatistic(request, user_id, field_id):
         else:
             percHard = 0
 
-        print("id: " + str(i) + ", percHard: " + str(percHard))
-        fieldHardCorrectList.append(percHard)
+        # print("id: " + str(i) + ", percHard: " + str(percHard))
+        fieldHardCorrectDict[fieldIDList[i]] = percHard
+        # print("id: " + str(i) + ", fieldHardCorrectDict: " + str(fieldHardCorrectDict[fieldIDList[i]]))
+
+        totalAvgPercDict[fieldIDList[i]] = round(((percEasy + percMedium + percHard)/3), 2)
+        # print("id: " + str(i) + ", totalAvgPercDict: " + str(totalAvgPercDict[fieldIDList[i]]))
+
+    topFive_totalAvgPercDict = dict(Counter(totalAvgPercDict).most_common(5))
+    # print("topFive_totalAvgPercDict: " + str(topFive_totalAvgPercDict)) #Test
+
+    topFive_fieldName_avgDict = {}
+
+    for fieldID in list(topFive_totalAvgPercDict.keys()):
+        for field in allGameFields:
+            if fieldID == field.id:
+                topFive_fieldName_avgDict[field.name] = topFive_totalAvgPercDict[fieldID]
+                break
+        fieldEasyCorrectList.append(fieldEasyCorrectDict[fieldID])
+        fieldMediumCorrectList.append(fieldMediumCorrectDict[fieldID])
+        fieldHardCorrectList.append(fieldHardCorrectDict[fieldID])
+
+    # print("topFive_fieldName_avgDict: " + str(topFive_fieldName_avgDict))
+    # print("fieldEasyCorrectList: " + str(fieldEasyCorrectList))
+    # print("fieldMediumCorrectList: " + str(fieldMediumCorrectList))
+    # print("fieldHardCorrectList: " + str(fieldHardCorrectList))
 
     # Card 9, 10 & 11
     avgSessionScoreByFieldList = []
@@ -1727,6 +1823,37 @@ def seeStatistic(request, user_id, field_id):
         avgSessionScoreByFieldList.append(int(round(totalScoreCurrentFieldDict['currentPointsEarned__sum']/currentFieldSessionCount, 0)))
         avgSessionHintByFieldList.append(int(round(totalHintCurrentFieldDict['hintsUsedCount__sum']/currentFieldSessionCount, 0)))
         avgSessionTimeTakenByFieldList.append(avgTimeTaken_unformatted)
+    
+    fieldName_ScoreDict = {}
+    fieldName_HintDict = {}
+    fieldName_TimeDict = {}
+
+    for i in range(len(fieldIDList)):
+        for field in allGameFields:
+            if fieldIDList[i] == field.id:
+                fieldNameList.append(field.name)
+                fieldName_ScoreDict[field.name] = avgSessionScoreByFieldList[i]
+                fieldName_HintDict[field.name] = avgSessionHintByFieldList[i]
+                fieldName_TimeDict[field.name] = avgSessionTimeTakenByFieldList[i]
+                break
+    
+    # print("fieldName_ScoreDict: " + str(fieldName_ScoreDict)) #Test
+
+    topFive_fieldName_ScoreDict = dict(Counter(fieldName_ScoreDict).most_common(5))
+    # print("topFive_fieldName_ScoreDict: " + str(topFive_fieldName_ScoreDict)) #Test
+
+    topFive_fieldName_HintDict = dict(sorted(fieldName_HintDict.items(), key = itemgetter(1))[:5])
+    # print("topFive_fieldName_HintDict: " + str(topFive_fieldName_HintDict)) #Test
+    
+    topFive_fieldName_TimeDict = dict(sorted(fieldName_TimeDict.items(), key = itemgetter(1))[:5])
+    # print("topFive_fieldName_TimeDict: " + str(topFive_fieldName_TimeDict)) #Test
+
+    avgSessionScoreByFieldList = sorted(avgSessionScoreByFieldList, reverse=True)
+    avgSessionScoreByFieldList = avgSessionScoreByFieldList[:5]
+    avgSessionHintByFieldList = sorted(avgSessionHintByFieldList)
+    avgSessionHintByFieldList = avgSessionHintByFieldList[:5]
+    avgSessionTimeTakenByFieldList = sorted(avgSessionTimeTakenByFieldList)
+    avgSessionTimeTakenByFieldList = avgSessionTimeTakenByFieldList[:5]
     
     #For DIV 2: career-rec
     criteria_score_list = []
@@ -1803,40 +1930,51 @@ def seeStatistic(request, user_id, field_id):
 
     # For ALL CHARTS(field colors)
     colors = [
-            "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
-            "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
-            "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
-            "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
-            "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
-            "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
-            "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
-            "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
-            "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
-            "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
+            "rgb(17,112,170)", "rgb(200,82,0)", "rgb(252,125,11)",
+            "rgb(123,132,143)", "rgb(163,172,185)", "rgb(163,204,233)",
+            "rgb(87,96,108)", "rgb(255,188,121)", "rgb(95,162,206)",
+            "rgb(200,208,217)", "rgb(255, 194, 10)", "rgb(64, 176, 66)",
+            "rgb(93, 58, 155)", "rgb(211, 95, 183)", "rgb(212, 17, 89)",
+            "rgb(86, 1, 151)", "rgb(132, 0, 205)", "rgb(255, 146, 253)",
+            "rgb(90, 0, 15)", "rgb(164, 1, 34)", "rgb(69, 2, 112)",
+            "rgb(153, 79, 0)", "rgb(254, 254, 98)", "rgb(220, 76, 103)"
         ]
 
     allGameFieldColorsDict = {}
+    allGameFields = quiz.models.GameField.objects.all().order_by('id')
 
     for i in range(len(allGameFields)):
         allGameFieldColorsDict[allGameFields[i].name] = colors[i]
     
+    # print("allGameFieldColorsDict: " + str(allGameFieldColorsDict)) #Test
+
     playedFieldColorList = colors[:len(fieldNameList)]
     # END color designation
 
     if request.is_ajax():
         # Card 7
+        # print("-----Card 7-----") #Test
+        playedFieldColorList = []
+
+        for field in list(topFive_fieldName_CountDict.keys()):
+            # print("field: " + field) #Test
+            # print("allGameFieldColorsDict[field]: " + str(allGameFieldColorsDict[field])) #Test
+            playedFieldColorList.append(allGameFieldColorsDict[field])
+
+        # print("playedFieldColorList: " + str(playedFieldColorList)) #Test
+
         most_played_field_chart_data = {
-            "labels": list(fieldName_CountDict.keys()),
+            "labels": list(topFive_fieldName_CountDict.keys()),
             "datasets":[{
                 "label": "Purata Petunjuk Digunakan",
-                "data": list(fieldName_CountDict.values()),
+                "data": list(topFive_fieldName_CountDict.values()),
                 "backgroundColor": playedFieldColorList
             }]
         }
 
         # Card 8
         dist_correct_answers_chart_data = {
-            "labels": list(fieldName_CountDict.keys()),
+            "labels": list(topFive_fieldName_avgDict.keys()),
             "datasets":[{
                 "label": "Mudah",
                 "data": fieldEasyCorrectList,
@@ -1853,8 +1991,18 @@ def seeStatistic(request, user_id, field_id):
         }
         
         # Card 9
+        # print("-----Card 9-----") #Test
+        playedFieldColorList = []
+
+        for field in list(topFive_fieldName_ScoreDict.keys()):
+            # print("field: " + field) #Test
+            # print("allGameFieldColorsDict[field]: " + str(allGameFieldColorsDict[field])) #Test
+            playedFieldColorList.append(allGameFieldColorsDict[field])
+
+        # print("playedFieldColorList: " + str(playedFieldColorList)) #Test
+
         avg_field_session_score_chart_data = {
-            "labels": list(fieldName_CountDict.keys()),
+            "labels": list(topFive_fieldName_ScoreDict.keys()),
             "datasets":[{ 
                 "label": "Purata Markah per Sesi",
                 "data": avgSessionScoreByFieldList,
@@ -1863,8 +2011,18 @@ def seeStatistic(request, user_id, field_id):
         }
 
         # Card 10
+        # print("-----Card 10-----") #Test
+        playedFieldColorList = []
+
+        for field in list(topFive_fieldName_HintDict.keys()):
+            # print("field: " + field) #Test
+            # print("allGameFieldColorsDict[field]: " + str(allGameFieldColorsDict[field])) #Test
+            playedFieldColorList.append(allGameFieldColorsDict[field])
+
+        # print("playedFieldColorList: " + str(playedFieldColorList)) #Test
+
         avg_field_session_hints_chart_data = {
-            "labels": list(fieldName_CountDict.keys()),
+            "labels": list(topFive_fieldName_HintDict.keys()),
             "datasets":[{ 
                 "label": "Purata Petunjuk Digunakan per Sesi",
                 "data": avgSessionHintByFieldList,
@@ -1874,7 +2032,7 @@ def seeStatistic(request, user_id, field_id):
 
         # Card 11
         avg_field_session_time_chart_data = {
-            "labels": list(fieldName_CountDict.keys()),
+            "labels": list(topFive_fieldName_TimeDict.keys()),
             "datasets":[{
                 "label": "Purata Masa Diambil per Sesi",
                 "data": avgSessionTimeTakenByFieldList,

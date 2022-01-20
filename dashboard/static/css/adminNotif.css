@@ -100,13 +100,10 @@
 .div-text{
     /* background-color: lightpink; */
     position: relative;
-    display: grid;
-    grid-auto-flow: column;
     width: 100%;
     height: fit-content;
     text-align: left;
     justify-content: left;
-    gap: 4px;
     line-height: 25px;
     margin-top: -5px;
     box-sizing: border-box;

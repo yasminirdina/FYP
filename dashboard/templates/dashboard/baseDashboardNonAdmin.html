@@ -164,6 +164,25 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Modal for nonAdminReport (Teacher-gameperf) -->
+            <div class="div-bg-modal-5">
+                <div class="div-modal-content-5">
+                    <div class="div-modal-header-5">
+                        Kedudukan Pemain
+                    </div>
+
+                    <p class="p-playerNameScoreList-modal" style="display: none;">{{ playerNameScoreList }}</p>
+                    
+                    <div class="div-table-student-list">
+                        {% include 'dashboard/nonAdminReportContentTeacher2.html' %}
+                    </div>
+
+                    <div class="div-student-list-buttons">
+                        <button class="btn close-student-list">Tutup</button>
+                    </div>
+                </div>
+            </div>
             
             <script>
                 function checkUnreadNotifCnt (){

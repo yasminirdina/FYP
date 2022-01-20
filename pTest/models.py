@@ -24,5 +24,10 @@ class StudentTester(models.Model):
 
 class StudentPersonalitySession(models.Model):
     studentID = models.ForeignKey(StudentTester, on_delete=models.PROTECT)
-    personalityID = models.ForeignKey(Personality, on_delete=models.CASCADE)
-    currentSectionScore = models.IntegerField(default=0)
+    # personalityID = models.ForeignKey(Personality, on_delete=models.CASCADE)
+    rSecScore = models.IntegerField(default=0)
+    aSecScore = models.IntegerField(default=0)
+    iSecScore = models.IntegerField(default=0)
+    sSecScore = models.IntegerField(default=0)
+    eSecScore = models.IntegerField(default=0)
+    cSecScore = models.IntegerField(default=0)

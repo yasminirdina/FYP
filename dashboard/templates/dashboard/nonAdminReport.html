@@ -115,18 +115,10 @@
 
             <div class="div-game-perf">
                 {% include 'dashboard/nonAdminReportContentTeacher1.html' %}
-
-                <div class="div-buttons">
-                    <button id="downloadPDF" class="btn download">Muat turun PDF</button>
-                </div>
             </div>
 
             <div class="div-parent-eng">
-                {% include 'dashboard/nonAdminReportContentTeacher2.html' %}
-
-                <div class="div-buttons">
-                    <button id="downloadPDF" class="btn download">Muat turun PDF</button>
-                </div>
+                {% include 'dashboard/nonAdminReportContentTeacher3.html' %}
             </div>
         {% endif %}
     </div>
@@ -154,7 +146,7 @@
                     $('.div-career-parent').html(result);
                 },
                 error: function(result) {
-                    // alert("sortPostDate: error");
+                    // alert("filterStudentName: error");
                 }
             })
         });
@@ -174,15 +166,33 @@
             $('.div-parent-eng').css("display", "grid");
         });
 
+        $('.div-game-perf').on('click', '#a-player-list', function(){
+            // alert("hi a-player-list");
+            $('.div-bg-modal-5').css("display","flex");
+        });
+
+        $('.close-student-list').on('click', function(){
+            $('.div-bg-modal-5').css("display","none");
+        });
+
         // CHARTS AJAX
         Chart.defaults.font.size = 17.6;
         Chart.defaults.font.family = "Varela Round";
         Chart.defaults.color = "#000000";
-        $(document).ready(Charts);
 
-        function Charts() {
+        filteredFormID = $('.p-filteredFormID').text();
+        // alert("filteredFormID: " + filteredFormID.toString());
+        // alert("typeof filteredFormID: " + (typeof filteredFormID).toString());
+
+        $(document).ready(Charts(filteredFormID));
+
+        function Charts(filteredFormID) {
             $.ajax({
-                url: "{% url 'quiz:quiz-statistic' user_id field_id %}",
+                url: "{% url 'dashboard:report' user_type user_id %}",
+                data: {
+                    'filteredFormID': filteredFormID,
+                    'requestType': 'Charts'
+                },
                 success: function(response) {
                     MostPlayedFieldChart(response["most_played_field_chart_data"]);
                     AvgFieldSessionScoreChart(response["avg_field_session_score_chart_data"]);
@@ -194,34 +204,71 @@
 
         function MostPlayedFieldChart(data) {
             var ctx = document.getElementById("MostPlayedField");
-            var PieChart1 = new Chart(ctx, {
-                type: "pie",
+            var BarChart1 = new Chart(ctx, {
+                type: "bar",
                 data: data,
                 options: {
-                    events:["mousemove", "click", "mouseout"],
+                    indexAxis: 'y',
+                    events: ["mousemove", "click", "mouseout"],
                     maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Bidang Kerjaya Paling Kerap Dimainkan',
+                            text: '5 Bidang Kerjaya Paling Kerap Dimainkan',
                             align: 'start',
                             font: {
                                 weight: "bold"
                             }
                         },
                         legend: {
-                            labels: {
-                                font: {
-                                    size: 16
-                                }
-                            }
+                            display: false
                         },
+                        barValueSpacing: 20,
                         tooltip: {
                             titleFont: {
                                 size: 14
                             },
                             bodyFont: {
                                 size: 14
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                callback: function(label, index, labels) {
+                                    if (this.getLabelForValue(label).length > 10) {
+                                        return this.getLabelForValue(label).substr(0, 9) + "...";
+                                    } else {
+                                        return this.getLabelForValue(label);
+                                    }           
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bidang Kerjaya',
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 14
+                                },
+                                stepSize: 1,
+                                maxRotation: 0
+                            },
+                            title: {
+                                display: true,
+                                text: 'Bilangan Sesi',
+                                font: {
+                                    size: 14
+                                }
                             }
                         }
                     }
@@ -231,7 +278,7 @@
 
         function AvgFieldSessionScoreChart(data) {
             var ctx = document.getElementById("AvgSessionScoreByField");
-            var BarChart1 = new Chart(ctx, {
+            var BarChart2 = new Chart(ctx, {
                 type: "bar",
                 data: data,
                 options: {
@@ -240,7 +287,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: ['Purata Markah per Sesi berdasarkan', 'Bidang Kerjaya'],
+                            text: ['5 Purata Tertinggi Markah per Sesi', 'berdasarkan Bidang Kerjaya'],
                             align: 'start',
                             font: {
                                 weight: "bold"
@@ -306,7 +353,7 @@
 
         function AvgFieldSessionHintsChart(data) {
             var ctx = document.getElementById("AvgSessionHintsUsedByField");
-            var BarChart2 = new Chart(ctx, {
+            var BarChart3 = new Chart(ctx, {
                 type: "bar",
                 data: data,
                 options: {
@@ -315,7 +362,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: ['Purata Petunjuk Digunakan per', 'Sesi berdasarkan Bidang Kerjaya'],
+                            text: ['5 Purata Terendah Petunjuk Digunakan', 'per Sesi berdasarkan Bidang Kerjaya'],
                             align: 'start',
                             font: {
                                 weight: "bold"
@@ -391,7 +438,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: ['Purata Masa Diambil per', 'Sesi berdasarkan Bidang Kerjaya'],
+                            text: ['5 Purata Terpantas Masa Diambil', 'per Sesi berdasarkan Bidang Kerjaya'],
                             align: 'start',
                             font: {
                                 weight: "bold"
@@ -521,13 +568,15 @@
             var canvas_image_width = reportPageWidth;
             var canvas_image_height = reportPageHeight;
 
+            alert("reportPageHeight: " + reportPageHeight.toString() + ", reportPageWidth: " + reportPageWidth.toString() + ", PDF_Width: " + PDF_Width.toString() + ", PDF_Height: " + PDF_Height.toString()); // Test
+
             // var totalPDFPages = Math.ceil(reportPageHeight / PDF_Height) - 1;
 
-            html2canvas($('.div-grid')[0]).then(function (canvas) {
+            html2canvas($('.div-grid-game')[0]).then(function (canvas) {
                 var imgData = canvas.toDataURL("image/jpeg", 1.0);
                 const { jsPDF } = window.jspdf;
                 var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
-                pdf.setFont("Poppins-Bold", "normal", 400);
+                pdf.setFont("VarelaRound-Regular", "normal", 400);
                 pdf.setFontSize(20);
                 text = "Statistik Prestasi Permainan Kuiz";
                 text2 = dateTime;
@@ -543,6 +592,52 @@
                 // pdf.save("Statistik.pdf");
                 window.open(pdf.output("bloburl"), "_blank");
             });
+        });
+
+        // Game-perf filter
+        $('.div-game-perf').on('change', '#student-form', function(){
+            // alert('hi div-game-perf filterForm');
+            var filteredFormID = $(this).val();
+            // alert('filteredFormID: ' + filteredFormID);
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:report' user_type user_id %}",
+                data: {
+                    'filteredFormID': filteredFormID,
+                    'requestType': 'filterForm'
+                },
+                success: function(result) {
+                    // alert("filteredFormID: success");
+                    $('.div-game-perf').html(result);
+
+                    filteredFormID = $('.p-filteredFormID').text();
+                    // alert("filteredFormID: " + filteredFormID.toString());
+                    // alert("typeof filteredFormID: " + (typeof filteredFormID).toString());
+
+                    Charts(filteredFormID);
+                    
+                    $.ajax({
+                        headers: { "X-CSRFToken": '{{csrf_token}}' },
+                        type: 'POST',
+                        url: "{% url 'dashboard:report' user_type user_id %}",
+                        data: {
+                            'filteredFormID': filteredFormID,
+                            'requestType': 'updateStudentListModal'
+                        },
+                        success: function(result) {
+                            // alert("updateStudentListModal: success");
+                            $('.div-table-student-list').html(result);
+                        },
+                        error: function(result) {
+                            // alert("updateStudentListModal: error");
+                        }
+                    })
+                },
+                error: function(result) {
+                    // alert("filteredFormID: error");
+                }
+            })
         });
 
         $('.div-parent-eng').on('click', '#downloadPDF', function() {
@@ -587,9 +682,11 @@
             var canvas_image_width = reportPageWidth;
             var canvas_image_height = reportPageHeight;
 
+            alert("reportPageHeight: " + reportPageHeight.toString() + ", reportPageWidth: " + reportPageWidth.toString() + ", PDF_Width: " + PDF_Width.toString() + ", PDF_Height: " + PDF_Height.toString()); // Test
+
             // var totalPDFPages = Math.ceil(reportPageHeight / PDF_Height) - 1;
 
-            html2canvas($('.div-grid')[0]).then(function (canvas) {
+            html2canvas($('.div-grid-eng')[0]).then(function (canvas) {
                 var imgData = canvas.toDataURL("image/jpeg", 1.0);
                 const { jsPDF } = window.jspdf;
                 var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
@@ -609,6 +706,64 @@
                 // pdf.save("Statistik.pdf");
                 window.open(pdf.output("bloburl"), "_blank");
             });
+        });
+
+        // Parent-eng filter
+        $('.div-parent-eng').on('change', '#student-form-parent', function(){
+            // alert('hi div-parent-eng filterForm');
+            var filteredFormID = $(this).val();
+            // alert('filteredFormID: ' + filteredFormID);
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:report' user_type user_id %}",
+                data: {
+                    'filteredFormID': filteredFormID,
+                    'requestType': 'filterFormParent'
+                },
+                success: function(result) {
+                    // alert("filteredFormID: success");
+                    $('.div-parent-eng').html(result);
+
+                    filteredFormID = $('.p-filteredFormID-parent').text();
+                    // alert("filteredFormID: " + filteredFormID);
+                },
+                error: function(result) {
+                    // alert("filteredFormID: error");
+                }
+            })
+        });
+
+        $('.div-parent-eng').on('change', '#student-name', function(){
+            // alert('hi div-parent-eng filterStudent');
+            var filteredFormID = $('#student-form-parent').val();
+            var filteredStudentID = $(this).val();
+            // alert('filteredFormID: ' + filteredFormID);
+            // alert('filteredStudentID: ' + filteredStudentID);
+            
+            $.ajax({
+                type: 'GET',
+                url: "{% url 'dashboard:report' user_type user_id %}",
+                data: {
+                    'filteredFormID': filteredFormID,
+                    'filteredStudentID': filteredStudentID,
+                    'requestType': 'filterFormParent'
+                },
+                success: function(result) {
+                    // alert("filterStudent: success");
+                    $('.div-parent-eng').html(result);
+
+                    filteredFormID = $('.p-filteredFormID-parent').text();
+                    filteredStudentID = $('.p-filteredStudentID').text();
+                    var filteredParentID = $('.p-filteredParentID').text();
+                    // alert("filteredFormID: " + filteredFormID);
+                    // alert("filteredStudentID: " + filteredStudentID);
+                    // alert("filteredParentID: " + filteredParentID);
+                },
+                error: function(result) {
+                    // alert("filteredFormID: error");
+                }
+            })
         });
     </script>
 {% endblock %}

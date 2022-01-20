@@ -75,7 +75,7 @@ body {
 }
 
 /* ---------------------endedit---------------------- */
-#div-wrapper{
+#wrapper{
     justify-content: center;
     align-items: center;
 }
@@ -167,8 +167,7 @@ body {
     margin-top: 1vw;
 }
 
-.choice-container{
-    /* background: rgb(240, 127, 62); */
+.choice-container {
     height: 5rem;
     border-radius: 30px;
     margin-left: 5rem;
@@ -176,11 +175,10 @@ body {
     transition: 0.4s;
 }
 
-.choice-container:hover{
+.choice-container:hover {
     cursor: pointer;
-    transform: scale(1.07);
-    width: 30rem;
-    transform: transfom 100ms;
+    transition: transform 100ms;
+    transform: scale(1.1);
 }
 
 .choice-text{
@@ -210,10 +208,11 @@ body {
             user-select: none;
 }
 
-.choice-container input[type="radio"]:checked ~ .choice-container input[type="radio"]:checked ~ .choice-text{
+.choice-container input[type="radio"]:checked ~ .choice-text{
     border: 3px solid white;
     background-color: rgb(178, 54, 250);
 }
+
 
 .choice-container input[type="radio"]:checked ~ .choice-text {
     border-left: none;

@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}{% endblock %}
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+
+    {% block js1 %}{% endblock %}
+    
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/studentMain.css' %}">
+
+    {% block styles %}{% endblock %}
+</head>
+<body>
+    <center>
+        <div class="div-navbar">
+            <div class="div-navbar-left">
+                <p class="p-navbar no-icon"><a class="p-a-navbar active" href="{% url test user_type user_id %}">Ujian Kerjaya</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">
+                    <span style="font-style: italic;">Dashboard</span>
+                    <span>{{ dashboardNav }}</span></a>
+                </p>
+
+                <!-- mobile -->
+                <p class="p-navbar icon"><a class="p-a-navbar active" href="{% url test user_type user_id %}">
+                    <i class="fas fa-edit"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">
+                    <i class="fas fa-blog"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url quiz user_id %}">
+                    <i class="fas fa-gamepad"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url search user_type user_id %}">
+                    <i class="fas fa-search"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">
+                    <i class="fas fa-user"></i>
+                </a></p>
+            </div>
+
+            <div class="div-navbar-right">
+                <p class="p-navbar logout no-icon"><a class="p-a-navbar" href="{% url logout user_id %}">Log Keluar</a></p>
+                <p class="p-navbar username no-icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></p>
+
+                <!-- mobile -->
+                <p class="p-navbar logout icon"><a class="p-a-navbar" href="{% url logout user_id %}">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a></p>
+                <p class="p-navbar username icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></p>
+            </div>
+        </div>
+    </center>   
+
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block js2 %}{% endblock %}
+</body>
+</html>

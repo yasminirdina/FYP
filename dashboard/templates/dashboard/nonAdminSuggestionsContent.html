@@ -1,38 +1,44 @@
-<table>
-    <thead>
-        <tr>
-            <th>No.</th>
-            <th>Subjek</th>
-            <th>Kategori</th>
-            <th>Tarikh Dikemukakan</th>
-            <th>Status</th>
-        </tr>
-    </thead>
+{% if allSuggestions %}
+    <table>
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Subjek</th>
+                <th>Kategori</th>
+                <th>Tarikh Dikemukakan</th>
+                <th>Status</th>
+            </tr>
+        </thead>
 
-    <tbody>
-        {% for suggestion in allSuggestions %}
-        <tr>
-            <p class="p-suggestionTitle" id="title-{{ suggestion.id }}" style="display: none;">{{ suggestion.title }}</p>
-            <p class="p-suggestionContent" id="content-{{ suggestion.id }}" style="display: none;">{{ suggestion.subjectContent }}</p>
+        <tbody>
+            {% for suggestion in allSuggestions %}
+            <tr>
+                <p class="p-suggestionTitle" id="title-{{ suggestion.id }}" style="display: none;">{{ suggestion.title }}</p>
+                <p class="p-suggestionContent" id="content-{{ suggestion.id }}" style="display: none;">{{ suggestion.subjectContent }}</p>
 
-            <td>{{ forloop.counter }}</td>
-            <td>
-                <a class="a-with-underline" id="a-{{ suggestion.id }}">
-                    {{ suggestion.title }}
-                </a>
-            </td>
-            <td>{{ suggestion.typeID.name }}</td>
-            <td>{{ suggestion.dateIssued|date:"d/m/Y" }}, {{ suggestion.timeIssued|date:"h:i A" }} </td>
-            <td>
-                {% if suggestion.status == 'Dihantar' %}
-                    <button class="btn sent">{{ suggestion.status }}</button>
-                {% elif suggestion.status == 'Sedang Diproses' %}
-                    <button class="btn processing">{{ suggestion.status }}</button>
-                {% elif suggestion.status == 'Ditutup' %}
-                    <button class="btn closed">{{ suggestion.status }}</button>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                    <a class="a-with-underline" id="a-{{ suggestion.id }}">
+                        {{ suggestion.title }}
+                    </a>
+                </td>
+                <td>{{ suggestion.typeID.name }}</td>
+                <td>{{ suggestion.dateIssued|date:"d/m/Y" }}, {{ suggestion.timeIssued|date:"h:i A" }} </td>
+                <td>
+                    {% if suggestion.status == 'Dihantar' %}
+                        <button class="btn sent">{{ suggestion.status }}</button>
+                    {% elif suggestion.status == 'Sedang Diproses' %}
+                        <button class="btn processing">{{ suggestion.status }}</button>
+                    {% elif suggestion.status == 'Ditutup' %}
+                        <button class="btn closed">{{ suggestion.status }}</button>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="div-no-suggestion">
+        Tiada cadangan penambahbaikan dikemukakan.
+    </div>
+{% endif %}

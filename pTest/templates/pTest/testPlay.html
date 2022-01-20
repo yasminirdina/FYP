@@ -1,242 +1,221 @@
-{% extends "pTest/base.html" %}
+{% extends "pTest/baseNonAdmin.html" %}
 {% load static %}
 
 {% block title %}
     <title>FutureCruise: Ujian Kerjaya | Personaliti {{ cnt_quest }}</title>
 {% endblock %}
 
+{% block js1 %}
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+{% endblock %}
+
 {% block styles %}
-<link rel="stylesheet" href="{% static 'css/studentTest.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'css/studentTest.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- -------------------------------edit--------------------------------- -->
-<div id="mySidenav" class="sidenav">
-    <div class="hud-item">
-        <p id="progressText" class="hud-prefix">
-            Soalan {{ cnt_quest }} / 10
-        </p>
-        <h1 class="hud-main-text" id="progress">
-            <div id="progressBar">
-                <div id="progressBarFull"></div>
-            </div>
-        </h1>
+    <!-- -------------------------------edit--------------------------------- -->
+    <div id="mySidenav" class="sidenav">
+        <div class="hud-item">
+            <p id="progressText" class="hud-prefix">
+                Soalan {{ cnt_quest }} / 10
+            </p>
+            <h1 class="hud-main-text" id="progress">
+                <div id="progressBar">
+                    <div id="progressBarFull"></div>
+                </div>
+            </h1>
+        </div>
+        
+        <!-- display current score (kiv) -->
+        <!-- <div class="hud-item">
+            <p class="hud-prefix">
+                Markah Semasa
+            </p> -->
+            <!-- if choose correct ans (in this case tukar choose yes) -->
+            <!-- display current score -->
+            <!-- {% if isCorrect == True %}
+                <h1 class="hud-main-text score correct" id="score">
+                    {{ currentStudentPersonalitySession.currentSectionScore }}
+                </h1>
+            {% else %}
+                <h1 class="hud-main-text score" id="score">
+                    {{ currentStudentPersonalitySession.currentSectionScore }}
+                </h1>
+            {% endif %}
+        </div> -->
+        
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <p>Bahagian Personaliti:</p>
+        <a href="#">Realistic</a>
+        <a href="#">Artistic</a>
+        <a href="#">Investigatif</a>
+        <a href="#">Social</a>
+        <a href="#">Enterprising</a>
+        <a href="#">Conventional</a>
     </div>
-    
-    <!-- display current score (kiv) -->
-    <!-- <div class="hud-item">
-        <p class="hud-prefix">
-            Markah Semasa
-        </p> -->
-        <!-- if choose correct ans (in this case tukar choose yes) -->
-        <!-- display current score -->
-        <!-- {% if isCorrect == True %}
-            <h1 class="hud-main-text score correct" id="score">
-                {{ currentStudentPersonalitySession.currentSectionScore }}
-            </h1>
-        {% else %}
-            <h1 class="hud-main-text score" id="score">
-                {{ currentStudentPersonalitySession.currentSectionScore }}
-            </h1>
-        {% endif %}
-    </div> -->
-    
-    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    <p>Bahagian Personaliti:</p>
-    <a href="#">Realistic</a>
-    <a href="#">Artistic</a>
-    <a href="#">Investigatif</a>
-    <a href="#">Social</a>
-    <a href="#">Enterprising</a>
-    <a href="#">Conventional</a>
-</div>
-<!-- Use any element to open the sidenav -->
-<span class="progress-navbar" onclick="openNav()">Progress</span>
-<!-- ----------------------------endedit-------------------------------- -->
+    <!-- Use any element to open the sidenav -->
+    <span class="progress-navbar" onclick="openNav()">Progress</span>
+    <!-- ----------------------------endedit-------------------------------- -->
 
-<div id="div-wrapper">
-    {% include 'pTest/testPlay2.html' %}
-</div>
+    <div id="wrapper">
+        {% include 'pTest/testPlay2.html' %}
+    </div>
 {% endblock %}
 
-{% block js %}
-<script type="text/javascript" src="{% static 'js/indexTest.js' %}"></script>
+{% block js2 %}
+    <script type="text/javascript">
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+    </script>
 
-<!-- js n jQuery for testPlay1$2 -->
-<script type="text/javascript">
-    var user_id = '{{ user_id }}';
-    var cnt_quest = parseInt(document.querySelector('.cnt_quest').innerText);
-    var next_cnt_quest = parseInt(document.querySelector('.next_cnt_quest').innerText);
-    var hasSubmitted = document.querySelector('.hasSubmitted').innerText;
-    var isCorrect = document.querySelector('.isCorrect').innerText;
-    var i = 0;
-    var k = 0;
-    var m = 0;
-    var bar_quest = document.querySelector('.div-bar-timer-quest');
-    var width_quest = 0;
-    var id_quest = 0;
-    var clickedQuit = false;
-    // var timeLimit = parseInt(document.querySelector('.p-timeLimit').innerText);
+    <script type="text/javascript">
+        var user_id = '{{ user_id }}';
+    </script>
 
-    //changing the bar width
-    $('#progressBarFull').width((cnt_quest/10) * 100 + "%"); 
+    <!-- js n jQuery for testPlay1$2 -->
+    <script type="text/javascript">
+        var cnt_quest = parseInt(document.querySelector('.cnt_quest').innerText);
+        var next_cnt_quest = parseInt(document.querySelector('.next_cnt_quest').innerText);
+        var hasSubmitted = document.querySelector('.hasSubmitted').innerText;
+        var isCorrect = document.querySelector('.isCorrect').innerText;
+        var i = 0;
+        var k = 0;
+        var m = 0;
+        var width_quest = 0;
+        var id_quest = 0;
+        var clickedQuit = false;
 
-    // function setCookie(c_name,value,exdays) {
-    //     if (c_name == 'mainMuted') {
-    //         var exdate=new Date();
-    //         exdate.setDate(exdate.getDate() + exdays);
-    //         var c_value = escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
-    //         document.cookie=c_name + "=" + c_value;
-    //     }
-    // }
+        //changing the progress bar width
+        $('#progressBarFull').width((cnt_quest/10) * 100 + "%"); 
 
-    // function getCookie(c_name) {
-    //     var i,x,y,ARRcookies=document.cookie.split(";");
-    //     for (i=0;i<ARRcookies.length;i++) {
-    //         x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
-    //         y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
-    //         x=x.replace(/^\s+|\s+$/g,"");
-    //         if (x==c_name) {
-    //             return unescape(y);
-    //         }
-    //     }
-    // }
+        // // function setCookie(c_name,value,exdays) {
+        // //     if (c_name == 'mainMuted') {
+        // //         var exdate=new Date();
+        // //         exdate.setDate(exdate.getDate() + exdays);
+        // //         var c_value = escape(value) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString()) + "; path=/";
+        // //         document.cookie=c_name + "=" + c_value;
+        // //     }
+        // // }
 
-    // setInterval(setCookie('mainMuted', song.muted), 1000); //0 for localhost & testing only
+        // // function getCookie(c_name) {
+        // //     var i,x,y,ARRcookies=document.cookie.split(";");
+        // //     for (i=0;i<ARRcookies.length;i++) {
+        // //         x=ARRcookies[i].substr(0,ARRcookies[i].indexOf("="));
+        // //         y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
+        // //         x=x.replace(/^\s+|\s+$/g,"");
+        // //         if (x==c_name) {
+        // //             return unescape(y);
+        // //         }
+        // //     }
+        // // }
 
-    // operation once form is submitted
-    function submit_form() {
-        // alert("(isClicked=" + $('#isClicked').val() + ") Enter form submit");
-        $.ajax({
-            headers: { "X-CSRFToken": '{{csrf_token}}' }, 
-            url: "{% url 'test:test-student' user_type user_id %}",
-            data: {
-                isClicked: $('#isClicked').val(),
-                answer_choices: $('input[name=answer_choices]:checked').val(),
-                cnt_quest: cnt_quest
-            },
-            type: 'POST',
-            success: function(result){
-                // alert("(isClicked=" + $('#isClicked').val() + ") Succeed submit form");
-                $("#div-wrapper").html(result);
-                $('#progressBarFull').width((cnt_quest/10) * 100 + "%");
-                hasSubmitted = document.querySelector('.hasSubmitted').innerText;
-                isCorrect = document.querySelector('.isCorrect').innerText;
-                // var currPlayerAllFieldScoreText = document.querySelector('.span-value-totalScore'); //in player navbar
-                // currPlayerAllFieldScoreText.innerText = document.querySelector('.p-totalPoints_2').innerText;
+        // operation once form is submitted
+        function submit_form() {
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'test:test-student' user_type user_id %}",
+                data: {
+                    isClicked: $('#isClicked').val(),
+                    answer_choices: $('input[name=answer_choices]:checked').val(),
+                    cnt_quest: cnt_quest
+                },
+                type: 'POST',
+                success: function(result){
+                    $("#wrapper").html(result);
+                    $('#progressBarFull').width((cnt_quest/10) * 100 + "%");
+                    hasSubmitted = document.querySelector('.hasSubmitted').innerText;
+                    isCorrect = document.querySelector('.isCorrect').innerText;
+                    personality_id = document.querySelector('.personality_id').innerText;
+                },
+                error: function(result){
+                    alert("(isClicked=" + $('#isClicked').val() + ") Failed submit form");
+                }
+            });
+        }
 
-                // if (hasSubmitted == 'True') {
-                //     if (isCorrect == 'True') {
-                //         currPlayerAllFieldScoreText.className = "span-value-totalScore correct";
-                //     }
-                //     else {
-                //         audio4.load();
-                //         audio4.play();
-                //     }
-                // }
-            },
-            error: function(result){
-                // alert("(isClicked=" + $('#isClicked').val() + ") Failed submit form");
-            }
+        // seterusnya
+        function nextQuest(){
+            next_cnt_quest = parseInt(document.querySelector('.next_cnt_quest').innerText);
+            next_personality_id = parseInt(document.querySelector('.next_personality_id').innerText);
+            $.ajax({
+                url: "{% url 'test:test-student' user_type user_id %}",
+                data: {
+                    'cnt_quest': next_cnt_quest
+                },
+                type: 'GET',
+                success: function(result){
+                    $("#wrapper").html(result);
+                    cnt_quest = parseInt(document.querySelector('.cnt_quest').innerText)
+                    $('#progressBarFull').width((cnt_quest/10) * 100 + "%");
+                    hasSubmitted = document.querySelector('.hasSubmitted').innerText;
+                    clickedQuit = false;
+                },
+                error: function(result){
+                    // alert("Fail go to next question");
+                }
+            })
+        // });
+        }
+
+        // // semak jawapan/seterusnya
+        $('#wrapper').on('click', '.next', function(){
+            // var currPlayerAllFieldScoreText = document.querySelector('.span-value-totalScore'); //in player navbar TEST
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'test:test-student' user_type user_id %}",
+                data: {
+                    'requestType': 'Next'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    document.getElementById('isClicked').value = result.isClicked
+                    submit_form();
+                    nextQuest();
+                },
+                error: function(result){
+                    alert("Failed update isClicked");
+                }
+            })
         });
-    }
+        
+        //lihat keputusan
+        $('#wrapper').on('click', '.resultTest', function(){
+            console.log("ok ke")
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'test:test-student' user_type user_id %}",
+                data: {
+                    'requestType': 'updateStatusSessionRecord'
+                },
+                type: 'POST',
+                success: function(response){
+                    submit_form()
+                    alert("updateStatusSessionRecord: success");
+                    window.location.href = "{% url 'test:test-result' user_type user_id %}";
+                },
+                error: function(response){
+                    alert("updateStatusSessionRecord: success");
+                }
+            })
+        });
 
-    // update question display
-    function update_framequest() {
-        if (hasSubmitted == 'False') {
-            if (m == 0) {
-                m = 1;
-                id_quest = setInterval(frame_quest, 1000);
-            }
-        }
-    }
-
-    //display quest function
-    function frame_quest() {
-        if (width_quest >= 100) {
-            clearInterval(id_quest);
-            m = 0;
-            submit_form();
-        } else {
-            // $(".choice-text").on('click', function() {
-            //     audio2.play();
-            //     audio.play();
-            // });
-            if (clickedQuit == true) {
-                clearInterval(id_quest);
-            }
-        }
-    }
-
-    update_framequest();
-
-    // seterusnya
-    // $(document).ready(function() {
-    $('#div-wrapper').on('click', '.btn.test', function(){
-        next_cnt_quest = parseInt(document.querySelector('.next_cnt_quest').innerText);
-        alert("next_cnt_quest: " + next_cnt_quest.toString());
-        $.ajax({
-            url: "{% url 'test:test-student' user_type user_id %}",
-            data: {
-                'cnt_quest': next_cnt_quest,
-            },
-            type: 'GET',
-            success: function(result){
-                // alert("Succeed go to next question");
-                $("#div-wrapper").html(result);
-                // var currPlayerAllFieldScoreText = document.querySelector('.span-value-totalScore'); //in player navbar
-                // currPlayerAllFieldScoreText.innerText = document.querySelector('.p-totalPoints_2').innerText;
-                // if (currPlayerAllFieldScoreText.className == "span-value-totalScore correct"){
-                //     currPlayerAllFieldScoreText.className = "span-value-totalScore";
-                // }
-                cnt_quest = parseInt(document.querySelector('.cnt_quest').innerText)
-                $('#progressBarFull').width((cnt_quest/10) * 100 + "%");
-                hasSubmitted = document.querySelector('.hasSubmitted').innerText;
-                i = 0;
-                k = 0;
-                m = 0;
-                // bar_ques = document.querySelector(".div-bar-timer-ques");
-                // width_ques = 0;
-                id_quest = 0;
-                // timeLimit = parseInt(document.querySelector('.p-timeLimit').innerText);
-                clickedQuit = false;
-                update_framequest();
-            },
-            error: function(result){
-                // alert("Fail go to next question");
-            }
-        })
-    });
-
-    //lihat keputusan
-    $('#div-wrapper').on('click', '.showResult', function(){
-        $.ajax({
-            headers: { "X-CSRFToken": '{{csrf_token}}' }, 
-            url: "{% url 'test:test-student' user_type user_id %}",
-            data: {
-                'requestType': 'updateStatusSessionRecord'
-            },
-            type: 'POST',
-            success: function(response){
-                // alert("updateStatusSessionRecord: success");
-                window.location.href = "{% url 'test:test-student' user_type user_id %}";
-            },
-            error: function(response){
-                // alert("updateStatusSessionRecord: success");
-            }
-        })
-    });
-
-    //tamatkan ujian
-    $('#div-wrapper').on('click', '.quit', function(){
-            audio2.play();
-            audio.play();
-            clickedQuit = true;
-            hasSubmitted = document.querySelector('.p-hasSubmitted').innerText;
-            if (hasSubmitted == 'True'){
-                modal1 = document.querySelector('.div-bg-modal');
-                modal1.style.display = "flex";
-            }
-    });
-</script>
+        // //tamatkan ujian
+        // $('#div-wrapper').on('click', '.quit', function(){
+        //         audio2.play();
+        //         audio.play();
+        //         clickedQuit = true;
+        //         hasSubmitted = document.querySelector('.p-hasSubmitted').innerText;
+        //         if (hasSubmitted == 'True'){
+        //             modal1 = document.querySelector('.div-bg-modal');
+        //             modal1.style.display = "flex";
+        //         }
+        // });
+    </script>
 {% endblock%}

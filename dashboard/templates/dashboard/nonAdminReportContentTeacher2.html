@@ -1,0 +1,19 @@
+<table>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Nama Pemain</th>
+            <th>Jumlah Markah</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in playerNameScoreList %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                {% for details in student %}
+                    <td>{{ details }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

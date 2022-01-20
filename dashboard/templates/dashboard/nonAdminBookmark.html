@@ -37,8 +37,6 @@
                     <option value="Paling Lama">Paling Lama</option>
                 </select>
             </form>
-            
-            <p class="p-scroll">Skrol jadual ke bawah &#128899;</p>
 
             <div class="div-table-post">
                 {% include 'dashboard/nonAdminBookmarkContent1.html' %}
@@ -60,8 +58,6 @@
                     <option value="Paling Lama">Paling Lama</option>
                 </select>
             </form>
-
-            <p class="p-scroll">Skrol jadual ke bawah &#128899;</p>
 
             <div class="div-table-info">
                 {% include 'dashboard/nonAdminBookmarkContent2.html' %}
@@ -110,11 +106,11 @@
         });
 
         $('.form-post').on('change', '#date-post', function(){
-            alert('hi form-post sortPostDate');
+            // alert('hi form-post sortPostDate');
             var search_post = $('#post-title').val();
             var date_selected = $(this).val();
-            alert('search_post: ' + search_post);
-            alert('date_selected: ' + date_selected);
+            // alert('search_post: ' + search_post);
+            // alert('date_selected: ' + date_selected);
             
             $.ajax({
                 type: 'GET',
@@ -125,21 +121,21 @@
                     'requestType': 'sortPostDate'
                 },
                 success: function(result) {
-                    alert("sortPostDate: success");
+                    // alert("sortPostDate: success");
                     $('.div-table-post').html(result);
                 },
                 error: function(result) {
-                    alert("sortPostDate: error");
+                    // alert("sortPostDate: error");
                 }
             })
         });
 
         $('.form-info').on('change', '#info-category', function(){
-            alert('hi form-post sortInfoCat');
+            // alert('hi form-post sortInfoCat');
             var cat_selected = $(this).val();
             var date_selected = $('#date-info').val();
-            alert('cat_selected: ' + cat_selected);
-            alert('date_selected: ' + date_selected);
+            // alert('cat_selected: ' + cat_selected);
+            // alert('date_selected: ' + date_selected);
 
             $.ajax({
                 type: 'GET',
@@ -150,21 +146,21 @@
                     'requestType': 'sortInfoCategory'
                 },
                 success: function(result) {
-                    alert("sortInfoCategory: success");
+                    // alert("sortInfoCategory: success");
                     $('.div-table-info').html(result);
                 },
                 error: function(result) {
-                    alert("sortInfoCategory: error");
+                    // alert("sortInfoCategory: error");
                 }
             })
         });
 
         $('.form-info').on('change', '#date-info', function(){
-            alert('hi form-post sortInfoDate');
+            // alert('hi form-post sortInfoDate');
             var cat_selected = $('#info-category').val();
             var date_selected = $(this).val();
-            alert('cat_selected: ' + cat_selected);
-            alert('date_selected: ' + date_selected);
+            // alert('cat_selected: ' + cat_selected);
+            // alert('date_selected: ' + date_selected);
             
             $.ajax({
                 type: 'GET',
@@ -175,54 +171,54 @@
                     'requestType': 'sortInfoDate'
                 },
                 success: function(result) {
-                    alert("sortInfoDate: success");
+                    // alert("sortInfoDate: success");
                     $('.div-table-info').html(result);
                 },
                 error: function(result) {
-                    alert("sortInfoDate: error");
+                    // alert("sortInfoDate: error");
                 }
             })
         });
 
         $('.div-table-post').on('click', '.delete', function(){
-            alert('hi delete post bookmark open');
+            // alert('hi delete post bookmark open');
 
             $('.confirm-delete').val($(this).val());
 
-            alert('post bookmark id to delete: ' + $('.confirm-delete').val());
+            // alert('post bookmark id to delete: ' + $('.confirm-delete').val());
 
             $('.div-bg-modal-4').css("display","flex");
         });
 
         $('.div-table-info').on('click', '.delete', function(){
-            alert('hi delete info bookmark open');
+            // alert('hi delete info bookmark open');
 
             $('.confirm-delete').val($(this).val());
 
-            alert('info bookmark id to delete: ' + $('.confirm-delete').val());
+            // alert('info bookmark id to delete: ' + $('.confirm-delete').val());
 
             $('.div-bg-modal-4').css("display","flex");
         });
 
         $('.confirm-delete').on('click', function(){
-            alert('hi confirm delete click');
+            // alert('hi confirm delete click');
             var bookmarkType = '';
             var bookmarkTypeID = $(this).val();
             var bookmarkID = 0;
 
             if (bookmarkTypeID.indexOf("post-") >= 0) {
-                alert("hi type post");
+                // alert("hi type post");
                 bookmarkType = "post";
                 bookmarkID = parseInt(bookmarkTypeID.replace("post-", ""));
-                alert("bookmarkType: " + bookmarkType);
-                alert("bookmarkID: " + bookmarkID.toString());
+                // alert("bookmarkType: " + bookmarkType);
+                // alert("bookmarkID: " + bookmarkID.toString());
             }
             else if (bookmarkTypeID.indexOf("info-") >= 0) {
-                alert("hi type info");
+                // alert("hi type info");
                 bookmarkType = "info";
                 bookmarkID = parseInt(bookmarkTypeID.replace("info-", ""));
-                alert("bookmarkType: " + bookmarkType);
-                alert("bookmarkID: " + bookmarkID.toString());
+                // alert("bookmarkType: " + bookmarkType);
+                // alert("bookmarkID: " + bookmarkID.toString());
             }
 
             $.ajax({
@@ -235,13 +231,13 @@
                 },
                 type: 'POST',
                 success: function(result){
-                    alert("deleteBookmark: success");
+                    // alert("deleteBookmark: success");
 
                     $('.div-bg-modal-4').css("display","none");
                     $('.div-table-post').html(result);
                 },
                 error: function(result){
-                    alert("deleteBookmark: failure");
+                    // alert("deleteBookmark: failure");
                 }
             })
         });

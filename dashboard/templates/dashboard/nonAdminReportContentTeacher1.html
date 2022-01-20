@@ -1,82 +1,137 @@
-<div class="div-grid-game">
-    <article id="TotalNoOfPlays">
-        <div class="div-header">
-            Jumlah Sesi Permainan
-        </div>
-        <div class="div-data">
-            <div class="div-data-value">
-                {{ playCount }}
-            </div>
-            <div class="div-data-subtitle">
-                sesi
-            </div>
-        </div>
-    </article>
-    <article id="AvgSessionScore">
-        <div class="div-header">
-            Purata Markah/Sesi
-        </div>
-        <div class="div-data">
-            <div class="div-data-value">
-                {{ avgSessionScore }}
-            </div>
-            <div class="div-data-subtitle">
-                markah
-            </div>
-        </div>
-    </article>
-    <article id="AvgSessionHintsUsed">
-        <div class="div-header">
-            Purata Petunjuk Digunakan/Sesi
-        </div>
-        <div class="div-data">
-            <div class="div-data-value">
-                {{ avgHintsUsed }}
-            </div>
-            <div class="div-data-subtitle">
-                petunjuk
-            </div>
-        </div>
-    </article>
-    <article id="AvgSessionTimeTaken">
-        <div class="div-header">
-            Purata Masa Diambil/Sesi
-        </div>
-        <div class="div-data">
-            <div class="div-data-value">
-                {{ avgSessionTimeTaken }}
-            </div>
-        </div>
-    </article>
-    <article id="LastPlayedTime">
-        <div class="div-header">
-            Sesi Terkini
-        </div>
-        <div class="div-data">
-            <div class="div-data-value">
-                <!-- 12:00PM, 29/09/2021 -->
-                {{ lastPlayedTime|date:"d/m/Y, h:iA" }}
-            </div>
-        </div>
-    </article>
-    <div class="div-chart-container">
-        <canvas id="MostPlayedField">
-            <!-- 5 Bidang Kerjaya Paling Kerap Dimainkan -->
-        </canvas>
-    </div>
-    <div class="div-chart-container">
-        <canvas id="AvgSessionScoreByField">
-            <!-- 5 Purata Markah per Sesi Tertinggi berdasarkan Bidang Kerjaya -->
-        </canvas>
-    </div>
-    <div class="div-chart-container">
-        <canvas id="AvgSessionHintsUsedByField">
-            <!-- 5 Purata Petunjuk Digunakan per Sesi Terendah berdasarkan Bidang Kerjaya -->
-        </canvas>
-    </div>
-    <div class="div-chart-container">
-        <canvas id="AvgSessionTimeTakenByField">
-            <!-- 5 Purata Masa Diambil per Sesi Terpantas berdasarkan Bidang Kerjaya -->
-        </canvas>
-    </div>
+<p class="p-filteredFormID" style="display: none;">{{ filtered_form.id }}</p>
+
+<div class="div-filter-game">
+    <form type="get" action="." class="form-game-perf">
+        Pilih tingkatan:
+        <select name="tingkatan" id="student-form">
+            {% if filtered_form.name != 'NA' %}
+                <option value="1">Semua</option>
+                {% for form in allForms %}
+                    {% if form.id == filtered_form.id %}
+                        <option value="{{ form.id }}" selected="selected">{{ form.name }}</option>
+                    {% else %}
+                        <option value="{{ form.id }}">{{ form.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <option value="1" selected="selected">Semua</option>
+                {% for form in allForms %}
+                    <option value="{{ form.id }}">{{ form.name }}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
+    </form>
 </div>
+
+{% if playCount > 0 %}
+    <div class="div-grid-game">
+        <article id="TotalPlayers">
+            <div class="div-header">
+                Jumlah Pemain
+            </div>
+            <div class="div-data">
+                <div class="div-data-value">
+                    {{ playersCnt }}
+                </div>
+                <div class="div-data-subtitle">
+                    pemain
+                    <a class="a-for-teacher" id="a-player-list">
+                        <i class="fas fa-info-circle"></i>
+                    </a>
+                </div>
+            </div>
+        </article>
+        <article id="TotalNoOfPlays">
+            <div class="div-header">
+                Jumlah Sesi Permainan
+            </div>
+            <div class="div-data">
+                <div class="div-data-value">
+                    {{ playCount }}
+                </div>
+                <div class="div-data-subtitle">
+                    sesi
+                </div>
+            </div>
+        </article>
+        <article id="AvgSessionScore">
+            <div class="div-header">
+                Purata Markah/Sesi
+            </div>
+            <div class="div-data">
+                <div class="div-data-value">
+                    {{ avgSessionScore }}
+                </div>
+                <div class="div-data-subtitle">
+                    markah
+                </div>
+            </div>
+        </article>
+        <article id="AvgSessionHintsUsed">
+            <div class="div-header">
+                Purata Petunjuk Digunakan/Sesi
+            </div>
+            <div class="div-data">
+                <div class="div-data-value">
+                    {{ avgHintsUsed }}
+                </div>
+                <div class="div-data-subtitle">
+                    petunjuk
+                </div>
+            </div>
+        </article>
+        <article id="AvgSessionTimeTaken">
+            <div class="div-header">
+                Purata Masa Diambil/Sesi
+            </div>
+            <div class="div-data">
+                <div class="div-data-value">
+                    {{ avgSessionTimeTaken }}
+                </div>
+            </div>
+        </article>
+        <article id="LastPlayedTime">
+            <div class="div-header">
+                Sesi Terkini
+            </div>
+            <div class="div-data">
+                <div class="div-data-value">
+                    <!-- 12:00PM, 29/09/2021 -->
+                    {{ lastPlayedTime|date:"d/m/Y, h:iA" }}
+                </div>
+            </div>
+        </article>
+        <div class="div-chart-container">
+            <canvas id="MostPlayedField">
+                <!-- 5 Bidang Kerjaya Paling Kerap Dimainkan -->
+            </canvas>
+        </div>
+        <div class="div-chart-container">
+            <canvas id="AvgSessionScoreByField">
+                <!-- 5 Purata Tertinggi Markah per Sesi berdasarkan Bidang Kerjaya -->
+            </canvas>
+        </div>
+        <div class="div-chart-container">
+            <canvas id="AvgSessionHintsUsedByField">
+                <!-- 5 Purata Terendah Petunjuk Digunakan per Sesi berdasarkan Bidang Kerjaya -->
+            </canvas>
+        </div>
+        <div class="div-chart-container">
+            <canvas id="AvgSessionTimeTakenByField">
+                <!-- 5 Purata Terpantas Masa Diambil per Sesi berdasarkan Bidang Kerjaya -->
+            </canvas>
+        </div>
+    </div>
+
+    <div class="div-buttons">
+        <button id="downloadPDF" class="btn download">Muat turun PDF</button>
+    </div>
+{% else %}
+    <div class="div-no-career">
+        {% if filtered_form.name != 'NA' %}
+            Tiada rekod sesi kuiz permainan bagi tingkatan {{ filtered_form.name }}.
+        {% else %}
+            Tiada rekod sesi kuiz permainan bagi mana-mana tingkatan.
+        {% endif %}
+    </div>
+{% endif %}

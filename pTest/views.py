@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from .forms import TestForm
 
-
 def userid(user_id):
     if 'S' in user_id:
         dashboardNav = " Pelajar"
@@ -72,10 +71,13 @@ def getQuestion(cnt_quest, allQuestionsPerPersonality, remainingQuestions):
             chosenQuestionRecord = allQuestionsPerPersonality.first()
         else:
             # chosenQuestionRecord = remainingQuestions.filter(id=randomID).first()
-            chosenQuestionRecord = remainingQuestions
+            chosenQuestionRecord = remainingQuestions.first()
         
         if chosenQuestionRecord:
             return chosenQuestionRecord
+
+personality_id = '1'
+sect_cnt_quest = '1'
 
 def testStart(request, user_type, user_id):
     currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
@@ -105,11 +107,7 @@ def testStart(request, user_type, user_id):
             currentTestStudent = pTest.models.StudentTester.objects.create(
                 ID_id=user_id
             )
-        #-------
         currentPlayerUsername = currentTestStudent.ID.ID.username #give username from User model
-        # sectionQuestion = pTest.models.Personality.objects.all()
-        # allQuestions = pTest.models.Questions.objects.all()
-        # allQuestionsPerSection = pTest.models.Questions.objects.filter(section_id = section_id)
 
         # AJAX:
         #   if click "Seterusnya" and go through ajax request to this url with next cnt ques for new question
@@ -129,54 +127,81 @@ def testStart(request, user_type, user_id):
                     print("~~~") #TEST
                     cnt_quest = request.session['cnt_quest']
         else:
+            print("initial")
             cnt_quest = '1' #when load (GET) ques 1
+       
+        global personality_id
+        global sect_cnt_quest
 
-        # real one step (kiv)---------
-        #takes in all of that one student punya session per personality
-        allPersonality = pTest.models.Personality.objects.all()
-        personality_id = 1 #test
-        # currentPersonality = []
-        # allCurrStudentPersonalitySession = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = user_id).order_by('id')
-        allCurrStudentPersonalitySession = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = user_id, personalityID_id=personality_id).order_by('id')
+        allPersonality = pTest.models.Personality.objects.get(id=int(personality_id))
+        allCurrStudentPersonalitySession = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = user_id).order_by('id')
         cntStudentPersonalitySession = allCurrStudentPersonalitySession.count()
+        allQuestionsPerPersonality = pTest.models.Questions.objects.filter(section_id=int(personality_id))
+        allQuestPersonalityList = len(list(allQuestionsPerPersonality))
+        next_personality_id = str(int(personality_id) + 1) #test
+        next_sect_cnt_quest = str(int(sect_cnt_quest) + 1) #test
+        next_cnt_quest = str(int(cnt_quest) + 1)
+
+        if int(cnt_quest) > allQuestPersonalityList:
+                personality_id = next_personality_id
+                cnt_quest = '1'
+                sect_cnt_quest = next_sect_cnt_quest
+                allPersonality = pTest.models.Personality.objects.get(id=int(personality_id))
+                allQuestionsPerPersonality = pTest.models.Questions.objects.filter(section_id=int(personality_id))
+                allQuestPersonalityList = len(list(allQuestionsPerPersonality))
+                next_cnt_quest = str(int(cnt_quest) + 1)
+                next_personality_id = str(int(personality_id) + 1) #test
+                # print('dah')
+                # print('personality id ' + str(personality_id))
+
+        # if int(sect_cnt_quest) < 6:
+        #     if int(cnt_quest) > allQuestPersonalityList:
+        #         personality_id = next_personality_id
+        #         cnt_quest = '1'
+        #         sect_cnt_quest = next_sect_cnt_quest
+        #         allPersonality = pTest.models.Personality.objects.get(id=int(personality_id))
+        #         allQuestionsPerPersonality = pTest.models.Questions.objects.filter(section_id=int(personality_id))
+        #         allQuestPersonalityList = len(list(allQuestionsPerPersonality))
+        #         next_cnt_quest = str(int(cnt_quest) + 1)
+        #         next_personality_id = str(int(personality_id) + 1) #test
+        #         # request.session['cntQuestList'] = []
+        #         print('dah')
+        #         print('personality id ' + str(personality_id))
+        # else:
+        #     if int(cnt_quest) > allQuestPersonalityList:
+        #         personality_id = next_personality_id
+        #         cnt_quest = '1'
+        #         sect_cnt_quest = next_sect_cnt_quest
+        #         allPersonality = pTest.models.Personality.objects.get(id=int(personality_id))
+        #         allQuestionsPerPersonality = pTest.models.Questions.objects.filter(section_id=int(personality_id))
+        #         allQuestPersonalityList = len(list(allQuestionsPerPersonality))
+        #         next_cnt_quest = str(int(cnt_quest) + 1)
+        #         next_personality_id = str(int(personality_id) + 1) #test
+        #         print('dah')
+        #         print('personality id ' + str(personality_id))
 
         # Nak buat session dlm db
         if cntStudentPersonalitySession > 0:
             #if cnt_ques = 1 for GET request je (initial load), bukannya create waktu refresh page after submit first ques gak
             #note: if refresh page at first ques, still create a new record (redundancy? but the old one has default values)
-            if cnt_quest == '1' and request.method != 'POST': 
-                currentStudentPersonalitySession = pTest.models.StudentPersonalitySession.objects.create(
-                    studentID_id=user_id,
-                    personalityID_id=personality_id
-                )
+            if cnt_quest == '1' and request.method != 'POST':
+                if sect_cnt_quest == '1':
+                    currentStudentPersonalitySession = pTest.models.StudentPersonalitySession.objects.create(
+                        studentID_id=user_id
+                    )
+                else:
+                    currentStudentPersonalitySession = allCurrStudentPersonalitySession.last()
             else:
                 currentStudentPersonalitySession = allCurrStudentPersonalitySession.last()
         else:
             currentStudentPersonalitySession = pTest.models.StudentPersonalitySession.objects.create(
-                studentID_id=user_id,
-                personalityID_id=personality_id
+                studentID_id=user_id
             )
 
-        #currentStudentAllPersonalityIDList akan filter n amik satu je (current student tu and personality id dia), arranged by id
-        currentStudentAllPersonalityIDList = list(pTest.models.StudentPersonalitySession.objects.filter(studentID_id=user_id,personalityID_id = personality_id).values_list('id', flat=True).order_by('id'))
+        currentStudentAllPersonalityIDList = list(pTest.models.StudentPersonalitySession.objects.filter(studentID_id=user_id).values_list('id', flat=True).order_by('id'))
         currentStudentAllPersonalityIDList.append(currentStudentPersonalitySession.id)
         currentStudentAllPersonalityRecords = pTest.models.StudentPersonalitySession.objects.filter(id__in=currentStudentAllPersonalityIDList)
         
-        # values_list with flat=True, return single value exp:[1,2,..]
-        currentStudentTotalScorePerSectionList = list(currentStudentAllPersonalityRecords.values_list('currentSectionScore', flat=True))
-        # ------------------------------------ test
-        currentStudentTotalScorePerSection = 0
-        for score in currentStudentTotalScorePerSectionList:
-            currentStudentTotalScorePerSection += score
-        # ------------------------------------
-
-        # allQuestions = pTest.models.Questions.objects.get()
-        allQuestionsPerPersonality = pTest.models.Questions.objects.filter(section_id=personality_id)
-        # allQuestionsPerPersonality = pTest.models.Questions.objects.get()
-        next_personality_id = str(int(personality_id) + 1) #test
-        next_cnt_quest = str(int(cnt_quest) + 1)
-        # kiv
-
         #First quest:
         #If bru first soalan (initial load page for first quest) / refresh initial page tanpa jawab lagi
         #   If the essential keys exists (subset) in current session keys:
@@ -190,36 +215,41 @@ def testStart(request, user_type, user_id):
         #           bcs of cookies in browser.
         #     Solution: use diff browser if user want to take the test simultaneously on the same device bc of the different cookies
 
-        # required_keys = frozenset(('attendedQuestions','cntQuesList','user_id','field_id','cnt_ques','hasSubmittedList',
-        # 'hasAnsweredList', 'isCorrectList', 'hintsUsedList', 'randomHintID')) <- min's reference
-        required_keys = frozenset(('answeredQuestions','cntQuestList','user_id','cnt_quest','hasSubmittedList','hasAnsweredList','isCorrectList')) #frozenset makes the values interchangable (values can be iterable, in this case: list)
+        required_keys = frozenset(('answeredQuestions','cntQuestList','user_id','cnt_quest','personality_id','sect_cnt_quest','hasSubmittedList','hasAnsweredList','isCorrectList')) #frozenset makes the values interchangable (values can be iterable, in this case: list)
 
         if cnt_quest == '1' and request.method == 'GET':
-            if required_keys <= request.session.keys():
-                request.session['answeredQuestions'] = []
-                request.session['cntQuestList'] = []
-                request.session['user_id'] = user_id
-                request.session['personality_id'] = personality_id #test
-                request.session['cnt_quest'] = cnt_quest 
-                request.session['hasSubmittedList'] = []
-                request.session['hasAnsweredList'] = []
-                request.session['isCorrectList'] = []
-            else:
-                request.session['answeredQuestions'] = []
-                request.session['cntQuestList'] = []
-                request.session['user_id'] = user_id
-                request.session['personality_id'] = personality_id #test
-                request.session['cnt_quest'] = cnt_quest
-                request.session['hasSubmittedList'] = []
-                request.session['hasAnsweredList'] = []
-                request.session['isCorrectList'] = []
+            # if sect_cnt_quest == 1:
+                if required_keys <= request.session.keys():
+                    request.session['answeredQuestions'] = []
+                    request.session['cntQuestList'] = []
+                    request.session['user_id'] = user_id
+                    request.session['personality_id'] = personality_id #test
+                    request.session['cnt_quest'] = cnt_quest
+                    request.session['sect_cnt_quest'] = sect_cnt_quest #test 
+                    request.session['hasSubmittedList'] = []
+                    request.session['hasAnsweredList'] = []
+                    request.session['isCorrectList'] = []
+
+                    request.session['cntQuestSectList'] = [] #test
+                else:
+                    request.session['answeredQuestions'] = []
+                    request.session['cntQuestList'] = []
+                    request.session['user_id'] = user_id
+                    request.session['personality_id'] = personality_id #test
+                    request.session['cnt_quest'] = cnt_quest
+                    request.session['sect_cnt_quest'] = sect_cnt_quest #test
+                    request.session['hasSubmittedList'] = []
+                    request.session['hasAnsweredList'] = []
+                    request.session['isCorrectList'] = []
+
+                    request.session['cntQuestSectList'] = [] #test
 
         answeredQuestionsIDsList = request.session['answeredQuestions']
         remainingQuestions = allQuestionsPerPersonality #for getRandomQuestion condition cnt_ques = 1
         remainingQuestionsIDs = [] #[TEST] for display in template; if cnt_ques=1 - [], else - take from ifelse below
 
-        #if cntQuestList > 1 (not the first quest)
         if len(request.session['cntQuestList']) > 0:
+            print(request.session['cntQuestList'])
             #if current cnt_quest same as the latest cnt_quest in list ((GET) page refreshed by user OR (POST) after submit while displaying answers)
             #display same quest
             if cnt_quest == request.session['cntQuestList'][-1]:
@@ -244,10 +274,7 @@ def testStart(request, user_type, user_id):
             nextQuestionRecord = getQuestion(cnt_quest, allQuestionsPerPersonality, remainingQuestions)
             request.session['answeredQuestions'].append(nextQuestionRecord.id)
             answeredQuestionsIDsList = request.session['answeredQuestions']
-
-        questionText = nextQuestionRecord.questionText #kiv
-        # questionTextOnly = ""
-
+            
         isCorrect = False
         isClicked = 'False'
         hasSubmitted = False
@@ -258,7 +285,7 @@ def testStart(request, user_type, user_id):
         #Utk method post(hantar data ke db)
         if request.method == 'POST':
             if 'requestType' in request.POST:
-                #utk btn next (seterusnya)
+                #utk btn semak jawapan
                 if request.POST['requestType'] == 'Next':
                     isClicked = 'True' #dah tekan
                     # currentFieldPlayerSession.save()
@@ -270,16 +297,16 @@ def testStart(request, user_type, user_id):
                         #or update +timeLimit sekali (SALAH)
                     }
                     return JsonResponse(result)
-                
-                # ni utk show result (semak jawapan) button 
-                # elif request.POST['requestType'] == 'updateStatusSessionRecord':
-                #     currentStudentPersonalitySession.isFinish = True
-                #     currentStudentPersonalitySession.save()
 
-                #     return HttpResponse("Success")
+                # ni utk show result (semak jawapan) button 
+                elif request.POST['requestType'] == 'updateStatusSessionRecord':
+                    currentStudentPersonalitySession.isFinish = True
+                    currentStudentPersonalitySession.save()
+
+                    return HttpResponse("Success")
             else:
-                # selain next btn
-                print("Hi")
+                # klu x hantar request type data in ajax
+                # print("Hi")
                 hasSubmitted = True
                 #import from form.py
                 form = TestForm(data=request.POST, answers=ANSWER_CHOICES)
@@ -291,16 +318,29 @@ def testStart(request, user_type, user_id):
                     # if tekan jawapan/pilihan
                     if filledList['isClicked'] == 'True':
                         hasAnswered = True
-                        for choice in enumerate(ANSWER_CHOICES): #enumerate adds a counter to an iterable and returns it in a form of enumerating object -> canuse directly in loop or list
-                                #choice[0] (value 'Ya')
-                                #choice[1] (value 'Tidak')
-
-                            if filledList['answer_choices'] == choice[0]:
-                                isCorrect = True
-                                currentStudentPersonalitySession.currentSectionScore += 1
-                    
+                        if filledList['answer_choices'] == '1':
+                            isCorrect = True
+                            if int(personality_id) == 1:
+                                currentStudentPersonalitySession.rSecScore += 1
+                                print('r')
+                            elif int(personality_id) == 2:
+                                currentStudentPersonalitySession.aSecScore += 1
+                                print('a')
+                            elif int(personality_id) == 3:
+                                currentStudentPersonalitySession.iSecScore += 1
+                                print('i')
+                            elif int(personality_id) == 4:
+                                currentStudentPersonalitySession.sSecScore += 1
+                                print('s')
+                            elif int(personality_id) == 5:
+                                currentStudentPersonalitySession.eSecScore += 1
+                                print('e')
+                            elif int(personality_id) == 6:
+                                currentStudentPersonalitySession.cSecScore += 1
+                                print('c')
                     # if filledList['answer_choices'] is None, tak jawab OR mmg tak jawab (tertekan next without click answer)
                     # so hasAnswered remains False and x dpt markah
+                    currentStudentPersonalitySession.save()
 
                     # TEST
                     request.session['hasSubmittedList'].append(hasSubmitted)
@@ -308,19 +348,15 @@ def testStart(request, user_type, user_id):
                     request.session['isCorrectList'].append(isCorrect)
 
                     context = {
+                        'user_type': user_type,
                         'user_id': user_id,
                         'form': form,
                         'currentStudentPersonalitySession': currentStudentPersonalitySession,
-                        # 'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
                         'nextQuestionRecord': nextQuestionRecord,
-                        # 'nextAnswerRecords': nextAnswerRecords,
-                        # 'nextHintRecords': nextHintRecords,
                         'cnt_quest': int(cnt_quest),
                         'isCorrect': isCorrect,
-                        # 'field_id': field_id,
-                        # 'questionTextOpt': questionTextOpt,
-                        # 'questionTextOnly': questionTextOnly,
-                        # 'chosenAnswerText': chosenAnswerText,
+                        'personality_id' : int(personality_id), #test
+                        'sect_cnt_quest' : int(sect_cnt_quest), #test
                         'hasAnswered': hasAnswered,
                         'hasSubmitted': hasSubmitted,
                         'sessionList': str(request.session['answeredQuestions']), #test
@@ -330,54 +366,45 @@ def testStart(request, user_type, user_id):
                         'hasAnsweredList': str(request.session['hasAnsweredList']), #test
                         'isCorrectList': str(request.session['isCorrectList']), #test
                         'remainingQuestionsIDs': remainingQuestionsIDs, #test
-                        # 'cntHint': cntHint,
-                        # 'randomHint': randomHint,
-                        # 'hintsUsedList': str(request.session['hintsUsedList']), test
-                        'isClicked': filledList['isClicked']
+                        'isClicked': filledList['isClicked'],
+                        'allpersonality':allPersonality,
+                        'next_personality_id':next_personality_id, #test
+                        'next_sect_cnt_quest':next_sect_cnt_quest #test
                     }
-
-                    # return render(request, 'quiz/quizPlay2.html', context)
                     return render(request, 'pTest/testPlay2.html', context)
         else:
             # method GET(display)/initial/other than POST/
             form = TestForm(answers=ANSWER_CHOICES)
             if request.is_ajax():
                 context = {
+                    'user_type': user_type,
                     'user_id': user_id,
                     'form': form,
                     'currentStudentPersonalitySession': currentStudentPersonalitySession,
-                    # 'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
                     'nextQuestionRecord': nextQuestionRecord,
-                    # 'nextAnswerRecords': nextAnswerRecords,
-                    # 'nextHintRecords': nextHintRecords,
                     'cnt_quest': int(cnt_quest),
                     'isCorrect': isCorrect,
-                    # 'field_id': field_id,
-                    # 'questionTextOpt': questionTextOpt,
-                    # 'questionTextOnly': questionTextOnly,
-                    # 'chosenAnswerText': chosenAnswerText,
+                    'personality_id' : int(personality_id), #test
+                    'sect_cnt_quest' : int(sect_cnt_quest), #test
                     'hasAnswered': hasAnswered,
                     'hasSubmitted': hasSubmitted,
                     'sessionList': str(request.session['answeredQuestions']), #test
-                    'cntQuesList': str(request.session['cntQuesList']),
+                    'cntQuestList': str(request.session['cntQuestList']),
                     'next_cnt_quest': next_cnt_quest,
                     'hasSubmittedList': str(request.session['hasSubmittedList']), #test
                     'hasAnsweredList': str(request.session['hasAnsweredList']), #test
                     'isCorrectList': str(request.session['isCorrectList']), #test
                     'remainingQuestionsIDs': remainingQuestionsIDs, #test
-                    # 'cntHint': cntHint,
-                    # 'randomHint': randomHint,
-                    # 'hintsUsedList': str(request.session['hintsUsedList']), #test
                     'isClicked': isClicked,
-                    'allPersonality': allPersonality
+                    'allPersonality': allPersonality,
+                    'next_personality_id':next_personality_id, #test
+                    'next_sect_cnt_quest':next_sect_cnt_quest #test
                 }
-                # return render(request, 'quiz/quizPlay2.html', context)
                 return render(request, 'pTest/testPlay2.html', context)
             else: 
                 context = {
                     'dashboardNav': userid(user_id),
                     'username': currentPlayerUsername,
-                    # 'currentAvatarDetailsObject': currentAvatarDetailsObject,
                     'user_type': user_type,
                     'user_id': user_id,
                     'test': urlTest,
@@ -388,16 +415,11 @@ def testStart(request, user_type, user_id):
                     'logout': urlLogout,
                     'form': form,
                     'currentStudentPersonalitySession': currentStudentPersonalitySession,
-                    # 'currentPlayerTotalScoreAllField': currentPlayerTotalScoreAllField,
                     'nextQuestionRecord': nextQuestionRecord,
-                    # 'nextAnswerRecords': nextAnswerRecords,
-                    # 'nextHintRecords': nextHintRecords,
                     'cnt_quest': int(cnt_quest),
                     'isCorrect': isCorrect,
-                    # 'field_id': field_id,
-                    # 'questionTextOpt': questionTextOpt,
-                    # 'questionTextOnly': questionTextOnly,
-                    # 'chosenAnswerText': chosenAnswerText,
+                    'personality_id' : int(personality_id), #test
+                    'sect_cnt_quest' : int(sect_cnt_quest), #test
                     'hasAnswered': hasAnswered,
                     'hasSubmitted': hasSubmitted,
                     'sessionList': str(request.session['answeredQuestions']), #test
@@ -407,15 +429,12 @@ def testStart(request, user_type, user_id):
                     'hasAnsweredList': str(request.session['hasAnsweredList']), #test
                     'isCorrectList': str(request.session['isCorrectList']), #test
                     'remainingQuestionsIDs': remainingQuestionsIDs, #test
-                    # 'cntHint': cntHint,
-                    # 'randomHint': randomHint,
-                    # 'hintsUsedList': str(request.session['hintsUsedList']), #test
                     'isClicked': isClicked,
-                    'allPersonality': allPersonality
+                    'allPersonality': allPersonality,
+                    'next_personality_id':next_personality_id, #test
+                    'next_sect_cnt_quest':next_sect_cnt_quest #test
                 }
-                # return render(request, 'quiz/quizPlay.html', context)
                 return render(request, 'pTest/testPlay.html', context)
-                # return render(request, 'pTest\studentTest.html', context)
         
     #parent and teacher
     else:
@@ -433,6 +452,93 @@ def testStart(request, user_type, user_id):
             'logout': urlLogout
         }
         return render(request, 'pTest\pTestNonStudent.html', context)
+
+def testResult (request, user_type, user_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    username = currentUserDetail.username
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    #if student
+    if user_type == 'pelajar' and 'S' in user_id:
+
+        allAttempts = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = user_id).order_by('id')
+        latestResult = allAttempts.last()
+        allCodeResult = [
+            latestResult.rSecScore,
+            latestResult.aSecScore,
+            latestResult.iSecScore,
+            latestResult.sSecScore,
+            latestResult.eSecScore,
+            latestResult.cSecScore
+        ]
+        print(allCodeResult)
+        
+        name = [
+            'Realistik',
+            'Artistik',
+            'Investigatif',
+            'Sosial',
+            'Enterprising',
+            'Conventional'
+        ]
+        test = allCodeResult
+        test2 = sorted(test, reverse=True)[:3]
+        print(test2)
+        
+        # check = 0
+        # count = 1
+        # for i in range(1, len(allCodeResult)+1):
+        #     if (count < len(allCodeResult)):
+        #         if(check != allCodeResult[len(allCodeResult)]):
+        #             print(allCodeResult[len(allCodeResult) - i], end = " ")
+        #             check = allCodeResult[len(allCodeResult) - i]
+        #             count += 1
+        #     else:
+        #         break
+ 
+        context = {
+            'dashboardNav': userid(user_id), 
+            'user_id': user_id,
+            'user_type':user_type, 
+            'username': username,
+            'test': urlTest, 
+            'blog': urlBlog, 
+            'quiz': urlQuiz, 
+            'search': urlSearch, 
+            'dashboard':urlDashboard, 
+            'logout': urlLogout,
+            'latestResult' : latestResult,
+            'allCodeResult' : allCodeResult,
+            'test2' : test2
+        }
+        return render(request, 'pTest\studentResult.html', context)
+
+    #parent and teacher
+    else:
+        context = {
+            'dashboardNav': userid(user_id), 
+            'user_id': user_id,
+            'user_type':user_type,  
+            'username': username,
+            'test': urlTest, 
+            'blog': urlBlog, 
+            'quiz': urlQuiz, 
+            'search': urlSearch, 
+            'dashboard':urlDashboard, 
+            'logout': urlLogout
+        }
+        return render(request, 'pTest\nonStudentResult.html', context)
+
 
 def testAdmin(request, user_id):
     context = {

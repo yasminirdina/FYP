@@ -11,6 +11,7 @@ urlpatterns = [
     #non-admin 
     path('<user_type>/<user_id>/', views.testMain, name='index-nonadmin'),
     path('<user_type>/<user_id>/mula-ujian', views.testStart, name='test-student'),
+    path('<user_type>/<user_id>/keputusan-ujian', views.testResult, name='test-result'),
 
     #student 
     # path('penjaga/<user_id>/', views.testNonadmin, name='index-nonadmin'),

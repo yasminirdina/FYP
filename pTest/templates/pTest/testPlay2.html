@@ -1,14 +1,16 @@
-<!-- <p class="p-points_2" style="display: none;">{{ currentStudentPersonalitySession.currentSectionScore }}</p> -->
+<p class="currPersonalityPoints" style="display: none;">{{ currentStudentPersonalitySession.currentSectionScore }}</p>
 <!-- <p class="p-totalPoints_2" style="display: none;">{{ currentPlayerTotalScoreAllField }}</p> -->
-<p class="next_cnt_quest" style="display: none;">{{ next_cnt_quest }}</p>
 <!-- <p class="p-timeLimit" style="display: none;">{{ nextQuestionRecord.timeLimit }}</p> -->
+<p class="personality_id" style="display: none;">{{ personality_id }}</p>
+<p class="next_personality_id" style="display: none;">{{ next_personality_id }}</p>
+<p class="next_cnt_quest" style="display: none;">{{ next_cnt_quest }}</p>
 <p class="cnt_quest" style="display: none;">{{ cnt_quest }}</p>
 <p class="hasSubmitted" style="display: none;">{{ hasSubmitted }}</p>
 <p class="isCorrect" style="display: none;">{{ isCorrect }}</p>
 
-<!-- <div class="div-outer">
-    <div id="hud"> -->
-        <!-- <div class="hud-item">
+<div class="div-outer">
+    <div id="hud">
+        <div class="hud-item">
             <p id="progressText" class="hud-prefix">
                 Soalan {{ cnt_quest }} / 10
             </p>
@@ -17,13 +19,13 @@
                     <div id="progressBarFull"></div>
                 </div>
             </h1>
-        </div> -->
+        </div>
         
         <!-- display current score (kiv) -->
-        <!-- <div class="hud-item">
+        <div class="hud-item">
             <p class="hud-prefix">
                 Markah Semasa
-            </p> -->
+            </p>
             <!-- if choose correct ans (in this case tukar choose yes) -->
             <!-- display current score -->
             <!-- {% if isCorrect == True %}
@@ -34,69 +36,113 @@
                 <h1 class="hud-main-text score" id="score">
                     {{ currentStudentPersonalitySession.currentSectionScore }}
                 </h1>
-            {% endif %}
-        </div> -->
-    <!-- </div> -->
-
-    <div class="test-container">
-    <!-- question -->
-    <div class="div-question"></div>
-        <h2 class="personality">Bahagian Personaliti: Realistik</h2>
-        <h1 class="question" id="question">
-            {{ nextQuestionRecord.questionText }}
-        </h1>
+            {% endif %} -->
+        </div>
     </div>
 
-    <!-- choices form -->
-    <form id="TestForm" class="TestForm" action="{% url 'test:test-student' user_type user_id %}" method="POST">
-        <div class="div-outer-choice">
-            {% csrf_token %}
-            <input type='hidden' id='isClicked' name='isClicked' value='False'/>
-
-            {% for answer in form.answer_choices %}
-                <div class="choice-container no-hover">
-                    <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}" disabled/>
-                    <div class="choice-text">
-                        <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
-                    </div>
-                </div>
-            {% endfor %}
+    <div class="test-container">
+        <!-- question -->
+        <div class="div-question">
+            <h2 class="personality">Bahagian Personaliti: {{ allPersonality }}</h2>
+            <h1 class="question" id="question">
+                {{ nextQuestionRecord.questionText }}
+            </h1>
         </div>
-    </form>
+
+        <!-- choices form -->
+        <form id="TestForm" class="TestForm" action="{% url 'test:test-student' user_type user_id %}" method="POST">
+            <div class="div-outer-choice">
+                <!-- In any template that uses a POST form, use the csrf_token tag inside the <form> element if the form is for an internal URL -->
+                {% csrf_token %}
+                <input type='hidden' id='isClicked' name='isClicked' value='False'/>
+
+                {% for answer in form.answer_choices %}
+                    <div class="choice-container">
+                        <input type="radio" name="answer_choices" value="{{ answer.data.value }}" id="{{ answer.id_for_label }}"/>
+                        <div class="choice-text">
+                            <label for="{{ answer.id_for_label }}">{{ answer.choice_label }}</label>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </form>
     </div>
 </div>
 
 <div class="div-buttons" id="div-buttons">
-    {% if cnt_quest < 10 %}
-        <button class="btn quit">
-            Tamatkan Ujian
-        </button>
-    <!-- dah reach end of quest tapi belum lagi submit -->
-    {% elif cnt_quest == 10 and hasSubmitted == False %}
-        <button class="btn quit">
-            Tamatkan Ujian
-        </button>
-    {% endif %}
-    
     {% if hasSubmitted == False %}
-    
-        <!-- <button class="btn next" id="btn-next"> -->
-        <button class="btn next">
-        <!-- <button class="btn test" onclick="test()"> -->
-            Seterusnya
-        </button>
+        {% if sect_cnt_quest == 1 %}
+            {% if cnt_quest > 1 %}
+                <button class="btn next" id="btn-next">
+                    Seterusnya
+                </button>
+                <button class="btn prev">
+                    Tamat Ujian
+                </button>
+            {% else %}
+                <button class="btn next" id="btn-next">
+                    Seterusnya
+                </button>
+            {% endif %}
 
-    {% elif hasSubmitted == True %}
-        {% if cnt_quest < 10 %}
-            <button class="btn next">
-                Seterusnya
+        {% elif sect_cnt_quest == 6 %}
+            {% if cnt_quest == 6 %}
+                <button class="btn resultTest">
+                    Tamat Ujian dan Lihat Keputusan
+                </button>
+            {% else %}
+                <button class="btn next" id="btn-next">
+                    Seterusnya
+                </button>
+                <button class="btn prev">
+                    Tamat Ujian
+                </button>
+            {% endif %}
+
+        {% else %}
+            <button class="btn next" id="btn-next">
+                    Seterusnya
             </button>
             <button class="btn prev">
-                Kembali
+                Tamat Ujian
             </button>
-        {% elif cnt_quest == 10 %}
-            <button class="btn showResult">
-                Lihat Keputusan
+        {% endif %}
+
+    {% elif hasSubmitted == True %}
+        {% if sect_cnt_quest == 1 %}
+            {% if cnt_quest > 1 %}
+                <button class="btn next" id="btn-next">
+                    Seterusnya
+                </button>
+                <button class="btn prev">
+                    Tamat Ujian
+                </button>
+            {% else %}
+                <button class="btn next" id="btn-next">
+                    Seterusnya
+                </button>
+            {% endif %}
+
+        {% elif sect_cnt_quest == 6 %}
+            {% if cnt_quest == 6 %}
+                <button class="btn resultTest">
+                    Tamat Ujian dan Lihat Keputusan
+                </button>
+            {% else %}
+                <button class="btn next" id="btn-next">
+                    Seterusnya
+                </button>
+                <button class="btn prev">
+                    Tamat Ujian
+                </button>
+            {% endif %}
+
+        {% else %}
+            <button class="btn next" id="btn-next">
+                    Seterusnya
+            </button>
+            <button class="btn prev">
+                Tamat Ujian
             </button>
         {% endif %}
     {% endif %}

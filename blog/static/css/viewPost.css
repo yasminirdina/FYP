@@ -533,7 +533,8 @@ input:focus::placeholder {color: transparent}
     grid-auto-flow: row;
     justify-items: center;
     align-items: center;
-    padding: 0 10px 10px;
+    padding: 10px;
+    gap: 10px;
     box-sizing: border-box;
 }
 
@@ -566,6 +567,7 @@ input:focus::placeholder {color: transparent}
 .div-related-title{
     text-align: center;
     font-size: 16px;
+    line-height: normal;
     height: fit-content;
     box-sizing: border-box;
 }

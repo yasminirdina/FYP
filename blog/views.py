@@ -133,23 +133,23 @@ def blogPostList(request, user_type, user_id):
     allBlogPosts = blog.models.BlogPost.objects.filter(delete=False).order_by('id') #no filter sidebar or no filter type or page refreshed
     allBlogCategoryBridge = blog.models.BlogPostCategory.objects.all().order_by('id')
     postIDswithImageList = list(blog.models.BlogPostImage.objects.all().order_by('id').values_list('blogPostID_id', flat=True))
-    print("postIDswithImageList: " + str(postIDswithImageList)) #Test
+    # print("postIDswithImageList: " + str(postIDswithImageList)) #Test
     allBlogPostImages = blog.models.BlogPostImage.objects.all().order_by('id')
-    print("allBlogPostImages:"  + str(allBlogPostImages)) #Test
+    # print("allBlogPostImages:"  + str(allBlogPostImages)) #Test
     toAddIds = []
     toShowURLs = []
 
     for image in allBlogPostImages:
-        print("image: " + str(image)) #Test
+        # print("image: " + str(image)) #Test
         if image.blogPostID_id not in toAddIds:
-            print("-- first picture for post id " + str(image.blogPostID_id)) #Test
+            # print("-- first picture for post id " + str(image.blogPostID_id)) #Test
             toAddIds.append(image.blogPostID_id)
             toShowURLs.append(image.blogPostImage)
-            print("updated toAddIds: " + str(toAddIds)) #Test
-            print("updated toShowURLs: " + str(toShowURLs)) #Test
+            # print("updated toAddIds: " + str(toAddIds)) #Test
+            # print("updated toShowURLs: " + str(toShowURLs)) #Test
     
     blogPostImages = blog.models.BlogPostImage.objects.filter(blogPostImage__in=toShowURLs)
-    print("blogPostImages: " + str(blogPostImages)) #Test
+    # print("blogPostImages: " + str(blogPostImages)) #Test
     allCategories = blog.models.Category.objects.all().order_by('id')
     allCategoriesByName = allCategories.order_by('name')
     allDatePublishedList = list(allBlogPosts.values_list('datePublished', flat=True).distinct().order_by('-datePublished'))
@@ -160,21 +160,21 @@ def blogPostList(request, user_type, user_id):
             allYearList.append(str(dp.year))
 
     if request.method == 'POST':
-        print("[POST]") #Test
+        # print("[POST]") #Test
         if request.is_ajax():
-            print("[ajax]") #Test
+            # print("[ajax]") #Test
             title_text = request.POST['title_text']
-            print("title_text: " + str(title_text)) #Test
+            # print("title_text: " + str(title_text)) #Test
             cat_selected = request.POST['cat_selected']
-            print("cat_selected: " + str(cat_selected)) #Test
+            # print("cat_selected: " + str(cat_selected)) #Test
             yearSelectedList = request.POST.getlist('yearSelectedList[]') #returned in string
-            print("yearSelectedList: " + str(yearSelectedList)) #Test
+            # print("yearSelectedList: " + str(yearSelectedList)) #Test
 
             # print("user_type: " + user_type)
             if user_type == 'admin':
                 typeSelected = request.POST['typeSelected']
-                print("typeSelected type string?: " + str(isinstance(typeSelected, str))) #Test
-                print("typeSelected: " + str(typeSelected)) #Test
+                # print("typeSelected type string?: " + str(isinstance(typeSelected, str))) #Test
+                # print("typeSelected: " + str(typeSelected)) #Test
 
             if request.POST['requestType'] == 'submitFormSidebar':
                 context = {
@@ -189,33 +189,33 @@ def blogPostList(request, user_type, user_id):
 
                 return render(request, 'blog/updateFormSidebar.html', context)
     else: #GET
-        print("[GET]") #Test
+        # print("[GET]") #Test
         if request.is_ajax():
-            print("[ajax]") #Test
-            print("requestType: " + request.GET.get('requestType')) #Test
+            # print("[ajax]") #Test
+            # print("requestType: " + request.GET.get('requestType')) #Test
             title_text = request.GET.get('title_text', None)
-            print("title_text: " + str(title_text)) #Test
+            # print("title_text: " + str(title_text)) #Test
             cat_selected = request.GET.get('cat_selected', None)
-            print("cat_selected: " + str(cat_selected)) #Test
+            # print("cat_selected: " + str(cat_selected)) #Test
             yearSelectedList = request.GET.getlist('yearSelectedList[]') #returned in string
-            print("yearSelectedList: " + str(yearSelectedList)) #Test
+            # print("yearSelectedList: " + str(yearSelectedList)) #Test
 
             if user_type == 'admin':
-                print("this is admin") #Test
+                # print("this is admin") #Test
                 typeSelected = request.GET.get('typeSelected', None)
-                print("typeSelected type string?: " + str(isinstance(typeSelected, str))) #Test
-                print("typeSelected: " + str(typeSelected)) #Test
+                # print("typeSelected type string?: " + str(isinstance(typeSelected, str))) #Test
+                # print("typeSelected: " + str(typeSelected)) #Test
 
             if title_text != '':
                 allBlogPosts = allBlogPosts.filter(title__icontains=title_text)
-                print("(1) after title filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
+                # print("(1) after title filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
 
             if cat_selected is not None:
                 if cat_selected != 'Semua':
                     cat_selected_ID = allCategories.get(name = cat_selected).id
                     postIDsList = list(allBlogCategoryBridge.filter(categoryID_id=cat_selected_ID).values_list('blogPostID_id', flat=True))
                     allBlogPosts = allBlogPosts.filter(id__in=postIDsList)
-                    print("(2) after category filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
+                    # print("(2) after category filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
             
             currentDatePublishedList = []
 
@@ -223,11 +223,11 @@ def blogPostList(request, user_type, user_id):
                 if '0' not in yearSelectedList:
                     for year in yearSelectedList:
                         for post in allBlogPosts:
-                            print("ID: " + str(post.id) + ", year: " + str(post.datePublished.year)) #Test
+                            # print("ID: " + str(post.id) + ", year: " + str(post.datePublished.year)) #Test
                             if year == str(post.datePublished.year):
                                 currentDatePublishedList.append(post.datePublished)
                     allBlogPosts = allBlogPosts.filter(datePublished__in=currentDatePublishedList)
-                    print("(3) after year filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
+                    # print("(3) after year filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
             
             if user_type == 'admin':
                 if typeSelected != 'Semua Artikel':
@@ -235,13 +235,13 @@ def blogPostList(request, user_type, user_id):
                         allBlogPosts = allBlogPosts.filter(show=True)
                     elif typeSelected == 'Draf':
                         allBlogPosts = allBlogPosts.filter(show=False)
-                    print("(4 admin) after type filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
+                    # print("(4 admin) after type filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
             else:
                 allBlogPosts = allBlogPosts.filter(show=True)
-                print("(4 non-admin) after type filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
+                # print("(4 non-admin) after type filter: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
             
             allBlogPosts = allBlogPosts.order_by('-datePublished', '-timePublished')
-            print("(5) after sort date & time desc: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
+            # print("(5) after sort date & time desc: " + str(list(allBlogPosts.values_list('id', flat=True)))) #Test
 
             if request.GET.get('requestType') == 'submitFormPostType_1':
                 context = {
@@ -273,18 +273,18 @@ def blogPostList(request, user_type, user_id):
 
                 return render(request, 'blog/updateContent.html', context)
         else: #Page is refreshed/initial load
-            print("[not ajax]") #Test
+            # print("[not ajax]") #Test
             title_text = request.GET.get('tajuk', None)
-            print("title_text: " + str(title_text)) #Test
+            # print("title_text: " + str(title_text)) #Test
             cat_selected = request.GET.get('kategori', None)
-            print("cat_selected: " + str(cat_selected)) #Test
+            # print("cat_selected: " + str(cat_selected)) #Test
             yearSelectedList = request.GET.getlist('tahun[]') #returned in string
-            print("yearSelectedList: " + str(yearSelectedList)) #Test
+            # print("yearSelectedList: " + str(yearSelectedList)) #Test
 
             if user_type == 'admin':
                 typeSelected = request.GET.get('jenis-artikel', None)
-                print("typeSelected type: " + str(isinstance(typeSelected, str))) #Test
-                print("typeSelected: " + str(typeSelected)) #Test
+                # print("typeSelected type: " + str(isinstance(typeSelected, str))) #Test
+                # print("typeSelected: " + str(typeSelected)) #Test
             else:
                 typeSelected = ""
 
@@ -374,6 +374,8 @@ def viewPost(request, user_type, user_id, post_id):
     allDatePublishedList = list(allBlogPosts.values_list('datePublished', flat=True).distinct().order_by('-datePublished'))
     allYearList = [0]
     
+    # print("postIDswithImageList: " + str(postIDswithImageList)) #Test
+
     for dp in allDatePublishedList:
         if dp.year not in allYearList:
             allYearList.append(dp.year)
@@ -537,7 +539,7 @@ def viewPost(request, user_type, user_id, post_id):
             # print(len(relatedPostIDsList)) #Test
             relatedPosts = allBlogPosts.filter(id__in=relatedPostIDsList)
         else:
-            print(len(relatedPostIDsList))
+            # print(len(relatedPostIDsList))
             while len(randomIDList) < limit:
                 randomID = randint(min_id, max_id)
                 # print("1: chosen randomID: " + str(randomID)) #Test
@@ -558,13 +560,32 @@ def viewPost(request, user_type, user_id, post_id):
     else:
         relatedPosts = allBlogPosts
  
-    # print("final related posts: " + str(list(relatedPosts.values_list('id', flat=True)))) #Test
+    finalRelatedPostIDList = list(relatedPosts.values_list('id', flat=True))
+    # print("final related posts: " + str(finalRelatedPostIDList)) #Test
+
+    #GET list of images to display
+    allRelatedPostImages = blog.models.BlogPostImage.objects.filter(blogPostID_id__in=finalRelatedPostIDList)
+    # print("allRelatedPostImages:"  + str(allRelatedPostImages)) #Test
+    toAddIds = []
+    toShowURLs = []
+
+    for image in allRelatedPostImages:
+        # print("image: " + str(image)) #Test
+        if image.blogPostID_id not in toAddIds:
+            # print("-- first picture for post id " + str(image.blogPostID_id)) #Test
+            toAddIds.append(image.blogPostID_id)
+            toShowURLs.append(image.blogPostImage)
+            # print("updated toAddIds: " + str(toAddIds)) #Test
+            # print("updated toShowURLs: " + str(toShowURLs)) #Test
+    
+    relatedPostImages = blog.models.BlogPostImage.objects.filter(blogPostImage__in=toShowURLs)
+    # print("blogPostImages: " + str(relatedPostImages)) #Test
 
     #COMMENT
     allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
     commentCount = allCurrentPostComments.count()
 
-    print("comment cnt: " + str(commentCount)) #Test
+    # print("comment cnt: " + str(commentCount)) #Test
 
     #for img-user in add comment (outer)
     if user_type == 'pelajar':
@@ -586,7 +607,7 @@ def viewPost(request, user_type, user_id, post_id):
     if request.method == 'POST':
         if request.is_ajax():
             if request.POST['requestType'] == 'deletePost':
-                print("hi")
+                # print("hi")
                 currentBlogCategoryBridgeIDList = list(blog.models.BlogPostCategory.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True))
                 currentBlogBookmarkIDList = list(blog.models.BlogPostBookmark.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True))
                 currentBlogCommentIDList = list(blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True))
@@ -596,46 +617,46 @@ def viewPost(request, user_type, user_id, post_id):
 
                 #delete blog category bridge records for current blog ID if current blog post exist in blogPostCategory table
                 if int(post_id) in currentBlogCategoryBridgeIDList:
-                    print("(1a) currentBlogCategoryBridgeIDList: " + str(currentBlogCategoryBridgeIDList)) #Test
+                    # print("(1a) currentBlogCategoryBridgeIDList: " + str(currentBlogCategoryBridgeIDList)) #Test
 
                     blog.models.BlogPostCategory.objects.filter(blogPostID_id=post_id).delete()
 
                     currentBlogCategoryBridgeIDList = list(blog.models.BlogPostCategory.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True)) #Test
-                    print("(1b) currentBlogCategoryBridgeIDList: " + str(currentBlogCategoryBridgeIDList)) #Test
+                    # print("(1b) currentBlogCategoryBridgeIDList: " + str(currentBlogCategoryBridgeIDList)) #Test
                 
                 #delete blog bookmark records for current blog ID if current blog post exist in blogPostBookmark table
                 if int(post_id) in currentBlogBookmarkIDList:
-                    print("(2a) currentBlogBookmarkIDList: " + str(currentBlogBookmarkIDList)) #Test
+                    # print("(2a) currentBlogBookmarkIDList: " + str(currentBlogBookmarkIDList)) #Test
 
                     blog.models.BlogPostBookmark.objects.filter(blogPostID_id=post_id).delete()
 
                     currentBlogBookmarkIDList = list(blog.models.BlogPostBookmark.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True)) #Test
-                    print("(2b) currentBlogBookmarkIDList: " + str(currentBlogBookmarkIDList)) #Test
+                    # print("(2b) currentBlogBookmarkIDList: " + str(currentBlogBookmarkIDList)) #Test
 
                 #delete blog comment records for current blog ID if current blog post exist in blogPostComment table
                 if int(post_id) in currentBlogCommentIDList:
-                    print("(3a) currentBlogCommentIDList: " + str(currentBlogCommentIDList)) #Test
+                    # print("(3a) currentBlogCommentIDList: " + str(currentBlogCommentIDList)) #Test
 
                     blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).delete()
 
                     currentBlogCommentIDList = list(blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True)) #Test
-                    print("(3b) currentBlogCommentIDList: " + str(currentBlogCommentIDList)) #Test
+                    # print("(3b) currentBlogCommentIDList: " + str(currentBlogCommentIDList)) #Test
                 
                 #delete blog views user records for current blog ID if current blog post exist in blogPostViewsUser table
                 if int(post_id) in currentBlogViewsUserIDList:
-                    print("(4a) currentBlogViewsUserIDList: " + str(currentBlogViewsUserIDList)) #Test
+                    # print("(4a) currentBlogViewsUserIDList: " + str(currentBlogViewsUserIDList)) #Test
 
                     blog.models.BlogPostViewsUser.objects.filter(blogPostID_id=post_id).delete()
 
                     currentBlogViewsUserIDList = list(blog.models.BlogPostViewsUser.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True)) #Test
-                    print("(4b) currentBlogViewsUserIDList: " + str(currentBlogViewsUserIDList)) #Test
+                    # print("(4b) currentBlogViewsUserIDList: " + str(currentBlogViewsUserIDList)) #Test
                 
                 #delete blog image temp records for url consisting current blog id
                 for imageTempRecord in allBlogPostImageTemp:
                     imageTempURL = str(imageTempRecord.blogPostImage)
-                    print("(5a) id portion: " + imageTempURL[:imageTempURL.index("-")]) #Test
+                    # print("(5a) id portion: " + imageTempURL[:imageTempURL.index("-")]) #Test
                     if str(post_id) ==  imageTempURL[:imageTempURL.index("-")]:
-                        print("(5b) yes") #Test
+                        # print("(5b) yes") #Test
                         blog.models.BlogPostImageTemp.objects.filter(blogPostImage=imageTempRecord.blogPostImage).delete()
 
                     # print("(5b) currentBlogImageIDList: " + str(currentBlogImageIDList)) #Test
@@ -643,11 +664,11 @@ def viewPost(request, user_type, user_id, post_id):
 
                 #delete blog image records for current blog ID if current blog post exist in blogPostImage table
                 if int(post_id) in currentBlogImageIDList:
-                    print("(6a) currentBlogImageIDList: " + str(currentBlogImageIDList)) #Test
+                    # print("(6a) currentBlogImageIDList: " + str(currentBlogImageIDList)) #Test
 
                     blog.models.BlogPostImage.objects.filter(blogPostID_id=post_id).delete()
 
-                    print("(6b) currentBlogImageIDList: " + str(currentBlogImageIDList)) #Test
+                    # print("(6b) currentBlogImageIDList: " + str(currentBlogImageIDList)) #Test
                     currentBlogImageIDList = list(blog.models.BlogPostImage.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True))
 
                 currentBlog = blog.models.BlogPost.objects.get(id=post_id)
@@ -661,11 +682,11 @@ def viewPost(request, user_type, user_id, post_id):
 
                 return JsonResponse(context)
             elif request.POST['requestType'] == 'deleteComment': # Delete comment or reply
-                print("hi")
+                # print("hi")
                 commentIDToDelete = request.POST['commentID']
                 currentBlogCommentIDList = list(blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).values_list('blogPostID_id', flat=True))
 
-                print("commentIDToDelete: " + str(commentIDToDelete)) #Test
+                # print("commentIDToDelete: " + str(commentIDToDelete)) #Test
 
                 blog.models.BlogPostComment.objects.get(id=commentIDToDelete).delete()
 
@@ -697,7 +718,7 @@ def viewPost(request, user_type, user_id, post_id):
 
                 allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
                 commentCount = allCurrentPostComments.count()
-                print("updated comment cnt: " + str(commentCount)) #Test
+                # print("updated comment cnt: " + str(commentCount)) #Test
 
                 context = {
                     'commentCount': commentCount
@@ -707,7 +728,7 @@ def viewPost(request, user_type, user_id, post_id):
             elif request.POST['requestType'] == 'addComment_2':
                 allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
                 newCommentID = allCurrentPostComments.filter(parentCommentID_id__isnull=True, userID_id=user_id).order_by('-id').first().id
-                print("new comment id: " + str(newCommentID)) #Test
+                # print("new comment id: " + str(newCommentID)) #Test
 
                 context = {
                     'user_id': user_id,
@@ -725,21 +746,21 @@ def viewPost(request, user_type, user_id, post_id):
                 repliedParentID = request.POST['repliedParentID'] #Parent comment ID (available for both repliedTo Parent or Child)
                 repliedChildID = request.POST['repliedChildID'] #Child comment ID (repliedTo Parent: 0, repliedTo Child: available)
                 repliedTo = request.POST['repliedTo'] #'Parent' or 'Child'
-                print("replied parent id_1: " + str(repliedParentID)) #Test
-                print("replied child id_1: " + str(repliedChildID)) #Test
-                print("replied to_1: " + repliedTo) #Test
+                # print("replied parent id_1: " + str(repliedParentID)) #Test
+                # print("replied child id_1: " + str(repliedChildID)) #Test
+                # print("replied to_1: " + repliedTo) #Test
 
                 if repliedTo == 'Parent':
                     repliedComment = blog.models.BlogPostComment.objects.get(id=repliedParentID) #Parent comment ID
-                    print("repliedParentComment:" + str(repliedComment.id)) #Test
+                    # print("repliedParentComment:" + str(repliedComment.id)) #Test
                 elif repliedTo == 'Child':
                     repliedComment = blog.models.BlogPostComment.objects.get(id=repliedChildID) #Child comment ID
-                    print("repliedChildComment: " + str(repliedComment.id)) #Test
+                    # print("repliedChildComment: " + str(repliedComment.id)) #Test
 
                 repliedText = repliedComment.text
                 repliedUsername = repliedComment.userID.username
-                print("repliedText: " + repliedText) #Test
-                print("repliedUsername: " + repliedUsername) #Test
+                # print("repliedText: " + repliedText) #Test
+                # print("repliedUsername: " + repliedUsername) #Test
 
                 context = {
                     'repliedParentID': repliedParentID,
@@ -753,15 +774,15 @@ def viewPost(request, user_type, user_id, post_id):
             elif request.POST['requestType'] == 'addReply_2': #update total comment count in viewPost.html
                 newReply = request.POST['newReply'] #New reply to parent or child comment
                 repliedTo = request.POST['repliedTo'] #'Parent' or 'Child'
-                print("new reply: " + newReply) #Test
-                print("replied to_2: " + repliedTo) #Test
+                # print("new reply: " + newReply) #Test
+                # print("replied to_2: " + repliedTo) #Test
                 repliedParentID = request.POST['repliedParentID'] #Parent comment ID (available for both repliedTo Parent or Child)
                 repliedChildID = request.POST['repliedChildID'] #Child comment ID (repliedTo Parent: 0, repliedTo Child: available)
                 # repliedComment = allCurrentPostComments.get(id=repliedCommentID)
                 # newParentReply = '@' + repliedComment.userID.username + ' ' + newParentReply
                 # print("new parent reply with @: " + newParentReply) #Test
-                print("replied parent id_2: " + str(repliedParentID)) #Test
-                print("replied child id_2: " + str(repliedChildID)) #Test
+                # print("replied parent id_2: " + str(repliedParentID)) #Test
+                # print("replied child id_2: " + str(repliedChildID)) #Test
 
                 currentDateTime = datetime.now 
                 if repliedTo == 'Parent': #No need to add childCommentID_id
@@ -785,7 +806,7 @@ def viewPost(request, user_type, user_id, post_id):
 
                 allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
                 commentCount = allCurrentPostComments.count()
-                print("updated comment cnt: " + str(commentCount)) #Test
+                # print("updated comment cnt: " + str(commentCount)) #Test
 
                 context = {
                     'commentCount': commentCount
@@ -795,10 +816,10 @@ def viewPost(request, user_type, user_id, post_id):
             elif request.POST['requestType'] == 'addReply_3': #update whole comment content with new parent reply
                 repliedParentID = request.POST['repliedParentID'] #Parent comment ID (available for both repliedTo Parent or Child)
                 repliedChildID = request.POST['repliedChildID'] #Child comment ID (repliedTo Parent: 0, repliedTo Child: available)
-                print("replied parent id_3: " + str(repliedParentID)) #Test
-                print("replied child id_3: " + str(repliedChildID)) #Test
+                # print("replied parent id_3: " + str(repliedParentID)) #Test
+                # print("replied child id_3: " + str(repliedChildID)) #Test
                 repliedTo = request.POST['repliedTo'] #'Parent' or 'Child'
-                print("replied to_3: " + repliedTo) #Test
+                # print("replied to_3: " + repliedTo) #Test
 
                 allCurrentPostComments = blog.models.BlogPostComment.objects.filter(blogPostID_id=post_id).order_by('dateTimeComment')
                 
@@ -807,13 +828,13 @@ def viewPost(request, user_type, user_id, post_id):
                 elif repliedTo == 'Child': #Need to add childCommentID_id
                     newCommentID = allCurrentPostComments.filter(parentCommentID_id=repliedParentID, childCommentID_id=repliedChildID, userID_id=user_id).order_by('-id').first().id
                 
-                print("new comment id: " + str(newCommentID)) #Test
+                # print("new comment id: " + str(newCommentID)) #Test
 
                 #get list of parent comment IDs which have replies (UPDATE)
                 parentCmtIDsWithReplies_all = list(blog.models.BlogPostComment.objects.filter(parentCommentID_id__isnull=False).values_list('parentCommentID_id', flat=True))
                 parentCmtIDsWithReplies_set = set(parentCmtIDsWithReplies_all)
                 parentCmtIDsWithReplies = (list(parentCmtIDsWithReplies_set))
-                print("updated parentCmtIDsWithReplies: " + str(parentCmtIDsWithReplies)) #Test
+                # print("updated parentCmtIDsWithReplies: " + str(parentCmtIDsWithReplies)) #Test
 
                 context = {
                     'user_id': user_id,
@@ -882,8 +903,8 @@ def viewPost(request, user_type, user_id, post_id):
             userViewsCnt = np.array(userViewsCnt)
             userViewsCnt[userViewsCnt==None] = 0
 
-            print("userCnt: " + str(userCnt)) #Test
-            print("userViewsCnt: " + str(userViewsCnt)) #Test
+            # print("userCnt: " + str(userCnt)) #Test
+            # print("userViewsCnt: " + str(userViewsCnt)) #Test
 
             context = {
                 'dashboardNav': dashboardNav,
@@ -914,6 +935,7 @@ def viewPost(request, user_type, user_id, post_id):
                 'userViewsCnt': userViewsCnt,
                 'relatedPostIDsList': relatedPostIDsList,
                 'relatedPosts': relatedPosts,
+                'relatedPostImages': relatedPostImages,
                 'allCurrentPostComments': allCurrentPostComments,
                 'commentCount': commentCount,
                 'currentAvatarDetailsObject': currentAvatarDetailsObject,
@@ -928,57 +950,76 @@ def upload_image(request, user_type, user_id, post_id):
     if request.method == "POST":
         file_obj = request.FILES['file']
         file_obj.name = re.sub('[ ]+', '_', file_obj.name)
+        # print("filename after sub with -: " + file_obj.name) #Test
         file_name_suffix = file_obj.name.split(".")[-1]
         if file_name_suffix not in ["jpg", "png", "gif", "jpeg", ]:
             return JsonResponse({"message": "Wrong file format"})
 
+        # print("post_id: " + str(post_id)) #Test
+
         # If for editPost
         if int(post_id) != 0:
-            newImageURL = post_id + '-' + file_obj.name
+            # print("hi") #Test
+            # newImageURL = post_id + '-' + file_obj.name
+            file_obj.name = post_id + '-' + file_obj.name
+            # print("filename after add current id: " + file_obj.name) #Test
         else:
+            # print("hi2") #Test
             latestBlogPost = blog.models.BlogPost.objects.order_by('id').last()
-            newImageURL = str(int(latestBlogPost.id) + 1) + '-' + file_obj.name
+            # newImageURL = str(int(latestBlogPost.id) + 1) + '-' + file_obj.name
+            file_obj.name = str(int(latestBlogPost.id) + 1) + '-' + file_obj.name
+            # print("filename after add new id: " + file_obj.name) #Test
 
         blogPostImageTempURls = list(blog.models.BlogPostImageTemp.objects.all().values_list('blogPostImage', flat=True))
 
-        if newImageURL not in blogPostImageTempURls:
-            newImageTemp = blog.models.BlogPostImageTemp.objects.create(blogPostImage=newImageURL)
-            print("newly added image temp: " + str(newImageTemp.blogPostImage)) #Test
+        nameInDB = 'images/admin_post_images_temp/' + file_obj.name
 
-            path = os.path.join(
-                settings.MEDIA_ROOT,
-                'images',
-                'admin_post_images'
-            )
+        # if newImageURL not in blogPostImageTempURls:
+        # if nameInDB not in blogPostImageTempURls:
+            # newImageTemp = blog.models.BlogPostImageTemp.objects.create(blogPostImage=newImageURL)
+        newImageTemp = blog.models.BlogPostImageTemp.objects.create(blogPostImage=file_obj)
+        # print("newly added image temp: " + str(newImageTemp.blogPostImage)) #Test
 
-            # If there is no such path, create
-            if not os.path.exists(path):
-                os.makedirs(path)
+        """ path = os.path.join(
+            settings.MEDIA_ROOT,
+            'images',
+            'admin_post_images_temp'
+            'admin_post_images'
+        ) """
 
-            file_path = os.path.join(path, newImageURL)
-            print("file_path: " + str(file_path)) #Test
+        path = settings.MEDIA_ROOT
 
-            file_url = f'{settings.MEDIA_URL}images/admin_post_images/{newImageURL}'
-            print("file_url: " + str(file_url)) #Test
+        # If there is no such path, create
+        if not os.path.exists(path):
+            os.makedirs(path)
 
-            if os.path.exists(file_path):
-                return JsonResponse({
-                    "message": "Anda tidak dibenarkan untuk memuat naik gambar yang sama",
-                    'location': file_url
-                })
+        # file_path = os.path.join(path, newImageURL)
+        # file_path = os.path.join(path, file_obj.name)
+        file_path = os.path.join(path, newImageTemp.blogPostImage.name)
+        # print("file_path: " + str(file_path)) #Test
 
-            with open(file_path, 'wb+') as f:
-                for chunk in file_obj.chunks():
-                    f.write(chunk)
+        # file_url = f'{settings.MEDIA_URL}images/admin_post_images/{newImageURL}'
+        file_url = f'{settings.MEDIA_URL}{newImageTemp.blogPostImage.name}'
+        # print("file_url: " + str(file_url)) #Test
 
+        if os.path.exists(file_path):
             return JsonResponse({
-                'message': 'Gambar berjaya dimuat naik',
+                "message": "Anda tidak dibenarkan untuk memuat naik gambar yang sama",
                 'location': file_url
             })
-        else:
+
+        with open(file_path, 'wb+') as f:
+            for chunk in file_obj.chunks():
+                f.write(chunk)
+
+        return JsonResponse({
+            'message': 'Gambar berjaya dimuat naik',
+            'location': file_url
+        })
+        """ else:
             return JsonResponse({
                     'message': "Anda tidak dibenarkan untuk memuat naik gambar yang sama. Sila pastikan bahawa nama fail gambar yang yang hendak dimuatnaik adalah berbeza daripada nama fail gambar-gambar sedia ada bagi artikel ini.",
-                })
+                }) """
     return JsonResponse({'detail': "Wrong request"})
 
 def addPost(request, user_type, user_id):
@@ -999,10 +1040,10 @@ def addPost(request, user_type, user_id):
     username = currentUserDetail.username
 
     if request.method == 'POST':
-        print("hi")
+        # print("hi")
         form = AddPostForm(request.POST)
         if form.is_valid():
-            print("valid")
+            # print("valid")
             filledList = form.cleaned_data
             filledTitle = filledList['title']
             filledCategories = request.POST.getlist('category')
@@ -1013,19 +1054,19 @@ def addPost(request, user_type, user_id):
             filledContent = filledContent.replace("../../../../../", "../../../../../../")
 
             filledIsDraft = filledList['isDraft']
-            print("filledIsDraft: " + str(filledIsDraft)) #Test
+            # print("filledIsDraft: " + str(filledIsDraft)) #Test
 
-            print("filledCategories: " + str(filledCategories)) #Test
+            # print("filledCategories: " + str(filledCategories)) #Test
             
             filledCategoriesIDList = []
 
             for choice in filledCategories:
-                print("choice: " + choice) #Test
+                # print("choice: " + choice) #Test
                 if int(choice) != 1:
-                    print("int(choice) != 1")
+                    # print("int(choice) != 1")
                     filledCategoriesIDList.append(int(choice))
 
-            print("filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
+            # print("filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
 
             finalCategoriesIDList = []
             allCategoriesName = list(blog.models.Category.objects.all().values_list('name', flat=True).order_by('name'))
@@ -1036,9 +1077,9 @@ def addPost(request, user_type, user_id):
 
                 for newCat in newCategoriesNameList:
                     if newCat in allCategoriesName:
-                        print("yes") #Test
+                        # print("yes") #Test
                         filledCategoriesIDList.append(1) #For 'others'
-                        print("filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
+                        # print("filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
                         context = {
                             'dashboardNav': dashboardNav,
                             'user_id': user_id,
@@ -1079,10 +1120,10 @@ def addPost(request, user_type, user_id):
                 finalCategoriesIDList = filledCategoriesIDList
 
             if filledIsDraft == True:
-                print("filledIsDraft: True") #Test
+                # print("filledIsDraft: True") #Test
                 newPost = blog.models.BlogPost.objects.create(title=filledTitle, content=filledContent, description=filledDesc, show=False)
             else:
-                print("filledIsDraft: False") #Test
+                # print("filledIsDraft: False") #Test
                 newPost = blog.models.BlogPost.objects.create(title=filledTitle, content=filledContent, description=filledDesc, show=True)
             newPost.lastDateEdited = newPost.datePublished
             newPost.lastTimeEdited = newPost.timePublished
@@ -1093,21 +1134,21 @@ def addPost(request, user_type, user_id):
 
             # Saving image
             blogPostImageTempURLs = list(blog.models.BlogPostImageTemp.objects.all().values_list('blogPostImage', flat=True))
-            print("blogPostImageTempURLs: " + str(blogPostImageTempURLs)) #Test
+            # print("blogPostImageTempURLs: " + str(blogPostImageTempURLs)) #Test
 
             for imageTempURL in blogPostImageTempURLs:
-                print("id portion: " + imageTempURL[:imageTempURL.index("-")]) #Test
-                print("imageTempURL: " + imageTempURL) #Test
-                if str(newPost.id) == imageTempURL[:imageTempURL.index("-")]:
-                    print("Yes") #Test
+                # print("id portion: " + imageTempURL[30:imageTempURL.index("-")]) #Test
+                # print("imageTempURL: " + imageTempURL) #Test
+                if str(newPost.id) == imageTempURL[30:imageTempURL.index("-")]:
+                    # print("Yes") #Test
                     blog.models.BlogPostImage.objects.create(blogPostImage=imageTempURL, blogPostID_id=newPost.id)
 
             return redirect('blog:view-post', user_type, user_id, newPost.id)
         else: #Test
-            print("not valid")
+            # print("not valid")
             print(form.errors)
     else:
-        print("hi 2")
+        # print("hi 2")
         form = AddPostForm()
 
     context = {
@@ -1157,18 +1198,18 @@ def editPost(request, user_type, user_id, post_id):
         currentIsDraft = True #Initial isDraft tickbox: ticked
     
     #TEST
-    print("(1) currentIsDraft: " + str(currentIsDraft))
-    print("(2) currentTitle: " + currentTitle)
-    print("(3) currentCategoriesIDList: " + str(currentCategoriesIDList))
-    print("(5) currentDesc: " + currentDesc)
+    # print("(1) currentIsDraft: " + str(currentIsDraft))
+    # print("(2) currentTitle: " + currentTitle)
+    # print("(3) currentCategoriesIDList: " + str(currentCategoriesIDList))
+    # print("(5) currentDesc: " + currentDesc)
     # print("currentContent: " + currentContent)
 
     if request.method == 'POST':
-        print("hi")
+        # print("hi")
         form = EditPostForm(request.POST, initial={'title': currentTitle, 'description': currentDesc, 'content': currentContent,
         'isDraft': currentIsDraft})
         if form.is_valid():
-            print("valid")
+            # print("valid")
             filledList = form.cleaned_data
             filledTitle = filledList['title']
             filledCategories = request.POST.getlist('category')
@@ -1177,41 +1218,41 @@ def editPost(request, user_type, user_id, post_id):
             filledContent = filledList['content']
             filledIsDraft = filledList['isDraft']
 
-            print("(1) filledIsDraft: " + str(filledIsDraft)) #Test
-            print("(2) filledTitle: " + filledTitle) #Test
+            # print("(1) filledIsDraft: " + str(filledIsDraft)) #Test
+            # print("(2) filledTitle: " + filledTitle) #Test
 
             if filledTitle != currentTitle:
-                print(">>> (2) Title not match") #Test
+                # print(">>> (2) Title not match") #Test
                 currentBlogPost.title = filledTitle
 
-            print("(3) filledCategories: " + str(filledCategories)) #Test
+            # print("(3) filledCategories: " + str(filledCategories)) #Test
 
             filledCategoriesIDList = []
 
             for choice in filledCategories:
-                print("choice: " + choice) #Test
+                # print("choice: " + choice) #Test
                 if int(choice) != 1:
-                    print("int(choice) != 1") #Test
+                    # print("int(choice) != 1") #Test
                     filledCategoriesIDList.append(int(choice))
                     
-            print("(3) filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
+            # print("(3) filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
 
             finalCategoriesIDList = []
 
             if filledNewCategories:
-                print(">>> (4) Has new categories") #Test
+                # print(">>> (4) Has new categories") #Test
                 newCategoriesNameList = re.split(", ", filledNewCategories)
                 newCategoriesIDList = []
 
-                print("(4a) newCategoriesNameList: " + str(newCategoriesNameList)) #Test
+                # print("(4a) newCategoriesNameList: " + str(newCategoriesNameList)) #Test
 
                 allCategoriesName = list(blog.models.Category.objects.all().values_list('name', flat=True).order_by('name'))
 
                 for newCat in newCategoriesNameList:
                     if newCat in allCategoriesName:
-                        print("yes") #Test
+                        # print("yes") #Test
                         filledCategoriesIDList.append(1) #For 'others'
-                        print("filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
+                        # print("filledCategoriesIDList: " + str(filledCategoriesIDList)) #Test
                         context = {
                             'dashboardNav': dashboardNav,
                             'user_id': user_id,
@@ -1253,7 +1294,7 @@ def editPost(request, user_type, user_id, post_id):
             else:
                 finalCategoriesIDList = filledCategoriesIDList
 
-            print("(4b) finalCategoriesIDList: " + str(finalCategoriesIDList)) #Test
+            # print("(4b) finalCategoriesIDList: " + str(finalCategoriesIDList)) #Test
 
             # If count of previous categories and filled are the same
                 # If the previous categories not same as after edit (some not same)
@@ -1263,63 +1304,70 @@ def editPost(request, user_type, user_id, post_id):
                 # Delete current post bridges
                 # Add everything again
             if len(finalCategoriesIDList) == len(currentCategoriesIDList):
-                print(">>> (3) Same count category") #Test
+                # print(">>> (3) Same count category") #Test
                 finalCategoriesIDList_2 = finalCategoriesIDList
 
                 finalCategoriesIDList.sort()
                 currentCategoriesIDList.sort()
 
                 if finalCategoriesIDList != currentCategoriesIDList:
-                    print(">>> (3) But have changed some categories") #Test
+                    # print(">>> (3) But have changed some categories") #Test
                     allCurrentCategories.delete()
 
                     for catID in finalCategoriesIDList_2:
                         blog.models.BlogPostCategory.objects.create(blogPostID_id=currentBlogPost.id, categoryID_id=catID)
             else:
-                print(">>> (3) Count category different") #Test
+                # print(">>> (3) Count category different") #Test
                 allCurrentCategories.delete()
 
                 for catID in finalCategoriesIDList:
                     blog.models.BlogPostCategory.objects.create(blogPostID_id=currentBlogPost.id, categoryID_id=catID)
 
-            print("(5) filledDesc: " + filledDesc) #Test
+            # print("(5) filledDesc: " + filledDesc) #Test
 
             if filledDesc != currentDesc:
-                print(">>> (5) Desc not match") #Test
+                # print(">>> (5) Desc not match") #Test
                 currentBlogPost.description = filledDesc
             
             if filledContent != currentContent:
-                print(">>> (-) Content not match") #Test
+                # print(">>> (-) Content not match") #Test
                 currentBlogPost.content = filledContent
 
                 #If admin remove any existing pic from post content
-                print("---Deleting removed pics from content---") #Test
+                # print("---Deleting removed pics from content---") #Test
                 blogPostImageTempURLs = list(blog.models.BlogPostImageTemp.objects.all().values_list('blogPostImage', flat=True))
                 blogPostImageURLs = list(blog.models.BlogPostImage.objects.filter(blogPostID_id=currentBlogPost.id).values_list('blogPostImage', flat=True))
-                print("blogPostImageTempURLs: " + str(blogPostImageTempURLs)) #Test
-                print("blogPostImageURLs: " + str(blogPostImageURLs)) #Test
+                # print("blogPostImageTempURLs: " + str(blogPostImageTempURLs)) #Test
+                # print("blogPostImageURLs: " + str(blogPostImageURLs)) #Test
 
-                updatedImageURLList = re.findall('admin_post_images/(.*?)"', filledContent)
-                print("updatedImageURLList: " + str(updatedImageURLList)) #Test
+                updatedImageURLList = re.findall('admin_post_images_temp/(.*?)"', filledContent)
+                # print("updatedImageURLList: " + str(updatedImageURLList)) #Test
+
+                updatedImageURLListWithPrefixes = []
+
+                for url in updatedImageURLList:
+                    updatedImageURLListWithPrefixes.append('images/admin_post_images_temp/' + url)
+
+                # print("updatedImageURLListWithPrefixes: " + str(updatedImageURLListWithPrefixes)) #Test
 
                 toDeleteImageURLs = []
 
                 for i in range(len(blogPostImageURLs)):
-                    print("blogPostImageURLs[" + str(i) + "]: " + blogPostImageURLs[i]) #Test
-                    if blogPostImageURLs[i] not in updatedImageURLList:
-                        print("--removed from content") #Test
+                    # print("blogPostImageURLs[" + str(i) + "]: " + blogPostImageURLs[i]) #Test
+                    if blogPostImageURLs[i] not in updatedImageURLListWithPrefixes:
+                        # print("--removed from content") #Test
                         toDeleteImageURLs.append(blogPostImageURLs[i])
-                        print("updated toDeleteImageURLs: " + str(toDeleteImageURLs)) #Test
+                        # print("updated toDeleteImageURLs: " + str(toDeleteImageURLs)) #Test
 
                 if len(toDeleteImageURLs) > 0:
-                    print("--got urls to delete") #Test
+                    # print("--got urls to delete") #Test
                     blog.models.BlogPostImageTemp.objects.filter(blogPostImage__in=toDeleteImageURLs).delete()
                     blog.models.BlogPostImage.objects.filter(blogPostImage__in=toDeleteImageURLs).delete()
-                    print("blogimageurltemp: " + str(blogPostImageTempURLs)) #Test
-                    print("blogimageurl: " + str(blogPostImageURLs)) #Test
+                    # print("blogimageurltemp: " + str(blogPostImageTempURLs)) #Test
+                    # print("blogimageurl: " + str(blogPostImageURLs)) #Test
 
             if filledIsDraft != currentIsDraft:
-                print(">>> (1) isDraft not match") #Test
+                # print(">>> (1) isDraft not match") #Test
                 currentBlogPost.show = not filledIsDraft
                 
             currentBlogPost.lastDateEdited = datetime.now().date()
@@ -1328,24 +1376,24 @@ def editPost(request, user_type, user_id, post_id):
 
             blogPostImageTempURLs = list(blog.models.BlogPostImageTemp.objects.all().values_list('blogPostImage', flat=True))
             blogPostImageURLs = list(blog.models.BlogPostImage.objects.filter(blogPostID_id=currentBlogPost.id).values_list('blogPostImage', flat=True))
-            print("blogPostImageTempURLs: " + str(blogPostImageTempURLs)) #Test
-            print("blogPostImageURLs: " + str(blogPostImageURLs)) #Test
+            # print("blogPostImageTempURLs: " + str(blogPostImageTempURLs)) #Test
+            # print("blogPostImageURLs: " + str(blogPostImageURLs)) #Test
 
             for imageTempURL in blogPostImageTempURLs:
-                print("id portion: " + imageTempURL[:imageTempURL.index("-")]) #Test
-                if str(currentBlogPost.id) in imageTempURL[:imageTempURL.index("-")]:
-                    print("count imageURL: " + str(blogPostImageURLs.count(imageTempURL))) #Test
-                    print("imageTempURL: " + imageTempURL) #Test
+                # print("id portion: " + imageTempURL[30:imageTempURL.index("-")]) #Test
+                if str(currentBlogPost.id) in imageTempURL[30:imageTempURL.index("-")]:
+                    # print("count imageURL: " + str(blogPostImageURLs.count(imageTempURL))) #Test
+                    # print("imageTempURL: " + imageTempURL) #Test
                     if imageTempURL not in blogPostImageURLs:
-                        print("yes") 
+                        # print("yes") 
                         blog.models.BlogPostImage.objects.create(blogPostImage=imageTempURL, blogPostID_id=currentBlogPost.id)
 
             return redirect('blog:view-post', user_type, user_id, post_id)
-        else: #Test
-            print("not valid")
-            print(form.errors)
+        # else: #Test
+            # print("not valid")
+            # print(form.errors)
     else:
-        print("hi 2")
+        # print("hi 2")
         form = EditPostForm(initial={'title': currentTitle, 'description': currentDesc, 'content': currentContent,
         'isDraft': currentIsDraft})
 

@@ -1,4 +1,5 @@
 from datetime import datetime
+from tkinter import NONE
 from django import http
 from django.db.models.expressions import F
 from django.shortcuts import redirect, render
@@ -10,6 +11,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from datetime import timedelta
 from django.db.models import Sum
 from collections import Counter
+from operator import itemgetter
 
 # Create your views here.
 def adminNotif(request, user_id):
@@ -38,11 +40,11 @@ def adminNotif(request, user_id):
         if request.method == 'POST':
             if request.is_ajax():
                 if request.POST['requestType'] == 'updateNotifStatus':
-                    print("hi POST ajax updateNotifStatus") # Test
+                    # print("hi POST ajax updateNotifStatus") # Test
                     notifID = request.POST['notifID']
 
-                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
-                    print("classToDelete: " + notifID) #Test
+                    # print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    # print("classToDelete: " + notifID) #Test
 
                     justReadNotif = allNotif.get(id=notifID)
                     justReadNotif.isOpen = True
@@ -118,13 +120,13 @@ def adminClassSettings(request, user_id):
     unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
     if request.method == 'POST':
-        print("hi POST")
+        # print("hi POST")
         if request.is_ajax():
             if request.POST['requestType'] == 'deleteClass':
-                print("hi POST ajax deleteClass") # Test
+                # print("hi POST ajax deleteClass") # Test
                 classToDelete = request.POST['className']
 
-                print("classToDelete: " + classToDelete) #Test
+                # print("classToDelete: " + classToDelete) #Test
 
                 allTeacherClassList = list(dashboard.models.Teacher.objects.exclude(homeroomClass='NA').values_list('homeroomClass', flat=True))
 
@@ -150,7 +152,7 @@ def adminClassSettings(request, user_id):
 
                 allClassList = list(allClass.values_list('className', flat=True))
 
-                print("newClassCap: " + newClass.upper()) #Test
+                # print("newClassCap: " + newClass.upper()) #Test
 
                 if newClass.upper() not in allClassList:
                     dashboard.models.HomeroomTeacherClass.objects.create(className=newClass.upper(), lastDateEdited=datetime.now().date())
@@ -245,15 +247,15 @@ def adminSuggestions(request, user_id):
     unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
     if request.method == 'POST':
-        print("hi POST")
+        # print("hi POST")
         if request.is_ajax():
             if request.POST['requestType'] == 'updateStatus':
-                print("hi POST ajax updateStatus") # Test
+                # print("hi POST ajax updateStatus") # Test
                 newStatus = request.POST['newStatus']
                 suggestionID = request.POST['suggestionID']
 
-                print("newStatus: " + newStatus) #Test
-                print("suggestionID: " + str(suggestionID)) #Test
+                # print("newStatus: " + newStatus) #Test
+                # print("suggestionID: " + str(suggestionID)) #Test
 
                 currentSuggestion = dashboard.models.Suggestion.objects.get(id=suggestionID)
                 currentSuggestion.status = newStatus
@@ -376,11 +378,11 @@ def nonAdminNotif(request, user_type, user_id):
         if request.method == 'POST':
             if request.is_ajax():
                 if request.POST['requestType'] == 'updateNotifStatus':
-                    print("hi POST ajax updateNotifStatus") # Test
+                    # print("hi POST ajax updateNotifStatus") # Test
                     notifID = request.POST['notifID']
 
-                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
-                    print("notifToDelete: " + notifID) #Test
+                    # print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    # print("notifToDelete: " + notifID) #Test
 
                     justReadNotif = allNotif.get(id=notifID)
                     justReadNotif.isOpen = True
@@ -424,11 +426,11 @@ def nonAdminNotif(request, user_type, user_id):
         if request.method == 'POST':
             if request.is_ajax():
                 if request.POST['requestType'] == 'updateNotifStatus':
-                    print("hi POST ajax updateNotifStatus") # Test
+                    # print("hi POST ajax updateNotifStatus") # Test
                     notifID = request.POST['notifID']
 
-                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
-                    print("notifToDelete: " + notifID) #Test
+                    # print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    # print("notifToDelete: " + notifID) #Test
 
                     justReadNotif = allNotif.get(id=notifID)
                     justReadNotif.isOpen = True
@@ -472,11 +474,11 @@ def nonAdminNotif(request, user_type, user_id):
         if request.method == 'POST':
             if request.is_ajax():
                 if request.POST['requestType'] == 'updateNotifStatus':
-                    print("hi POST ajax updateNotifStatus") # Test
+                    # print("hi POST ajax updateNotifStatus") # Test
                     notifID = request.POST['notifID']
 
-                    print("notifID is number?: " + str(isinstance(notifID, int))) #Test
-                    print("notifToDelete: " + notifID) #Test
+                    # print("notifID is number?: " + str(isinstance(notifID, int))) #Test
+                    # print("notifToDelete: " + notifID) #Test
 
                     justReadNotif = allNotif.get(id=notifID)
                     justReadNotif.isOpen = True
@@ -820,10 +822,10 @@ def changePassword(request, user_type, user_id):
         if form.is_valid():
             filledList = form.cleaned_data
             #if filled current password is the same as that user's record in Student/Parent/Teacher table
-            print("filledpassraw: " + filledList['currentPass']) #Test
-            print("filledpasshash: " + make_password(filledList['currentPass'])) #Test
-            print("currentpassraw: " + currentUserTypeDetail.password) #Test
-            print("currentpasshash: " + make_password(currentUserTypeDetail.password)) #Test
+            # print("filledpassraw: " + filledList['currentPass']) #Test
+            # print("filledpasshash: " + make_password(filledList['currentPass'])) #Test
+            # print("currentpassraw: " + currentUserTypeDetail.password) #Test
+            # print("currentpasshash: " + make_password(currentUserTypeDetail.password)) #Test
             if check_password(filledList['currentPass'], currentUserTypeDetail.password) == True:
                 #if first and second entered password is the same
                 if filledList['newPass'] == filledList['newPassConfirm']:
@@ -1420,23 +1422,23 @@ def nonAdminBookmark(request, user_type, user_id):
     unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
     if request.method == 'POST':
-        print("hi POST")
+        # print("hi POST")
         if request.is_ajax():
             if request.POST['requestType'] == 'deleteBookmark':
-                print("hi POST ajax deleteBookmark") # Test
+                # print("hi POST ajax deleteBookmark") # Test
                 bookmarkType = request.POST['bookmarkType']
                 bookmarkID = int(request.POST['bookmarkID'])
 
-                print("bookmarkType: " + bookmarkType) #Test
-                print("bookmarkID: " + str(bookmarkID)) #Test
+                # print("bookmarkType: " + bookmarkType) #Test
+                # print("bookmarkID: " + str(bookmarkID)) #Test
 
                 context = {}
 
                 if bookmarkType == 'post':
-                    print("bookmarkType is post") #Test
+                    # print("bookmarkType is post") #Test
                     blog.models.BlogPostBookmark.objects.get(id=bookmarkID).delete()
                     allPostBookmarks = blog.models.BlogPostBookmark.objects.filter(userID_id=user_id).order_by('-dateTimeAdded')
-                    print("allPostBookmarks: " + str(allPostBookmarks)) #Test
+                    # print("allPostBookmarks: " + str(allPostBookmarks)) #Test
 
                     context = {
                         'allPostBookmarks': allPostBookmarks
@@ -1455,22 +1457,22 @@ def nonAdminBookmark(request, user_type, user_id):
             
                 if search_post is not None:
                     allPostIDsinUserBookmark = list(allPostBookmarks.values_list('blogPostID_id', flat=True))
-                    print("allPostIDsinUserBookmark: " + str(allPostIDsinUserBookmark)) #Test
+                    # print("allPostIDsinUserBookmark: " + str(allPostIDsinUserBookmark)) #Test
                     allBookmarkedPosts = blog.models.BlogPost.objects.filter(id__in=allPostIDsinUserBookmark)
-                    print("allBookmarkedPosts: " + str(allBookmarkedPosts)) #Test
+                    # print("allBookmarkedPosts: " + str(allBookmarkedPosts)) #Test
                     filteredPosts = allBookmarkedPosts.filter(title__icontains=search_post)
-                    print("filteredPosts: " + str(filteredPosts)) #Test
+                    # print("filteredPosts: " + str(filteredPosts)) #Test
                     filteredPostIDs = list(filteredPosts.values_list('id', flat=True))
-                    print("filteredPostIDs: " + str(filteredPostIDs)) #Test
+                    # print("filteredPostIDs: " + str(filteredPostIDs)) #Test
                     allPostBookmarks = allPostBookmarks.filter(blogPostID_id__in=filteredPostIDs)
-                    print("allPostBookmarks: " + str(allPostBookmarks)) #Test
+                    # print("allPostBookmarks: " + str(allPostBookmarks)) #Test
 
                 if sort_order == 'Terkini':
                     allPostBookmarks = allPostBookmarks.order_by('-dateTimeAdded')
                 elif sort_order == 'Paling Lama':
                     allPostBookmarks = allPostBookmarks.order_by('dateTimeAdded')
                 
-                print("allPostBookmarks: " + str(allPostBookmarks)) #Test
+                # print("allPostBookmarks: " + str(allPostBookmarks)) #Test
                     
                 context = {
                     'allPostBookmarks': allPostBookmarks
@@ -1649,7 +1651,7 @@ def nonAdminReport(request, user_type, user_id):
             
                 if filteredStudentID is not None:
                     filtered_student = parentStudents.get(ID_id=filteredStudentID)
-                    print("filtered_student: " + str(filtered_student)) #Test
+                    # print("filtered_student: " + str(filtered_student)) #Test
 
                 currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=filtered_student.ID_id, isFinish=True)
                 fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
@@ -1859,74 +1861,580 @@ def nonAdminReport(request, user_type, user_id):
     elif user_type == "guru" and 'T' in user_id:
         dashboardNav = " Guru"
         
-        currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=user_id, isFinish=True)
-        fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+        #For DIV 1: game-perf
+        def get_player_name_score_list(allFieldPlayerSessions):
+            playerIDList = list(allFieldPlayerSessions.order_by('fieldPlayerID_id').values_list("fieldPlayerID_id", flat=True).distinct("fieldPlayerID_id"))
+            playersCnt = len(playerIDList)
+            playerNameScoreList = []
 
-        # For ALL CHARTS(field colors)
-        colors = [
-                "rgb(255, 129, 129)", "rgb(71, 91, 191)", "rgb(94, 208, 181)",
-                "rgb(178, 143, 249)", "rgb(253, 165, 126)", "rgb(98, 194, 239)",
-                "rgb(223, 129, 129)", "rgb(92, 105, 167)", "rgb(102, 188, 168)",
-                "rgb(153, 135, 188)", "rgb(222, 156, 126)", "rgb(150, 200, 213)",
-                "rgb(191, 128, 128)", "rgb(106, 114, 151)", "rgb(111, 168, 154)",
-                "rgb(123, 95, 179)", "rgb(224, 97, 40)", "rgb(93, 194, 218)",
-                "rgb(255, 75, 75)", "rgb(155, 172, 255)", "rgb(161, 230, 213)",
-                "rgb(109, 79, 172)", "rgb(200, 105, 62)", "rgb(58, 158, 183)",
-                "rgb(208, 36, 36)", "rgb(30, 51, 153)", "rgb(19, 134, 106)",
-                "rgb(99, 80, 139)", "rgb(222, 110, 16)", "rgb(64, 136, 154)"
-            ]
+            for playerID in playerIDList:
+                # print("playerID: " + str(playerID))
 
-        allGameFieldColorsDict = {}
+                currentPlayerSessions = allFieldPlayerSessions.filter(fieldPlayerID_id=playerID)
+                currentPlayerScoreDict = currentPlayerSessions.aggregate(Sum('currentPointsEarned'))
+                currentPlayerRecord = quiz.models.Player.objects.get(ID_id=playerID)
+                playerNameScoreList.append((currentPlayerRecord.ID.name, currentPlayerScoreDict['currentPointsEarned__sum']))
 
-        fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
-        allGameFields = quiz.models.GameField.objects.filter(id__in=fieldIDList).order_by('id')
+                # print("playerScoreList: " + str(playerNameScoreList))
 
-        fieldPlayedCountList = []
-        fieldNameList = []
-        fieldName_CountDict = {}
+            playerNameScoreList = sorted(playerNameScoreList, key=lambda x: x[1], reverse=True)
+            # print("sorted playerNameScoreList: " + str(playerNameScoreList))
 
-        for fieldID in fieldIDList:
-            fieldPlayedCountList.append(0)
+            return playerNameScoreList, playersCnt
 
-        for session in currentPlayerAllFieldRecords:
+        def get_chart_data(allFieldPlayerSessions):
+            totalScoreAllFieldList = list(allFieldPlayerSessions.values_list('currentPointsEarned', flat=True))
+            fieldIDList = list(allFieldPlayerSessions.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+
+            #Card 1: Total Players
+            results = get_player_name_score_list(allFieldPlayerSessions)
+            playerNameScoreList = results[0]
+            playersCnt = results[1]
+                
+            #Card 2: Total No of Plays
+            playCount = allFieldPlayerSessions.count()
+
+            #Card 3: Average score per session (all fields)
+            totalScoreAllField = 0
+
+            for score in totalScoreAllFieldList:
+                totalScoreAllField += score
+
+            if playCount > 0:
+                avgSessionScore = int(round(totalScoreAllField/playCount, 0))
+            else:
+                avgSessionScore = 0
+
+            #Card 4: Average hints used per session (all fields)
+            totalHintsUsedDict = allFieldPlayerSessions.aggregate(Sum('hintsUsedCount'))
+
+            if playCount > 0:
+                avgHintsUsed = int(round(totalHintsUsedDict['hintsUsedCount__sum']/playCount, 0))
+            else:
+                avgHintsUsed = 0
+
+            #Card 5: Average time taken per session (all fields)
+            timeList = list(allFieldPlayerSessions.values_list('timeTaken', flat=True))
+            totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList))
+
+            if playCount > 0:
+                avgSessionTimeTaken = int(round(totalTimeTaken.total_seconds()/playCount, 0))
+            else:
+                avgSessionTimeTaken = 0
+
+            minutes = avgSessionTimeTaken // 60
+            seconds = avgSessionTimeTaken % 60
+
+            if minutes != 0 and seconds != 0:
+                avgSessionTimeTaken = '{} minit {} saat'.format(minutes, seconds)
+            elif minutes == 0:
+                avgSessionTimeTaken = '{} saat'.format(seconds)
+            elif seconds == 0:
+                avgSessionTimeTaken = '{} minit'.format(minutes)
+
+            #Card 6: Last Played Time
+            if playCount > 0:
+                lastPlayedTime = allFieldPlayerSessions.last().dateLastPlayed #Format to string HH:mmPM, DD/MM/YYYY
+            else:
+                lastPlayedTime = datetime.now()
+
+            #Card 7: (Bar Chart) 5 Most Played Field
+            fieldIDList = list(allFieldPlayerSessions.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+            allGameFields = quiz.models.GameField.objects.filter(id__in=fieldIDList).order_by('id')
+
+            fieldPlayedCountList = []
+            fieldNameList = []
+            fieldName_CountDict = {}
+
+            for fieldID in fieldIDList:
+                fieldPlayedCountList.append(0)
+
+            for session in allFieldPlayerSessions:
+                for i in range(len(fieldIDList)):
+                    if session.fieldID_id == fieldIDList[i]:
+                        fieldPlayedCountList[i] += 1
+                        break
+
             for i in range(len(fieldIDList)):
-                if session.fieldID_id == fieldIDList[i]:
-                    fieldPlayedCountList[i] += 1
-                    break
+                for field in allGameFields:
+                    if fieldIDList[i] == field.id:
+                        fieldNameList.append(field.name)
+                        fieldName_CountDict[field.name] = fieldPlayedCountList[i]
+                        break
+            
+            topFive_fieldName_CountDict = dict(Counter(fieldName_CountDict).most_common(5))
 
-        for i in range(len(fieldIDList)):
-            for field in allGameFields:
-                if fieldIDList[i] == field.id:
-                    fieldNameList.append(field.name)
-                    fieldName_CountDict[field.name] = fieldPlayedCountList[i]
-                    break
+            # Card 8, 9 & 10
+            avgSessionScoreByFieldList = []
+            avgSessionHintByFieldList = []
+            avgSessionTimeTakenByFieldList = []
 
-        for i in range(len(allGameFields)):
-            allGameFieldColorsDict[allGameFields[i].name] = colors[i]
+            for i in range(len(fieldIDList)):
+                currentIterFieldRecords = allFieldPlayerSessions.filter(fieldID_id=fieldIDList[i])
+                currentFieldSessionCount = currentIterFieldRecords.count()
+
+                totalScoreCurrentFieldDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+                totalHintCurrentFieldDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+                timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+                totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList))
+                avgTimeTaken_unformatted = int(round(totalTimeTaken.total_seconds()/currentFieldSessionCount, 0))
+
+                avgSessionScoreByFieldList.append(int(round(totalScoreCurrentFieldDict['currentPointsEarned__sum']/currentFieldSessionCount, 0)))
+                avgSessionHintByFieldList.append(int(round(totalHintCurrentFieldDict['hintsUsedCount__sum']/currentFieldSessionCount, 0)))
+                avgSessionTimeTakenByFieldList.append(avgTimeTaken_unformatted)
+
+            fieldName_ScoreDict = {}
+            fieldName_HintDict = {}
+            fieldName_TimeDict = {}
+
+            for i in range(len(fieldIDList)):
+                for field in allGameFields:
+                    if fieldIDList[i] == field.id:
+                        fieldNameList.append(field.name)
+                        fieldName_ScoreDict[field.name] = avgSessionScoreByFieldList[i]
+                        fieldName_HintDict[field.name] = avgSessionHintByFieldList[i]
+                        fieldName_TimeDict[field.name] = avgSessionTimeTakenByFieldList[i]
+                        break
+            
+            # print("fieldName_ScoreDict: " + str(fieldName_ScoreDict)) #Test
+
+            topFive_fieldName_ScoreDict = dict(Counter(fieldName_ScoreDict).most_common(5))
+            # print("topFive_fieldName_ScoreDict: " + str(topFive_fieldName_ScoreDict)) #Test
+
+            topFive_fieldName_HintDict = dict(sorted(fieldName_HintDict.items(), key = itemgetter(1))[:5])
+            # print("topFive_fieldName_HintDict: " + str(topFive_fieldName_HintDict)) #Test
+
+            topFive_fieldName_TimeDict = dict(sorted(fieldName_TimeDict.items(), key = itemgetter(1))[:5])
+            # print("topFive_fieldName_TimeDict: " + str(topFive_fieldName_TimeDict)) #Test
+
+            avgSessionScoreByFieldList = sorted(avgSessionScoreByFieldList, reverse=True)
+            avgSessionScoreByFieldList = avgSessionScoreByFieldList[:5]
+            avgSessionHintByFieldList = sorted(avgSessionHintByFieldList)
+            avgSessionHintByFieldList = avgSessionHintByFieldList[:5]
+            avgSessionTimeTakenByFieldList = sorted(avgSessionTimeTakenByFieldList)
+            avgSessionTimeTakenByFieldList = avgSessionTimeTakenByFieldList[:5]
+
+            # For ALL CHARTS(field colors)
+            colors = [
+                    "rgb(17,112,170)", "rgb(200,82,0)", "rgb(252,125,11)",
+                    "rgb(123,132,143)", "rgb(163,172,185)", "rgb(163,204,233)",
+                    "rgb(87,96,108)", "rgb(255,188,121)", "rgb(95,162,206)",
+                    "rgb(200,208,217)", "rgb(255, 194, 10)", "rgb(64, 176, 66)",
+                    "rgb(93, 58, 155)", "rgb(211, 95, 183)", "rgb(212, 17, 89)",
+                    "rgb(86, 1, 151)", "rgb(132, 0, 205)", "rgb(255, 146, 253)",
+                    "rgb(90, 0, 15)", "rgb(164, 1, 34)", "rgb(69, 2, 112)",
+                    "rgb(153, 79, 0)", "rgb(254, 254, 98)", "rgb(220, 76, 103)"
+                ]
+
+            allGameFieldColorsDict = {}
+            allGameFields = quiz.models.GameField.objects.all().order_by('id')
+
+            for i in range(len(allGameFields)):
+                allGameFieldColorsDict[allGameFields[i].name] = colors[i]
+            
+            # print("allGameFieldColorsDict: " + str(allGameFieldColorsDict)) #Test
+
+            playedFieldColorList = colors[:len(fieldNameList)]
+            # END color designation
+
+            return topFive_fieldName_CountDict, allGameFieldColorsDict, topFive_fieldName_ScoreDict, avgSessionScoreByFieldList, topFive_fieldName_HintDict, avgSessionHintByFieldList, topFive_fieldName_TimeDict, avgSessionTimeTakenByFieldList, playCount, totalScoreAllField, avgSessionScore, avgHintsUsed, avgSessionTimeTaken, lastPlayedTime, playerNameScoreList, playersCnt
+
+        allFieldPlayerSessions = quiz.models.FieldPlayerSession.objects.filter(isFinish=True).order_by('id')
+
+        results = get_chart_data(allFieldPlayerSessions)
+
+        topFive_fieldName_CountDict = results[0]
+        allGameFieldColorsDict = results[1]
+        topFive_fieldName_ScoreDict = results[2]
+        avgSessionScoreByFieldList = results[3]
+        topFive_fieldName_HintDict = results[4]
+        avgSessionHintByFieldList = results[5]
+        topFive_fieldName_TimeDict = results[6]
+        avgSessionTimeTakenByFieldList = results[7]
+        playCount = results[8]
+        totalScoreAllField = results[9]
+        avgSessionScore = results[10]
+        avgHintsUsed = results[11]
+        avgSessionTimeTaken = results[12]
+        lastPlayedTime = results[13]
+        playerNameScoreList = results[14]
+        playersCnt = results[15]
         
-        playedFieldColorList = colors[:len(fieldNameList)]
-        # END color designation
+        def get_filtered_session(filteredFormID, filtered_form):
+            if filteredFormID != 1:
+                filteredHomeroomTeacherClass = dashboard.models.HomeroomTeacherClass.objects.get(className=filtered_form.name)
+                # print("filteredHomeroomTeacherClass: " + str(filteredHomeroomTeacherClass)) #Test
+            
+                studentIDList = list(dashboard.models.Student.objects.filter(studentClass_id=filteredHomeroomTeacherClass).values_list("ID_id", flat=True))
+                # print("studentIDList: " + str(studentIDList)) #Test
+            else:
+                # print("yes")
 
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion,
-            'allNotif': allNotif,
-            'unreadNotifCnt': unreadNotifCnt
-        } 
-        return render(request, 'dashboard/nonAdminReport.html', context)
+                filteredHomeroomTeacherClass = dashboard.models.HomeroomTeacherClass.objects.all()
+                # print("filteredHomeroomTeacherClass: " + str(filteredHomeroomTeacherClass)) #Test
+
+                studentIDList = list(dashboard.models.Student.objects.all().values_list("ID_id", flat=True))
+                # print("studentIDList: " + str(studentIDList)) #Test
+
+            playerIDList = list(quiz.models.Player.objects.filter(ID__in=studentIDList).values_list('ID', flat=True))
+            # print("playerIDList: " + str(playerIDList)) #Test
+
+            allFieldPlayerSessions = quiz.models.FieldPlayerSession.objects.filter(isFinish=True, fieldPlayerID_id__in=playerIDList).order_by('id')
+            # print("allFieldPlayerSessions: " + str(allFieldPlayerSessions)) #Test
+
+            return allFieldPlayerSessions
+
+        allForms = dashboard.models.ClassList.objects.all().order_by('name')
+
+        #For DIV 2: parent-eng
+        def get_filtered_student(filtered_form_parent ,filteredStudentID):
+            # print("----------------DIV 2: parent-eng----------------") #Test
+
+            if filtered_form_parent.id != 1:
+                filtered_HTC = dashboard.models.HomeroomTeacherClass.objects.get(className=filtered_form_parent.name)
+                allStudents = dashboard.models.Student.objects.filter(studentClass_id=filtered_HTC).order_by('studentClass', 'name')
+            else:
+                allStudents = dashboard.models.Student.objects.all().order_by('studentClass', 'name')
+
+            # print("allStudents after filtered form: " + str(allStudents)) #Test
+
+            get_one_student = False
+            filtered_student_record = None
+
+            if filteredStudentID != None:
+                if filteredStudentID != '1':
+                    filtered_student_record = allStudents.get(ID=filteredStudentID)
+                    listOfParentIDs = [filtered_student_record.parentID_id]
+                    get_one_student = True
+                    # print("filtered_student_record after filtered student: " + str(filtered_student_record)) #Test
+                    # print("listOfParentIDs after filtered student: " + str(listOfParentIDs)) #Test
+
+            # Card 1: TotalBlogViews
+            # print("Card 1: TotalBlogViews") #Test
+
+            if get_one_student == False:
+                if allStudents.count() > 0:
+                    listOfParentIDs = list(allStudents.values_list('parentID_id', flat=True))
+                else:
+                    listOfParentIDs = []
+                
+            parentViews = blog.models.BlogPostViewsUser.objects.filter(userID_id__in=listOfParentIDs)
+            viewsCnt = 0
+
+            if parentViews.count() > 0:
+                viewsCntDict = parentViews.aggregate(Sum('noOfViews'))
+                viewsCnt = viewsCntDict['noOfViews__sum']
+
+            # print("parentViews: " + str(parentViews)) #Test
+            # print("viewsCnt: " + str(viewsCnt)) #Test
+
+            # Card 2: TotalBlogComments
+            # print("Card 2: TotalBlogComments") #Test
+
+            parentComments = blog.models.BlogPostComment.objects.filter(userID_id__in=listOfParentIDs)
+            commentsCnt = 0
+
+            if parentComments.count() > 0:
+                commentsCnt = parentComments.count()
+
+            # print("parentComments: " + str(parentComments)) #Test
+            # print("commentsCnt: " + str(commentsCnt)) #Test
+
+            # Card 3: TotalBookmarks
+            # print("Card 3: TotalBookmarks") #Test
+
+            parentBlogBookmarks = blog.models.BlogPostBookmark.objects.filter(userID_id__in=listOfParentIDs)
+            parentInfoBookmarks = dashboard.models.InfoDashboardBookmark.objects.filter(userID_id__in=listOfParentIDs)
+            bookmarkCnt = 0
+
+            if parentBlogBookmarks.count() > 0:
+                bookmarkCnt += parentBlogBookmarks.count()
+            if parentInfoBookmarks.count() > 0:
+                bookmarkCnt += parentInfoBookmarks.count()
+
+            # print("parentBlogBookmarks: " + str(parentBlogBookmarks)) #Test
+            # print("parentInfoBookmarks: " + str(parentInfoBookmarks)) #Test
+            # print("bookmarkCnt: " + str(bookmarkCnt)) #Test
+
+            # Card 4: TotalSuggestions
+            # print("Card 4: TotalSuggestions") #Test
+            parentSuggestions = dashboard.models.Suggestion.objects.filter(creatorID_id__in=listOfParentIDs)
+            suggestionCnt = 0
+
+            if parentSuggestions.count() > 0:
+                suggestionCnt = parentSuggestions.count()
+
+            # print("parentSuggestions: " + str(parentSuggestions)) #Test
+            # print("suggestionCnt: " + str(suggestionCnt)) #Test
+
+            # Card 5: LastChatTime
+            # Get all parent chat records where senderID is in listOfParentIDs order by id
+            # If count above > 0, 
+                # Get the last parent chat record from above
+                # Get the time sent
+            # Else
+                # lastChatTime = 0
+
+            lastChatTime = 0
+
+            # print("parentChats: " + str(lastParentChat)) #Test
+            # print("lastChatTime: " + str(lastChatTime)) #Test
+        
+            return allStudents, get_one_student, filtered_student_record, viewsCnt, commentsCnt, bookmarkCnt, suggestionCnt, lastChatTime
+
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'updateStudentListModal':
+                    filteredFormID = int(request.POST['filteredFormID'])
+
+                    filtered_form = allForms.get(id=filteredFormID)
+                    # print("filtered_form: " + str(filtered_form)) #Test
+                
+                    allFieldPlayerSessions = get_filtered_session(filteredFormID, filtered_form)
+
+                    playerNameScoreList = get_player_name_score_list(allFieldPlayerSessions)[0]
+
+                    # print("playerNameScoreList: " + str(playerNameScoreList))
+
+                    context = {
+                        'playerNameScoreList': playerNameScoreList
+                    } 
+                    return render(request, 'dashboard/nonAdminReportContentTeacher2.html', context)
+        else:
+            if request.is_ajax():
+                if request.GET.get("requestType") == "Charts":
+                    filteredFormID = int(request.GET.get('filteredFormID', None))
+
+                    filtered_form = allForms.get(id=filteredFormID)
+                    # print("filtered_form: " + str(filtered_form)) #Test
+                
+                    allFieldPlayerSessions = get_filtered_session(filteredFormID, filtered_form)
+
+                    results = get_chart_data(allFieldPlayerSessions)
+                    
+                    topFive_fieldName_CountDict = results[0]
+                    allGameFieldColorsDict = results[1]
+                    topFive_fieldName_ScoreDict = results[2]
+                    avgSessionScoreByFieldList = results[3]
+                    topFive_fieldName_HintDict = results[4]
+                    avgSessionHintByFieldList = results[5]
+                    topFive_fieldName_TimeDict = results[6]
+                    avgSessionTimeTakenByFieldList = results[7]
+
+                    # Card 7
+                    # print("-----Card 7-----") #Test
+                    playedFieldColorList = []
+
+                    for field in list(topFive_fieldName_CountDict.keys()):
+                        # print("field: " + field) #Test
+                        # print("allGameFieldColorsDict[field]: " + str(allGameFieldColorsDict[field])) #Test
+                        playedFieldColorList.append(allGameFieldColorsDict[field])
+
+                    # print("playedFieldColorList: " + str(playedFieldColorList)) #Test
+
+                    most_played_field_chart_data = {
+                        "labels": list(topFive_fieldName_CountDict.keys()),
+                        "datasets":[{
+                            "label": "Bilangan Sesi",
+                            "data": list(topFive_fieldName_CountDict.values()),
+                            "backgroundColor": playedFieldColorList
+                        }]
+                    }
+                    
+                    # Card 8
+                    # print("-----Card 8-----") #Test
+                    playedFieldColorList = []
+
+                    for field in list(topFive_fieldName_ScoreDict.keys()):
+                        # print("field: " + field) #Test
+                        # print("allGameFieldColorsDict[field]: " + str(allGameFieldColorsDict[field])) #Test
+                        playedFieldColorList.append(allGameFieldColorsDict[field])
+
+                    # print("playedFieldColorList: " + str(playedFieldColorList)) #Test
+
+                    avg_field_session_score_chart_data = {
+                        "labels": list(topFive_fieldName_ScoreDict.keys()),
+                        "datasets":[{ 
+                            "label": "Purata Markah per Sesi",
+                            "data": avgSessionScoreByFieldList,
+                            "backgroundColor": playedFieldColorList
+                        }]
+                    }
+
+                    # Card 9
+                    # print("-----Card 9-----") #Test
+                    playedFieldColorList = []
+
+                    for field in list(topFive_fieldName_HintDict.keys()):
+                        # print("field: " + field) #Test
+                        # print("allGameFieldColorsDict[field]: " + str(allGameFieldColorsDict[field])) #Test
+                        playedFieldColorList.append(allGameFieldColorsDict[field])
+
+                    # print("playedFieldColorList: " + str(playedFieldColorList)) #Test
+
+                    avg_field_session_hints_chart_data = {
+                        "labels": list(topFive_fieldName_HintDict.keys()),
+                        "datasets":[{ 
+                            "label": "Purata Petunjuk Digunakan per Sesi",
+                            "data": avgSessionHintByFieldList,
+                            "backgroundColor": playedFieldColorList
+                        }]
+                    }
+
+                    # Card 10
+                    avg_field_session_time_chart_data = {
+                        "labels": list(topFive_fieldName_TimeDict.keys()),
+                        "datasets":[{
+                            "label": "Purata Masa Diambil per Sesi",
+                            "data": avgSessionTimeTakenByFieldList,
+                            "fill": False,
+                            "borderColor": 'rgb(179, 97, 173)',
+                            "tension": 0.1
+                        }]
+                    }
+
+                    data_dict = {
+                        "most_played_field_chart_data": most_played_field_chart_data,
+                        "avg_field_session_score_chart_data": avg_field_session_score_chart_data,
+                        "avg_field_session_hints_chart_data": avg_field_session_hints_chart_data,
+                        "avg_field_session_time_chart_data": avg_field_session_time_chart_data
+                    }
+
+                    return JsonResponse(data=data_dict, safe=False)
+                elif request.GET.get("requestType") == "filterForm":
+                    filteredFormID = int(request.GET.get('filteredFormID', None))
+
+                    filtered_form = allForms.get(id=filteredFormID)
+                    # print("filtered_form: " + str(filtered_form)) #Test
+                
+                    allFieldPlayerSessions = get_filtered_session(filteredFormID, filtered_form)
+
+                    results = get_chart_data(allFieldPlayerSessions)
+                    
+                    topFive_fieldName_CountDict = results[0]
+                    allGameFieldColorsDict = results[1]
+                    topFive_fieldName_ScoreDict = results[2]
+                    avgSessionScoreByFieldList = results[3]
+                    topFive_fieldName_HintDict = results[4]
+                    avgSessionHintByFieldList = results[5]
+                    topFive_fieldName_TimeDict = results[6]
+                    avgSessionTimeTakenByFieldList = results[7]
+                    playCount = results[8]
+                    totalScoreAllField = results[9]
+                    avgSessionScore = results[10]
+                    avgHintsUsed = results[11]
+                    avgSessionTimeTaken = results[12]
+                    lastPlayedTime = results[13]
+                    playerNameScoreList = results[14]
+                    playersCnt = results[15]
+                    
+                    context = {
+                        'filtered_form': filtered_form,
+                        'allForms': allForms,
+                        'playerNameScoreList': playerNameScoreList,
+                        'playersCnt': playersCnt,
+                        'playCount': playCount,
+                        'totalScoreAllField': totalScoreAllField,
+                        'avgSessionScore': avgSessionScore,
+                        'avgHintsUsed': avgHintsUsed,
+                        'avgSessionTimeTaken': avgSessionTimeTaken,
+                        'lastPlayedTime': lastPlayedTime
+                    }
+                    return render(request, 'dashboard/nonAdminReportContentTeacher1.html', context)
+                elif request.GET.get("requestType") == "filterFormParent":
+                    # print("requestType: filterFormParent") #Test
+
+                    filteredFormID = int(request.GET.get('filteredFormID', None))
+                    filteredStudentID = None
+
+                    if request.GET.get('filteredStudentID') != None:
+                        filteredStudentID = request.GET.get('filteredStudentID')
+
+                    filtered_form_parent = allForms.get(id=filteredFormID)
+                    has_filtered_form = True
+                    has_filtered_student = True
+                    filtered_student_record = None
+                    # print("filtered_form_parent: " + str(filtered_form_parent)) #Test
+                    # print("filteredStudentID: " + str(filteredStudentID)) #Test
+
+                    results = get_filtered_student(filtered_form_parent, filteredStudentID)
+
+                    if results[1] == False:
+                        if results[0].count() == 1:
+                            filtered_student_record = results[0].first()
+                            allStudentsCnt = 1
+                        else:
+                            allStudentsCnt = results[0].count()
+                    else:
+                        filtered_student_record = results[2]
+                        allStudentsCnt = 1
+                    
+                    context = {
+                        'allForms': allForms,
+                        'filtered_form_parent': filtered_form_parent,
+                        'has_filtered_form': has_filtered_form,
+                        'has_filtered_student': has_filtered_student,
+                        'allStudents': results[0],
+                        'allStudentsCnt': allStudentsCnt,
+                        'get_one_student': results[1],
+                        'filtered_student_record': filtered_student_record,
+                        'viewsCnt': results[3],
+                        'commentsCnt': results[4],
+                        'bookmarkCnt': results[5],
+                        'suggestionCnt': results[6],
+                        'lastChatTime': results[7]
+                    }
+                    return render(request, 'dashboard/nonAdminReportContentTeacher3.html', context)
+            else:
+                filtered_form = allForms.get(id=1)
+                filtered_form_parent = allForms.get(id=1)
+                filteredStudentID = None
+                has_filtered_form = False
+                has_filtered_student = False
+
+                results = get_filtered_student(filtered_form_parent, filteredStudentID)
+
+                context = {
+                    'dashboardNav': dashboardNav,
+                    'user_type': user_type,
+                    'user_id': user_id,
+                    'username': username,
+                    'test': urlTest,
+                    'blog': urlBlog,
+                    'quiz': urlQuiz,
+                    'search': urlSearch,
+                    'dashboard':urlDashboard,
+                    'logout': urlLogout,
+                    'settings': urlProfile,
+                    'bookmark': urlBookmark,
+                    'report': urlReport,
+                    'chat': urlChat,
+                    'suggestions': urlSuggestion,
+                    'allNotif': allNotif,
+                    'unreadNotifCnt': unreadNotifCnt,
+                    'filtered_form': filtered_form,
+                    'allForms': allForms,
+                    'playerNameScoreList': playerNameScoreList,
+                    'playersCnt': playersCnt,
+                    'playCount': playCount,
+                    'totalScoreAllField': totalScoreAllField,
+                    'avgSessionScore': avgSessionScore,
+                    'avgHintsUsed': avgHintsUsed,
+                    'avgSessionTimeTaken': avgSessionTimeTaken,
+                    'lastPlayedTime': lastPlayedTime,
+                    'filtered_form_parent': filtered_form_parent,
+                    'has_filtered_form': has_filtered_form,
+                    'has_filtered_student': has_filtered_student,
+                    'allStudents': results[0],
+                    'allStudentsCnt': results[0].count(),
+                    'filtered_student_record': results[2],
+                    'viewsCnt': results[3],
+                    'commentsCnt': results[4],
+                    'bookmarkCnt': results[5],
+                    'suggestionCnt': results[6],
+                    'lastChatTime': results[7]
+                } 
+                return render(request, 'dashboard/nonAdminReport.html', context)
 
 def nonAdminChat(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
@@ -2051,15 +2559,15 @@ def nonAdminSuggestions(request, user_type, user_id):
     unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
     if request.method == 'POST':
-        print("hi POST")
+        # print("hi POST")
         if request.is_ajax():
             if request.POST['requestType'] == 'updateStatus':
-                print("hi POST ajax updateStatus") # Test
+                # print("hi POST ajax updateStatus") # Test
                 newStatus = request.POST['newStatus']
                 suggestionID = request.POST['suggestionID']
 
-                print("newStatus: " + newStatus) #Test
-                print("suggestionID: " + str(suggestionID)) #Test
+                # print("newStatus: " + newStatus) #Test
+                # print("suggestionID: " + str(suggestionID)) #Test
 
                 currentSuggestion = dashboard.models.Suggestion.objects.get(id=suggestionID)
                 currentSuggestion.status = newStatus
@@ -2150,10 +2658,10 @@ def addSuggestion(request, user_type, user_id):
             filledCategory = filledList['category']
             filledContent = filledList['content']
 
-            print("filledSubject: " + filledSubject) #Test
-            print("filledCategory is String?: " + str(isinstance(filledCategory, str))) #Test
-            print("filledCategory: " + filledCategory) #Test
-            print("filledContent: " + filledContent) #Test
+            # print("filledSubject: " + filledSubject) #Test
+            # print("filledCategory is String?: " + str(isinstance(filledCategory, str))) #Test
+            # print("filledCategory: " + filledCategory) #Test
+            # print("filledContent: " + filledContent) #Test
 
             newSuggestion = dashboard.models.Suggestion.objects.create(creatorID_id=user_id, typeID_id=int(filledCategory), dateUpdated=datetime.now().date(), timeUpdated=datetime.now().time(), title=filledSubject, subjectContent=filledContent, status='Dihantar')
             newSuggestion.dateUpdated = newSuggestion.dateIssued

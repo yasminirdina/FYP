@@ -64,13 +64,12 @@
                         {% for image in blogPostImages %}
                             {% if image.blogPostID_id == post.id %}
                                 <div class="div-image">
-                                    <img class="img-post" src="{% get_media_prefix %}images/admin_post_images/{{ image.blogPostImage.name }}">
+                                    <img class="img-post" src="{{ image.blogPostImage.url }}">
                                 </div>
                             {% endif %}
                         {% endfor %}
                     {% else %}
                         <div class="div-image-default">
-                            <!-- <img class="img-post" src="{% static 'images/thumbnail/sample-post-image.jpg' %}"> -->
                             <img class="img-post-default" src="{% static 'images/thumbnail/newspaper-regular.png' %}">
                         </div>
                     {% endif %}

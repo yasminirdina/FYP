@@ -1,0 +1,106 @@
+{% extends "pTest/baseNonAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>FutureCruise: Ujian Kerjaya | Keputusan Personaliti</title>
+{% endblock %}
+
+{% block js1 %}
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script> 
+    <link rel="stylesheet" href="{% static 'css/studentTest.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1>Profil Kecendurangan Minat Kerjaya</h1>
+    <h2>Tahniah {{ username }}! Ini adalah keputusan Ujian Minat Kerjaya anda! </h2>
+
+    <p>Kod Mata Holland Anda</p>
+
+    <canvas id="hollandCode" width="10vh" height="10vh"></canvas>
+    <script>
+
+    var test2 = "{{test2}}";
+    test2 = test2.substr(1, test2.length-2);
+    var test3 = test2.split(", ");
+    console.log(typeof(test2),test3);
+
+    const hC = document.getElementById('hollandCode').getContext('2d');
+    const hollandCode = new Chart(hC, {
+        type: 'polarArea',
+        data: {
+            labels: [
+            'Red',
+            'Green',
+            'Yellow'
+            ],
+            datasets: [{
+            label: 'My First Dataset',
+            data: test3,
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(75, 192, 192)',
+                'rgb(255, 205, 86)',
+                'rgb(201, 203, 207)',
+                'rgb(54, 162, 235)'
+                ]
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+    
+    <canvas id="allCodeChart" width="100" height="30vh"></canvas>
+    <script>
+    var allCodeResult = "{{allCodeResult}}";
+    allCodeResult = allCodeResult.substr(1, allCodeResult.length-2);
+    var allResult = allCodeResult.split(", ");
+    // console.log(typeof(allCodeResult),allResult);
+
+    const aC = document.getElementById('allCodeChart').getContext('2d');
+    const allCodeChart = new Chart(aC, {
+        type: 'bar',
+        data: {
+            labels: ['Realistik', 'Artistik', 'Investigatif', 'Sosial', 'Enterprising', 'Conventional'],
+            datasets: [{
+                label: '# of Votes',
+                data: allResult,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',  
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    </script>
+{% endblock %}
