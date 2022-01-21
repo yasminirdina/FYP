@@ -3,31 +3,66 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>FutureCruise: Pencarian Maklumat</title>
 
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/search.css' %}">
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"> -->
     <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous"> -->
     <!-- <script src="https://kit.fontawesome.com/6e871/9d54.js" crossorigin="anonymous"></script> -->
+
+    <title>FutureCruise: Pencarian Maklumat</title>
+
 </head>
 <body>
     <center>    
-        <ul class="ul-navbar">
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">Blog Berita</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></li>
-            <li class="li-navbar"><a class="li-a-navbar active" href="{% url search user_id %}">Carian Maklumat</a></li>
-            <li class="li-navbar"><a class="li-a-navbar" href="{% url dashboard user_id %}">
-                <span style="font-style: italic;">Dashboard</span>
-                <span> Admin</span></a></li>
-            <li class="li-navbar logout"><a class="li-a-navbar" href="{% url logout user_id %}">Log Keluar</a></li>            
-            <li class="li-navbar username"><a class="li-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></li>
-        </ul>
+        <div class="div-navbar">
+            <div class="div-navbar-left">
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="">Blog Berita</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar  active" href="{% url search user_id %}">Carian Maklumat</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">
+                    <span>Dashboard</span>
+                    <span>{{ dashboardNav }}</span></a>
+                </p>
+
+                <!-- mobile -->
+                <p class="p-navbar icon"><a class="p-a-navbar active" href="{% url test user_id %}">
+                    <i class="fas fa-edit"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="">
+                    <i class="fas fa-blog"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url quiz user_id %}">
+                    <i class="fas fa-gamepad"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url search user_id %}">
+                    <i class="fas fa-search"></i>
+                </a></p>
+                <p class="p-navbar icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">
+                    <i class="fas fa-user"></i>
+                </a></p>
+            </div>
+
+            <div class="div-navbar-right">
+                <p class="p-navbar logout no-icon"><a class="p-a-navbar" href="{% url logout user_id %}">Log Keluar</a></p>
+                <!-- <p class="p-navbar username no-icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">{{ username }}</a></p> -->
+                <p class="p-navbar username no-icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">Admin</a></p>
+
+                <!-- mobile -->
+                <p class="p-navbar logout icon"><a class="p-a-navbar" href="{% url logout user_id %}">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a></p>
+                <p class="p-navbar username icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">{{ username }}</a></p>
+            </div>
+        </div>
+    </center>
 
     <h1>Carian Maklumat</h1>
     
     <h2>{% block header %}{% endblock %}</h2>
-    </center>
     
     {% block content %}
     {% endblock %}

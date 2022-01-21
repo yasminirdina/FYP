@@ -3,7 +3,7 @@
 {% block header %} Carian Mengikut Bidang Kerjaya {% endblock %}
 {% block content %}
 <div class="container-form-search">
-    <form method="GET" action=".">
+    <form method="GET" action="{% url 'search:jobs-nonadmin' user_type user_id %}">
         <!-- job search -->
         <label for="inputUni">Kerjaya</label><br>
         <input class="form-job" type="search" name="jobs_contains" placeholder="Nama Kerjaya" />

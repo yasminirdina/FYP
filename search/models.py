@@ -23,6 +23,7 @@ class Bridge(models.Model):
 class Jobs(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     job = models.CharField(max_length=120)
+    personality = models.CharField(max_length=120, null=True)
 
     def __str__(self):
         return self.job

@@ -3,7 +3,7 @@
 {% block header %}Cari Semua Rekod {% endblock %}
 {% block content %}
 <div class="container-form-search">
-    <form method="GET" action=".">
+    <form method="GET" action="{% url 'search:all-nonadmin' user_type user_id %}">
         <!-- uni search -->
         <label for="inputUni">Universiti</label><br>
         <input class="form-uni" type="search" name="uni_contains" placeholder="Nama Universiti" />

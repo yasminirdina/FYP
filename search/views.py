@@ -23,141 +23,46 @@ def userid(user_id):
 def search(request, user_type, user_id):
 
     currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if currentUserRecord.isActive == False:
+        return redirect('home:login')
+    
     username = currentUserRecord.username
     urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
-    urlProfile = ''
-    urlBookmark = ''
-    urlReport = ''
-    urlChat = ''
-    urlSuggestion = ''
-    if user_type == "pelajar" and 'S' in user_id:
-        # dashboardNav = " Pelajar"
-        urlProfile = 'dashboard:profile-settings-nonadmin' #same view for any nonadmin user (display setting)
-        urlBookmark = 'dashboard:bookmarks' #same view for any nonadmin user (display bookmark list)
-        urlReport = 'dashboard:reports-student' #so far i think report have diff view for every nonadmin type (student view and download, parent view childrens', homeroom teacher can filter, view, dl)
-        urlChat = 'dashboard:chat-student' #tbc same view or not, if yes, omit 'student' use same url pattern for all nonadmin
-        urlSuggestion = 'dashboard:suggestions-nonadmin' #same view for any nonadmin user (display suggestion list)
-        context = { 
-            'dashboardNav': userid(user_id),  
-            'user_type': user_type, 
-            'user_id': user_id, 
-            'username': username,
-            'test': urlTest, 
-            'blog': urlBlog, 
-            'quiz': urlQuiz, 
-            'search': urlSearch, 
-            'dashboard':urlDashboard, 
-            'logout': urlLogout, 
-            'profile': urlProfile,
-            'bookmark': urlBookmark, 
-            'report': urlReport, 
-            'chat': urlChat, 
-            'suggestion': urlSuggestion
-        } 
-        return render(request,'search/user/search.html', context)
-    elif user_type == "penjaga" and 'P' in user_id:
-        urlProfile = 'dashboard:profile-settings-nonadmin'
-        urlBookmark = 'dashboard:bookmarks'
-        urlReport = 'dashboard:reports-parent'
-        urlChat = 'dashboard:chat-parent'
-        urlSuggestion = 'dashboard:suggestions-nonadmin'
-        context = {
-            'dashboardNav': userid(user_id), 
-            'user_type': user_type, 
-            'user_id': user_id, 
-            'username': username,
-            'test': urlTest, 
-            'blog': urlBlog, 
-            'quiz': urlQuiz, 
-            'search': urlSearch, 
-            'dashboard':urlDashboard, 
-            'logout': urlLogout, 
-            'profile': urlProfile,
-            'bookmark': urlBookmark, 
-            'report': urlReport, 
-            'chat': urlChat, 
-            'suggestion': urlSuggestion
-        } 
-        return render(request, 'search/user/search.html', context)
-    elif user_type == "guru" and 'T' in user_id:
-        urlProfile = 'dashboard:profile-settings-nonadmin'
-        urlBookmark = 'dashboard:bookmarks'
-        urlReport = 'dashboard:reports-teacher'
-        urlChat = 'dashboard:chat-teacher'
-        urlSuggestion = 'dashboard:suggestions-nonadmin'
-        context = { 
-            'dashboardNav': userid(user_id), 
-            'user_type': user_type, 
-            'user_id': user_id, 
-            'username': username,
-            'test': urlTest, 
-            'blog': urlBlog, 
-            'quiz': urlQuiz, 
-            'search': urlSearch, 
-            'dashboard':urlDashboard, 
-            'logout': urlLogout, 
-            'profile': urlProfile,
-            'bookmark': urlBookmark, 
-            'report': urlReport, 
-            'chat': urlChat, 
-            'suggestion': urlSuggestion
-        } 
-        return render(request, 'search/user/search.html', context)
-    else: #no match between user type and user ID huruf part (cth: 'pelajar' and 'A1') OR english user types OR typo
-        title = ''
-        dashboardNav = ''
-        if user_type == 'pelajar':
-            title = "Future Cruise: Papan Pemuka Pelajar"
-            dashboardNav = "Papan Pemuka Pelajar"
-            response = "Halaman ini hanya boleh diakses oleh pelajar."
-        elif user_type == 'penjaga':
-            title = "Future Cruise: Papan Pemuka Penjaga"
-            dashboardNav = "Papan Pemuka Penjaga"
-            response = "Halaman ini hanya boleh diakses oleh ibu bapa atau penjaga."
-        elif user_type == 'guru':
-            title = "Future Cruise: Papan Pemuka Guru"
-            dashboardNav = "Papan Pemuka Guru"
-            response = "Halaman ini hanya boleh diakses oleh guru."
-        else: #user type in english/invalid e.g. student, parent, teacher, typos
-            title = "Future Cruise: Papan Pemuka Pengguna"
-            dashboardNav = "Papan Pemuka Pengguna"
-            response = "Halaman ini tidak wujud." 
-        #pass url navbar nonadmin to error template
-        context = {
-            'title': title, 
-            'dashboardNav': dashboardNav, 
-            'response': response, 
-            'user_type': user_type, 
-            'user_id': user_id,
-            'username': username, 
-            'test': urlTest, 
-            'blog': urlBlog, 
-            'quiz': urlQuiz, 
-            'search': urlSearch, 
-            'dashboard':urlDashboard, 
-            'logout': urlLogout
-        }
-        return render(request, 'dashboard\dashboardIndexNonAdminError.html', context)
+    
+    context = { 
+        'dashboardNav': userid(user_id),  
+        'user_type': user_type, 
+        'user_id': user_id, 
+        'username': username,
+        'test': urlTest, 
+        'blog': urlBlog, 
+        'quiz': urlQuiz, 
+        'search': urlSearch, 
+        'dashboard':urlDashboard,
+        'logout': urlLogout 
+    } 
+    return render(request,'search/user/search.html', context)
 
 def searchAll(request, user_type, user_id):
     currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if currentUserRecord.isActive == False:
+        return redirect('home:login')
+    
     username = currentUserRecord.username
-    urlTest = 'dashboard:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
-    urlLogout = 'dashboard:logout-confirm'
-    urlProfile = 'dashboard:profile-settings-nonadmin'
-    urlBookmark = ''
-    urlReport = ''
-    urlChat = ''
-    urlSuggestion = ''
     urlLogout = 'dashboard:logout-confirm'
     
     course = Course.objects.all()
@@ -179,17 +84,17 @@ def searchAll(request, user_type, user_id):
     # if is_valid_queryparam(jobs_contains):
     #     jobs = jobs.filter(jobs__icontains=jobs_contains)
         
-    context = {
-        'user_id': user_id,
-        'user_type': user_type,
-        'username' : username,
-        'dashboardNav' : userid(user_id), 
+    context = { 
+        'dashboardNav': userid(user_id),  
+        'user_type': user_type, 
+        'user_id': user_id, 
+        'username': username,
         'test': urlTest, 
         'blog': urlBlog, 
-        'quiz': urlQuiz,
+        'quiz': urlQuiz, 
         'search': urlSearch, 
-        'dashboard': urlDashboard, 
-        'logout': urlLogout,
+        'dashboard':urlDashboard,
+        'logout': urlLogout, 
         'allCourse' : course,
         'allUni':uni,
         'allJobs':jobs,
@@ -198,20 +103,18 @@ def searchAll(request, user_type, user_id):
     return render(request, 'search/user/searchAll.html', context)
 
 def searchUni(request, user_type, user_id):
-    
     currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if currentUserRecord.isActive == False:
+        return redirect('home:login')
+    
     username = currentUserRecord.username
-    urlTest = 'dashboard:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
-    urlLogout = 'dashboard:logout-confirm'
-    urlProfile = 'dashboard:profile-settings-nonadmin'
-    urlBookmark = ''
-    urlReport = ''
-    urlChat = ''
-    urlSuggestion = ''
     urlLogout = 'dashboard:logout-confirm'
     
     course = Course.objects.all()
@@ -230,48 +133,37 @@ def searchUni(request, user_type, user_id):
     if is_valid_queryparam(course_contains):
         course = course.filter(course__icontains=course_contains)
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = "Papan Pemuka Pelajar"
-    elif user_type == 'penjaga':
-        dashboardNav = "Papan Pemuka Penjaga"
-    elif user_type == 'guru':
-        dashboardNav = "Papan Pemuka Guru"
-    else: #user type in english/invalid e.g. student, parent, teacher, typos
-        dashboardNav = "Papan Pemuka Pengguna"
-
-    context = {
-        'user_id': user_id,
-        'user_type': user_type,
-        'username' : username,
-        'dashboardNav' : dashboardNav, 
+    context = { 
+        'dashboardNav': userid(user_id),  
+        'user_type': user_type, 
+        'user_id': user_id, 
+        'username': username,
         'test': urlTest, 
         'blog': urlBlog, 
-        'quiz': urlQuiz,
+        'quiz': urlQuiz, 
         'search': urlSearch, 
-        'dashboard': urlDashboard, 
-        'logout': urlLogout,
+        'dashboard':urlDashboard,
+        'logout': urlLogout, 
         'allCourse' : course,
         'allUni':uni,
         'allJobs':jobs,
         'allBridge':courseuni,
-        }
-    return render(request, 'search/user/searchUni.html', context)
+    } 
+    return render(request,'search/user/searchUni.html', context)
 
-def searchCourse(request, user_type, user_id):
-    
+def searchCourse(request, user_type, user_id): 
     currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if currentUserRecord.isActive == False:
+        return redirect('home:login')
+    
     username = currentUserRecord.username
-    urlTest = 'dashboard:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
-    urlLogout = 'dashboard:logout-confirm'
-    urlProfile = 'dashboard:profile-settings-nonadmin'
-    urlBookmark = ''
-    urlReport = ''
-    urlChat = ''
-    urlSuggestion = ''
     urlLogout = 'dashboard:logout-confirm'
     
     course = Course.objects.all()
@@ -290,26 +182,17 @@ def searchCourse(request, user_type, user_id):
     if is_valid_queryparam(uni_contains):
         uni = uni.filter(uni__icontains=uni_contains)
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = "Papan Pemuka Pelajar"
-    elif user_type == 'penjaga':
-        dashboardNav = "Papan Pemuka Penjaga"
-    elif user_type == 'guru':
-        dashboardNav = "Papan Pemuka Guru"
-    else: #user type in english/invalid e.g. student, parent, teacher, typos
-        dashboardNav = "Papan Pemuka Pengguna"
-
-    context = {
-        'user_id': user_id,
-        'user_type': user_type,
-        'username' : username,
-        'dashboardNav' : dashboardNav, 
+    context = { 
+        'dashboardNav': userid(user_id),  
+        'user_type': user_type, 
+        'user_id': user_id, 
+        'username': username,
         'test': urlTest, 
         'blog': urlBlog, 
-        'quiz': urlQuiz,
+        'quiz': urlQuiz, 
         'search': urlSearch, 
-        'dashboard': urlDashboard, 
-        'logout': urlLogout,
+        'dashboard':urlDashboard,
+        'logout': urlLogout, 
         'allCourse' : course,
         'allUni':uni,
         'allJobs':jobs,
@@ -318,20 +201,18 @@ def searchCourse(request, user_type, user_id):
     return render(request, 'search/user/searchCourse.html', context)
 
 def searchJobs(request, user_type, user_id):
-    
     currentUserRecord = dashboard.models.User.objects.get(ID=user_id)
+    
+    #check logged in or not
+    if currentUserRecord.isActive == False:
+        return redirect('home:login')
+    
     username = currentUserRecord.username
-    urlTest = 'dashboard:index-nonadmin'
-    urlBlog = 'blog:index-nonadmin'
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
     urlQuiz = 'quiz:index-student'
     urlSearch = 'search:index-nonadmin'
     urlDashboard = 'dashboard:index-nonadmin'
-    urlLogout = 'dashboard:logout-confirm'
-    urlProfile = 'dashboard:profile-settings-nonadmin'
-    urlBookmark = ''
-    urlReport = ''
-    urlChat = ''
-    urlSuggestion = ''
     urlLogout = 'dashboard:logout-confirm'
     
     course = Course.objects.all()
@@ -351,26 +232,17 @@ def searchJobs(request, user_type, user_id):
     if is_valid_queryparam(course_contains):
         course = course.filter(course__icontains=course_contains)
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = "Papan Pemuka Pelajar"
-    elif user_type == 'penjaga':
-        dashboardNav = "Papan Pemuka Penjaga"
-    elif user_type == 'guru':
-        dashboardNav = "Papan Pemuka Guru"
-    else: #user type in english/invalid e.g. student, parent, teacher, typos
-        dashboardNav = "Papan Pemuka Pengguna"
-
-    context = {
-        'user_id': user_id,
-        'user_type': user_type,
-        'username' : username,
-        'dashboardNav' : dashboardNav, 
+    context = { 
+        'dashboardNav': userid(user_id),  
+        'user_type': user_type, 
+        'user_id': user_id, 
+        'username': username,
         'test': urlTest, 
         'blog': urlBlog, 
-        'quiz': urlQuiz,
+        'quiz': urlQuiz, 
         'search': urlSearch, 
-        'dashboard': urlDashboard, 
-        'logout': urlLogout,
+        'dashboard':urlDashboard,
+        'logout': urlLogout, 
         'allCourse' : course,
         'allUni':uni,
         'allJobs':jobs,
