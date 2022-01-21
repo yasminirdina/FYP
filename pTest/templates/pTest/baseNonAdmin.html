@@ -23,7 +23,9 @@
             <div class="div-navbar-left">
                 <p class="p-navbar no-icon"><a class="p-a-navbar active" href="{% url test user_type user_id %}">Ujian Kerjaya</a></p>
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
-                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                {% if user_type == 'pelajar' %}
+                    <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                {% endif %}
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></p>
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">
                     <span style="font-style: italic;">Dashboard</span>

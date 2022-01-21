@@ -1,0 +1,159 @@
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(224, 224, 224);
+    border-radius: 50px;
+    /* border: 3px solid orange; */
+}
+
+body {
+    background: linear-gradient(
+        rgba(255, 190, 93, 0.664) 0%,
+        rgba(253, 174, 110, 0.658) 20%,
+        rgba(255, 87, 87, 0.459) 90%
+    );
+    /* background-size: 100%; */
+    padding-bottom: 100px;
+    color: white;
+}
+
+.topic-header{
+    font-size: 2rem;
+}
+
+.main-header{
+    font-size: 2.5rem;
+    margin-bottom: 50px;
+}
+
+#hCode-container{
+    border-radius: 10px;
+    background-color: rgba(226, 121, 195, 0.363);
+    margin: 40px;
+    padding: 10px 30px 30px 30px;
+}
+
+.hCode-name{
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.hCode-chart{
+    /* background-color: rgb(168, 56, 56); */
+    margin: auto;
+    padding: 30px;
+    width: 600px;
+    height:500px
+}
+
+#allCode-container{
+    border-radius: 10px;
+    background-color: rgba(226, 121, 195, 0.363);
+    margin: 40px;
+    padding: 10px 30px 30px 30px;
+}
+
+.allCode-name{
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.allCode-chart{
+    /* background-color: rgb(168, 56, 56); */
+    margin: auto;
+    padding: 30px;
+    height:400px
+}
+
+#career-main-container{
+    border-radius: 10px;
+    background-color: rgba(226, 121, 195, 0.363);
+    margin: 40px;
+    padding: 10px 30px 30px 30px;
+}
+
+.career-title{
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+/* Style the tab */
+.hollcode-main-tab {
+    overflow: hidden;
+    border: 1px solid rgb(250, 127, 56);
+    border-radius: 10px 10px 0 0;
+    background-color: rgb(250, 127, 56);
+}
+
+.hollcode-sub-tab {
+    overflow: hidden;
+    /* border: 1px solid rgb(207, 119, 119); */
+    background-color: rgb(250, 188, 54);
+}
+
+/* Style the buttons that are used to open the tab content */
+.hollcode-main-tab button{
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+.hollcode-sub-tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.hollcode-main-tab button:hover{
+    background-color: rgb(250, 151, 37);
+    /* border-radius: 10px; */
+}
+
+.hollcode-sub-tab button:hover {
+    background-color: rgba(250, 127, 56, 0.692);
+}
+
+/* Create an active/current tablink class */
+.hollcode-main-tab button.active{
+    background-color: rgb(250, 188, 54);
+    border-radius: 10px 10px 0 0;
+}
+
+.hollcode-sub-tab button.active {
+    background-color: rgba(250, 127, 56, 0.692);
+    border-radius: 10px 10px 0 0;
+}
+
+/* Style the tab content */
+.career-content{
+    background: rgba(250, 127, 56, 0.692);
+}
+
+.tabcontent {
+    display: none;
+    /* padding: 6px 12px; */
+    border: 1px solid rgb(199, 90, 90);
+    border-top: none;
+}
+
+table, th, td{
+    font-size: 1rem;
+    /* border-collapse: collapse; */
+    /* font-weight: bold; */
+    padding: 10px;
+}

@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse, JsonResponse
 from .forms import TestForm
+import pandas as pd
 
 def userid(user_id):
     if 'S' in user_id:
@@ -48,10 +49,21 @@ def testMain(request, user_type, user_id):
             'logout': urlLogout 
         }
         return render(request, 'pTest\pTstudentMain.html', context)
+    
     #parent and teacher
     else:
+        # for teacher
+        classRoom = dashboard.models.Teacher.objects.get(ID_id=user_id)
+        studentList = dashboard.models.Student.objects.filter(studentClass_id = classRoom.homeroomClass).order_by('name')
+        studentTakenTest = pTest.models.StudentTester.objects.all()
+        # studentTakenTest = studentTakenTest.exists()
+        # print(classRoom.homeroomClass)
+        print(studentList)
+        print(studentTakenTest)
+
         context = {
             'dashboardNav': userid(user_id), 
+            'user_type': user_type,
             'user_id': user_id, 
             'username': username,
             'test': urlTest, 
@@ -59,9 +71,12 @@ def testMain(request, user_type, user_id):
             'quiz': urlQuiz, 
             'search': urlSearch, 
             'dashboard':urlDashboard, 
-            'logout': urlLogout
+            'logout': urlLogout,
+            'classRoom': classRoom,
+            'studentList' : list(studentList),
+            'studentTakenTest' : list(studentTakenTest)
         }
-        return render(request, 'pTest\pTestNonStudent.html', context)
+        return render(request, 'pTest\pTNonStudentMain.html', context)
 
 def getQuestion(cnt_quest, allQuestionsPerPersonality, remainingQuestions):
 
@@ -468,77 +483,133 @@ def testResult (request, user_type, user_id):
     urlDashboard = 'dashboard:index-nonadmin'
     urlLogout = 'dashboard:logout-confirm'
 
-    #if student
-    if user_type == 'pelajar' and 'S' in user_id:
+    #personality name
+    codeName = []
+    for x in range(1,7):
+        allPersonality = pTest.models.Personality.objects.get(id=x)
+        codeName.append(allPersonality.personality)
+    # print(codeName)
 
-        allAttempts = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = user_id).order_by('id')
-        latestResult = allAttempts.last()
-        allCodeResult = [
-            latestResult.rSecScore,
-            latestResult.aSecScore,
-            latestResult.iSecScore,
-            latestResult.sSecScore,
-            latestResult.eSecScore,
-            latestResult.cSecScore
-        ]
-        print(allCodeResult)
-        
-        name = [
-            'Realistik',
-            'Artistik',
-            'Investigatif',
-            'Sosial',
-            'Enterprising',
-            'Conventional'
-        ]
-        test = allCodeResult
-        test2 = sorted(test, reverse=True)[:3]
-        print(test2)
-        
-        # check = 0
-        # count = 1
-        # for i in range(1, len(allCodeResult)+1):
-        #     if (count < len(allCodeResult)):
-        #         if(check != allCodeResult[len(allCodeResult)]):
-        #             print(allCodeResult[len(allCodeResult) - i], end = " ")
-        #             check = allCodeResult[len(allCodeResult) - i]
-        #             count += 1
-        #     else:
-        #         break
- 
-        context = {
-            'dashboardNav': userid(user_id), 
-            'user_id': user_id,
-            'user_type':user_type, 
-            'username': username,
-            'test': urlTest, 
-            'blog': urlBlog, 
-            'quiz': urlQuiz, 
-            'search': urlSearch, 
-            'dashboard':urlDashboard, 
-            'logout': urlLogout,
-            'latestResult' : latestResult,
-            'allCodeResult' : allCodeResult,
-            'test2' : test2
-        }
-        return render(request, 'pTest\studentResult.html', context)
+    #personality score
+    allAttempts = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = user_id).order_by('id')
+    latestResult = allAttempts.last()
+    allCodeResult = [
+        latestResult.rSecScore,
+        latestResult.aSecScore,
+        latestResult.iSecScore,
+        latestResult.sSecScore,
+        latestResult.eSecScore,
+        latestResult.cSecScore
+    ]
+    # print(allCodeResult)
+    
+    #top3 code
+    listCode = {codeName[i]: allCodeResult[i] for i in range(len(codeName))}
+    topCode = sorted(listCode.items(), key=lambda x: x[1], reverse=True)[:3]
+    
+    topName=[]
+    topScore=[]
+    for i in topCode:
+        topName.append(i[0]),
+        topScore.append(i[1])
 
-    #parent and teacher
-    else:
-        context = {
-            'dashboardNav': userid(user_id), 
-            'user_id': user_id,
-            'user_type':user_type,  
-            'username': username,
-            'test': urlTest, 
-            'blog': urlBlog, 
-            'quiz': urlQuiz, 
-            'search': urlSearch, 
-            'dashboard':urlDashboard, 
-            'logout': urlLogout
-        }
-        return render(request, 'pTest\nonStudentResult.html', context)
+    hollCode={
+        'topName': topName,
+        'topScore':topScore
+    }
+    # print(hollCode)
 
+    context = {
+        'dashboardNav': userid(user_id), 
+        'user_id': user_id,
+        'user_type':user_type, 
+        'username': username,
+        'test': urlTest, 
+        'blog': urlBlog, 
+        'quiz': urlQuiz, 
+        'search': urlSearch, 
+        'dashboard':urlDashboard, 
+        'logout': urlLogout,
+        'codeName':codeName,
+        'latestResult' : latestResult,
+        'allCodeResult' : allCodeResult,
+        'topCode' : topCode,
+        'hollCode' : hollCode
+    }
+    return render(request, 'pTest\studentResult.html', context)
+
+def nonStudentTestResult (request, user_type, user_id, student, student_id):
+    currentUserDetail = dashboard.models.User.objects.get(ID=user_id)
+    currentStudentDetail = dashboard.models.Student.objects.get(ID=student_id)
+
+    #check logged in or not
+    if currentUserDetail.isActive == False:
+        return redirect('home:login')
+
+    studentName = currentStudentDetail.name
+    urlTest = 'test:index-nonadmin'
+    urlBlog = 'blog:index'
+    urlQuiz = 'quiz:index-student'
+    urlSearch = 'search:index-nonadmin'
+    urlDashboard = 'dashboard:index-nonadmin'
+    urlLogout = 'dashboard:logout-confirm'
+
+    #personality name
+    codeName = []
+    for x in range(1,7):
+        allPersonality = pTest.models.Personality.objects.get(id=x)
+        codeName.append(allPersonality.personality)
+    # print(codeName)
+
+    #personality score
+    allAttempts = pTest.models.StudentPersonalitySession.objects.filter(studentID_id = student_id).order_by('id')
+    latestResult = allAttempts.last()
+    allCodeResult = [
+        latestResult.rSecScore,
+        latestResult.aSecScore,
+        latestResult.iSecScore,
+        latestResult.sSecScore,
+        latestResult.eSecScore,
+        latestResult.cSecScore
+    ]
+    # print(allCodeResult)
+    
+    #top3 code
+    listCode = {codeName[i]: allCodeResult[i] for i in range(len(codeName))}
+    topCode = sorted(listCode.items(), key=lambda x: x[1], reverse=True)[:3]
+    
+    topName=[]
+    topScore=[]
+    for i in topCode:
+        topName.append(i[0]),
+        topScore.append(i[1])
+
+    hollCode={
+        'topName': topName,
+        'topScore':topScore
+    }
+    # print(hollCode)
+
+    context = {
+        'dashboardNav': userid(user_id), 
+        'user_id': user_id,
+        'user_type':user_type,
+        'student_id': student_id, #test
+        'student':student, #test
+        'studentName': studentName,
+        'test': urlTest, 
+        'blog': urlBlog, 
+        'quiz': urlQuiz, 
+        'search': urlSearch, 
+        'dashboard':urlDashboard, 
+        'logout': urlLogout,
+        'codeName':codeName,
+        'latestResult' : latestResult,
+        'allCodeResult' : allCodeResult,
+        'topCode' : topCode,
+        'hollCode' : hollCode
+    }
+    return render(request, 'pTest\pTNonStudentResult.html', context)
 
 def testAdmin(request, user_id):
     context = {

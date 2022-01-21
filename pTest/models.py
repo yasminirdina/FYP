@@ -20,7 +20,7 @@ class StudentTester(models.Model):
     ID = models.OneToOneField(Student, on_delete=models.CASCADE, primary_key=True)
     
     def __str__(self):
-        return self.ID
+        return str(self.ID)
 
 class StudentPersonalitySession(models.Model):
     studentID = models.ForeignKey(StudentTester, on_delete=models.PROTECT)
@@ -31,3 +31,5 @@ class StudentPersonalitySession(models.Model):
     sSecScore = models.IntegerField(default=0)
     eSecScore = models.IntegerField(default=0)
     cSecScore = models.IntegerField(default=0)
+
+

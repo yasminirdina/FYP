@@ -1,0 +1,100 @@
+*::-webkit-scrollbar {
+    width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgb(224, 224, 224);
+    border-radius: 50px;
+    /* border: 3px solid orange; */
+}
+
+body {
+    background: linear-gradient(
+        rgba(255, 190, 93, 0.664) 0%,
+        rgba(253, 174, 110, 0.658) 20%,
+        rgba(255, 87, 87, 0.459) 90%
+    );
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.main-header{
+    font-size: 2.5rem;
+}
+
+.topic-header{
+    font-size: 2rem;
+    margin-bottom: 0;
+}
+
+#list-container{
+    border-radius: 10px;
+    background-color: rgba(226, 121, 195, 0.363);
+    margin: 40px;
+    padding: 10px 30px 30px 30px;
+}
+
+.class-name{
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+table, th, td{
+    font-size: 1rem;
+    border: 1.5px solid rgb(172, 98, 15);
+    border-collapse: collapse;
+    /* font-weight: bold; */
+    padding: 10px;
+}
+
+.table-student-name{
+    background-color: rgba(238, 238, 238, 0.89);
+    border-radius: 10px;
+} 
+
+th{
+    background-color: rgb(255, 196, 107);
+    color: rgb(66, 66, 66);
+}
+
+th#student-column { 
+    width:1024px;
+    font-size: 1.2rem;
+}
+
+th#status-column { 
+    width:170px;
+    font-size: 1.2rem;
+}
+
+td#status-completed { 
+    color: rgb(105, 146, 9);
+    line-height: 30px;
+}
+
+td#status-incomplete { 
+    color: rgb(241, 35, 35);
+}
+
+#teacher-result-btn{
+    color: rgb(255, 255, 255);
+    font-size: 0.9rem;
+    padding: 5px;
+    border-radius: 0.5rem;
+    text-align: center;
+    text-decoration: none;
+    background: rgb(250, 151, 37);
+}
+
+#teacher-result-btn:hover{
+    background: rgb(133, 180, 23);
+}
+
