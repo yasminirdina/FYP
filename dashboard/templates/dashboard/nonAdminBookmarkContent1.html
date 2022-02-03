@@ -12,7 +12,11 @@
             {% for bookmark in allPostBookmarks %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ bookmark.blogPostID.title }}</td>
+                    <td>
+                        <a class="a-with-underline" href="{% url 'blog:view-post' user_type user_id bookmark.blogPostID.id %}">
+                            {{ bookmark.blogPostID.title }}
+                        </a>
+                    </td>
                     <td>{{ bookmark.dateTimeAdded |date:"d/m/Y, h:i A" }}</td>
                     <td>
                         <button class="btn delete" value="post-{{ bookmark.id }}">

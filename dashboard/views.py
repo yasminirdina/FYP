@@ -31,7 +31,8 @@ def adminNotif(request, user_id):
 
     urlClassSettings = 'dashboard:class-settings'
     urlSuggestions = 'dashboard:suggestions-admin'
-    urlChat = 'dashboard:chat-admin'
+    # urlChat = 'dashboard:chat-admin'
+    urlChat = 'dashboard:chat'
 
     if user_id == 'A1': #betul ni admin, render dashboard index admin
         allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
@@ -112,7 +113,8 @@ def adminClassSettings(request, user_id):
 
     urlClassSettings = 'dashboard:class-settings'
     urlSuggestions = 'dashboard:suggestions-admin'
-    urlChat = 'dashboard:chat-admin'
+    # urlChat = 'dashboard:chat-admin'
+    urlChat = 'dashboard:chat'
 
     allClass = dashboard.models.HomeroomTeacherClass.objects.exclude(className='NA').order_by('className')
     
@@ -237,7 +239,8 @@ def adminSuggestions(request, user_id):
 
     urlClassSettings = 'dashboard:class-settings'
     urlSuggestions = 'dashboard:suggestions-admin'
-    urlChat = 'dashboard:chat-admin'
+    # urlChat = 'dashboard:chat-admin'
+    urlChat = 'dashboard:chat'
 
     statusList = ['Dihantar', 'Sedang Diproses', 'Ditutup']
     allSuggestions = dashboard.models.Suggestion.objects.all().order_by('-dateIssued', '-timeIssued', 'title')
@@ -309,7 +312,7 @@ def adminSuggestions(request, user_id):
 
             return render(request, 'dashboard/adminSuggestions.html', context)
 
-def adminChat(request, user_id):
+""" def adminChat(request, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
     
     #check logged in or not
@@ -326,7 +329,8 @@ def adminChat(request, user_id):
 
     urlClassSettings = 'dashboard:class-settings'
     urlSuggestions = 'dashboard:suggestions-admin'
-    urlChat = 'dashboard:chat-admin'
+    # urlChat = 'dashboard:chat-admin'
+    urlChat = 'dashboard:chat'
 
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
     unreadNotifCnt = allNotif.filter(isOpen=False).count()
@@ -347,7 +351,7 @@ def adminChat(request, user_id):
         'unreadNotifCnt': unreadNotifCnt
     }
 
-    return render(request, 'dashboard/adminChat.html', context)
+    return render(request, 'dashboard/adminChat.html', context) """
 
 def nonAdminNotif(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
@@ -367,7 +371,8 @@ def nonAdminNotif(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     if user_type == "pelajar" and 'S' in user_id:
@@ -567,7 +572,8 @@ def showProfileNonAdmin(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
     
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
@@ -751,7 +757,8 @@ def changePassword(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
@@ -932,7 +939,8 @@ def editProfile(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
@@ -1412,7 +1420,8 @@ def nonAdminBookmark(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     allPostBookmarks = blog.models.BlogPostBookmark.objects.filter(userID_id=user_id).order_by('-dateTimeAdded')
@@ -1475,6 +1484,8 @@ def nonAdminBookmark(request, user_type, user_id):
                 # print("allPostBookmarks: " + str(allPostBookmarks)) #Test
                     
                 context = {
+                    'user_type': user_type,
+                    'user_id': user_id,
                     'allPostBookmarks': allPostBookmarks
                 }
 
@@ -1531,7 +1542,8 @@ def nonAdminReport(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
@@ -1643,15 +1655,98 @@ def nonAdminReport(request, user_type, user_id):
 
         parentStudents = dashboard.models.Student.objects.filter(parentID_id=user_id).order_by('name')
         parentStudentsCnt = parentStudents.count()
+        print("parentStudentsCnt: " + str(parentStudentsCnt))
+
+        filtered_student = parentStudents.first()
+        print("filtered_student: " + str(filtered_student))
+
+        if parentStudentsCnt > 0:
+            currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=filtered_student.ID_id, isFinish=True)
+            fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
+            criteria_score_list = []
+            criteria_hint_list = []
+            criteria_time_list = []
+            final_field_criteria_dict = {}
+
+            for i in range(len(fieldIDList)):
+                currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
+                currentFieldSessionCount = currentIterFieldRecords.count()
+
+                #for criteria_score_list
+                fullScoreEasyDict = currentIterFieldRecords.aggregate(Sum('countEasy'))
+                fullScoreEasy = fullScoreEasyDict['countEasy__sum']*6
+                fullScoreMediumDict = currentIterFieldRecords.aggregate(Sum('countMedium'))
+                fullScoreMedium = fullScoreMediumDict['countMedium__sum']*8
+                fullScoreHardDict = currentIterFieldRecords.aggregate(Sum('countHard'))
+                fullScoreHard = fullScoreHardDict['countHard__sum']*10
+                totalFullScore = fullScoreEasy + fullScoreMedium + fullScoreHard
+
+                #deducted hint already because took from currentPointsEarned
+                earnedScoreDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
+                earnedScore = earnedScoreDict['currentPointsEarned__sum']
+
+                if totalFullScore > 0:
+                    criteria_score_list.append(round((earnedScore/totalFullScore)*45, 2))
+                else:
+                    criteria_score_list.append(0)
+
+                #for criteria_hint_list
+                fullHintCount = 30*currentFieldSessionCount
+                usedHintCountDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
+                usedHintCount = usedHintCountDict['hintsUsedCount__sum']
+
+                criteria_hint_list.append(round(((fullHintCount-usedHintCount)/fullHintCount)*30, 2))
+
+                #for criteria_time_list (in seconds)
+                fullTimeEasy = fullScoreEasyDict['countEasy__sum']*10
+                fullTimeMedium = fullScoreMediumDict['countMedium__sum']*20
+                fullTimeHard = fullScoreHardDict['countHard__sum']*30
+                totalFullTime = fullTimeEasy + fullTimeMedium + fullTimeHard
+
+                timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
+                totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList)).total_seconds()
+
+                #rasanya no totalFullTime should be 0? Sebab mesti time akan running at least 1s. But this one happened sebab
+                #while debugging something dulu it didnt manage to track time but now should be ok
+                if totalFullTime > 0:
+                    criteria_time_list.append(round(((totalFullTime-totalTimeTaken)/totalFullTime)*25, 2))
+                else:
+                    criteria_time_list.append(0)
+
+                final_field_criteria_dict[fieldIDList[i]] = criteria_score_list[i] + criteria_hint_list[i] + criteria_time_list[i]
+            
+            k = Counter(final_field_criteria_dict)
+        
+            # Finding 3 highest values
+            three_highest_fields = k.most_common(3) #returns list = [(fieldID_1, perc_1), (fieldID_2, perc_2), (fieldID_3, perc_3)]
+            three_highest_fieldIDs = list(field[0] for field in three_highest_fields)
+            three_highest_fieldPerc = list(field[1] for field in three_highest_fields)
+            three_highest_fieldImage = []
+            three_highest_fieldName = []
+
+            #append image URL into imageURLList following the order of gameFields
+            for fieldID in three_highest_fieldIDs:
+                for field in quiz.models.GameField.objects.all():
+                    if fieldID == field.id:
+                        three_highest_fieldName.append(field.name)
+                        for image in quiz.models.ImageField.objects.all():
+                            if field.imageURL_id == image.id:
+                                three_highest_fieldImage.append(image.imageURL)
+                                break
+                        break
+        else:
+            three_highest_fieldImage = []
+            three_highest_fieldName = []
 
         # div-career-parent
         if request.is_ajax():
             if request.GET.get('requestType') == 'filterStudentName':
+                print("filterStudentName")
                 filteredStudentID = request.GET.get('filteredStudentID', None)
             
                 if filteredStudentID is not None:
                     filtered_student = parentStudents.get(ID_id=filteredStudentID)
-                    # print("filtered_student: " + str(filtered_student)) #Test
+                    print("filtered_student: " + str(filtered_student)) #Test
 
                 currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=filtered_student.ID_id, isFinish=True)
                 fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
@@ -1755,81 +1850,7 @@ def nonAdminReport(request, user_type, user_id):
 
                 return render(request, 'dashboard/nonAdminReportContentParent.html', context)
         else:
-            filtered_student = parentStudents.first()
-
-            currentPlayerAllFieldRecords = quiz.models.FieldPlayerSession.objects.filter(fieldPlayerID_id=filtered_student.ID_id, isFinish=True)
-            fieldIDList = list(currentPlayerAllFieldRecords.order_by('fieldID_id').values_list("fieldID_id", flat=True).distinct("fieldID_id"))
-            criteria_score_list = []
-            criteria_hint_list = []
-            criteria_time_list = []
-            final_field_criteria_dict = {}
-
-            for i in range(len(fieldIDList)):
-                currentIterFieldRecords = currentPlayerAllFieldRecords.filter(fieldID_id=fieldIDList[i])
-                currentFieldSessionCount = currentIterFieldRecords.count()
-
-                #for criteria_score_list
-                fullScoreEasyDict = currentIterFieldRecords.aggregate(Sum('countEasy'))
-                fullScoreEasy = fullScoreEasyDict['countEasy__sum']*6
-                fullScoreMediumDict = currentIterFieldRecords.aggregate(Sum('countMedium'))
-                fullScoreMedium = fullScoreMediumDict['countMedium__sum']*8
-                fullScoreHardDict = currentIterFieldRecords.aggregate(Sum('countHard'))
-                fullScoreHard = fullScoreHardDict['countHard__sum']*10
-                totalFullScore = fullScoreEasy + fullScoreMedium + fullScoreHard
-
-                #deducted hint already because took from currentPointsEarned
-                earnedScoreDict = currentIterFieldRecords.aggregate(Sum('currentPointsEarned'))
-                earnedScore = earnedScoreDict['currentPointsEarned__sum']
-
-                if totalFullScore > 0:
-                    criteria_score_list.append(round((earnedScore/totalFullScore)*45, 2))
-                else:
-                    criteria_score_list.append(0)
-
-                #for criteria_hint_list
-                fullHintCount = 30*currentFieldSessionCount
-                usedHintCountDict = currentIterFieldRecords.aggregate(Sum('hintsUsedCount'))
-                usedHintCount = usedHintCountDict['hintsUsedCount__sum']
-
-                criteria_hint_list.append(round(((fullHintCount-usedHintCount)/fullHintCount)*30, 2))
-
-                #for criteria_time_list (in seconds)
-                fullTimeEasy = fullScoreEasyDict['countEasy__sum']*10
-                fullTimeMedium = fullScoreMediumDict['countMedium__sum']*20
-                fullTimeHard = fullScoreHardDict['countHard__sum']*30
-                totalFullTime = fullTimeEasy + fullTimeMedium + fullTimeHard
-
-                timeList = list(currentIterFieldRecords.values_list('timeTaken', flat=True))
-                totalTimeTaken = timedelta(seconds=sum(td.total_seconds() for td in timeList)).total_seconds()
-
-                #rasanya no totalFullTime should be 0? Sebab mesti time akan running at least 1s. But this one happened sebab
-                #while debugging something dulu it didnt manage to track time but now should be ok
-                if totalFullTime > 0:
-                    criteria_time_list.append(round(((totalFullTime-totalTimeTaken)/totalFullTime)*25, 2))
-                else:
-                    criteria_time_list.append(0)
-
-                final_field_criteria_dict[fieldIDList[i]] = criteria_score_list[i] + criteria_hint_list[i] + criteria_time_list[i]
-            
-            k = Counter(final_field_criteria_dict)
-        
-            # Finding 3 highest values
-            three_highest_fields = k.most_common(3) #returns list = [(fieldID_1, perc_1), (fieldID_2, perc_2), (fieldID_3, perc_3)]
-            three_highest_fieldIDs = list(field[0] for field in three_highest_fields)
-            three_highest_fieldPerc = list(field[1] for field in three_highest_fields)
-            three_highest_fieldImage = []
-            three_highest_fieldName = []
-
-            #append image URL into imageURLList following the order of gameFields
-            for fieldID in three_highest_fieldIDs:
-                for field in quiz.models.GameField.objects.all():
-                    if fieldID == field.id:
-                        three_highest_fieldName.append(field.name)
-                        for image in quiz.models.ImageField.objects.all():
-                            if field.imageURL_id == image.id:
-                                three_highest_fieldImage.append(image.imageURL)
-                                break
-                        break
+            print("GET")
         
         context = {
             'dashboardNav': dashboardNav,
@@ -2436,7 +2457,8 @@ def nonAdminReport(request, user_type, user_id):
                 } 
                 return render(request, 'dashboard/nonAdminReport.html', context)
 
-def nonAdminChat(request, user_type, user_id):
+# def nonAdminChat(request, user_type, user_id):
+def Chat(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
     
     #check logged in or not
@@ -2444,24 +2466,25 @@ def nonAdminChat(request, user_type, user_id):
         return redirect('home:login')
 
     username = userRecord.username
-    urlTest = 'test:index-nonadmin'
-    urlBlog = 'blog:index'
-    urlQuiz = 'quiz:index-student'
-    urlSearch = 'search:index-nonadmin'
-    urlDashboard = 'dashboard:index-nonadmin'
-    urlLogout = 'dashboard:logout-confirm'
-
-    urlProfile = 'dashboard:profile-settings'
-    urlBookmark = 'dashboard:bookmark'
-    urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
-    urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
     unreadNotifCnt = allNotif.filter(isOpen=False).count()
 
-    if user_type == "pelajar" and 'S' in user_id:
-        dashboardNav = " Pelajar"
+    if user_type == 'admin':
+        urlTest = 'test:index-admin'
+        urlBlog = 'blog:index'
+        urlQuiz = 'quiz:index-admin'
+        urlSearch = 'search:index-admin'
+        urlDashboard = 'dashboard:index-admin'
+        urlLogout = 'dashboard:logout-confirm'
+        user_type= "admin"
+
+        urlClassSettings = 'dashboard:class-settings'
+        urlSuggestions = 'dashboard:suggestions-admin'
+        # urlChat = 'dashboard:chat-admin'
+        urlChat = 'dashboard:chat'
+
+        dashboardNav = " Admin"
 
         context = {
             'dashboardNav': dashboardNav,
@@ -2472,20 +2495,38 @@ def nonAdminChat(request, user_type, user_id):
             'blog': urlBlog,
             'quiz': urlQuiz,
             'search': urlSearch,
-            'dashboard':urlDashboard,
+            'dashboard': urlDashboard,
             'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
+            'settings': urlClassSettings,
+            'suggestions': urlSuggestions,
             'chat': urlChat,
-            'suggestions': urlSuggestion,
             'allNotif': allNotif,
             'unreadNotifCnt': unreadNotifCnt
-        } 
-        return render(request, 'dashboard/nonAdminChat.html', context)
-    elif user_type == "penjaga" and 'P' in user_id:
-        dashboardNav = " Penjaga"
-        
+        }
+    else:
+        urlTest = 'test:index-nonadmin'
+        urlBlog = 'blog:index'
+        urlQuiz = 'quiz:index-student'
+        urlSearch = 'search:index-nonadmin'
+        urlDashboard = 'dashboard:index-nonadmin'
+        urlLogout = 'dashboard:logout-confirm'
+
+        urlProfile = 'dashboard:profile-settings'
+        urlBookmark = 'dashboard:bookmark'
+        urlReport = 'dashboard:report'
+        # urlChat = 'dashboard:chat-nonadmin'
+        urlChat = 'dashboard:chat'
+        urlSuggestion = 'dashboard:suggestions-nonadmin'
+
+        if user_type == "pelajar" and 'S' in user_id:
+            dashboardNav = " Pelajar"
+
+        elif user_type == "penjaga" and 'P' in user_id:
+            dashboardNav = " Penjaga"
+            
+        elif user_type == "guru" and 'T' in user_id:
+            dashboardNav = " Guru"
+            
         context = {
             'dashboardNav': dashboardNav,
             'user_type': user_type,
@@ -2504,31 +2545,9 @@ def nonAdminChat(request, user_type, user_id):
             'suggestions': urlSuggestion,
             'allNotif': allNotif,
             'unreadNotifCnt': unreadNotifCnt
-        } 
-        return render(request, 'dashboard/nonAdminChat.html', context)
-    elif user_type == "guru" and 'T' in user_id:
-        dashboardNav = " Guru"
-        
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion,
-            'allNotif': allNotif,
-            'unreadNotifCnt': unreadNotifCnt
-        } 
-        return render(request, 'dashboard/nonAdminChat.html', context)
+        }
+
+    return render(request, 'dashboard/chat.html', context)
 
 def nonAdminSuggestions(request, user_type, user_id):
     userRecord = dashboard.models.User.objects.get(ID=user_id)
@@ -2548,7 +2567,8 @@ def nonAdminSuggestions(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     statusList = ['Dihantar', 'Sedang Diproses', 'Ditutup']
@@ -2644,7 +2664,8 @@ def addSuggestion(request, user_type, user_id):
     urlProfile = 'dashboard:profile-settings'
     urlBookmark = 'dashboard:bookmark'
     urlReport = 'dashboard:report'
-    urlChat = 'dashboard:chat-nonadmin'
+    # urlChat = 'dashboard:chat-nonadmin'
+    urlChat = 'dashboard:chat'
     urlSuggestion = 'dashboard:suggestions-nonadmin'
 
     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')

@@ -34,38 +34,6 @@ h2 {
   line-height: 1.5em;
 }
 
-/* .container{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 80rem;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.flex-column{
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-center{
-  justify-content: center;
-  align-items: center;
-}
-
-.justify-center{
-  justify-content: center;
-}
-
-.text-center{
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-} */
-
-/* ------------------------------------------------------------------------------------------ */
 .wrapper {
   height: 92.5vh;
   overflow-x: hidden;
@@ -172,7 +140,7 @@ h2 {
   animation: fadePg2 1s;
   -webkit-animation: fadePg2 1s;
   animation-fill-mode: forwards;
-  animation-delay: 3s;
+  animation-delay: 1.5s;
 }
 
 .text-container h1 {

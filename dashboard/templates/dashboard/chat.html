@@ -1,4 +1,4 @@
-{% extends "dashboard/baseDashboardNonAdmin.html" %}
+{% extends "dashboard/baseDashboard.html" %}
 {% load static %}
 
 {% block title %}
@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block styles %}   
-    <link rel="stylesheet" href="{% static 'css/nonAdminChat.css' %}">
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,11 @@
     </div>
 
     <div class="div-content-outer">
-        {% include 'dashboard/nonAdminChatContent.html' %}
+        {% if user_type == 'admin' %}
+            {% include 'dashboard/chatContentAdmin.html' %}
+        {% else %}
+            {% include 'dashboard/chatContentNonAdmin.html' %}
+        {% endif %}
     </div>
 {% endblock %}
 

@@ -3,13 +3,17 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}{% endblock %}
+
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <link rel="stylesheet" href="{% static 'css/search.css' %}">
-
-    <title>FutureCruise: Pencarian Maklumat</title>
+    <link rel="stylesheet" href="{% static 'css/searchBase.css' %}">
+    {% block styles %}{% endblock %}
 
 </head>
 <body>
@@ -17,13 +21,13 @@
         <div class="div-navbar">
             <div class="div-navbar-left">
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></p>
-                <p class="p-navbar no-icon"><a class="p-a-navbar" href="">Blog Berita</a></p>
+                <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
                 {% if user_type == 'pelajar' %}
                     <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
                 {% endif %}
                 <p class="p-navbar no-icon"><a class="p-a-navbar  active" href="{% url search user_type user_id %}">Carian Maklumat</a></p>
                 <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">
-                    <span>Dashboard</span>
+                    <span style="font-style: italic;">Dashboard</span>
                     <span>{{ dashboardNav }}</span></a>
                 </p>
 
@@ -58,12 +62,9 @@
         </div>
     </center>
     
-    <h1>Carian Maklumat</h1>
-    
-    <h2>{% block header %}{% endblock %}</h2>
-    
-    {% block content %}
-    {% endblock %}
+    {% block header %}{% endblock %}
+    {% block content %}{% endblock %}
+    {% block js %}{% endblock %}
 
 </body>
 </html>

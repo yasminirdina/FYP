@@ -1,0 +1,275 @@
+@viewport {
+  width: device-width;
+  height: device-height;
+  zoom: 1;
+}  
+
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(224, 224, 224);
+  border-radius: 50px;
+  /* border: 3px solid orange; */
+}
+
+body {
+  font-family: 'Varela Round', sans-serif;
+  font-size: 16px;
+  color: white;
+  position: relative;
+  margin: 0;
+  background: rgba(255, 191, 132, 0.527);
+}
+
+.div-navbar {
+  display: flex;
+  flex-direction: row;
+  background-color: rgb(250, 127, 56);
+  position: unset;
+  top: 0;
+  width: 100%;
+  height: auto;
+  font-family: 'Varela Round', sans-serif;
+}
+
+.div-navbar.admin{
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.div-navbar-left{
+    max-width: 80%;
+    float: left;
+}
+
+.div-navbar-right{
+    position: absolute;
+    max-width: 30%;
+    float: right;
+    right: 0;
+}
+
+.p-navbar{
+    float: left;
+    margin: 0;
+}
+
+.p-a-navbar{
+    display: block;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 1vw 1.25vw;
+    text-decoration: none;
+}
+
+.p-a-navbar:hover:not(.active) {
+    background-color: rgb(250, 151, 37);
+    border-radius: 10px;
+}
+
+.icon{
+    display: none;
+}
+  
+.active{
+    background-color: rgb(250, 188, 54);
+    border-radius: 10px;
+}
+  
+.logout {
+    float: right;
+    background-color: rgb(207, 61, 61);
+}
+
+.div-navbar.admin .logout{
+    border-radius: 10px;
+}
+  
+.username {
+    float: right;
+    font-style: italic;
+}
+
+.logout:hover{
+    background-color: rgb(207, 61, 61);
+}
+
+p {
+    font-size: 16px;
+}
+
+.container-search-main{
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 50px 50px;
+  padding-left: 10px;
+  padding: 30px;
+}
+
+.container-search{
+  display: inline-grid;
+  text-align: center;
+}
+
+.a-search-main {
+  font-family: 'Varela Round', sans-serif;
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+}
+
+.btn{
+  border: none;
+  background-color: rgb(250, 127, 56);
+  padding: 30px 30px;
+  font-size: 18px;
+  font-family: "DM Sans";
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  border-radius: 50px;
+}
+
+.btn:hover{
+background: rgb(121, 85, 118);
+}
+
+.btn-search {
+  background-color: coral;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: center;
+}
+
+.btn-search:hover {
+  background-color: rgb(255, 103, 47);
+}
+
+/* admin-btn */
+.btn-create {
+  background-color: coral;
+  padding: 5px;
+  margin: 0px 50px 30px 50px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: center;
+}
+
+.btn-a-create {
+  color: white;
+}
+
+.btn-update{
+  background-color: coral;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: center;
+}
+
+.btn-a-update{
+  color:white;
+}
+
+.btn-delete{
+  background-color: rgb(202, 56, 56);
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  position: center;
+}
+
+.btn-a-delete{
+  color:white;
+}
+
+.btn-delete-cancel{
+  color: crimson;
+  padding-right: 10px;
+}
+
+/* general search form n input*/
+.container-form-search {
+  border-radius: 10px;
+  background-color: rgba(238, 152, 121, 0.781);
+  padding: 20px 40px 20px 40px;
+  margin: 10px 200px 50px 200px;
+}
+
+input[type=search], select, textarea {
+  width: 100%; /* Full width */
+  padding: 12px; /* Some padding */ 
+  border: 1px; /* Gray border */
+  border-radius: 4px; /* Rounded borders */
+  box-sizing: border-box; /* Make sure that padding and width stays in place */
+  margin-top: 6px; /* Add a top margin */
+  margin-bottom: 16px; /* Bottom margin */
+  resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
+}
+
+.search-result-container{
+  background-color: rgb(245, 245, 245);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 40px 20px 40px;
+}
+
+@media screen and (max-width: 1010px) {
+  .div-navbar-left{
+    width: 80%;
+  }
+
+  .div-navbar-right{
+      width: 20%;
+  }
+
+  .div-navbar-left.admin-left{
+      width: 60%;
+      float: left;
+  }
+
+  .div-navbar-right.admin-right{
+      width: 40%;
+      float: right;
+  }
+
+  .p-a-navbar{
+      padding: 5px 10px;
+  }
+
+  .no-icon{
+      display: none;
+  }
+
+  .icon{
+      display: flex;
+  }
+}
+
+@media screen and (max-width: 450px) {
+    .div-navbar-left{
+        width: 70%;
+    }
+    
+    .div-navbar-right{
+        width: 30%;
+    }
+
+    .admin-right .username{
+        display: none;
+    }
+}

@@ -20,8 +20,9 @@ urlpatterns = [
     #reports (non-admin)
     path('<user_type>/<user_id>/laporan-visual/', views.nonAdminReport, name='report'), #KIV
     #chat
-    path('admin/<user_id>/ruang-bual-kaunseling/', views.adminChat, name='chat-admin'),
-    path('<user_type>/<user_id>/ruang-bual-kaunseling/', views.nonAdminChat, name='chat-nonadmin'), #KIV
+    # path('admin/<user_id>/ruang-bual-kaunseling/', views.adminChat, name='chat-admin'),
+    # path('<user_type>/<user_id>/ruang-bual-kaunseling/', views.nonAdminChat, name='chat-nonadmin'), #KIV
+    path('<user_type>/<user_id>/ruang-bual-kaunseling/', views.Chat, name='chat'),
     #suggestions
     path('admin/<user_id>/cadangan/', views.adminSuggestions, name='suggestions-admin'),
     path('<user_type>/<user_id>/cadangan/', views.nonAdminSuggestions, name='suggestions-nonadmin'),

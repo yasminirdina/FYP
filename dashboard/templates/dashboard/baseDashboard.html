@@ -1,0 +1,323 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}{% endblock %}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/2cfab3be1d.js" crossorigin="anonymous"></script>
+
+    {% block js1 %}{% endblock %}
+
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/baseDashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/baseAdminModal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/baseNonAdminModal.css' %}">
+
+    {% block styles %}{% endblock %}
+</head>
+    <body>
+        <center>
+            {% if user_id == 'A1' %}
+                <div class="div-navbar admin">
+                    <div class="div-navbar-left admin-left">
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url test user_id %}">Ujian Kerjaya</a></p>
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url search user_id %}">Carian Maklumat</a></p>
+                        <p class="p-navbar no-icon"><a class="p-a-navbar active" href="{% url dashboard user_id %}">
+                            <span style="font-style: italic;">Dashboard</span>
+                            <span> Admin</span></a>
+                        </p>
+                
+                        <!--mobile-->
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url test user_id %}">
+                            <i class="fas fa-edit"></i>
+                        </a></p>
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">
+                            <i class="fas fa-blog"></i>
+                        </a></p>
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url quiz user_id %}">
+                            <i class="fas fa-gamepad"></i>
+                        </a></p>
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url search user_id %}">
+                            <i class="fas fa-search"></i>
+                        </a></p>
+                        <p class="p-navbar icon"><a class="p-a-navbar active" href="{% url dashboard user_id %}">
+                            <i class="fas fa-user"></i>
+                        </a></p>
+                    </div>
+                    <div class="div-navbar-right admin-right">
+                        <p class="p-navbar logout no-icon"><a class="p-a-navbar" href="{% url logout user_id %}">Log Keluar</a></p>
+                        <p class="p-navbar username no-icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></p>
+                
+                        <!--mobile-->
+                        <p class="p-navbar logout icon"><a class="p-a-navbar" href="{% url logout user_id %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a></p>
+                        <p class="p-navbar username icon"><a class="p-a-navbar" href="{% url dashboard user_id %}">ftrcrsadmin</a></p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="div-navbar">
+                    <div class="div-navbar-left">
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url test user_type user_id %}">Ujian Kerjaya</a></p>
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">Blog Berita</a></p>
+                        {% if user_type == 'pelajar' %}
+                            <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url quiz user_id %}">Permainan Kuiz</a></p>
+                        {% endif %}
+                        <p class="p-navbar no-icon"><a class="p-a-navbar" href="{% url search user_type user_id %}">Carian Maklumat</a></p>
+                        <p class="p-navbar no-icon"><a class="p-a-navbar active" href="{% url dashboard user_type user_id %}">
+                            <span style="font-style: italic;">Dashboard</span>
+                            <span>{{ dashboardNav }}</span></a>
+                        </p>
+
+                        <!-- mobile -->
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url test user_type user_id %}">
+                            <i class="fas fa-edit"></i>
+                        </a></p>
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url blog user_type user_id%}">
+                            <i class="fas fa-blog"></i>
+                        </a></p>
+                        {% if user_type == 'pelajar' %}
+                            <p class="p-navbar icon"><a class="p-a-navbar" href="{% url quiz user_id %}">
+                                <i class="fas fa-gamepad"></i>
+                            </a></p>
+                        {% endif %}
+                        <p class="p-navbar icon"><a class="p-a-navbar" href="{% url search user_type user_id %}">
+                            <i class="fas fa-search"></i>
+                        </a></p>
+                        <p class="p-navbar icon"><a class="p-a-navbar active" href="{% url dashboard user_type user_id %}">
+                            <i class="fas fa-user"></i>
+                        </a></p>
+                    </div>
+
+                    <div class="div-navbar-right">
+                        <p class="p-navbar logout no-icon"><a class="p-a-navbar" href="{% url logout user_id %}">Log Keluar</a></p>
+                        <p class="p-navbar username no-icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></p>
+
+                        <!-- mobile -->
+                        <p class="p-navbar logout icon"><a class="p-a-navbar" href="{% url logout user_id %}">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a></p>
+                        <p class="p-navbar username icon"><a class="p-a-navbar" href="{% url dashboard user_type user_id %}">{{ username }}</a></p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <p class="p-unreadNotifCnt" style="display: none">{{ unreadNotifCnt }}</p>
+
+            <!-- Put sidebar for buttons (see dashboardIndex admin) -->
+            <div class="div-outer">
+                <div class="div-sidebar-outer">
+                    <h2>
+                        Menu:
+                    </h2>
+
+                    <div class="div-sidebar-menulist">
+                        <!-- if got UNREAD notification for blog/chat/suggestion, put circle icon on notification and chat/suggestion (where applicable) -->
+                        {% if user_id == 'A1' %}
+                            <p class="p-sidebar notification"><a class="p-a-sidebar" id ="notification" href="{% url dashboard user_id %}">Notifikasi</a></p>
+                            <p class="p-sidebar class-settings"><a class="p-a-sidebar" href="{% url settings user_id %}">Tetapan Maklumat Kelas</a></p>
+                            <p class="p-sidebar chat"><a class="p-a-sidebar" href="{% url chat 'admin' user_id %}">Ruang Bual Kaunseling</a></p>
+                            <p class="p-sidebar suggestion"><a class="p-a-sidebar" href="{% url suggestions user_id %}">Cadangan Penambahbaikan</a></p>
+                        {% else %}
+                            <p class="p-sidebar notification"><a class="p-a-sidebar" id ="notification" href="{% url dashboard user_type user_id %}">Notifikasi</a></p>
+                            <p class="p-sidebar profile-settings"><a class="p-a-sidebar" href="{% url settings user_type user_id %}">Tetapan Akaun</a></p>
+                            <p class="p-sidebar bookmark"><a class="p-a-sidebar" href="{% url bookmark user_type user_id %}">Penanda Isi Kandungan</a></p>
+                            <p class="p-sidebar report"><a class="p-a-sidebar" href="{% url report user_type user_id %}">Laporan Visual</a></p>
+                            <p class="p-sidebar chat"><a class="p-a-sidebar" href="{% url chat user_type user_id %}">Ruang Bual Kaunseling</a></p>
+                            <p class="p-sidebar suggestion"><a class="p-a-sidebar" href="{% url suggestions user_type user_id %}">Cadangan Penambahbaikan</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="div-main-outer">
+                    {% block header %}{% endblock %}
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+
+            {% if user_id == 'A1' %}
+                <!-- Modal for adminClassSettings -->
+                <div class="div-bg-modal-1">
+                    <div class="div-modal-content-1">
+                        <div class="div-modal-header-1">
+                            Padam Kelas
+                        </div>
+            
+                        Adakah anda pasti ingin memadam kelas ini?
+            
+                        <div class="div-confirm-delete-buttons">
+                            <button class="btn confirm-delete" value="">Ya</button> 
+                            <button class="btn cancel-delete">Tidak</button>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="div-bg-modal-2">
+                    <div class="div-modal-content-2">
+                        <div class="div-modal-header-2">
+                            Kelas Telah Dipadam
+                        </div>
+            
+                        Mengemaskini senarai kelas...
+                    </div>
+                </div>
+
+                <!-- Modal for adminSuggestions -->
+                <div class="div-bg-modal-3">
+                    <div class="div-modal-content-3">
+                        <div class="div-modal-header-3">
+                            Subjek Cadangan
+                        </div>
+            
+                        <div class="div-suggestion-content">
+                            ...
+                        </div>
+            
+                        <div class="div-suggestion-buttons">
+                            <button class="btn close-suggestion">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+
+                <script>
+                    function checkUnreadNotifCnt (){
+                        var unreadNotifCnt = parseInt($('.p-unreadNotifCnt').text());
+                        // alert("ori unreadNotifCnt: " + unreadNotifCnt); // Test
+
+                        if(unreadNotifCnt > 0){
+                            $('#notification').empty();
+                            $('#notification').append('<i class="fas fa-circle" id="circle-notif"></i> Notifikasi');
+                        }
+                        else{
+                            $('#circle-notif').remove();
+                        }
+                    }
+
+                    $(document).ready(function(){
+                        checkUnreadNotifCnt();
+                    })
+                </script>
+            {% else %}
+                <!-- Modal for showProfile -->
+                <div class="div-bg-modal-1">
+                    <div class="div-modal-content-1">
+                        <div class="div-modal-header-1">
+                            Senarai Jagaan
+                        </div>
+            
+                        <div class="div-parent-student-content">
+                            <ol class="ol-parent-student">
+                                {% for student in studentDetail %}
+                                    <li>{{ student.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+            
+                        <div class="div-parent-student-buttons">
+                            <button class="btn close-parent-student">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="div-bg-modal-2">
+                    <div class="div-modal-content-2">
+                        <div class="div-modal-header-2">
+                            Senarai Pelajar bagi Kelas {{ userDetail.homeroomClass }}
+                        </div>
+            
+                        <div class="div-teacher-student-content">
+                            <ol class="ol-teacher-student">
+                                {% for student in studentDetail %}
+                                    <li>{{ student.name }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+            
+                        <div class="div-teacher-student-buttons">
+                            <button class="btn close-teacher-student">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for adminSuggestions/nonAdminSuggestions -->
+                <div class="div-bg-modal-3">
+                    <div class="div-modal-content-3">
+                        <div class="div-modal-header-3">
+                            Subjek Cadangan
+                        </div>
+            
+                        <div class="div-suggestion-content">
+                            ...
+                        </div>
+            
+                        <div class="div-suggestion-buttons">
+                            <button class="btn close-suggestion">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for nonAdminBookmark (Post/Info) -->
+                <div class="div-bg-modal-4">
+                    <div class="div-modal-content-4">
+                        <div class="div-modal-header-4">
+                            Padam Penanda
+                        </div>
+            
+                        Adakah anda pasti ingin memadam penanda ini?
+            
+                        <div class="div-confirm-delete-buttons">
+                            <button class="btn confirm-delete" value="">Ya</button> 
+                            <button class="btn cancel-delete">Tidak</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal for nonAdminReport (Teacher-gameperf) -->
+                <div class="div-bg-modal-5">
+                    <div class="div-modal-content-5">
+                        <div class="div-modal-header-5">
+                            Kedudukan Pemain
+                        </div>
+
+                        <p class="p-playerNameScoreList-modal" style="display: none;">{{ playerNameScoreList }}</p>
+                        
+                        <div class="div-table-student-list">
+                            {% include 'dashboard/nonAdminReportContentTeacher2.html' %}
+                        </div>
+
+                        <div class="div-student-list-buttons">
+                            <button class="btn close-student-list">Tutup</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    function checkUnreadNotifCnt (){
+                        var unreadNotifCnt = parseInt($('.p-unreadNotifCnt').text());
+                        // alert("ori unreadNotifCnt: " + unreadNotifCnt); // Test
+
+                        if(unreadNotifCnt > 0){
+                            $('#notification').empty();
+                            $('#notification').append('<i class="fas fa-circle" id="circle-notif"></i> Notifikasi');
+                        }
+                        else{
+                            $('#circle-notif').remove();
+                        }
+                    }
+
+                    $(document).ready(function(){
+                        checkUnreadNotifCnt();
+                    })
+                </script>
+            {% endif %}
+
+            {% block js2 %}{% endblock %}
+        </center>
+    </body>
+</html>

@@ -16,178 +16,197 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="topic-header" >Profil Kecendurangan Minat Kerjaya</h1>
-    <h2 class="main-header">Tahniah {{ username }}! </br> Ini adalah keputusan Ujian Minat Kerjaya anda! </h2>
+    <div class="header-container">
+        <h1 class="topic-header" >Profil Kecendurangan Minat Kerjaya</h1>
+        <hr class="hr-header">
+        <h2 class="main-header">Tahniah {{ username }}! </br> Ini adalah keputusan Ujian Minat Kerjaya anda! </h2>
+    </div>
 
-    <div id=hCode-container>
-        <p class="hCode-name">Kod Mata Holland</p>
-        <hr>
+    <div class="main-result-container">
+        <div id="hCode-container">
+            <p class="hCode-name">Kod Mata Holland</p>
+            <hr class="hr-hCode">
 
-        <!-- Holland Code Chart -->
-        <div class="hCode-chart">
-            <canvas id="hollandCode"></canvas>
-            <script>
-                var topName = "{{hollCode.topName}}";
-                topName = topName.replace(/&#x27;/g,'') //replace htmlcode
-                topName = topName.substr(1, topName.length-2); //buang the []
-                var hollCodeName = topName.split(", ");
-                
-                var topScore = "{{hollCode.topScore}}";
-                topScore = topScore.substr(1, topScore.length-2); //buang the []
-                var hollCodeScore = topScore.split(", ");
-                // console.log(typeof(hollCodeScore),hollCodeScore)
+            <!-- Holland Code Chart -->
+            <div class="hCode-chart">
+                <canvas id="hollandCode"></canvas>
+                <script>
+                    var topName = "{{hollCode.topName}}";
+                    topName = topName.replace(/&#x27;/g,'') //replace htmlcode
+                    topName = topName.substr(1, topName.length-2); //buang the []
+                    var hollCodeName = topName.split(", ");
+                    
+                    var topScore = "{{hollCode.topScore}}";
+                    topScore = topScore.substr(1, topScore.length-2); //buang the []
+                    var hollCodeScore = topScore.split(", ");
+                    // console.log(typeof(hollCodeScore),hollCodeScore)
 
-                const hC = document.getElementById('hollandCode').getContext('2d');
-                const hollandCode = new Chart(hC, {
-                    type: 'polarArea',
-                    data: {
-                        labels: hollCodeName,
-                        datasets: [{
-                            data: hollCodeScore,
-                            backgroundColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(75, 192, 192)',
-                                'rgb(255, 205, 86)'
-                            ],
-                            // borderColor: 'rgba(0, 0, 0, 0.8)',
-                            // borderJoinStyle: 'round',
-                            // hoverBorderWidth: '5px'
-                        }],
-                    },
-                    options: {
-                        responsive:true,
-                        maintainAspectRatio: false,
-                        animation: {
-                            animateRotate: false,
-                            animateScale: true
+                    const hC = document.getElementById('hollandCode').getContext('2d');
+                    const hollandCode = new Chart(hC, {
+                        type: 'polarArea',
+                        data: {
+                            labels: hollCodeName,
+                            datasets: [{
+                                data: hollCodeScore,
+                                backgroundColor: [
+                                    'rgb(255, 99, 132)',
+                                    'rgb(75, 192, 192)',
+                                    'rgb(255, 205, 86)'
+                                ],
+                                // borderColor: 'rgba(0, 0, 0, 0.8)',
+                                // borderJoinStyle: 'round',
+                                // hoverBorderWidth: '5px'
+                            }],
+                        },
+                        options: {
+                            responsive:true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                animateRotate: false,
+                                animateScale: true
+                            }
                         }
-                    }
-                });
-            </script>
+                    });
+                </script>
+            </div>
+        </div>
+        <div class="hCode-desc">
+            <div class="col hCode1">
+                <p>{{hollCode.topName.0}}</p>
+                <p>Decsribe</p>
+            </div>
+            <div class="col hCode2">
+                <p>{{hollCode.topName.1}}</p>
+                <p>Decsribe</p>
+            </div>
+            <div class="col hCode2">
+                <p>{{hollCode.topName.2}}</p>
+                <p>Decsribe</p>
+            </div>
         </div>
     </div>
 
-    <div id=allCode-container>
-        <p class="allCode-name">Keseluruhan Markah Personaliti</p>
-        <hr>
+        <div id="allCode-container">
+            <p class="allCode-name">Keseluruhan Markah Personaliti</p>
+            <hr>
 
-        <!-- All Personality Chart -->
-        <div class="allCode-chart">
-            <canvas id="allCode"></canvas>
-            <script>
-                var codeName = "{{codeName}}"
-                codeName = codeName.replace(/&#x27;/g,'') //replace htmlcode
-                codeName = codeName.substr(1, codeName.length-2); //buang the []
-                var allCodeName = codeName.split(", ");
-                console.log(typeof(codeName),allCodeName);
+            <!-- All Personality Chart -->
+            <div class="allCode-chart">
+                <canvas id="allCode"></canvas>
+                <script>
+                    var codeName = "{{codeName}}"
+                    codeName = codeName.replace(/&#x27;/g,'') //replace htmlcode
+                    codeName = codeName.substr(1, codeName.length-2); //buang the []
+                    var allCodeName = codeName.split(", ");
+                    console.log(typeof(codeName),allCodeName);
 
-                var allCodeResult = "{{allCodeResult}}";
-                allCodeResult = allCodeResult.substr(1, allCodeResult.length-2); //buang the []
-                var allResult = allCodeResult.split(", ");
+                    var allCodeResult = "{{allCodeResult}}";
+                    allCodeResult = allCodeResult.substr(1, allCodeResult.length-2); //buang the []
+                    var allResult = allCodeResult.split(", ");
 
-                const aC = document.getElementById('allCode').getContext('2d');
-                const allCode = new Chart(aC, {
-                    type: 'bar',
-                    data: {
-                        labels: allCodeName,
-                        datasets: [{
-                            label: 'Jumlah Markah',
-                            data: allResult,
-                            backgroundColor: [
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 99, 132)',
-                                'rgb(255, 205, 86)',  
-                                'rgb(75, 192, 192)',
-                                'rgb(153, 102, 255)',
-                                'rgb(255, 159, 64)'
-                            ],
-                            borderColor: [
-                                'rgb(255, 255, 255)',
-                                'rgb(255, 255, 255)',
-                                'rgb(255, 255, 255)',
-                                'rgb(255, 255, 255)',
-                                'rgb(255, 255, 255)',
-                                'rgb(255, 255, 255)'
-                            ],
-                            borderWidth: 1.5,
-                            // hoverBorderWidth: '5px'
-                        }]
-                    },
-                    options: {
-                        responsive:true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            x: {
-                                grid: {
-                                    display:false
+                    const aC = document.getElementById('allCode').getContext('2d');
+                    const allCode = new Chart(aC, {
+                        type: 'bar',
+                        data: {
+                            labels: allCodeName,
+                            datasets: [{
+                                label: 'Jumlah Markah',
+                                data: allResult,
+                                backgroundColor: [
+                                    'rgb(54, 162, 235)',
+                                    'rgb(255, 99, 132)',
+                                    'rgb(255, 205, 86)',  
+                                    'rgb(75, 192, 192)',
+                                    'rgb(153, 102, 255)',
+                                    'rgb(255, 159, 64)'
+                                ],
+                                borderColor: [
+                                    'rgb(255, 255, 255)',
+                                    'rgb(255, 255, 255)',
+                                    'rgb(255, 255, 255)',
+                                    'rgb(255, 255, 255)',
+                                    'rgb(255, 255, 255)',
+                                    'rgb(255, 255, 255)'
+                                ],
+                                borderWidth: 1.5,
+                                // hoverBorderWidth: '5px'
+                            }]
+                        },
+                        options: {
+                            responsive:true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                x: {
+                                    grid: {
+                                        display:false
+                                    }
+                                },
+                                y: {
+                                    grid: {
+                                        display:false
+                                    },
+                                    beginAtZero: true
                                 }
                             },
-                            y: {
-                                grid: {
-                                    display:false
-                                },
-                                beginAtZero: true
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
                             }
                         }
-                    }
-                });
-            </script>
-        </div>
-    </div>
-
-    <div id = "career-main-container">
-        <p class="career-title" >Kerjaya Mengikut Kod Mata Holland</p>
-      
-        <div class = "hollcode-career-container">
-            <!-- Main Tab -->
-            <div class="hollcode-main-tab">
-                <button class="tablinks" onclick="mainTab(event, 'Kod Mata Holland')" id="defaultOpen">Kod Mata Holland</button>
-                <button class="tablinks" onclick="mainTab(event, 'Semua Personaliti')">Semua Personaliti</button>
-            </div>
-            
-            <div id="Kod Mata Holland" class="tabcontent">
-                <!-- Sub Tab -->
-                <div class="hollcode-sub-tab">
-                    <button class="tablinks2" onclick="codeTab(event, 'c1')" id="defaultOpen2">{{hollCode.topName.0}}</button>
-                    <button class="tablinks2" onclick="codeTab(event, 'c2')">{{hollCode.topName.1}}</button>
-                    <button class="tablinks2" onclick="codeTab(event, 'c3')">{{hollCode.topName.2}}</button>
-                </div>
-                <!-- Content for each tab -->
-                <div id="c1" class="career-content">
-                    <table>
-                        <tr>
-                            <th>Kerjaya</th>
-                        </tr>
-                        <tr>
-                            <td><a href="{% url 'test:index-nonadmin' user_type user_id %}" class="">Test1</a></td>
-                        </tr>
-                        <tr>
-                            <td><a href="{% url 'test:index-nonadmin' user_type user_id %}" class="">Test1</a></td>
-                        </tr>
-                    </table>
-                </div>
-                <div id="c2" class="career-content">
-                    <h3>Kod Mata Holland</h3>
-                    <p>London is the capital city of England.</p>
-                </div>
-                <div id="c3" class="career-content">
-                    <h3>Kod Mata Holland</h3>
-                    <p>London is the capital city of England.</p>
-                </div>
-            </div>
-
-            <div id="Semua Personaliti" class="tabcontent">
-                <h3>Semua Personaliti</h3>
-                <p>Paris is the capital of France.</p>
+                    });
+                </script>
             </div>
         </div>
-    </div>
 
+        <div id ="career-main-container">
+            <p class="career-title" >Kerjaya Mengikut Kod Mata Holland</p>
+        
+            <div class = "hollcode-career-container">
+                <!-- Main Tab -->
+                <div class="hollcode-main-tab">
+                    <button class="tablinks" onclick="mainTab(event, 'Kod Mata Holland')" id="defaultOpen">Kod Mata Holland</button>
+                    <button class="tablinks" onclick="mainTab(event, 'Semua Personaliti')">Semua Personaliti</button>
+                </div>
+                
+                <div id="Kod Mata Holland" class="tabcontent">
+                    <!-- Sub Tab -->
+                    <div class="hollcode-sub-tab">
+                        <button class="tablinks2" onclick="codeTab(event, 'c1')" id="defaultOpen2">{{hollCode.topName.0}}</button>
+                        <button class="tablinks2" onclick="codeTab(event, 'c2')">{{hollCode.topName.1}}</button>
+                        <button class="tablinks2" onclick="codeTab(event, 'c3')">{{hollCode.topName.2}}</button>
+                    </div>
+                    <!-- Content for each tab -->
+                    <div id="c1" class="career-content">
+                        <table>
+                            <tr>
+                                <th>Kerjaya</th>
+                            </tr>
+                            <tr>
+                                <td><a href="{% url 'test:index-nonadmin' user_type user_id %}" class="">Test1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="{% url 'test:index-nonadmin' user_type user_id %}" class="">Test1</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div id="c2" class="career-content">
+                        <h3>Kod Mata Holland</h3>
+                        <p>London is the capital city of England.</p>
+                    </div>
+                    <div id="c3" class="career-content">
+                        <h3>Kod Mata Holland</h3>
+                        <p>London is the capital city of England.</p>
+                    </div>
+                </div>
+
+                <div id="Semua Personaliti" class="tabcontent">
+                    <h3>Semua Personaliti</h3>
+                    <p>Paris is the capital of France.</p>
+                </div>
+            </div>
+        </div>
+    
     <script type="text/javascript">
         
         // Get the element with id="defaultOpen" and click on it

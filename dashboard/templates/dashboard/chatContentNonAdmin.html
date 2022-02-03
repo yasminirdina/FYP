@@ -1,0 +1,35 @@
+<div class="div-right">
+    <div class="div-chat-title">
+        <span class="span-username-thumb title">ftrcrsadmin</span>
+        <button class="btn adminnn title">Admin</button>
+    </div>
+    <div class="div-chat-content">
+        {% for message in currentChatMessages %}
+            {% if message.creatorID.ID == user_id %}
+                <div class="div-message-ind sent">
+                    {{ message.bodyText }}
+                    <br>
+                    <span class="span-datetime">
+                        {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                    </span>
+                </div>
+            {% else %}
+                <div class="div-message-ind received">
+                    {{ message.bodyText }}
+                    <br>
+                    <span class="span-datetime">
+                        {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                    </span>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="div-chat-write">
+        <form type="get" action="." class="form-send">
+            <input id="chat-message" type="text" name="mesej" placeholder="Tulis Mesej anda...">
+        </form>
+        <button class="btn send-message">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>

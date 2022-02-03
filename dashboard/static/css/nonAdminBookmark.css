@@ -71,6 +71,16 @@
     color: inherit;
 }
 
+.a-with-underline {
+    text-decoration: underline;
+    color: inherit;
+}
+
+.a-with-underline:hover{
+    color: rgb(250, 127, 56);
+    font-weight: bold;
+}
+
 /* form */
 .form-post, .form-info{
     /* background-color: rgb(33, 150, 120); */

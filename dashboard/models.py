@@ -175,19 +175,19 @@ class Suggestion(models.Model):
     subjectContent = models.CharField(max_length=500)
     status = models.CharField(max_length=25, null=True)
 
-class Chatroom(models.Model):
+""" class Chatroom(models.Model):
     #default id
-    nonAdminID = models.ForeignKey(User, on_delete=models.PROTECT)
+    nonAdminID = models.ForeignKey(User, on_delete=models.PROTECT) """
 
 class Message(models.Model):
     #default id
-    creatorID = models.ForeignKey(User, on_delete=models.PROTECT, related_name='created_by')
-    recipientID = models.ForeignKey(User, on_delete=models.PROTECT, related_name='received_by')
-    parentMessageID = models.OneToOneField('self', on_delete=models.PROTECT, related_name='parent_message_of')
-    chatroomID = models.ForeignKey(Chatroom, on_delete=models.CASCADE)
-    bodyText = models.CharField(max_length=200)
-    dateCreated = models.DateField(auto_now_add=False)
-    timeCreated = models.TimeField(auto_now_add=False)
+    creatorID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_by')
+    recipientID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_by')
+    # parentMessageID = models.OneToOneField('self', on_delete=models.PROTECT, related_name='parent_message_of')
+    # chatroomID = models.ForeignKey(Chatroom, on_delete=models.CASCADE)
+    bodyText = models.CharField(max_length=500)
+    dateTimeSent = models.DateTimeField(auto_now_add=True)
+    isRead = models.BooleanField(default=False)
 
 class NotificationType(models.Model):
     #default id
@@ -205,18 +205,6 @@ class Notification(models.Model):
     blogPostCommentID = models.ForeignKey('blog.BlogPostComment', on_delete=models.SET_NULL, related_name='comment_notif_for', null=True)
     blogCommentReplyID = models.ForeignKey('blog.BlogPostComment', on_delete=models.SET_NULL, related_name='comment_reply_notif_for', null=True)
     isOpen = models.BooleanField(default=False)
-
-""" class ReportType(models.Model):
-    #default id
-    name = models.CharField(max_length=30)
-
-class Report(models.Model):
-    #default id
-    typeID = models.ForeignKey(ReportType, on_delete=models.SET_NULL, null=True)
-    userID = models.ForeignKey(User, on_delete=models.CASCADE)
-    dateCreated = models.DateField(auto_now_add=False)
-    title = models.CharField(max_length=50)
-    URL = models.URLField(max_length=200) """
 
 class InfoDashboardBookmark(models.Model):
     #default id

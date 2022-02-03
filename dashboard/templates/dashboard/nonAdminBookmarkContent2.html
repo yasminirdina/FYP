@@ -13,7 +13,11 @@
             <!-- {% for bookmark in allInfoBookmarks %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ bookmark.infoID.title }}</td>
+                    <td>
+                        <a class="a-with-underline" href="{% url 'blog:view-post' user_type user_id bookmark.blogPostID.id %}">
+                            {{ bookmark.infoID.title }}
+                        </a>
+                    </td>
                     <td>{{ bookmark.categoryID.name }}</td>
                     <td>{{ bookmark.dateTimeAdded }}|date:"d/m/Y, h:i A"</td>
                     <td>

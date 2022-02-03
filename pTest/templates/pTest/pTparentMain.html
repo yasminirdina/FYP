@@ -1,0 +1,44 @@
+{% extends "pTest/baseNonAdmin.html" %}
+{% load static %}
+
+{% block title %}
+    <title>FutureCruise: Ujian Kerjaya</title>
+{% endblock %}
+
+{% block styles %}   
+<link rel="stylesheet" href="{% static 'css/pTNonStudentMain.css' %}">
+<link href="https://unpkg.com/ionicons@4.5.10-0/dist/css/ionicons.min.css" rel="stylesheet"/>
+{% endblock %}
+
+{% block content %}
+    <h1 class=main-header>Ujian Minat Kerjaya</h1>
+    <h2 class=topic-header>Pelajar Bawah Penjagaan {{username}}</h2>
+    
+    <div id=list-container>
+        <table class=table-student-name>
+            <tr>
+                <th id=student-column> Pelajar </th>
+                <th id=status-column> Status Ujian </th>
+            </tr>
+            {% for student in studentList %}
+                <tr>
+                    <td> {{student.name}} </td>
+                    {% for taken in studentTakenTest %}
+                        {% if student.ID_id == taken.ID_id %}
+                            <td id=status-completed> 
+                                Selesai Jawab
+                                <!-- <button> Lihat Keputusan </button> -->
+                                <br>
+                                <a href="{% url 'test:nonStudent-test-result' user_type user_id 'pelajar' student.ID_id %}" id="nonStudent-result-btn">Lihat Keputusan</a>
+                            </td>
+                        {% elif student.ID_id != taken.ID_id%} 
+                            <td id=status-incomplete> Belum Ambil Ujian </td>
+                        {{ "<!--" }}
+                        {% endif %}
+                    {% endfor %}    
+                    {{ "-->" }}
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock%}

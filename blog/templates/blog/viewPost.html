@@ -306,7 +306,11 @@
                     {% elif 'T' in user_id %}
                         <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
                     {% else %}
-                        <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                        {% if currentAvatarDetailsObject %}
+                            <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                        {% else %}
+                            <img class="img-user-add-comment" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                        {% endif %}
                     {% endif %}
                     
                     <form method="POST" action="{% url 'blog:view-post' user_type user_id post_id %}" class="form-add-comment">
@@ -351,7 +355,11 @@
                     <!-- change with teacher icon (in dashboard/static/images/user_avatar/default_teacher.png) -->
                     <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
                 {% else %}
-                    <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                    {% if currentAvatarDetailsObject %}
+                        <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/' %}{{ currentAvatarDetailsObject.imageURL }}">
+                    {% else %}
+                        <img class="img-user-add-reply" src="{% static 'images/quiz_avatar/1-default_avatar.png' %}">
+                    {% endif %}
                 {% endif %}
 
                 <form method="POST" action="{% url 'blog:view-post' user_type user_id post_id %}" class="form-add-reply">

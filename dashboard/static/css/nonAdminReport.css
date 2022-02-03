@@ -265,7 +265,7 @@ input:focus::placeholder {color: transparent}
     height: 30%;
 }
 
-.div-no-career, .div-no-student{
+.div-no-career, .div-no-career-2, .div-no-student{
     position: relative;
     display: grid;
     grid-auto-flow: column;

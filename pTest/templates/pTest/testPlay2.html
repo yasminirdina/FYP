@@ -1,54 +1,39 @@
-<p class="currPersonalityPoints" style="display: none;">{{ currentStudentPersonalitySession.currentSectionScore }}</p>
-<!-- <p class="p-totalPoints_2" style="display: none;">{{ currentPlayerTotalScoreAllField }}</p> -->
-<!-- <p class="p-timeLimit" style="display: none;">{{ nextQuestionRecord.timeLimit }}</p> -->
 <p class="personality_id" style="display: none;">{{ personality_id }}</p>
 <p class="next_personality_id" style="display: none;">{{ next_personality_id }}</p>
 <p class="next_cnt_quest" style="display: none;">{{ next_cnt_quest }}</p>
 <p class="cnt_quest" style="display: none;">{{ cnt_quest }}</p>
+<p class="allQuestionPerPersonality" style="display: none;">{{ allQuestionPerPersonality }}</p>
 <p class="hasSubmitted" style="display: none;">{{ hasSubmitted }}</p>
 <p class="isCorrect" style="display: none;">{{ isCorrect }}</p>
 
 <div class="div-outer">
-    <div id="hud">
-        <div class="hud-item">
-            <p id="progressText" class="hud-prefix">
-                Soalan {{ cnt_quest }} / 10
-            </p>
-            <h1 class="hud-main-text" id="progress">
-                <div id="progressBar">
-                    <div id="progressBarFull"></div>
-                </div>
-            </h1>
+    <div class="personality-container">
+        <p class="personality persona-sect">Bahagian Personaliti {{ personality_id}}:</p>
+        <p class="personality persona-name">{{ allPersonality }}</p>
+    </div>
+
+    <div class="progress-container">
+        <p id="progressText">
+            Soalan {{ cnt_quest }} / {{ allQuestionPerPersonality }}
+        </p>
+        <!-- <h1 class="progress-main-text" id="progress"> -->
+        <div class="progressBar">
+            <div id="progressBarFull"></div>
         </div>
-        
-        <!-- display current score (kiv) -->
-        <div class="hud-item">
-            <p class="hud-prefix">
-                Markah Semasa
-            </p>
-            <!-- if choose correct ans (in this case tukar choose yes) -->
-            <!-- display current score -->
-            <!-- {% if isCorrect == True %}
-                <h1 class="hud-main-text score correct" id="score">
-                    {{ currentStudentPersonalitySession.currentSectionScore }}
-                </h1>
-            {% else %}
-                <h1 class="hud-main-text score" id="score">
-                    {{ currentStudentPersonalitySession.currentSectionScore }}
-                </h1>
-            {% endif %} -->
-        </div>
+        <!-- </h1> -->
     </div>
 
     <div class="test-container">
         <!-- question -->
-        <div class="div-question">
-            <h2 class="personality">Bahagian Personaliti: {{ allPersonality }}</h2>
-            <h1 class="question" id="question">
+        <div class="question">
+            <h1 class="question quest-main">
                 {{ nextQuestionRecord.questionText }}
             </h1>
+            <h2 class="question quest-desc">
+                {{ nextQuestionRecord.questionDesc }}
+            </h2>
         </div>
-
+        <hr class="hr-quest">
         <!-- choices form -->
         <form id="TestForm" class="TestForm" action="{% url 'test:test-student' user_type user_id %}" method="POST">
             <div class="div-outer-choice">
@@ -69,81 +54,120 @@
     </div>
 </div>
 
-<div class="div-buttons" id="div-buttons">
-    {% if hasSubmitted == False %}
-        {% if sect_cnt_quest == 1 %}
-            {% if cnt_quest > 1 %}
-                <button class="btn next" id="btn-next">
-                    Seterusnya
+{% if hasSubmitted == False %}
+    {% if sect_cnt_quest == 1 %}
+        {% if cnt_quest > 1 %}
+            <div class="div-buttons" id="div-buttons">
+                <button class="btn prev" id="btn-prev">
+                    << Kembali
                 </button>
-                <button class="btn prev">
+                <button class="btn next" id="btn-next">
+                    Seterusnya >>
+                </button>
+            </div>
+            <div class="div-btn-end">
+                <button class="btn end">
                     Tamat Ujian
                 </button>
-            {% else %}
+            </div>
+        {% else %}
+            <div class="div-buttons" id="div-buttons">
                 <button class="btn next" id="btn-next">
-                    Seterusnya
+                    Seterusnya >>
                 </button>
-            {% endif %}
+            </div>
+        {% endif %}
 
-        {% elif sect_cnt_quest == 6 %}
-            {% if cnt_quest == 6 %}
+    {% elif sect_cnt_quest == 6 %}
+        {% if cnt_quest == allQuestionPerPersonality %}
+            <div class="div-buttons" id="div-buttons">
                 <button class="btn resultTest">
                     Tamat Ujian dan Lihat Keputusan
                 </button>
-            {% else %}
-                <button class="btn next" id="btn-next">
-                    Seterusnya
+            </div>
+        {% else %}
+            <div class="div-buttons" id="div-buttons">
+                <button class="btn prev" id="btn-prev">
+                    << Kembali
                 </button>
-                <button class="btn prev">
+                <button class="btn next" id="btn-next">
+                    Seterusnya >>
+                </button>
+            </div>
+            <div class="div-btn-end">
+                <button class="btn end">
                     Tamat Ujian
                 </button>
-            {% endif %}
-
-        {% else %}
-            <button class="btn next" id="btn-next">
-                    Seterusnya
-            </button>
-            <button class="btn prev">
-                Tamat Ujian
-            </button>
+            </div>
         {% endif %}
 
-    {% elif hasSubmitted == True %}
-        {% if sect_cnt_quest == 1 %}
-            {% if cnt_quest > 1 %}
-                <button class="btn next" id="btn-next">
-                    Seterusnya
-                </button>
-                <button class="btn prev">
-                    Tamat Ujian
-                </button>
-            {% else %}
-                <button class="btn next" id="btn-next">
-                    Seterusnya
-                </button>
-            {% endif %}
-
-        {% elif sect_cnt_quest == 6 %}
-            {% if cnt_quest == 6 %}
-                <button class="btn resultTest">
-                    Tamat Ujian dan Lihat Keputusan
-                </button>
-            {% else %}
-                <button class="btn next" id="btn-next">
-                    Seterusnya
-                </button>
-                <button class="btn prev">
-                    Tamat Ujian
-                </button>
-            {% endif %}
-
-        {% else %}
-            <button class="btn next" id="btn-next">
-                    Seterusnya
+    {% else %}
+        <div class="div-buttons" id="div-buttons">
+            <button class="btn prev" id="btn-prev">
+                << Kembali
             </button>
-            <button class="btn prev">
+            <button class="btn next" id="btn-next">
+                Seterusnya >>
+            </button>
+        </div>
+        <div class="div-btn-end">
+            <button class="btn end">
                 Tamat Ujian
             </button>
-        {% endif %}
+        </div>
     {% endif %}
-</div>
+
+{% elif hasSubmitted == True %}
+    {% if sect_cnt_quest == 1 %}
+        {% if cnt_quest > 1 %}
+            <div class="div-buttons" id="div-buttons">
+                <button class="btn next" id="btn-next">
+                    Seterusnya >>
+                </button>
+            </div>
+            <div class="div-btn-end">
+                <button class="btn end">
+                    Tamat Ujian
+                </button>
+            </div>
+        {% else %}
+            <div class="div-buttons" id="div-buttons">
+                <button class="btn next" id="btn-next">
+                    Seterusnya >>
+                </button>
+            </div>
+        {% endif %}
+
+    {% elif sect_cnt_quest == 6 %}
+        {% if cnt_quest == allQuestionPerPersonality %}
+            <div class="div-buttons" id="div-buttons">
+                <button class="btn resultTest">
+                    Tamat Ujian dan Lihat Keputusan
+                </button>
+            </div>
+        {% else %}
+            <div class="div-buttons" id="div-buttons">
+                <button class="btn next" id="btn-next">
+                    Seterusnya >>
+                </button>
+            </div>
+            <div class="div-btn-end">
+                <button class="btn end">
+                    Tamat Ujian
+                </button>
+            </div>
+        {% endif %}
+
+    {% else %}
+        <div class="div-buttons" id="div-buttons">
+            <button class="btn next" id="btn-next">
+                    Seterusnya >>
+            </button>
+        </div>
+        <div class="div-btn-end">
+            <button class="btn end">
+                Tamat Ujian
+            </button>
+        </div>
+    {% endif %}
+{% endif %}

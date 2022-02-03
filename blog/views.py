@@ -589,13 +589,17 @@ def viewPost(request, user_type, user_id, post_id):
 
     #for img-user in add comment (outer)
     if user_type == 'pelajar':
-        currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
-        currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+        if user_id in list(quiz.models.Player.objects.all().values_list('ID', flat=True)):
+            currentPlayerRecordObject = quiz.models.Player.objects.get(ID=user_id)
+            currentAvatarDetailsObject = currentPlayerRecordObject.avatarID
+        else:
+            currentAvatarDetailsObject = None
     else:
         currentAvatarDetailsObject = currentUserDetail #Will not be used, this is just for allowing context part below to pass for admin
 
     #for img-user-inner for all comments/replies from students
     allPlayerRecords = quiz.models.Player.objects.all().order_by('ID')
+    playerIDList = list(allPlayerRecords.values_list('ID', flat=True))
 
     #get list of parent comment IDs which have replies 
     parentCmtIDsWithReplies_all = list(blog.models.BlogPostComment.objects.filter(parentCommentID_id__isnull=False).values_list('parentCommentID_id', flat=True))
@@ -738,6 +742,7 @@ def viewPost(request, user_type, user_id, post_id):
                     'newCommentID': str(newCommentID),
                     'currentAvatarDetailsObject': currentAvatarDetailsObject,
                     'allPlayerRecords': allPlayerRecords,
+                    'playerIDList': playerIDList,
                     'parentCmtIDsWithReplies': parentCmtIDsWithReplies
                 }
 
@@ -845,6 +850,7 @@ def viewPost(request, user_type, user_id, post_id):
                     'newCommentID': str(newCommentID),
                     'currentAvatarDetailsObject': currentAvatarDetailsObject,
                     'allPlayerRecords': allPlayerRecords,
+                    'playerIDList': playerIDList,
                     'parentCmtIDsWithReplies': parentCmtIDsWithReplies
                 }
 
@@ -866,6 +872,7 @@ def viewPost(request, user_type, user_id, post_id):
                     'newCommentID': '0', #no need to find current user's latest parent ID for sorting - will always show from top again
                     'currentAvatarDetailsObject': currentAvatarDetailsObject,
                     'allPlayerRecords': allPlayerRecords,
+                    'playerIDList': playerIDList,
                     'parentCmtIDsWithReplies': parentCmtIDsWithReplies
                 }
 
@@ -940,6 +947,7 @@ def viewPost(request, user_type, user_id, post_id):
                 'commentCount': commentCount,
                 'currentAvatarDetailsObject': currentAvatarDetailsObject,
                 'allPlayerRecords': allPlayerRecords,
+                'playerIDList': playerIDList,
                 'parentCmtIDsWithReplies': parentCmtIDsWithReplies,
                 'newCommentID': '0' #For refreshed page only
             }

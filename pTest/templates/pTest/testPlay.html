@@ -15,57 +15,45 @@
 {% endblock %}
 
 {% block content %}
-    <!-- -------------------------------edit--------------------------------- -->
-    <div id="mySidenav" class="sidenav">
-        <div class="hud-item">
-            <p id="progressText" class="hud-prefix">
-                Soalan {{ cnt_quest }} / 10
-            </p>
-            <h1 class="hud-main-text" id="progress">
-                <div id="progressBar">
-                    <div id="progressBarFull"></div>
-                </div>
-            </h1>
+    <body onload="openPop()">
+    <div>
+        <div class="popup-overlay"></div>
+        <div id="instructPopMessage">
+            <p class="popMessage title-pop">Ujian Personaliti Minat Kerjaya</p>
+            <p class="popMessage time-pop">Anggaran Durasi: <strong>30 minit</strong></p>
+            <ul class="instList-pop">
+                <li class="popMessage">Ujian ini mengandungi 6 bahagian personaliti: <br><strong>Realistik, Artistik, Investigatif, Sosial dan Konvensional</strong></li>
+                <br>
+                <li class="popMessage">Setiap bahagian mempunyai 18 soalan</li>
+                <br>
+                <li class="popMessage">Pilih jawapan yang paling sesuai dengan anda</li>
+            </ul>
+            <div id="btn-mainPop">
+                <button id="btn-closePop" onclick="closePop()">Mula Ujian</button>
+            </div>
         </div>
-        
-        <!-- display current score (kiv) -->
-        <!-- <div class="hud-item">
-            <p class="hud-prefix">
-                Markah Semasa
-            </p> -->
-            <!-- if choose correct ans (in this case tukar choose yes) -->
-            <!-- display current score -->
-            <!-- {% if isCorrect == True %}
-                <h1 class="hud-main-text score correct" id="score">
-                    {{ currentStudentPersonalitySession.currentSectionScore }}
-                </h1>
-            {% else %}
-                <h1 class="hud-main-text score" id="score">
-                    {{ currentStudentPersonalitySession.currentSectionScore }}
-                </h1>
-            {% endif %}
-        </div> -->
-        
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <p>Bahagian Personaliti:</p>
-        <a href="#">Realistic</a>
-        <a href="#">Artistic</a>
-        <a href="#">Investigatif</a>
-        <a href="#">Social</a>
-        <a href="#">Enterprising</a>
-        <a href="#">Conventional</a>
     </div>
-    <!-- Use any element to open the sidenav -->
-    <span class="progress-navbar" onclick="openNav()">Progress</span>
-    <!-- ----------------------------endedit-------------------------------- -->
 
-    <div id="wrapper">
-        {% include 'pTest/testPlay2.html' %}
+    <div id="mainContainer">
+        <div id="wrapper">
+            {% include 'pTest/testPlay2.html' %}
+        </div>
     </div>
 {% endblock %}
 
 {% block js2 %}
     <script type="text/javascript">
+        function openPop() {
+            document.getElementById("instructPopMessage").style.position = "absolute";
+            document.getElementsByClassName("popup-overlay")[0].style.display = "block"
+        }
+
+        function closePop() {
+            // document.getElementById("instructPopMessage").style.transition = "fadeoutPop 1s";
+            document.getElementById("instructPopMessage").style.display = "none";
+            document.getElementsByClassName("popup-overlay")[0].style.display = "none"
+        }
+
         function openNav() {
             document.getElementById("mySidenav").style.width = "250px";
         }
@@ -76,11 +64,8 @@
 
     <script type="text/javascript">
         var user_id = '{{ user_id }}';
-    </script>
-
-    <!-- js n jQuery for testPlay1$2 -->
-    <script type="text/javascript">
         var cnt_quest = parseInt(document.querySelector('.cnt_quest').innerText);
+        var allQuestionPerPersonality = parseInt(document.querySelector('.allQuestionPerPersonality').innerText);
         var next_cnt_quest = parseInt(document.querySelector('.next_cnt_quest').innerText);
         var hasSubmitted = document.querySelector('.hasSubmitted').innerText;
         var isCorrect = document.querySelector('.isCorrect').innerText;
@@ -92,7 +77,7 @@
         var clickedQuit = false;
 
         //changing the progress bar width
-        $('#progressBarFull').width((cnt_quest/10) * 100 + "%"); 
+        $('#progressBarFull').width((cnt_quest/allQuestionPerPersonality) * 100 + "%"); 
 
         // // function setCookie(c_name,value,exdays) {
         // //     if (c_name == 'mainMuted') {
@@ -128,7 +113,7 @@
                 type: 'POST',
                 success: function(result){
                     $("#wrapper").html(result);
-                    $('#progressBarFull').width((cnt_quest/10) * 100 + "%");
+                    $('#progressBarFull').width((cnt_quest/allQuestionPerPersonality) * 100 + "%");
                     hasSubmitted = document.querySelector('.hasSubmitted').innerText;
                     isCorrect = document.querySelector('.isCorrect').innerText;
                     personality_id = document.querySelector('.personality_id').innerText;
@@ -197,7 +182,6 @@
                 type: 'POST',
                 success: function(response){
                     submit_form()
-                    alert("updateStatusSessionRecord: success");
                     window.location.href = "{% url 'test:test-result' user_type user_id %}";
                 },
                 error: function(response){

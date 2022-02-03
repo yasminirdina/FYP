@@ -84,7 +84,7 @@ td#status-incomplete {
     color: rgb(241, 35, 35);
 }
 
-#teacher-result-btn{
+#nonStudent-result-btn{
     color: rgb(255, 255, 255);
     font-size: 0.9rem;
     padding: 5px;
@@ -94,7 +94,7 @@ td#status-incomplete {
     background: rgb(250, 151, 37);
 }
 
-#teacher-result-btn:hover{
+#nonStudent-result-btn:hover{
     background: rgb(133, 180, 23);
 }
 

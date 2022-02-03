@@ -100,13 +100,25 @@
                 </div>
             </div>
         {% else %}
-            <div class="div-no-career">
-                Untuk melihat cadangan kerjaya bagi pelajar ini, pelajar mestilah telah bermain permainan kuiz dalam paling kurang 3 jenis bidang kerjaya.
-            </div>
+            {% if parentStudentsCnt > 1 %}
+                <div class="div-no-career">
+                    Untuk melihat cadangan kerjaya bagi pelajar ini, pelajar mestilah telah bermain permainan kuiz dalam paling kurang 3 jenis bidang kerjaya.
+                </div>
+            {% else %}
+                <div class="div-no-career-2">
+                    Untuk melihat cadangan kerjaya bagi pelajar ini, pelajar mestilah telah bermain permainan kuiz dalam paling kurang 3 jenis bidang kerjaya.
+                </div>
+            {% endif %}
         {% endif %}
     {% else %}
-        <div class="div-no-career">
-            Tiada rekod kuiz permainan bagi pelajar ini. Untuk melihat cadangan kerjaya bagi pelajar, pelajar itu mestilah mempunyai rekod bermain dalam permainan kuiz di laman web ini.
-        </div>
+        {% if parentStudentsCnt > 0 %}
+            <div class="div-no-career">
+                Tiada rekod kuiz permainan bagi pelajar ini. Untuk melihat cadangan kerjaya bagi pelajar, pelajar itu mestilah mempunyai rekod bermain dalam permainan kuiz di laman web ini.
+            </div>
+        {% else %}
+            <div class="div-no-career-2">
+                Tiada pelajar yang telah mendaftarkan anda sebagai penjaga pada akaun mereka. Anda mungkin mahu meminta pelajar di bawah jagaan anda untuk mengemaskini akaun mereka atau mendaftar akaun baharu jika mereka belum mendaftarkan diri mereka.
+            </div>
+        {% endif %}
     {% endif %}
 </div>

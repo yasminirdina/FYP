@@ -3,6 +3,7 @@ from dashboard.models import Student
 
 class Personality(models.Model):
     personality = models.CharField(max_length=120)
+    description = models.TextField(default="")
 
     def __str__(self):
         return self.personality
@@ -10,6 +11,7 @@ class Personality(models.Model):
 class Questions(models.Model):
     section = models.ForeignKey(Personality, on_delete=models.CASCADE)
     questionText = models.CharField(max_length=1500)
+    questionDesc = models.TextField()
     # points = models.IntegerField()
 
     def __str__(self):
