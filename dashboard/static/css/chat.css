@@ -38,7 +38,7 @@
 .teacher{background-color: rgb(245, 118, 59);}
 
 .send-message{
-    background-color: white;
+    background-color: transparent;
     padding: 0;
     width: 100%;
     color: rgb(250, 127, 56);
@@ -46,6 +46,7 @@
 }
 
 .send-message:hover{
+    background-color: transparent;
     color: rgb(250, 188, 54);
     box-shadow: none;
     transition: transform 150ms;
@@ -78,7 +79,7 @@
     width: 100%;
 }
 
-#chat-user, #chat-message {
+#chat-user, #chat-message-by-admin, #chat-message-by-nonadmin {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
     border-radius: 5px;
@@ -88,8 +89,13 @@
     text-align: left;
     box-sizing: border-box;
 }
+
+#chat-message-by-admin, #chat-message-by-nonadmin{
+    height: 100%;
+}
   
-input:focus::placeholder {color: transparent}
+/* input:focus::placeholder {color: transparent} */
+textarea:focus::placeholder {color: transparent}
 
 /* div */
 .div-section-header, .div-content-outer{
@@ -158,14 +164,13 @@ input:focus::placeholder {color: transparent}
     max-height: 73vh;
 }
 
-.div-search, .div-search-error{
-    /* background-color: lightgoldenrodyellow; */
+/* .div-search, .div-search-error{
     align-content: flex-start;
     justify-items: center;
     text-align: center;
     gap: 5px;
     padding: 0;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
 }
 
 .div-search{
@@ -189,7 +194,9 @@ input:focus::placeholder {color: transparent}
     font-style: italic;
     line-height: 25px;
     color: rgb(207, 61, 61);
-}
+    padding-bottom: 0;
+    display: none;
+} */
 
 .div-chat-list, .div-chat-ind{
     padding: 0;
@@ -209,8 +216,12 @@ input:focus::placeholder {color: transparent}
     border: none;
 }
 
-.div-chat-ind:hover{
+.div-chat-ind.clicked, .div-chat-ind:hover{
     background-color: #eee;
+    padding: 10px;
+}
+
+.div-chat-ind:hover{
     cursor: pointer;
 }
 
@@ -234,6 +245,7 @@ input:focus::placeholder {color: transparent}
 .div-chat-lastmessage{
     font-weight: normal;
     line-height: 25px;
+    grid-auto-flow: row;
 }
 
 .div-chat-title{
@@ -256,7 +268,7 @@ input:focus::placeholder {color: transparent}
     grid-auto-flow: row;
     width: 100%;
     padding: 0;
-    height: 50vh;
+    height: 55vh;
     overflow: auto;
     justify-items: left;
     align-content: flex-start;
@@ -328,6 +340,10 @@ input:focus::placeholder {color: transparent}
     box-sizing: border-box;
 }
 
+.non-admin-no-msg{
+    height: 55vh;
+}
+
 .div-initial-img-text{
     /* background-color: lightpink; */
     position: relative;
@@ -389,8 +405,13 @@ input:focus::placeholder {color: transparent}
 
 /* span */
 .span-username-thumb{
+    font-weight: bold;
     line-height: 25px;
 }
+
+/* .span-lastmessage{
+    width: 100%;
+} */
 
 .span-lastmessage.unread{
     font-weight: bold;
@@ -403,14 +424,21 @@ input:focus::placeholder {color: transparent}
     color: rgb(207, 61, 61);
 }
 
+.span-lastdatetime{
+    width: 100%;
+    font-size: 12px;
+    /* text-align: right; */
+}
+
 /* .span-username-thumb{
     background-color: lightgreen;
 } */
 
 .span-datetime{
     font-size: 12px;
-}
-
-.sent > .span-datetime{
     justify-self: right;
 }
+
+/* .sent > .span-datetime{
+    justify-self: right;
+} */

@@ -28,11 +28,10 @@
                     <i class="fas fa-comment-alt"></i>
 
                     <div class="div-text">
-                        <!-- Temp -->
-                        Terdapat mesej baharu daripada admin.
-                        Terdapat mesej baharu daripada admin.
-                        Terdapat mesej baharu daripada admin.
-                        Terdapat mesej baharu daripada admin.
+                        Terdapat 
+                        <span>
+                            <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'dashboard:chat' user_type user_id %}">mesej baharu</a>
+                        </span> daripada guru kaunseling.
                     </div>
                 <!-- Type 5: Status Change (for non-admin ONLY) -->
                 {% elif notif.typeID_id == 5 %}
@@ -82,11 +81,10 @@
                     <i class="fas fa-comment-alt"></i>
 
                     <div class="div-text">
-                        <!-- Temp -->
-                        Terdapat mesej baharu daripada admin.
-                        Terdapat mesej baharu daripada admin.
-                        Terdapat mesej baharu daripada admin.
-                        Terdapat mesej baharu daripada admin.
+                        Terdapat 
+                        <span>
+                            <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'dashboard:chat' user_type user_id %}">mesej baharu</a>
+                        </span> daripada guru kaunseling.
                     </div>
                 <!-- Type 5: Status Change (for non-admin ONLY) -->
                 {% elif notif.typeID_id == 5 %}

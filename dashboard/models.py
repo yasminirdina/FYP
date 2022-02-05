@@ -185,9 +185,13 @@ class Message(models.Model):
     recipientID = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_by')
     # parentMessageID = models.OneToOneField('self', on_delete=models.PROTECT, related_name='parent_message_of')
     # chatroomID = models.ForeignKey(Chatroom, on_delete=models.CASCADE)
-    bodyText = models.CharField(max_length=500)
+    # bodyText = models.CharField(max_length=500)
+    bodyText = models.TextField()
     dateTimeSent = models.DateTimeField(auto_now_add=True)
     isRead = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "chat id: " + str(self.id) + ", creatorID: " + self.creatorID.ID + ", recipientID: " + self.recipientID.ID + ", isRead: " + str(self.isRead)
 
 class NotificationType(models.Model):
     #default id

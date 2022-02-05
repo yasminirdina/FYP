@@ -65,6 +65,20 @@
     border: 1px solid lightgray;
 }
 
+.div-mark-read{
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    width: 100%;
+    height: fit-content;
+    font-size: 16px;
+    line-height: 20px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
 .div-notif-ind{
     background-color: white;
     position: relative;

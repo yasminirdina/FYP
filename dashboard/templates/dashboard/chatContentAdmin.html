@@ -1,8 +1,11 @@
 {% load static %}
+<p class="p-chosenRecipientIDClicked" style="display: none;">{{ chosenRecipient.ID }}</p>
+<p class="p-chosenRecipientLatestChatID" style="display: none;">{{ chosenRecipientLatestChatID }}</p>
+<p class="p-chosenRecipientIDNoChat" style="display: none;">{{ chosenRecipient.ID }}</p>
 
 <div class="div-content-inner">
     <div class="div-left">
-        <div class="div-search">
+        <!-- <div class="div-search">
             <form type="get" action="." class="form-chat">
                 <div class="div-search-icon">
                     <i class="fas fa-search"></i>
@@ -17,211 +20,651 @@
             <div class="div-search-error">
                 Pengguna yang dicari tiada dalam rekod pengguna.
             </div>
-        </div>
+        </div> -->
         <div class="div-chat-list">
-            <!-- Test -->
-            <div class="div-chat-ind">
-                <div class="div-chat-name-type">
-                    <span class="span-username-thumb">Pelajar A</span>
-                    <button class="btn student">Pelajar</button>
-                </div>
-                <div class="div-chat-lastmessage">
-                    <span class="span-lastmessage unread">Mesej terakhir bersama pelajar...</span>
-                </div>
-            </div>
-            <div class="div-chat-ind">
-                <div class="div-chat-name-type">
-                    <span class="span-username-thumb">Penjaga A</span>
-                    <button class="btn parents">Penjaga</button>
-                </div>
-                <div class="div-chat-lastmessage">
-                    <span class="span-lastmessage no-message">Tiada sebarang mesej direkodk...</span>
-                </div>
-            </div>
-            <div class="div-chat-ind">
-                <div class="div-chat-name-type">
-                    <span class="span-username-thumb">Guru A</span>
-                    <button class="btn teacher">Guru</button>
-                </div>
-                <div class="div-chat-lastmessage">
-                    <span class="span-lastmessage">Mesej terakhir bersama guru A...</span>
-                </div>
-            </div>
-            <div class="div-chat-ind">
-                <div class="div-chat-name-type">
-                    <span class="span-username-thumb">Pelajar B</span>
-                    <button class="btn student">Pelajar</button>
-                </div>
-                <div class="div-chat-lastmessage">
-                    <span class="span-lastmessage unread">Mesej terakhir bersama pelajar...</span>
-                </div>
-            </div>
-            <div class="div-chat-ind">
-                <div class="div-chat-name-type">
-                    <span class="span-username-thumb">Pelajar C</span>
-                    <button class="btn student">Pelajar</button>
-                </div>
-                <div class="div-chat-lastmessage">
-                    <span class="span-lastmessage unread">Mesej terakhir bersama pelajar...</span>
-                </div>
-            </div>
+            {% for chat_id in allDistinctChatForFromNA_IDList %}
+                {% for chat in allChats %}
+                    {% if chat.id == chat_id %}
+                        {% if chosenRecipient %}
+                            {% if chat.id == chosenRecipientLatestChatID %}
+                                <div class="div-chat-ind clicked" id="latest-{{ chat.id }}">
+                                    {% if chat_id in distinctChatForNonAdmin_IDList %}
+                                        <p class="p-chosenRecipientID" style="display: none;">{{ chat.recipientID.ID }}</p>
+                                        <div class="div-chat-name-type">
+                                            {% if 'S' in chat.recipientID.ID %}
+                                                {% for student in allStudents %}
+                                                    {% if student.ID.ID == chat.recipientID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if student.name != 'NA' %}
+                                                                {{ student.name }}
+                                                            {% else %}
+                                                                {{ chat.recipientID.username }}
+                                                            {% endif %}
 
-            <!-- {% for user in allUsers %}
-                <div class="div-chat-ind">
-                    <div class="div-chat-name-type">
-                        {% if 'S' in user.ID %}
-                            {% for student in allStudents %}
-                                {% if student.ID == user.ID %}
-                                    <span class="span-username-thumb">{{ student.name }}</span>
-                                {% endif %}
-                            {% endfor %}
-                            <button class="btn student">Pelajar</button>
-                        {% elif 'P' in user.ID %}
-                            {% for parent in allParents %}
-                                {% if parent.ID == user.ID %}
-                                    <span class="span-username-thumb">{{ parent.name }}</span>
-                                {% endif %}
-                            {% endfor %}
-                            <button class="btn parents">Penjaga</button>
-                        {% elif 'T' in user.ID %}
-                            {% for teacher in allTeachers %}
-                                {% if teacher.ID == user.ID %}
-                                    <span class="span-username-thumb">{{ teacher.name }}</span>
-                                {% endif %}
-                            {% endfor %}
-                            <button class="btn teacher">Guru</button>
-                        {% endif %}
-                    </div>
-                    <div class="div-chat-lastmessage">
-                        {% if user.ID in chatUserList %}
-                            {% for chat in allDistinctChatUsers %}
-                                {% if user.ID == chat.recipientID %}
-                                    {% if chat.isRead == False %}
-                                        <span class="span-lastmessage unread">{{ chat.bodyText }}|truncatechars:30</span>
-                                    {% else %}
-                                        {{ chat.bodyText }}
+                                                            <button class="btn student">Pelajar</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'P' in chat.recipientID.ID %}
+                                                {% for parent in allParents %}
+                                                    {% if parent.ID.ID == chat.recipientID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if parent.name != 'NA' %}
+                                                                {{ parent.name }}
+                                                            {% else %}
+                                                                {{ chat.recipientID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn parents">Penjaga</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'T' in chat.recipientID.ID %}
+                                                {% for teacher in allTeachers %}
+                                                    {% if teacher.ID.ID == chat.recipientID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if teacher.name != 'NA' %}
+                                                                {{ teacher.name }}
+                                                            {% else %}
+                                                                {{ chat.recipientID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn teacher">Guru</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="div-chat-lastmessage">
+                                            <span>
+                                                {% if chat.isRead == False %}
+                                                    <i class="fas fa-check"></i>
+                                                {% else %}
+                                                    <i class="fas fa-check-double"></i>
+                                                {% endif %}
+
+                                                {{ chat.bodyText |truncatechars:50 }}
+                                            </span>
+                                            <span class="span-lastdatetime">
+                                                {{ chat.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                            </span>
+                                        </div>
+                                    {% elif chat_id in distinctChatFromNonAdmin_IDList %}
+                                        <p class="p-chosenRecipientID" style="display: none;">{{ chat.creatorID.ID }}</p>
+                                        <div class="div-chat-name-type">
+                                            {% if 'S' in chat.creatorID.ID %}
+                                                {% for student in allStudents %}
+                                                    {% if student.ID.ID == chat.creatorID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if student.name != 'NA' %}
+                                                                {{ student.name }}
+                                                            {% else %}
+                                                                {{ chat.creatorID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn student">Pelajar</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'P' in chat.creatorID.ID %}
+                                                {% for parent in allParents %}
+                                                    {% if parent.ID.ID == chat.creatorID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if parent.name != 'NA' %}
+                                                                {{ parent.name }}
+                                                            {% else %}
+                                                                {{ chat.creatorID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn parents">Penjaga</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'T' in chat.creatorID.ID %}
+                                                {% for teacher in allTeachers %}
+                                                    {% if teacher.ID.ID == chat.creatorID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if teacher.name != 'NA' %}
+                                                                {{ teacher.name }}
+                                                            {% else %}
+                                                                {{ chat.creatorID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn teacher">Guru</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="div-chat-lastmessage">
+                                            {% if chat.isRead == False %}
+                                                <span class="span-lastmessage unread">{{ chat.bodyText |truncatechars:50 }}</span>
+                                            {% else %}
+                                                {{ chat.bodyText |truncatechars:50 }}
+                                            {% endif %}
+                                            <span class="span-lastdatetime">
+                                                {{ chat.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                            </span>
+                                        </div>
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="div-chat-ind">
+                                    {% if chat_id in distinctChatForNonAdmin_IDList %}
+                                        <p class="p-chosenRecipientID" style="display: none;">{{ chat.recipientID.ID }}</p>
+                                        <div class="div-chat-name-type">
+                                            {% if 'S' in chat.recipientID.ID %}
+                                                {% for student in allStudents %}
+                                                    {% if student.ID.ID == chat.recipientID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if student.name != 'NA' %}
+                                                                {{ student.name }}
+                                                            {% else %}
+                                                                {{ chat.recipientID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn student">Pelajar</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'P' in chat.recipientID.ID %}
+                                                {% for parent in allParents %}
+                                                    {% if parent.ID.ID == chat.recipientID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if parent.name != 'NA' %}
+                                                                {{ parent.name }}
+                                                            {% else %}
+                                                                {{ chat.recipientID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn parents">Penjaga</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'T' in chat.recipientID.ID %}
+                                                {% for teacher in allTeachers %}
+                                                    {% if teacher.ID.ID == chat.recipientID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if teacher.name != 'NA' %}
+                                                                {{ teacher.name }}
+                                                            {% else %}
+                                                                {{ chat.recipientID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn teacher">Guru</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="div-chat-lastmessage">
+                                            <span>
+                                                {% if chat.isRead == False %}
+                                                    <i class="fas fa-check"></i>
+                                                {% else %}
+                                                    <i class="fas fa-check-double"></i>
+                                                {% endif %}
+
+                                                {{ chat.bodyText |truncatechars:50 }}
+                                            </span>
+                                            <span class="span-lastdatetime">
+                                                {{ chat.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                            </span>
+                                        </div>
+                                    {% elif chat_id in distinctChatFromNonAdmin_IDList %}
+                                        <p class="p-chosenRecipientID" style="display: none;">{{ chat.creatorID.ID }}</p>
+                                        <div class="div-chat-name-type">
+                                            {% if 'S' in chat.creatorID.ID %}
+                                                {% for student in allStudents %}
+                                                    {% if student.ID.ID == chat.creatorID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if student.name != 'NA' %}
+                                                                {{ student.name }}
+                                                            {% else %}
+                                                                {{ chat.creatorID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn student">Pelajar</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'P' in chat.creatorID.ID %}
+                                                {% for parent in allParents %}
+                                                    {% if parent.ID.ID == chat.creatorID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if parent.name != 'NA' %}
+                                                                {{ parent.name }}
+                                                            {% else %}
+                                                                {{ chat.creatorID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn parents">Penjaga</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% elif 'T' in chat.creatorID.ID %}
+                                                {% for teacher in allTeachers %}
+                                                    {% if teacher.ID.ID == chat.creatorID.ID %}
+                                                        <span class="span-username-thumb">
+                                                            {% if teacher.name != 'NA' %}
+                                                                {{ teacher.name }}
+                                                            {% else %}
+                                                                {{ chat.creatorID.username }}
+                                                            {% endif %}
+
+                                                            <button class="btn teacher">Guru</button>
+                                                        </span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                        <div class="div-chat-lastmessage">
+                                            {% if chat.isRead == False %}
+                                                <span class="span-lastmessage unread">{{ chat.bodyText |truncatechars:50 }}</span>
+                                            {% else %}
+                                                {{ chat.bodyText |truncatechars:50 }}
+                                            {% endif %}
+                                            <span class="span-lastdatetime">
+                                                {{ chat.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                            </span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         {% else %}
-                            <span class="span-lastmessage no-message">Tiada sebarang mesej direkodkan bersama pengguna ini.</span>
+                            <div class="div-chat-ind">
+                                {% if chat_id in distinctChatForNonAdmin_IDList %}
+                                    <p class="p-chosenRecipientID" style="display: none;">{{ chat.recipientID.ID }}</p>
+                                    <div class="div-chat-name-type">
+                                        {% if 'S' in chat.recipientID.ID %}
+                                            {% for student in allStudents %}
+                                                {% if student.ID.ID == chat.recipientID.ID %}
+                                                    <span class="span-username-thumb">
+                                                        {% if student.name != 'NA' %}
+                                                            {{ student.name }}
+                                                        {% else %}
+                                                            {{ chat.recipientID.username }}
+                                                        {% endif %}
+
+                                                        <button class="btn student">Pelajar</button>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% elif 'P' in chat.recipientID.ID %}
+                                            {% for parent in allParents %}
+                                                {% if parent.ID.ID == chat.recipientID.ID %}
+                                                    <span class="span-username-thumb">
+                                                        {% if parent.name != 'NA' %}
+                                                            {{ parent.name }}
+                                                        {% else %}
+                                                            {{ chat.recipientID.username }}
+                                                        {% endif %}
+
+                                                        <button class="btn parents">Penjaga</button>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% elif 'T' in chat.recipientID.ID %}
+                                            {% for teacher in allTeachers %}
+                                                {% if teacher.ID.ID == chat.recipientID.ID %}
+                                                    <span class="span-username-thumb">
+                                                        {% if teacher.name != 'NA' %}
+                                                            {{ teacher.name }}
+                                                        {% else %}
+                                                            {{ chat.recipientID.username }}
+                                                        {% endif %}
+
+                                                        <button class="btn teacher">Guru</button>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="div-chat-lastmessage">
+                                        <span>
+                                            {% if chat.isRead == False %}
+                                                <i class="fas fa-check"></i>
+                                            {% else %}
+                                                <i class="fas fa-check-double"></i>
+                                            {% endif %}
+
+                                            {{ chat.bodyText |truncatechars:50 }}
+                                        </span>
+                                        <span class="span-lastdatetime">
+                                            {{ chat.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                        </span>
+                                    </div>
+                                {% elif chat_id in distinctChatFromNonAdmin_IDList %}
+                                    <p class="p-chosenRecipientID" style="display: none;">{{ chat.creatorID.ID }}</p>
+                                    <div class="div-chat-name-type">
+                                        {% if 'S' in chat.creatorID.ID %}
+                                            {% for student in allStudents %}
+                                                {% if student.ID.ID == chat.creatorID.ID %}
+                                                    <span class="span-username-thumb">
+                                                        {% if student.name != 'NA' %}
+                                                            {{ student.name }}
+                                                        {% else %}
+                                                            {{ chat.creatorID.username }}
+                                                        {% endif %}
+
+                                                        <button class="btn student">Pelajar</button>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% elif 'P' in chat.creatorID.ID %}
+                                            {% for parent in allParents %}
+                                                {% if parent.ID.ID == chat.creatorID.ID %}
+                                                    <span class="span-username-thumb">
+                                                        {% if parent.name != 'NA' %}
+                                                            {{ parent.name }}
+                                                        {% else %}
+                                                            {{ chat.creatorID.username }}
+                                                        {% endif %}
+
+                                                        <button class="btn parents">Penjaga</button>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% elif 'T' in chat.creatorID.ID %}
+                                            {% for teacher in allTeachers %}
+                                                {% if teacher.ID.ID == chat.creatorID.ID %}
+                                                    <span class="span-username-thumb">
+                                                        {% if teacher.name != 'NA' %}
+                                                            {{ teacher.name }}
+                                                        {% else %}
+                                                            {{ chat.creatorID.username }}
+                                                        {% endif %}
+
+                                                        <button class="btn teacher">Guru</button>
+                                                    </span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="div-chat-lastmessage">
+                                        {% if chat.isRead == False %}
+                                            <span class="span-lastmessage unread">{{ chat.bodyText |truncatechars:50 }}</span>
+                                        {% else %}
+                                            {{ chat.bodyText |truncatechars:50 }}
+                                        {% endif %}
+                                        <span class="span-lastdatetime">
+                                            {{ chat.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                            </div>
                         {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+
+            {% for user in allNonChatUsers %}
+                {% if chosenRecipient %}
+                    {% if user.ID == chosenRecipient.ID %}
+                        <div class="div-chat-ind clicked" id="latest-{{ user.ID }}">
+                            <p class="p-chosenRecipientID" style="display: none;">{{ user.ID }}</p>
+                            <div class="div-chat-name-type">
+                                {% if 'S' in user.ID %}
+                                    {% for student in allStudents %}
+                                        {% if student.ID.ID == user.ID %}
+                                            <span class="span-username-thumb">
+                                                {% if student.name != 'NA' %}
+                                                    {{ student.name }}
+                                                {% else %}
+                                                    {{ user.username }}
+                                                {% endif %}
+
+                                                <button class="btn student">Pelajar</button>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% elif 'P' in user.ID %}
+                                    {% for parent in allParents %}
+                                        {% if parent.ID.ID == user.ID %}
+                                            <span class="span-username-thumb">
+                                                {% if parent.name != 'NA' %}
+                                                    {{ parent.name }}
+                                                {% else %}
+                                                    {{ user.username }}
+                                                {% endif %}
+
+                                                <button class="btn parents">Penjaga</button>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% elif 'T' in user.ID %}
+                                    {% for teacher in allTeachers %}
+                                        {% if teacher.ID.ID == user.ID %}
+                                            <span class="span-username-thumb">
+                                                {% if teacher.name != 'NA' %}
+                                                    {{ teacher.name }}
+                                                {% else %}
+                                                    {{ user.username }}
+                                                {% endif %}
+
+                                                <button class="btn teacher">Guru</button>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="div-chat-lastmessage">
+                                <span class="span-lastmessage no-message">Tiada sebarang mesej direkodkan bersama pengguna ini.</span>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="div-chat-ind">
+                            <p class="p-chosenRecipientID" style="display: none;">{{ user.ID }}</p>
+                            <div class="div-chat-name-type">
+                                {% if 'S' in user.ID %}
+                                    {% for student in allStudents %}
+                                        {% if student.ID.ID == user.ID %}
+                                            <span class="span-username-thumb">
+                                                {% if student.name != 'NA' %}
+                                                    {{ student.name }}
+                                                {% else %}
+                                                    {{ user.username }}
+                                                {% endif %}
+
+                                                <button class="btn student">Pelajar</button>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% elif 'P' in user.ID %}
+                                    {% for parent in allParents %}
+                                        {% if parent.ID.ID == user.ID %}
+                                            <span class="span-username-thumb">
+                                                {% if parent.name != 'NA' %}
+                                                    {{ parent.name }}
+                                                {% else %}
+                                                    {{ user.username }}
+                                                {% endif %}
+
+                                                <button class="btn parents">Penjaga</button>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% elif 'T' in user.ID %}
+                                    {% for teacher in allTeachers %}
+                                        {% if teacher.ID.ID == user.ID %}
+                                            <span class="span-username-thumb">
+                                                {% if teacher.name != 'NA' %}
+                                                    {{ teacher.name }}
+                                                {% else %}
+                                                    {{ user.username }}
+                                                {% endif %}
+
+                                                <button class="btn teacher">Guru</button>
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="div-chat-lastmessage">
+                                <span class="span-lastmessage no-message">Tiada sebarang mesej direkodkan bersama pengguna ini.</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <div class="div-chat-ind">
+                        <p class="p-chosenRecipientID" style="display: none;">{{ user.ID }}</p>
+                        <div class="div-chat-name-type">
+                            {% if 'S' in user.ID %}
+                                {% for student in allStudents %}
+                                    {% if student.ID.ID == user.ID %}
+                                        <span class="span-username-thumb">
+                                            {% if student.name != 'NA' %}
+                                                {{ student.name }}
+                                            {% else %}
+                                                {{ user.username }}
+                                            {% endif %}
+
+                                            <button class="btn student">Pelajar</button>
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% elif 'P' in user.ID %}
+                                {% for parent in allParents %}
+                                    {% if parent.ID.ID == user.ID %}
+                                        <span class="span-username-thumb">
+                                            {% if parent.name != 'NA' %}
+                                                {{ parent.name }}
+                                            {% else %}
+                                                {{ user.username }}
+                                            {% endif %}
+
+                                            <button class="btn parents">Penjaga</button>
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% elif 'T' in user.ID %}
+                                {% for teacher in allTeachers %}
+                                    {% if teacher.ID.ID == user.ID %}
+                                        <span class="span-username-thumb">
+                                            {% if teacher.name != 'NA' %}
+                                                {{ teacher.name }}
+                                            {% else %}
+                                                {{ user.username }}
+                                            {% endif %}
+
+                                            <button class="btn teacher">Guru</button>
+                                        </span>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="div-chat-lastmessage">
+                            <span class="span-lastmessage no-message">Tiada sebarang mesej direkodkan bersama pengguna ini.</span>
+                        </div>
                     </div>
-                </div>
-            {% endfor %} -->
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 
     <div class="div-right">
-        <!-- Test -->
-        <div class="div-chat-title">
-            <span class="span-username-thumb title">Pelajar A namanamanama</span>
-            <button class="btn student title">Pelajar</button>
-        </div>
-        <div class="div-chat-content">
-            <div class="div-message-ind sent">
-                Assalamualaikum
-                <br>
-                <span class="span-datetime">
-                    28/01/2022, 12:55 PM
-                </span>
-            </div>
-            <div class="div-message-ind received">
-                Waalaikumussalam
-                <br>
-                <span class="span-datetime">
-                    28/01/2022, 12:56 PM
-                </span>
-            </div>
-            <div class="div-message-ind sent">
-                Ini Cikgu Zaid, guru kaunseling dari SMK Damansara Damai 1.
-                <br>
-                <span class="span-datetime">
-                    28/01/2022, 12:57 PM
-                </span>
-            </div>
-            <div class="div-message-ind sent">
-                Cikgu ingin berbincang dengan awak tentang perancangan kerjaya awak.
-                <br>
-                <span class="span-datetime">
-                    28/01/2022, 12:57 PM
-                </span>
-            </div>
-            <div class="div-message-ind sent">
-                Cikgu ingin berbincang dengan awak tentang perancangan kerjaya awak.
-                <br>
-                <span class="span-datetime">
-                    28/01/2022, 12:57 PM
-                </span>
-            </div>
-        </div>
-        <div class="div-chat-write">
-            <form type="get" action="." class="form-send">
-                <input id="chat-message" type="text" name="mesej" placeholder="Tulis mesej anda...">
-            </form>
-            <button class="btn send-message">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-
-        <!-- <div class="div-initial">
-            <div class="div-initial-img-text">
-                <img class="img-initial" src="{% static 'images/interaction.svg' %}"/>
-                <div class="div-text">
-                    Mulakan interaksi bersama pengguna lain dengan mencari nama mereka dan menghantar mesej kepada mereka.
-                </div>
-            </div>
-            <div class="div-initial-credit">
-                <span style="word-break: break-all;">
-                    Ikon di atas dikreditkan kepada
-                    <span>
-                        <a class="a-link" href="https://www.svgrepo.com/svg/341482/interaction-browser-internet-website-dashboard-seo-optimization">
-                            https://www.svgrepo.com/svg/341482/interaction-browser-internet-website-dashboard-seo-optimization
-                        </a>
-                    </span>
-                </span>
-            </div>
-        </div> -->
-
-        <!-- {% if chosenRecipient %}
+        {% if chosenRecipient %}
             <div class="div-chat-title">
-                <span class="span-username-thumb title">{{ chosenRecipient.name }}</span>
                 {% if 'S' in chosenRecipient.ID %}
-                    <button class="btn student title">Pelajar</button>
+                    {% for student in allStudents %}
+                        {% if student.ID.ID == chosenRecipient.ID %}
+                            <span class="span-username-thumb title">
+                                {% if student.name != 'NA' %}
+                                    {{ student.name }}
+                                {% else %}
+                                    {{ chosenRecipient.username }}
+                                {% endif %}
+
+                                <button class="btn student title">Pelajar</button>
+                            </span>
+                        {% endif %}
+                    {% endfor %}
                 {% elif 'P' in chosenRecipient.ID %}
-                    <button class="btn parents title">Penjaga</button>
+                    {% for parent in allParents %}
+                        {% if parent.ID.ID == chosenRecipient.ID %}
+                            <span class="span-username-thumb title">
+                                {% if parent.name != 'NA' %}
+                                    {{ parent.name }}
+                                {% else %}
+                                    {{ chosenRecipient.username }}
+                                {% endif %}
+
+                                <button class="btn parents title">Penjaga</button>
+                            </span>
+                        {% endif %}
+                    {% endfor %}
                 {% elif 'T' in chosenRecipient.ID %}
-                    <button class="btn teacher title">Guru</button>
+                    {% for teacher in allTeachers %}
+                        {% if teacher.ID.ID == chosenRecipient.ID %}
+                            <span class="span-username-thumb title">
+                                {% if teacher.name != 'NA' %}
+                                    {{ teacher.name }}
+                                {% else %}
+                                    {{ chosenRecipient.username }}
+                                {% endif %}
+
+                                <button class="btn teacher title">Guru</button>
+                            </span>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
             </div>
 
             <div class="div-chat-content">
-                {% for message in currentChatMessages %}
-                    {% if message.creatorID.ID == 'A1' %}
-                        <div class="div-message-ind sent">
-                            {{ message.bodyText }}
-                            <br>
-                            <span class="span-datetime">
-                                {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
-                            </span>
-                        </div>
+                {% for message in chosenUserAllChats %}
+                    {% if message.id == chosenRecipientLatestChatID %}
+                        {% if message.creatorID.ID == 'A1' %}
+                            <div class="div-message-ind sent" id="newest-{{ message.id }}">
+                                {{ message.bodyText |linebreaksbr }}
+                                <span class="span-datetime">
+                                    {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="div-message-ind received" id="newest-{{ message.id }}">
+                                {{ message.bodyText |linebreaksbr }}
+                                <span class="span-datetime">
+                                    {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                </span>
+                            </div>
+                        {% endif %}
                     {% else %}
-                        <div class="div-message-ind received">
-                            {{ message.bodyText }}
-                            <br>
-                            <span class="span-datetime">
-                                {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
-                            </span>
-                        </div>
+                        {% if message.creatorID.ID == 'A1' %}
+                            <div class="div-message-ind sent">
+                                {{ message.bodyText |linebreaksbr }}
+                                <span class="span-datetime">
+                                    {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                </span>
+                            </div>
+                        {% else %}
+                            <div class="div-message-ind received">
+                                {{ message.bodyText |linebreaksbr }}
+                                <span class="span-datetime">
+                                    {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                </span>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             </div>
 
             <div class="div-chat-write">
                 <form type="get" action="." class="form-send">
-                    <input id="chat-message" type="text" name="mesej" placeholder="Tulis Mesej anda...">
+                    {% if typedMessage %}
+                        <!-- <input id="chat-message-by-admin" type="text" name="mesej" placeholder="Tulis mesej anda..." value="{{ typedMessage }}"> -->
+                        <textarea autofocus id="chat-message-by-admin" type="text" name="mesej" placeholder="Tulis mesej anda..."rows="1" cols="8">{{ typedMessage }}</textarea>
+                    {% else %}
+                        <!-- <input id="chat-message-by-admin" type="text" name="mesej" placeholder="Tulis mesej anda..."> -->
+                        <textarea autofocus id="chat-message-by-admin" type="text" name="mesej" placeholder="Tulis mesej anda..."rows="1" cols="8"></textarea>
+                    {% endif %}
                 </form>
-                <button class="btn send-message">
+                <button class="btn send-message" id="by-admin" value="{{ chosenRecipient.ID }}">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
@@ -244,6 +687,6 @@
                     </span>
                 </div>
             </div>
-        {% endif %} -->
+        {% endif %}
     </div>
 </div>

@@ -1,0 +1,13 @@
+.job-header{
+    grid-row-start: 1;
+    grid-row-end: 3;
+    padding: 20px;
+}
+
+.job-container{
+    background-color: rgb(233, 233, 233);
+    border-radius: 10px;
+    margin: 10px 0 5px 0;
+    padding: 1px 20px 1px 20px;
+}
+  

@@ -568,7 +568,7 @@
             var canvas_image_width = reportPageWidth;
             var canvas_image_height = reportPageHeight;
 
-            alert("reportPageHeight: " + reportPageHeight.toString() + ", reportPageWidth: " + reportPageWidth.toString() + ", PDF_Width: " + PDF_Width.toString() + ", PDF_Height: " + PDF_Height.toString()); // Test
+            // alert("reportPageHeight: " + reportPageHeight.toString() + ", reportPageWidth: " + reportPageWidth.toString() + ", PDF_Width: " + PDF_Width.toString() + ", PDF_Height: " + PDF_Height.toString()); // Test
 
             // var totalPDFPages = Math.ceil(reportPageHeight / PDF_Height) - 1;
 
@@ -674,7 +674,7 @@
             var dateTime = date + ', ' + time;
 
             var reportPageHeight = $('.div-grid-eng').innerHeight();
-            var reportPageWidth = $('.div-grid-eng').innerWidth();
+            var reportPageWidth = $('.div-grid-eng').width();
             var top_left_margin = 15;
             var PDF_Width = reportPageWidth + (top_left_margin * 2);
             // var PDF_Height = (PDF_Width * 1.5) + (top_left_margin * 2);
@@ -682,9 +682,31 @@
             var canvas_image_width = reportPageWidth;
             var canvas_image_height = reportPageHeight;
 
-            alert("reportPageHeight: " + reportPageHeight.toString() + ", reportPageWidth: " + reportPageWidth.toString() + ", PDF_Width: " + PDF_Width.toString() + ", PDF_Height: " + PDF_Height.toString()); // Test
+            // alert("reportPageHeight: " + reportPageHeight.toString() + ", reportPageWidth: " + reportPageWidth.toString() + ", PDF_Width: " + PDF_Width.toString() + ", PDF_Height: " + PDF_Height.toString()); // Test
 
             // var totalPDFPages = Math.ceil(reportPageHeight / PDF_Height) - 1;
+
+            // $('.div-grid-eng').css("font-family", "VarelaRound-Regular");
+
+            // const { jsPDF } = window.jspdf;
+            // var pdf = new jsPDF('p', 'pt', [PDF_Width, PDF_Height]);
+            // pdf.setFont("VarelaRound-Regular", "normal", 400);
+            // pdf.setFontSize(20);
+            // text = "Statistik Keterlibatan Penjaga";
+            // text2 = dateTime;
+            // xOffset = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() / 2);
+            // xOffset2 = (pdf.internal.pageSize.width / 2) - (pdf.getStringUnitWidth(text2) * pdf.internal.getFontSize() / 2);
+            // pdf.text(text, xOffset, top_left_margin * 2);
+            // pdf.text(text2, xOffset2, top_left_margin * 4);
+            // // pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin * 5, canvas_image_width, canvas_image_height);
+            // pdf.html($('.div-grid-eng')[0], {
+            //     callback: function (pdf) {
+            //         pdf.save('Statistik_Keterlibatan_Penjaga.pdf');
+            //     },
+            //     x: top_left_margin,
+            //     y: top_left_margin * 5,
+            //     width: canvas_image_width
+            // });
 
             html2canvas($('.div-grid-eng')[0]).then(function (canvas) {
                 var imgData = canvas.toDataURL("image/jpeg", 1.0);
@@ -699,11 +721,16 @@
                 pdf.text(text, xOffset, top_left_margin * 2);
                 pdf.text(text2, xOffset2, top_left_margin * 4);
                 pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin * 5, canvas_image_width, canvas_image_height);
-                /* for (var i = 1; i <= totalPDFPages; i++) { 
-                    pdf.addPage(PDF_Width, PDF_Height);
-                    pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
-                } */
-                // pdf.save("Statistik.pdf");
+                // pdf.html(
+                //     $('.div-grid-eng')[0],
+                //     {
+                //         callback: function (pdf) {
+                //             pdf.save('Statistik_Keterlibatan_Penjaga.pdf');
+                //     },
+                //     x: top_left_margin,
+                //     y: top_left_margin * 5,
+                //     width: canvas_image_width
+                // });
                 window.open(pdf.output("bloburl"), "_blank");
             });
         });

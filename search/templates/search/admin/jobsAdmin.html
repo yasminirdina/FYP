@@ -1,79 +1,92 @@
 {% extends "search/adminbase.html" %}
-{% block header %} Carian Mengikut Bidang Kerjaya {% endblock %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise: Carian Mengikut Kerjaya</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/searchAdmin.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-form-search">
-    <form method="GET" action=".">
-        <!-- job search -->
-        <label for="inputUni">Kerjaya</label><br>
-        <input class="form-job" type="search" name="jobs_contains" placeholder="Nama Kerjaya" />
-        <span class="input-goup-append">
-            <div class="input-group-text bg-transparent">
-                <!-- putting search icon -->
-                <i class="fa fa-search"></i> 
-            </div>
-        </span>
+    <div class="container-form-search">
+        <h1 class="course-header">Carian Mengikut Kerjaya</h1>
+        <form method="GET" action="{% url 'search:jobs-admin' user_id %}">
+            <!-- job search -->
+            <label for="inputJob">Kerjaya</label><br>
+            <input class="form-job" type="search" name="job_contains" placeholder="Nama Kerjaya" />
 
-        <!-- course search -->
-        <label for="inputCourse">Kursus</label><br>
-        <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
-        <span class="input-goup-append">
-            <div class="input-group-text bg-transparent">
-                <!-- putting search icon -->
-                <i class="fa fa-search"></i> 
-            </div>
-        </span>
+            <!-- course search -->
+            <label for="inputCourse">Kursus</label><br>
+            <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
 
-        <button type="submit" class="btn btn-search">Cari</button>
+            <button type="submit" class="btn btn-search" onclick="backBtn()">Cari</button>
 
-    </form>
-</div>
-<center>
-<button type="submit" class="btn btn-create"><a class="btn btn-a-create">Cipta Rekod Baru</a></button>
-</center>
-</div>
-<!-- {% for course in allCourse %}
-    {% for courseuni in allBridge %}
-        {% if course.id == courseuni.course.id %}
-            {% for uni in allUni %}
-                {% if uni.id == courseuni.university.id %}
-                <div class="row">
-                    <ul class="ul-data">
-                        <li class="li-course"><a class="li-a-course" href="#">{{ course.course}}</a></li>
-                        <li hrfclass="li-uni"><b>Ditawarkan oleh:</b><a class="li-a-uni" href="#">{{ uni.uni }}</a></li>
-                    </ul>
-                </div>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}    
-{% endfor %} -->
-{% for course in allCourse %}
-    {% for jobs in allJobs %}
-        {% if course.id == jobs.course.id %}
-            <!-- <div class="row"> -->
-            <div class="row">
-            <table class="table table-all">
-                <tr>
-                    <td>
-                        <ul class="ul-data">
-                            <li class="li-course"><a class="li-a-course" href="#">{{ jobs.job }}</a></li>
-                            <!-- <li hrfclass="li-uni"><b>Kursus:</b></li> -->
-                            <!-- <ul class="ul-data"> -->
-                                <!-- <li hrfclass="li-uni"><a class="li-a-uni" href="#">{{ uni.uni }}</a></li> -->
-                            <li class="li-uni"><b>Kursus:</b><a class="li-a-uni" href="#">{{ course.course }}</a></li>
-                            <!-- </ul> -->
-                            <!-- <hr /> -->
-                        <!-- </div> -->
-                        </ul>
-                    </td>
-                    <td>
-                        <button class="btn-update"><a class="btn-a-update" href="">Kemas Kini</a></button>
-                        <button class="btn-delete"><a class="btn-a-delete" href="">Padam</a></button>
-                    </td>
-                </tr>
-            </table>
+        </form>
+    </div>
+
+    <!-- <div class="back-btn">
+        <button id="backBtn" style="display:none">Kembali</button>
+    </div> -->
+
+    {% for job in allJobs %}
+    <div class="search-result-container">
+        <div class="row1">
+            <h3 class="job-name"><a href="{% url 'search:job-AdminPage' user_id job.id %}">{{ job.job }}</a></h3>
+            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateJobData-admin' user_id job.id %}">Kemas Kini</a></p>
+            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteJobData-admin' user_id job.id %}">Padam</a></p>
+        </div>
+        <div class="row2">
+            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
+            <p class="input"></p>
+            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
+            <p class="input"></p>
+        </div>
+        <div class="row3">
+            <button class="accordion search-detailsjob-courseOffer">Kursus Berkaitan</button>
+            <div class="panel" style="display: none;">
+                {% for coursejob in allBridge %}
+                    {% if job.id == coursejob.job.id %}
+                        {% for course in allCourse %}
+                            {% if course.id == coursejob.course.id %}
+                                <ul>
+                                    <li class="li-courseOffer"><a class="li-p-courseOffer" href="">{{course.course}}</a ></li>
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
             </div>
-        {% endif %}
+        </div>
+    </div>   
     {% endfor %}
-{% endfor %}
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+
+        // function backBtn() {
+        //     document.getElementById("backBtn").style.display = "block";
+        // }
+
+        var acc = document.getElementsByClassName("accordion");
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+            /* Toggle between adding and removing the "active" class,
+            to highlight the button that controls the panel */
+            this.classList.toggle("active");
+
+            /* Toggle between hiding and showing the active panel */
+            var panel = this.nextElementSibling;
+            if (panel.style.display === "block") {
+            panel.style.display = "none";
+            } else {
+            panel.style.display = "block";
+            }
+        });
+        }
+    </script>
 {% endblock %}

@@ -1,3 +1,24 @@
+<!-- <p class="p-unreadNotifCnt2">{{ unreadNotifCnt }}</p> -->
+
+<!-- {% if unreadNotifCnt > 0 %}
+    <div class="div-mark-read">
+        <span>
+            <i class="fas fa-exclamation-circle"></i>
+            <span class="span-unreadNotifCnt" style="font-weight: bold;">
+                {{ unreadNotifCnt }}
+            </span>
+            notifikasi belum dibaca.
+        </span>
+
+        <span>
+            Tandakan semua notifikasi sebagai "Sudah Dibaca"
+            <button class="btn mark-all-read">
+                <i class="fas fa-check-double"></i>
+            </button>
+        </span>
+    </div>
+{% endif %} -->
+
 {% for notif in allNotif %}
     {% if notif.isOpen == False %}
         <div class="div-notif-ind unread">
@@ -46,11 +67,19 @@
                 <i class="fas fa-comment-alt"></i>
 
                 <div class="div-text">
-                    <!-- Temp -->
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
+                    Terdapat 
+                    <span>
+                        <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'dashboard:chat' user_type user_id %}">mesej baharu</a>
+                    </span> daripada
+                    <span>
+                        {% if 'S' in notif.senderID_id %}
+                            pelajar <span class="span-bold">{{ notif.senderID.username }}</span>.
+                        {% elif 'P' in notif.senderID_id %}
+                            penjaga <span class="span-bold">{{ notif.senderID.username }}</span>.
+                        {% elif 'T' in notif.senderID_id %}
+                            guru <span class="span-bold">{{ notif.senderID.username }}</span>.
+                        {% endif %}
+                    </span>
                 </div>
             <!-- Type 4: New Suggestion (for admin ONLY) -->
             {% elif notif.typeID_id == 4 %}
@@ -120,11 +149,19 @@
                 <i class="fas fa-comment-alt"></i>
 
                 <div class="div-text">
-                    <!-- Temp -->
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
-                    Terdapat mesej baharu daripada pelajar/penjaga/guru (username).
+                    Terdapat 
+                    <span>
+                        <a class="a-for-linkto" id="{{ notif.id }}" href="{% url 'dashboard:chat' user_type user_id %}">mesej baharu</a>
+                    </span> daripada
+                    <span>
+                        {% if 'S' in notif.senderID_id %}
+                            pelajar <span class="span-bold">{{ notif.senderID.username }}</span>.
+                        {% elif 'P' in notif.senderID_id %}
+                            penjaga <span class="span-bold">{{ notif.senderID.username }}</span>.
+                        {% elif 'T' in notif.senderID_id %}
+                            guru <span class="span-bold">{{ notif.senderID.username }}</span>.
+                        {% endif %}
+                    </span>
                 </div>
             <!-- Type 4: New Suggestion (for admin ONLY) -->
             {% elif notif.typeID_id == 4 %}

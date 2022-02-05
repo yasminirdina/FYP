@@ -28,5 +28,284 @@
 {% block js2 %}
     <script type="text/javascript">
         $('.p-sidebar.chat .p-a-sidebar').addClass('sb-active');
+        
+        function updateMsgAdmin(){
+            var lastScrollPositionDivLeft = $(".div-left").scrollTop(); 
+            // alert("lastScrollPositionDivLeft: " + lastScrollPositionDivLeft.toString());
+            var chosenRecipientID = $('.p-chosenRecipientIDClicked').text();
+            // alert("chosenRecipientID: " + chosenRecipientID);
+            
+            if (chosenRecipientID != ""){
+                var lastScrollPositionDivChatContent = $(".div-chat-content").scrollTop(); 
+                // alert("lastScrollPositionDivChatContent: " + lastScrollPositionDivChatContent.toString());
+            }
+
+            if (chosenRecipientID != ""){
+                var typedMessage = $('#chat-message-by-admin').val();
+                var lastScrollPositionTextarea = $("#chat-message-by-admin").scrollTop(); 
+                var lastCursorPositionTextArea = $("#chat-message-by-admin")[0].selectionStart;
+            }
+            else{
+                var typedMessage = "";
+            }
+            // alert("typedMessage: " + typedMessage);
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:chat' user_type user_id %}",
+                data: {
+                    'chosenRecipientID': chosenRecipientID,
+                    'typedMessage': typedMessage,
+                    'requestType': 'updateMessageAdmin'
+                },
+                type: 'POST',
+                success: function(result){
+                    // alert("updateMessageAdmin: success");
+                    $('.div-content-outer').html(result);
+
+                    var chosenRecipientLatestChatID = $('.p-chosenRecipientLatestChatID').text();
+
+                    $(".div-left").scrollTop(lastScrollPositionDivLeft);
+
+                    if (chosenRecipientLatestChatID != 0){
+                        $(".div-chat-content").scrollTop(lastScrollPositionDivChatContent);
+                        $('#chat-message-by-admin').focus();
+                        var len = $('#chat-message-by-admin').val().length;
+                        // alert("len: " + len.toString());
+                        $('#chat-message-by-admin')[0].setSelectionRange(lastCursorPositionTextArea, lastCursorPositionTextArea);
+                        $("#chat-message-by-admin").scrollTop(lastScrollPositionTextarea);
+                    }
+                },
+                error: function(result){
+                    // alert("updateMessageAdmin: failure");
+                }
+            })
+            setTimeout('updateMsgAdmin()', 20000);
+        }
+
+        function updateMsgNonAdmin(){
+            var lastScrollPositionDivChatContent = $(".div-chat-content").scrollTop(); 
+            // alert("lastScrollPositionDivChatContent: " + lastScrollPositionDivChatContent.toString());
+
+            if ($('#chat-message-by-nonadmin').val() != undefined){
+                var typedMessage = $('#chat-message-by-nonadmin').val();
+                var lastScrollPositionTextarea = $("#chat-message-by-nonadmin").scrollTop();
+                var lastCursorPositionTextArea = $("#chat-message-by-nonadmin")[0].selectionStart;
+            }
+            else{
+                var typedMessage = "";
+            }
+            // alert("typedMessage: " + typedMessage);
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:chat' user_type user_id %}",
+                data: {
+                    'typedMessage': typedMessage,
+                    'requestType': 'updateMessageNonAdmin'
+                },
+                type: 'POST',
+                success: function(result){
+                    // alert("updateMessageNonAdmin: success");
+                    $('.div-content-outer').html(result);
+
+                    $(".div-chat-content").scrollTop(lastScrollPositionDivChatContent);
+                    $('#chat-message-by-nonadmin').focus();
+                    var len = $('#chat-message-by-nonadmin').val().length;
+                    // alert("len: " + len.toString());
+                    if (len > 0){
+                        $('#chat-message-by-nonadmin')[0].setSelectionRange(lastCursorPositionTextArea, lastCursorPositionTextArea);
+                        $("#chat-message-by-nonadmin").scrollTop(lastScrollPositionTextarea);
+                    }
+                },
+                error: function(result){
+                    // alert("updateMessageNonAdmin: failure");
+                }
+            })
+            setTimeout('updateMsgNonAdmin()', 20000);
+        }
+
+        $(document).ready(function(){
+            $.ajaxSetup({
+                cache: false
+            });
+
+            if (window.location.href.indexOf("admin") > -1) {
+                updateMsgAdmin();
+            }
+            else{
+                var latestMessage = document.getElementById("non-admin").lastElementChild;
+                latestMessage.scrollIntoView();
+                var lastScrollPositionTextarea = $("#chat-message-by-nonadmin").scrollTop();
+                var lastCursorPositionTextArea = $("#chat-message-by-nonadmin")[0].selectionStart;
+
+                updateMsgNonAdmin();
+            }
+        });
+
+        // Admin view
+        // $('.div-content-outer').on('input', '#chat-user', function(){
+        //     var enteredName = $(this).val();
+            
+        //     $.ajax({
+        //         url: "{% url 'dashboard:chat' user_type user_id %}",
+        //         data: {
+        //             'enteredName': enteredName,
+        //             'requestType': 'findUser'
+        //         },
+        //         type: 'GET',
+        //         success: function(result){
+        //             alert("findUser: success");
+        //             $('.div-content-outer').html(result);
+        //             var chosenRecipientLatestChatID = $('.p-chosenRecipientLatestChatID').text();
+        //             if (chosenRecipientLatestChatID != 0){
+        //                 var divSelectedChat = document.getElementById("latest-"+ chosenRecipientLatestChatID);
+        //                 var divLatestMessage = document.getElementById("newest-"+ chosenRecipientLatestChatID);
+        //                 divSelectedChat.scrollIntoView();
+        //                 divLatestMessage.scrollIntoView();
+        //             }
+        //             else{
+        //                 var chosenRecipientID = $('.p-chosenRecipientIDNoChat').text();
+        //                 var divSelectedChat = document.getElementById("latest-"+ chosenRecipientID);
+        //                 divSelectedChat.scrollIntoView();
+        //             }
+        //         },
+        //         error: function(result){
+        //             alert("findUser: failure");
+        //         }
+        //     })
+        // });
+
+        $('.div-content-outer').on('click', '.div-chat-ind', function(){
+            var chosenRecipientID = $(this).find('.p-chosenRecipientID').text();
+            // alert("chosenRecipientID: " + chosenRecipientID); //Test
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:chat' user_type user_id %}",
+                data: {
+                    'chosenRecipientID': chosenRecipientID,
+                    'requestType': 'clickChat'
+                },
+                type: 'POST',
+                success: function(result){
+                    // alert("clickChat: success");
+                    $('.div-content-outer').html(result);
+                    var chosenRecipientLatestChatID = $('.p-chosenRecipientLatestChatID').text();
+                    if (chosenRecipientLatestChatID != 0){
+                        var divSelectedChat = document.getElementById("latest-"+ chosenRecipientLatestChatID);
+                        var divLatestMessage = document.getElementById("newest-"+ chosenRecipientLatestChatID);
+                        divSelectedChat.scrollIntoView();
+                        divLatestMessage.scrollIntoView();
+                    }
+                    else{
+                        var chosenRecipientID = $('.p-chosenRecipientIDNoChat').text();
+                        var divSelectedChat = document.getElementById("latest-"+ chosenRecipientID);
+                        divSelectedChat.scrollIntoView();
+                    }
+                },
+                error: function(result){
+                    // alert("clickChat: failure");
+                }
+            })
+        });
+
+        function adminSendMessage(){
+            var creatorID = 'A1';
+            var chosenRecipientID = $('#by-admin').val();
+            // alert("chosenRecipientID: " + chosenRecipientID); //Test
+            var newMessage = $('#chat-message-by-admin').val();
+            // alert("newMessage: " + newMessage); //Test
+            
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:chat' user_type user_id %}",
+                data: {
+                    'newMessage': newMessage,
+                    'chosenRecipientID': chosenRecipientID,
+                    'requestType': 'adminSendMessage'
+                },
+                type: 'POST',
+                success: function(result){
+                    // alert("adminSendMessage: success");
+                    $('.div-content-outer').html(result);
+
+                    var chosenRecipientLatestChatID = $('.p-chosenRecipientLatestChatID').text();
+                    if (chosenRecipientLatestChatID != 0){
+                        var divSelectedChat = document.getElementById("latest-"+ chosenRecipientLatestChatID);
+                        var divLatestMessage = document.getElementById("newest-"+ chosenRecipientLatestChatID);
+                        divSelectedChat.scrollIntoView();
+                        divLatestMessage.scrollIntoView();
+                    }
+                    else{
+                        var chosenRecipientID = $('.p-chosenRecipientIDNoChat').text();
+                        var divSelectedChat = document.getElementById("latest-"+ chosenRecipientID);
+                        divSelectedChat.scrollIntoView();
+                    }
+                },
+                error: function(result){
+                    // alert("adminSendMessage: failure");
+                }
+            })
+        }
+
+        $('.div-content-outer').on('click', '#by-admin', function(){
+            adminSendMessage();
+        });
+
+        $('.div-content-outer').on('keypress', '#chat-message-by-admin', function(e){
+            if (e.which == 13 && !e.shiftKey){
+                e.preventDefault();
+                adminSendMessage();
+            }
+            if (e.which == 13 && e.shiftKey) {
+                document.getElementById("chat-message-by-admin").value = document.getElementById("chat-message-by-admin").value +"\n";
+                e.preventDefault();
+            }
+        });
+
+        // Non-admin view
+        function nonAdminSendMessage(){
+            var creatorID = 'A1';
+            var newMessage = $('#chat-message-by-nonadmin').val();
+            // alert("newMessage: " + newMessage); //Test
+            
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:chat' user_type user_id %}",
+                data: {
+                    'newMessage': newMessage,
+                    'requestType': 'nonAdminSendMessage'
+                },
+                type: 'POST',
+                success: function(result){
+                    // alert("nonAdminSendMessage: success");
+                    $('.div-content-outer').html(result);
+
+                    var newMessageID = $('.p-newMessageID').text();
+                    var divNewMessage = document.getElementById("latest-"+ newMessageID);
+                    divNewMessage.scrollIntoView();
+                },
+                error: function(result){
+                    // alert("nonAdminSendMessage: failure");
+                }
+            })
+        }
+
+        $('.div-content-outer').on('click', '#by-nonadmin', function(){
+            nonAdminSendMessage();
+        });
+
+        $('.div-content-outer').on('keypress', '#chat-message-by-nonadmin', function(e){
+            // alert("hi");
+            if (e.which == 13 && !e.shiftKey){
+                e.preventDefault();
+                nonAdminSendMessage();
+            }
+            if (e.which == 13 && e.shiftKey) {
+                document.getElementById("chat-message-by-nonadmin").value = document.getElementById("chat-message-by-nonadmin").value +"\n";
+                e.preventDefault();
+            }
+        });
     </script>
 {% endblock %}

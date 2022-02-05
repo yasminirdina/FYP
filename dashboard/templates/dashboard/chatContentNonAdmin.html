@@ -1,34 +1,65 @@
+{% load static %}
+<p class="p-newMessageID" style="display: none;">{{ newMessageID }}</p>
+
 <div class="div-right">
     <div class="div-chat-title">
-        <span class="span-username-thumb title">ftrcrsadmin</span>
-        <button class="btn adminnn title">Admin</button>
+        <span class="span-username-thumb title">
+            Guru Kaunseling
+            <button class="btn adminnn title">Admin</button>
+        </span>
     </div>
-    <div class="div-chat-content">
-        {% for message in currentChatMessages %}
-            {% if message.creatorID.ID == user_id %}
-                <div class="div-message-ind sent">
-                    {{ message.bodyText }}
-                    <br>
-                    <span class="span-datetime">
-                        {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
-                    </span>
+    {% if currentChatMessages %}
+        <div class="div-chat-content" id="non-admin">
+            {% for message in currentChatMessages %}
+                {% if message.creatorID.ID == user_id %}
+                    <div class="div-message-ind sent" id="latest-{{ message.id }}">
+                        {{ message.bodyText|linebreaksbr }}
+                        <span class="span-datetime">
+                            {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                        </span>
+                    </div>
+                {% else %}
+                    <div class="div-message-ind received" id="latest-{{ message.id }}">
+                        {{ message.bodyText|linebreaksbr }}
+                        <span class="span-datetime">
+                            {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                        </span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="div-initial non-admin-no-msg">
+            <div class="div-initial-img-text">
+                <img class="img-initial" src="{% static 'images/interaction.svg' %}"/>
+                <div class="div-text">
+                    Mulakan interaksi bersama guru kaunseling dengan menghantar mesej kepada mereka.
                 </div>
-            {% else %}
-                <div class="div-message-ind received">
-                    {{ message.bodyText }}
-                    <br>
-                    <span class="span-datetime">
-                        {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+            </div>
+            <div class="div-initial-credit">
+                <span style="word-break: break-all;">
+                    Ikon di atas dikreditkan kepada
+                    <span>
+                        <a class="a-link" href="https://www.svgrepo.com/svg/341482/interaction-browser-internet-website-dashboard-seo-optimization">
+                            https://www.svgrepo.com/svg/341482/interaction-browser-internet-website-dashboard-seo-optimization
+                        </a>
                     </span>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+                </span>
+            </div>
+        </div>
+    {% endif %}
+
     <div class="div-chat-write">
         <form type="get" action="." class="form-send">
-            <input id="chat-message" type="text" name="mesej" placeholder="Tulis Mesej anda...">
+            {% if typedMessage %}
+                <!-- <input id="chat-message-by-nonadmin" type="text" name="mesej" placeholder="Tulis mesej anda..." value="{{ typedMessage }}"> -->
+                <textarea autofocus id="chat-message-by-nonadmin" type="text" name="mesej" placeholder="Tulis mesej anda..."rows="1" cols="8">{{ typedMessage }}</textarea>
+            {% else %}
+                <!-- <input id="chat-message-by-nonadmin" type="text" name="mesej" placeholder="Tulis mesej anda..."> -->
+                <textarea autofocus id="chat-message-by-nonadmin" type="text" name="mesej" placeholder="Tulis mesej anda..." rows="1" cols="8"></textarea>
+            {% endif %}
         </form>
-        <button class="btn send-message">
+        <button class="btn send-message" id="by-nonadmin">
             <i class="fas fa-paper-plane"></i>
         </button>
     </div>

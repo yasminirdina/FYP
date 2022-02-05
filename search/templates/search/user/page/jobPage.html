@@ -1,0 +1,101 @@
+{% extends "search/userbase.html" %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise : {{currentJob.job}}</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/user/basePage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user/jobPage.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="main-div">
+        <h1 class="job-header">{{currentJob.job}}</h1>
+        <div class="count job-rating">
+            <p>Rating</p>
+        </div>
+        <div class="count job-bookmark">
+            <p>Bookmark</p>
+        </div>
+        <div class="count views-count">
+            <p>Jumlah bookmark</p>
+        </div>
+        <!-- <div class="count bookmark-count">
+            <p>Kiraan kursus ditambah pada penanda halaman</p>
+        </div> -->
+        <div class="info-container">
+            <!-- Tab links -->
+            <div class="info-tab">
+                <button class="tablinks" onclick="openTab(event, 'Overview')" id="defaultOpenInfo">Ringkasan</button>
+                <button class="tablinks" onclick="openTab(event, 'Statistics')">Analisis</button>
+            </div>
+            
+            <!-- Tab content -->
+            <div id="Overview" class="tabcontent">
+                <div class="job-container about">
+                    <h3 class="about-title">Pengenalan Kerjaya</h3>
+                    <p class="about-desc">{{currentCourse.description}}</p>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio exercitationem, non saepe architecto autem at, consequuntur voluptates ea voluptate quaerat illo modi iusto nobis delectus vel aliquam, earum illum corrupti.</p>
+                </div>
+                <div class="job-container detail">
+                    <h3 class="detail-title">Butiran Kursus</h3>
+                    <p class="detail1">Peringkat pengajian:</p>
+                    <p class="input">test</p>
+
+                    <p class="detail2">Anggaran tempoh kursus:</p>
+                    <p class="input">test</p>
+
+                    <p class="detail3">Anggaran bayaran kursus:</p>
+                    <p class="input">test</p>
+                </div>
+                <div class="job-container courseList">
+                    <h3 class="courseList-title">Kursus Berkaitan</h3>
+                    {% for currJob in jobCourseBridge %}
+                        {% for c in course %}
+                            {% if c.id == currJob.course_id %}
+                                <div class="courseList-container">
+                                    <p><a class="courseOffer" href="{% url 'search:course-page' user_type user_id c.id %}">{{c.course}}</a></p>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %} 
+                </div>
+            </div>
+            
+            <div id="Statistics" class="tabcontent">
+                <h3>Paris</h3>
+                <p>Paris is the capital of France.</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+    document.getElementById("defaultOpenInfo").click();
+
+    function openTab(evt, infoTab) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+    
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        }
+    
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+    
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(infoTab).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+{% endblock %}

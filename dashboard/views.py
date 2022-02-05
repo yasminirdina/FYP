@@ -9,9 +9,10 @@ import dashboard.models, blog.models, quiz.models
 import string, re
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import timedelta
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from collections import Counter
 from operator import itemgetter
+import numpy as np
 
 # Create your views here.
 def adminNotif(request, user_id):
@@ -60,6 +61,26 @@ def adminNotif(request, user_id):
                     }
                     
                     return JsonResponse(context)
+                # elif request.POST['requestType'] == 'markAllRead':
+                #     allUnreadNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id, isOpen=False)
+
+                #     if allUnreadNotif:
+                #         for unread in allUnreadNotif:
+                #             unread.isOpen = True
+                #             unread.save()
+                    
+                #     allNotif = dashboard.models.Notification.objects.filter(recipientID_id=user_id).order_by('-id')
+                #     unreadNotifCnt = allNotif.filter(isOpen=False).count()
+                #     print("unreadNotifCnt: " + str(unreadNotifCnt))
+
+                #     context = {
+                #         'user_id': user_id,
+                #         'user_type': user_type,
+                #         'allNotif': allNotif,
+                #         'unreadNotifCnt': unreadNotifCnt
+                #     }
+
+                #     return render(request, 'dashboard/adminNotifContent.html', context)
         else:
             context = {
                 'user_id': user_id,
@@ -2190,13 +2211,18 @@ def nonAdminReport(request, user_type, user_id):
 
             # Card 5: LastChatTime
             # Get all parent chat records where senderID is in listOfParentIDs order by id
+            selectedParentChats = dashboard.models.Message.objects.filter(creatorID_id__in=listOfParentIDs).order_by('id')
+
             # If count above > 0, 
                 # Get the last parent chat record from above
                 # Get the time sent
             # Else
                 # lastChatTime = 0
 
-            lastChatTime = 0
+            if selectedParentChats.count() > 0:
+                lastChatTime = selectedParentChats.last().dateTimeSent
+            else:
+                lastChatTime = 0
 
             # print("parentChats: " + str(lastParentChat)) #Test
             # print("lastChatTime: " + str(lastChatTime)) #Test
@@ -2486,23 +2512,280 @@ def Chat(request, user_type, user_id):
 
         dashboardNav = " Admin"
 
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard': urlDashboard,
-            'logout': urlLogout,
-            'settings': urlClassSettings,
-            'suggestions': urlSuggestions,
-            'chat': urlChat,
-            'allNotif': allNotif,
-            'unreadNotifCnt': unreadNotifCnt
-        }
+        def get_info_for_admin():
+            allChatsForNonAdmin = dashboard.models.Message.objects.exclude(recipientID_id='A1').order_by('-dateTimeSent')
+            print("allChatsForNonAdmin: " + str(allChatsForNonAdmin)) #Test
+
+            distinctRecipientIDList = []
+            distinctChatForNonAdmin_IDList = []
+            distinct_recipID_chatID_dict = {}
+
+            for chat in allChatsForNonAdmin:
+                if chat.recipientID_id not in distinctRecipientIDList:
+                    distinctRecipientIDList.append(chat.recipientID_id)
+                    distinctChatForNonAdmin_IDList.append(chat.id)
+                    distinct_recipID_chatID_dict[chat.recipientID_id] = chat.id
+            
+            print("distinctRecipientIDList:" + str(distinctRecipientIDList)) #Test
+            print("distinctChatForNonAdmin_IDList:" + str(distinctChatForNonAdmin_IDList)) #Test
+
+            allChatsFromNonAdmin = dashboard.models.Message.objects.exclude(creatorID_id='A1').order_by('-dateTimeSent')
+            print("allChatsFromNonAdmin: " + str(allChatsFromNonAdmin)) #Test
+
+            distinctCreatorIDList = []
+            distinctChatFromNonAdmin_IDList = []
+            distinct_creID_chatID_dict = {}
+
+            for chat in allChatsFromNonAdmin:
+                if chat.creatorID_id not in distinctCreatorIDList:
+                    distinctCreatorIDList.append(chat.creatorID_id)
+                    distinctChatFromNonAdmin_IDList.append(chat.id)
+                    distinct_creID_chatID_dict[chat.creatorID_id] = chat.id
+            
+            print("distinctCreatorIDList:" + str(distinctCreatorIDList)) #Test
+            print("distinctChatFromNonAdmin_IDList:" + str(distinctChatFromNonAdmin_IDList)) #Test
+
+            allDistinctChatUsersIDList = list(dict.fromkeys(distinctRecipientIDList + distinctCreatorIDList))
+            print("allDistinctChatUsersIDList: " + str(allDistinctChatUsersIDList)) #Test
+
+            allDistinctChatForFromNA_IDList = []
+
+            for userID in allDistinctChatUsersIDList:
+                if userID in list(distinct_recipID_chatID_dict.keys()):
+                    if userID in list(distinct_creID_chatID_dict.keys()):
+                        if distinct_recipID_chatID_dict[userID] > distinct_creID_chatID_dict[userID]:
+                            allDistinctChatForFromNA_IDList.append(distinct_recipID_chatID_dict[userID])
+                        else:
+                            allDistinctChatForFromNA_IDList.append(distinct_creID_chatID_dict[userID])
+                    else:
+                        allDistinctChatForFromNA_IDList.append(distinct_recipID_chatID_dict[userID])
+                else:
+                    allDistinctChatForFromNA_IDList.append(distinct_creID_chatID_dict[userID])
+
+            print("allDistinctChatForFromNA_IDList: " + str(allDistinctChatForFromNA_IDList)) #Test
+            allDistinctChatForFromNA_IDList.sort(reverse=True)
+            print("allDistinctChatForFromNA_IDList desc: " + str(allDistinctChatForFromNA_IDList)) #Test
+
+            allChats = dashboard.models.Message.objects.order_by('-dateTimeSent')
+
+            # For non-admin users with no chat yet
+            allDistinctChatUsersIDList.append('A1')
+            allDistinctChatUsersIDList.append('NA')
+            print("allDistinctChatUsersIDList with admin & NA: " + str(allDistinctChatUsersIDList)) #Test
+
+            allNonChatUsers = dashboard.models.User.objects.exclude(ID__in=allDistinctChatUsersIDList).order_by('ID')
+            print("allNonChatUsers: " + str(allNonChatUsers)) #Test
+
+            allStudents = dashboard.models.Student.objects.all()
+            allParents = dashboard.models.Parent.objects.all()
+            allTeachers = dashboard.models.Teacher.objects.all()
+
+            return distinctChatForNonAdmin_IDList, distinctChatFromNonAdmin_IDList, allDistinctChatUsersIDList, allDistinctChatForFromNA_IDList, allChats, allNonChatUsers, allStudents, allParents, allTeachers
+
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'clickChat' or request.POST['requestType'] == 'updateMessageAdmin':
+                    if request.POST['requestType'] == 'updateMessageAdmin':
+                        print("?????")
+                        
+                    chosenRecipientID = request.POST['chosenRecipientID']
+                    print("chosenRecipientID: " + str(chosenRecipientID)) #Test
+
+                    if request.POST['requestType'] == 'updateMessageAdmin':
+                        typedMessage = request.POST['typedMessage']
+                    else:
+                        typedMessage = ""
+                    print("typedMessage: " + str(typedMessage)) #Test
+
+                    if chosenRecipientID != "":
+                        chosenRecipient = dashboard.models.User.objects.get(ID=chosenRecipientID)
+                        print("chosenRecipient: " + str(chosenRecipient)) #Test
+                    else:
+                        chosenRecipient = None
+                        print("chosenRecipient: " + str(chosenRecipient)) #Test
+
+                    results = get_info_for_admin()
+                    distinctChatForNonAdmin_IDList = results[0]
+                    distinctChatFromNonAdmin_IDList = results[1]
+                    allDistinctChatUsersIDList = results[2]
+                    allDistinctChatForFromNA_IDList = results[3]
+                    allChats = results[4]
+                    allNonChatUsers = results[5]
+                    allStudents = results[6]
+                    allParents = results[7]
+                    allTeachers = results[8]
+
+                    if chosenRecipientID != "":
+                        if chosenRecipientID in allDistinctChatUsersIDList:
+                            chosenUserAllChats = allChats.filter(Q(creatorID_id=chosenRecipientID) | Q(recipientID_id=chosenRecipientID)).order_by('dateTimeSent')
+                            chosenRecipientLatestChatID = chosenUserAllChats.last().id
+                        else:
+                            chosenUserAllChats = None
+                            chosenRecipientLatestChatID = 0
+                    else:
+                        chosenUserAllChats = None
+                        chosenRecipientLatestChatID = 0
+                    print("chosenUserAllChats: " + str(chosenUserAllChats)) #Test
+                    print("chosenRecipientLatestChatID: " + str(chosenRecipientLatestChatID)) #Test
+
+                    if chosenUserAllChats:
+                        allUnreadChatFromNANotif = dashboard.models.Notification.objects.filter(typeID_id=3, recipientID_id='A1', senderID_id=chosenRecipientID, isOpen=False)
+                        print("allUnreadChatFromNANotif: " + str(allUnreadChatFromNANotif)) #Test
+
+                        if chosenUserAllChats.last().creatorID_id == chosenRecipientID:
+                            for chat2 in chosenUserAllChats:
+                                if chat2.isRead == False:
+                                    chat2.isRead = True
+                                    chat2.save()
+                            for notif in allUnreadChatFromNANotif:
+                                notif.isOpen = True
+                                notif.save()
+                        else: #chosenUserAllChats.last().recipientID_id == chosenRecipientID
+                            latestMsgSentByNonAdmin = chosenUserAllChats.filter(creatorID_id=chosenRecipientID)
+                            
+                            if latestMsgSentByNonAdmin:
+                                latestMsgSentByNonAdminID = latestMsgSentByNonAdmin.last().id
+                                for chat in chosenUserAllChats.filter(id__lte=latestMsgSentByNonAdminID):
+                                    if chat.isRead == False:
+                                        chat.isRead = True
+                                        chat.save()
+
+                            for i in range(len(chosenUserAllChats)-1):
+                                if chosenUserAllChats[i].isRead == False:
+                                    chosenUserAllChats[i].isRead = True
+                                    chosenUserAllChats[i].save()
+
+                    print("chosenUserAllChats: " + str(chosenUserAllChats)) #Test
+
+                    context = {
+                        'distinctChatForNonAdmin_IDList': distinctChatForNonAdmin_IDList,
+                        'distinctChatFromNonAdmin_IDList': distinctChatFromNonAdmin_IDList,
+                        'allDistinctChatUsersIDList': allDistinctChatUsersIDList,
+                        'allDistinctChatForFromNA_IDList': allDistinctChatForFromNA_IDList,
+                        'allChats': allChats,
+                        'allNonChatUsers': allNonChatUsers,
+                        'allStudents': allStudents,
+                        'allParents': allParents,
+                        'allTeachers': allTeachers,
+                        'chosenRecipient': chosenRecipient,
+                        'chosenUserAllChats': chosenUserAllChats,
+                        'chosenRecipientLatestChatID': chosenRecipientLatestChatID,
+                        'typedMessage': typedMessage
+                    } 
+                    return render(request, 'dashboard/chatContentAdmin.html', context)
+                elif request.POST['requestType'] == 'adminSendMessage':
+                    newMessage = request.POST['newMessage']
+                    chosenRecipientID = request.POST['chosenRecipientID']
+                    print("newMessage: " + newMessage) #Test
+                    print("chosenRecipientID: " + str(chosenRecipientID)) #Test
+
+                    chosenRecipient = dashboard.models.User.objects.get(ID=chosenRecipientID)
+                    print("chosenRecipient: " + str(chosenRecipient)) #Test
+
+                    newMessageRecord = dashboard.models.Message.objects.create(bodyText=newMessage, creatorID_id='A1', recipientID_id=chosenRecipientID)
+                    print("newMessageRecord: " + str(newMessageRecord)) #Test
+
+                    results = get_info_for_admin()
+                    distinctChatForNonAdmin_IDList = results[0]
+                    distinctChatFromNonAdmin_IDList = results[1]
+                    allDistinctChatUsersIDList = results[2]
+                    allDistinctChatForFromNA_IDList = results[3]
+                    allChats = results[4]
+                    allNonChatUsers = results[5]
+                    allStudents = results[6]
+                    allParents = results[7]
+                    allTeachers = results[8]
+
+                    print("allChats with newmsg: " + str(allChats)) #Test
+
+                    if chosenRecipientID in allDistinctChatUsersIDList:
+                        chosenUserAllChats = allChats.filter(Q(creatorID_id=chosenRecipientID) | Q(recipientID_id=chosenRecipientID)).order_by('dateTimeSent')
+                        chosenRecipientLatestChatID = chosenUserAllChats.last().id
+                    else:
+                        chosenUserAllChats = None
+                        chosenRecipientLatestChatID = 0
+                    print("chosenUserAllChats: " + str(chosenUserAllChats)) #Test
+                    print("chosenRecipientLatestChatID: " + str(chosenRecipientLatestChatID)) #Test
+
+                    if chosenUserAllChats:
+                        if chosenUserAllChats.last().creatorID_id == chosenRecipientID:
+                            for chat2 in chosenUserAllChats:
+                                if chat2.isRead == False:
+                                    chat2.isRead = True
+                                    chat2.save()
+                        else: #chosenUserAllChats.last().recipientID_id == chosenRecipientID
+                            latestMsgSentByNonAdmin = chosenUserAllChats.filter(creatorID_id=chosenRecipientID)
+                            
+                            if latestMsgSentByNonAdmin:
+                                latestMsgSentByNonAdminID = latestMsgSentByNonAdmin.last().id
+                                for chat in chosenUserAllChats.filter(id__lte=latestMsgSentByNonAdminID):
+                                    if chat.isRead == False:
+                                        chat.isRead = True
+                                        chat.save()
+
+                            for i in range(len(chosenUserAllChats)-1):
+                                if chosenUserAllChats[i].isRead == False:
+                                    chosenUserAllChats[i].isRead = True
+                                    chosenUserAllChats[i].save()
+
+                    print("chosenUserAllChats: " + str(chosenUserAllChats)) #Test
+
+                    #create notification (Type id 3 - New message from admin to non-admin)
+                    dashboard.models.Notification.objects.create(senderID_id='A1', recipientID_id=newMessageRecord.recipientID_id, messageID_id=newMessageRecord.id, typeID_id=3)
+
+                    context = {
+                        'distinctChatForNonAdmin_IDList': distinctChatForNonAdmin_IDList,
+                        'distinctChatFromNonAdmin_IDList': distinctChatFromNonAdmin_IDList,
+                        'allDistinctChatUsersIDList': allDistinctChatUsersIDList,
+                        'allDistinctChatForFromNA_IDList': allDistinctChatForFromNA_IDList,
+                        'allChats': allChats,
+                        'allNonChatUsers': allNonChatUsers,
+                        'allStudents': allStudents,
+                        'allParents': allParents,
+                        'allTeachers': allTeachers,
+                        'chosenRecipient': chosenRecipient,
+                        'chosenUserAllChats': chosenUserAllChats,
+                        'chosenRecipientLatestChatID': chosenRecipientLatestChatID
+                    } 
+                    return render(request, 'dashboard/chatContentAdmin.html', context)
+        else:
+            results = get_info_for_admin()
+            distinctChatForNonAdmin_IDList = results[0]
+            distinctChatFromNonAdmin_IDList = results[1]
+            allDistinctChatUsersIDList = results[2]
+            allDistinctChatForFromNA_IDList = results[3]
+            allChats = results[4]
+            allNonChatUsers = results[5]
+            allStudents = results[6]
+            allParents = results[7]
+            allTeachers = results[8]
+
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard': urlDashboard,
+                'logout': urlLogout,
+                'settings': urlClassSettings,
+                'suggestions': urlSuggestions,
+                'chat': urlChat,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt,
+                'distinctChatForNonAdmin_IDList': distinctChatForNonAdmin_IDList,
+                'distinctChatFromNonAdmin_IDList': distinctChatFromNonAdmin_IDList,
+                'allDistinctChatUsersIDList': allDistinctChatUsersIDList,
+                'allDistinctChatForFromNA_IDList': allDistinctChatForFromNA_IDList,
+                'allChats': allChats,
+                'allNonChatUsers': allNonChatUsers,
+                'allStudents': allStudents,
+                'allParents': allParents,
+                'allTeachers': allTeachers
+            }
     else:
         urlTest = 'test:index-nonadmin'
         urlBlog = 'blog:index'
@@ -2526,26 +2809,89 @@ def Chat(request, user_type, user_id):
             
         elif user_type == "guru" and 'T' in user_id:
             dashboardNav = " Guru"
-            
-        context = {
-            'dashboardNav': dashboardNav,
-            'user_type': user_type,
-            'user_id': user_id,
-            'username': username,
-            'test': urlTest,
-            'blog': urlBlog,
-            'quiz': urlQuiz,
-            'search': urlSearch,
-            'dashboard':urlDashboard,
-            'logout': urlLogout,
-            'settings': urlProfile,
-            'bookmark': urlBookmark,
-            'report': urlReport,
-            'chat': urlChat,
-            'suggestions': urlSuggestion,
-            'allNotif': allNotif,
-            'unreadNotifCnt': unreadNotifCnt
-        }
+
+        def get_current_chat_msgs():
+            currentChatMessages = dashboard.models.Message.objects.filter(Q(creatorID_id=user_id) | Q(recipientID_id=user_id)).order_by('dateTimeSent')
+            print("*******************************************************")
+            print("currentChatMessages: " + str(currentChatMessages)) #Test
+
+            allUnreadChatFromAdminNotif = dashboard.models.Notification.objects.filter(typeID_id=3, recipientID_id=user_id, isOpen=False)
+            print("allUnreadChatFromAdminNotif: " + str(allUnreadChatFromAdminNotif)) #Test
+
+            if currentChatMessages:
+                if currentChatMessages.last().creatorID_id == 'A1':
+                    for chat in currentChatMessages:
+                        if chat.isRead == False:
+                            chat.isRead = True
+                            chat.save()
+                    for notif in allUnreadChatFromAdminNotif:
+                        notif.isOpen = True
+                        notif.save()
+                else:
+                    latestMsgSentByAdmin = currentChatMessages.filter(creatorID_id="A1")
+                    
+                    if latestMsgSentByAdmin:
+                        latestMsgSentByAdminID = latestMsgSentByAdmin.last().id
+                        for chat in currentChatMessages.filter(id__lte=latestMsgSentByAdminID):
+                            if chat.isRead == False:
+                                chat.isRead = True
+                                chat.save()
+
+            print("-----------------------------------------------------------")
+            print("currentChatMessages after update: " + str(currentChatMessages)) #Test
+            print("allUnreadChatFromAdminNotif after update: " + str(allUnreadChatFromAdminNotif)) #Test
+
+            return currentChatMessages
+
+        if request.method == 'POST':
+            if request.is_ajax():
+                if request.POST['requestType'] == 'nonAdminSendMessage':
+                    newMessage = request.POST['newMessage']
+                    print("newMessage: " + newMessage) #Test
+
+                    newMessageRecord = dashboard.models.Message.objects.create(bodyText=newMessage, creatorID_id=user_id, recipientID_id='A1')
+                    print("newMessageRecord: " + str(newMessageRecord)) #Test
+
+                    #create notification (Type id 3 - New message from non-admin to admin)
+                    dashboard.models.Notification.objects.create(senderID_id=user_id, recipientID_id='A1', messageID_id=newMessageRecord.id, typeID_id=3)
+
+                    context = {
+                        'user_id': user_id,
+                        'currentChatMessages': get_current_chat_msgs(),
+                        'newMessageID': newMessageRecord.id
+                    } 
+                    return render(request, 'dashboard/chatContentNonAdmin.html', context)
+                elif request.POST['requestType'] == 'updateMessageNonAdmin':
+                    typedMessage = request.POST['typedMessage']
+                    print("typedMessage: " + typedMessage) #Test
+
+                    context = {
+                        'user_id': user_id,
+                        'typedMessage': typedMessage,
+                        'currentChatMessages': get_current_chat_msgs(),
+                    } 
+                    return render(request, 'dashboard/chatContentNonAdmin.html', context)
+        else:            
+            context = {
+                'dashboardNav': dashboardNav,
+                'user_type': user_type,
+                'user_id': user_id,
+                'username': username,
+                'test': urlTest,
+                'blog': urlBlog,
+                'quiz': urlQuiz,
+                'search': urlSearch,
+                'dashboard':urlDashboard,
+                'logout': urlLogout,
+                'settings': urlProfile,
+                'bookmark': urlBookmark,
+                'report': urlReport,
+                'chat': urlChat,
+                'suggestions': urlSuggestion,
+                'allNotif': allNotif,
+                'unreadNotifCnt': unreadNotifCnt,
+                'currentChatMessages': get_current_chat_msgs()
+            }
 
     return render(request, 'dashboard/chat.html', context)
 

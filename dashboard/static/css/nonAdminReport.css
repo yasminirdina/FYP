@@ -422,6 +422,15 @@ input:focus::placeholder {color: transparent}
     justify-content: space-around;
 }
 
+#LastChatTime .div-data{
+    display: grid;
+    grid-auto-flow: row;
+    justify-self: center;
+    align-items: center;
+    /* background-color: antiquewhite; */
+    height: 100%;
+}
+
 .div-data-value{
     /* background-color: rgb(250, 159, 159); */
     position: relative;
@@ -450,6 +459,15 @@ input:focus::placeholder {color: transparent}
     word-break: break-word;
 }
 
+#LastChatTime .div-data-value{
+    /* background-color: aquamarine; */
+    height: 100%;
+    display: grid;
+    grid-auto-flow: row;
+    justify-content: center;
+    align-content: center;
+}
+
 .div-data-subtitle{
     /* background-color: rgb(208, 122, 248); */
     position: relative;
@@ -463,6 +481,10 @@ input:focus::placeholder {color: transparent}
 #LastChatTime .div-data-subtitle{
     display: none;
     height: 40%;
+}
+
+#LastChatTime .div-data-subtitle{
+    height: 0;
 }
 
 #TotalSuggestions .div-data-subtitle{

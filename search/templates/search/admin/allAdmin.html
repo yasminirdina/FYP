@@ -1,104 +1,88 @@
 {% extends "search/adminbase.html" %}
-{% block header %} Cari Semua Rekod {% endblock %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise: Cari Semua Rekod</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/searchAdmin.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container-form-search">
-    <form method="GET" action=".">
-        <!-- uni search  -->
-        <label for="inputUni">Universiti</label>
-        <input class="form-control py-2 border-right-0 border" type="search" name="uni_contains" placeholder="Nama Universiti" />
-        <span class="input-goup-append">
-            <div class="input-group-text bg-transparent">
-                <!-- putting search icon -->
-                <i class="fa fa-search"></i> 
-            </div>
-        </span>
-                
-        <!-- course search -->
-        <label for="inputCourse">Kursus</label>
-        <input class="form-control py-2 border-right-0 border" type="search" name="course_contains" placeholder="Nama Kursus" />
-        <span class="input-goup-append">
-            <div class="input-group-text bg-transparent">
-                <!-- putting search icon -->
-                <i class="fa fa-search"></i> 
-            </div>
-        </span>
-                
-        <!-- form group -->
-        <label for="inputUniCourse">Kerjaya</label><br>
-        <input class="form-unicourse" type="search" name="jobs_contains" placeholder="Nama Kerjaya" />
-        <span class="input-goup-append">
-            <div class="input-group-text bg-transparent">
-                <!-- putting search icon -->
-                <i class="fa fa-search"></i> 
-            </div>
-        </span>
-                
-        <button type="submit" class="btn btn-search">Cari</button>
-    
-    </form>
-</div>
-<center>
-<button type="submit" class="btn btn-create"><a class="btn btn-a-create" href="{% url 'search:createData-admin' user_id %}">Cipta Rekod Baru</a></button>
-</center>
-<!-- <div class="row"> -->
-    {% for course in allCourse %}
-        {% for courseuni in allBridge %}
-            {% if course.id == courseuni.course.id %}
-                {% for uni in allUni %}
-                    {% if uni.id == courseuni.university.id %}
-                    <div class="row">
-                    <table class="table table-all">
-                    <!-- <ul class="ul-data"> -->
-                        <tr>
-                            <td>
-                                <ul class="ul-data">
-                                    <li class="li-course"><a class="li-a-course" href="#">{{ course.course}}</a></li>
-                                    <li hrfclass="li-uni"><b>Ditawarkan oleh:</b><a class="li-a-uni" href="#">{{ uni.uni }}</a></li>
-                                </ul>
-                            </td>
-                            <td>
-                                <button class="btn-update"><a class="btn-a-update" href="{% url 'search:updateData-admin' user_id courseuni.id%}">Kemas Kini</a></button>
-                                <button class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteData-admin' user_id courseuni.id%}">Padam</a></button>
-                            </td>
-                        </tr>
-                            <!-- <li hrfclass="li-uni"><a class="li-a-uni" href="#">{{ uni.uni }}</a></li> -->
-                            <!-- <li class="li-course">{{ course.course}}</li> -->
-                        <!-- </ul> -->
-                    </table>
-                    </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endfor %}    
+    <div class="container-form-search">
+        <h1 class="course-header">Cari Semua Rekod</h1>
+        <form method="GET" action="{% url 'search:all-admin' user_id %}">
+            <!-- uni search -->
+            <label for="inputUni">Universiti</label><br>
+            <input class="form-uni" type="search" name="uni_contains" placeholder="Nama Universiti" />
+
+            <!-- course search -->
+            <label for="inputCourse">Kursus</label><br>
+            <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
+
+            <!-- form group -->
+            <label for="inputUniCourse">Kerjaya</label><br>
+            <input class="form-unicourse" type="search" name="job_contains" placeholder="Nama Kerjaya" />
+
+            <button type="submit" class="btn btn-search">Cari</button>
+
+        </form>
+    </div>
+
+    {% for uni in allUni %}
+    <div class="search-result-container">
+        <div class="row1">
+            <h3 class="uni-name"><a href="{% url 'search:uni-AdminPage' user_id uni.id %}">{{ uni.uni }}</a></h3>
+            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateUniData-admin' user_id uni.id %}">Kemas Kini</a></p>
+            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteUniData-admin' user_id uni.id %}">Padam</a></p>
+        </div>
+        <div class="row2">
+            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
+            <!-- <p class="input">{{ course.studyLevel }}</p> -->
+            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
+            <!-- <p class="input">{{ course.langguage }}</p> -->
+        </div>
+    </div>   
     {% endfor %}
+
     {% for course in allCourse %}
-        {% for jobs in allJobs %}
-            {% if course.id == jobs.course.id %}
-                <div class="row">
-                <table class="table table-all">
-                    <tr>
-                        <td>
-                            <ul class="ul-data">
-                                <li class="li-course"><a class="li-a-course" href="#">{{ jobs.job }}</a></li>
-                                <!-- <li hrfclass="li-uni"><b>Kursus:</b></li> -->
-                                <!-- <ul class="ul-data"> -->
-                                    <!-- <li hrfclass="li-uni"><a class="li-a-uni" href="#">{{ uni.uni }}</a></li> -->
-                                <li class="li-uni"><b>Kursus:</b><a class="li-a-uni" href="#">{{ course.course }}</a></li>
-                                <!-- </ul> -->
-                                <!-- <hr /> -->
-                            <!-- </div> -->
-                            </ul>
-                        </td>
-                        <td>
-                            <button class="btn-update"><a class="btn-a-update" href="">Kemas Kini</a></button>
-                            <button class="btn-delete"><a class="btn-a-delete" href="">Padam</a></button>
-                        </td>
-                    </tr>
-                </table>
-                </div>
-            {% endif %}
-        {% endfor %}
+    <div class="search-result-container">
+        <div class="row1">
+            <h3 class="course-name"><a href="{% url 'search:course-AdminPage' user_id course.id %}">{{ course.course }}</a></h3>
+            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateCourseData-admin' user_id course.id %}">Kemas Kini</a></p>
+            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteCourseData-admin' user_id course.id %}">Padam</a></p>
+        </div>
+        <div class="row2">
+            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
+            <p class="input">{{ course.studyLevel }}</p>
+            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
+            <p class="input">{{ course.langguage }}</p>
+        </div>
+    </div>   
     {% endfor %}
-<!-- </div> -->
-</main><!-- container -->
+
+    {% for job in allJobs %}
+    <div class="search-result-container">
+        <div class="row1">
+            <h3 class="job-name"><a href="{% url 'search:job-AdminPage' user_id job.id %}">{{ job.job }}</a></h3>
+            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateJobData-admin' user_id job.id %}">Kemas Kini</a></p>
+            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteJobData-admin' user_id job.id %}">Padam</a></p>
+        </div>
+        <div class="row2">
+            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
+            <p class="input"></p>
+            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
+            <p class="input"></p>
+        </div>
+    </div>   
+    {% endfor %}
+{% endblock %}
+
+{% block js %}
+    <!-- <script type="text/javascript">
+        def deletePopUp(course.id){
+
+        }
+    </script> -->
 {% endblock %}

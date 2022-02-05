@@ -16,7 +16,7 @@
         </h1>
     </div>
 
-    <div class="div-content-outer">
+    <div class="div-content-outer">        
         {% include 'dashboard/adminNotifContent.html' %}
     </div>
 {% endblock %}
@@ -24,6 +24,32 @@
 {% block js2 %}
     <script type="text/javascript">
         $('.p-sidebar.notification .p-a-sidebar').addClass('sb-active');
+
+        /* $('.div-content-outer').on('click', '.mark-all-read', function(){
+            alert('masuk');
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' },
+                url: "{% url 'dashboard:index-admin' user_id %}",
+                data: {
+                    'requestType': 'markAllRead'
+                },
+                type: 'POST',
+                success: function(result) {
+                    alert("markAllRead: success"); // Test
+
+                    alert("typeof p-unreadNotifCnt2: " + typeof $('.p-unreadNotifCnt2').text().toString());
+                    alert("updated unreadNotifCnt2: " + $('.p-unreadNotifCnt2').text()); // Test
+                    $('.p-unreadNotifCnt').text($('.p-unreadNotifCnt2').text());
+                    alert("updated unreadNotifCnt for navbar: " + parseInt($('.p-unreadNotifCnt').text())); // Test
+
+                    checkUnreadNotifCnt();
+                },
+                error: function(result) {
+                    alert("markAllRead: error"); // Test
+                }
+            })
+        }); */
 
         $('.unread').on('click', '.a-for-linkto', function(){
             // alert("notifID: " + $(this).attr("id")); // Test
