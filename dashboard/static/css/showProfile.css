@@ -4,7 +4,8 @@
     font-family: 'Varela Round', sans-serif;
     text-align: left;
     padding-left: 0;
-    list-style-position: inside;
+    list-style-position: outside;
+    padding-left: 15px;
     line-height: 25px;
     box-sizing: border-box;
 }
@@ -97,8 +98,7 @@
     display: grid;
     grid-auto-flow: column;
     width: 100%;
-    max-height: 80vh;
-    overflow: auto;
+    height: 100%;
     border-radius: 10px;
     box-sizing: border-box;
 }
@@ -109,8 +109,6 @@
 
 .div-modal-content-1, .div-modal-content-2 {
     max-width: 50%;
-    /* max-height: 80vh;
-    overflow: auto; */
     background-color: white;
     border: none; 
     border-radius: 15px;
@@ -132,7 +130,6 @@
     font-family: 'Varela Round', sans-serif;
     font-weight: bold;
     box-sizing: border-box;
-    /* background-color: rgb(121, 85, 118); */
 }
 
 .div-modal-header-2{
@@ -140,7 +137,7 @@
 }
 
 .div-parent-student-content, .div-parent-student-buttons, .div-teacher-student-content, .div-teacher-student-buttons{
-    /* background-color: antiquewhite; */
+    /* background-color: pink; */
     position: relative;
     width: fit-content;
     display: grid;
@@ -158,14 +155,11 @@
 
 .div-parent-student-buttons, .div-teacher-student-buttons{
     height: fit-content;
-    /* top | horizontal | bottom */
     margin: 0 0 5px;
 }
 
 /* table */
 table {
-    /* border: 1px solid whitesmoke; */
-    /* border-collapse: separate !important; */
     border-collapse: collapse;
     border-spacing: 0;
     font-size: 16px;
@@ -209,4 +203,93 @@ tr:hover {
 .span-error{
     font-style: italic;
     color: rgb(207, 61, 61);
+}
+
+/* For minimized screen width (desktop) and/or tablet */
+@media screen and (max-width: 1010px) {
+    .div-content-outer{
+        max-height: 65vh;
+    }
+
+    /* For tablet */
+    @media screen and (min-height: 900px) and (max-height: 1280px) {
+        .div-content-outer{
+            max-height: 76vh;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .div-content-outer{
+        max-height: 69vh;
+    }
+}
+
+/* For mobile */
+@media screen and (max-width: 480px), (max-height: 480px) {
+    .btn, .div-modal-content-1, .div-modal-content-2, .div-modal-header-1, .div-modal-header-2, table, .ol-parent-student, .ol-teacher-student{
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .btn{
+        padding: 5px 10px;
+    }
+
+    .div-section-header{
+        margin: 0 0 -5px;
+    }
+
+    .div-content-outer{
+        max-height: 80vh;
+    }
+
+    th, td{
+        padding: 5px;
+    }
+
+    .div-modal-content-1, .div-modal-content-2{
+        max-width: 90%;
+    }
+
+    /* vertical mobile */
+    @media screen and (max-height: 700px) {
+        .div-content-outer{
+            max-height: 75vh;
+        }
+    }
+
+    /* horizontal mobile */
+    @media screen and (max-width: 920px) and (max-height: 480px) {
+        .div-content-outer{
+            /* background-color: pink; */
+            max-height: 55vh;
+        }
+
+        /* Vertical ip5 & ip5s */
+        @media screen and (max-width: 320px) and (max-height: 600px) {
+            .div-content-outer{
+                /* background-color: lightsalmon; */
+                max-height: 65vh;
+            }
+            
+            table{
+                word-break: break-all;
+            }
+        }
+
+        @media screen and (max-height: 350px) {
+            .div-content-outer{
+                /* background-color: lightblue; */
+                max-height: 50vh;
+            }
+        }
+
+        @media screen and (max-height: 320px) {
+            .div-content-outer{
+                /* background-color: lightgreen; */
+                max-height: 45vh;
+            }
+        }
+    }
 }

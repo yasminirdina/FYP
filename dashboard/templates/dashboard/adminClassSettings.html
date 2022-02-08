@@ -30,14 +30,17 @@
             {% endif %}
 
             <label for="classname">
-                <i class="fas fa-plus"></i>
+                <i class="fas fa-plus plus-1"></i>
                 <span>Tambah kelas baharu:</span>
             </label>
         
             <div class="div-form-content">
                 <!-- <input type="text" id="classname" name="classname" maxlength="25"> -->
                 {{ form.classname }}
-                <button class="btn add-class" type="submit">Tambah</button>
+                <button class="btn add-class plus-3" type="submit">Tambah</button>
+                <button class="btn add-class plus-2" type="submit">
+                    <i class="fas fa-plus" id="plus-1"></i>
+                </button>
             </div> 
         </form>
     </div>

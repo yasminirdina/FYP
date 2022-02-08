@@ -1,7 +1,7 @@
 {% load static %}
 <p class="p-newMessageID" style="display: none;">{{ newMessageID }}</p>
 
-<div class="div-right">
+<div class="div-right for-NA">
     <div class="div-chat-title">
         <span class="span-username-thumb title">
             Guru Kaunseling
@@ -16,6 +16,11 @@
                         {{ message.bodyText|linebreaksbr }}
                         <span class="span-datetime">
                             {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                            {% if message.isRead == False %}
+                                <i class="fas fa-check"></i>
+                            {% else %}
+                                <i class="fas fa-check-double"></i>
+                            {% endif %}
                         </span>
                     </div>
                 {% else %}

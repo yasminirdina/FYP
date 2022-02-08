@@ -7,20 +7,36 @@ import search.models
 class createUniversity(ModelForm):
     class Meta:
         model = search.models.University
-        fields = ['uni']
+        # fields = ['uni']
+        fields = '__all__'
         labels = {
-            'uni': 'Universiti'
-            }
+            'uni': 'Universiti',
+            'rating': 'Rating',
+            'uniType': 'Jenis Institusi',
+            'location': 'Lokasi',
+            'description': 'Diskripsi',
+            'fee': 'Purata Yuran',
+            'population': 'Purata Populasi Pelajar',
+            'intStudent': 'Penerimaan Pelajar Antarabangsa',
+            'contactInfo': 'Maklumat Perhubungan',
+            'linkPage': 'Laman Web Universiti'
+        }
 
     def clean_uni(self):
         uni = self.cleaned_data.get('uni')
         if not uni:
             raise forms.ValidationError('Bahagian ini diperlukan')
+        
 
-        for instance in search.models.University.objects.all():
-            if instance.uni == uni:
-                raise forms.ValidationError(uni + ' sudah wujud dalam rekod')
-        return uni
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            newData = {
+                "class" : "formInput"
+            }
+            self.fields[str(field)].widget.attrs.update(
+                newData
+            )
 
 # uniCourse bridge
 class uniCourseCreate(ModelForm):
@@ -43,7 +59,17 @@ class jobCourseCreate(ModelForm):
 class createCourse(ModelForm):
     class Meta:
         model = search.models.Course
-        fields = '__all__' 
+        fields = '__all__'
+        labels = {
+            'course': 'Kursus',
+            'rating': 'Rating',
+            'studyLevel': 'Peringkat Pengajian',
+            'langguage': 'Bahasa Utama Kursus',
+            'avgFee': 'Bayaran Purata Kursus',
+            'avgDuration': 'Tempoh Purata Kursus',
+            'description': 'Diskripsi',
+            'requirement': 'Kelayakan Kemasukan'
+        } 
 
     def clean_course(self):
         course = self.cleaned_data.get('course')
@@ -54,12 +80,30 @@ class createCourse(ModelForm):
             if instance.course == course:
                 raise forms.ValidationError(course + ' sudah wujud dalam rekod')
         return course
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            newData = {
+                "class" : "formInput"
+            }
+            self.fields[str(field)].widget.attrs.update(
+                newData
+            )
 
 #create job form
 class createJob(ModelForm):
     class Meta:
         model = search.models.Jobs
-        fields = '__all__' 
+        fields = '__all__'
+        labels = {
+            'job': 'Kerjaya',
+            'personality': 'Personaliti',
+            'description': 'Diskripsi',
+            'skills': 'Kemahiran',
+            'avgSalary': 'Gaji Purata (Malaysia)',
+            'avgEmployement': 'Kadar Purata Pekerjaan'
+        }  
     
     def clean_job(self):
         job = self.cleaned_data.get('job')
@@ -76,3 +120,13 @@ class createJob(ModelForm):
         if not personality:
             raise forms.ValidationError('Bahagian ini diperlukan')
         return personality
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            newData = {
+                "class" : "formInput"
+            }
+            self.fields[str(field)].widget.attrs.update(
+                newData
+            )

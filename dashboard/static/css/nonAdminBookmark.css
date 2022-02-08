@@ -29,7 +29,6 @@
 }
 
 .delete:hover{
-    background-color: #eee;
     color: rgb(207, 61, 61);
     box-shadow: 0 0.4rem 1.4rem 0 rgba(207, 61, 61, 0.699);
 }
@@ -39,7 +38,6 @@
 }
 
 .cancel-delete:hover {
-    background-color: #eee;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -143,7 +141,6 @@ input:focus::placeholder {color: transparent}
 }
 
 .div-post, .div-info{
-    /* background-color: rgba(255, 255, 255, 0.384); */
     display: grid;
     grid-auto-flow: row;
     width: 100%;

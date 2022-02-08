@@ -17,7 +17,7 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
@@ -29,7 +29,7 @@
 }
 
 .cancel-for-editPost:hover, .upload-for-editPost:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -41,7 +41,9 @@
 }
 
 /* hyperlink path and button 1 */
-.a-main-for-editPost, .a-back-for-editPost {color: rgb(250, 127, 56);}
+.a-main-for-editPost, .a-back-for-editPost {color:black;}
+
+.a-main-for-editPost:hover, .a-back-for-editPost:hover {color:rgb(207, 61, 61);}
 
 .a-for-editPost{
     text-decoration: none;
@@ -61,7 +63,7 @@ form{
 .title, .category, .new_category, .description, .content, .isDraft {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px solid lightgray;
     padding: 5px 10px;
     box-sizing: border-box;
@@ -78,11 +80,15 @@ form{
 }
 
 .div-outer{
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     display: grid;
     grid-auto-flow: row;
     width: 90%;
     margin: 0 auto;
     gap: 10px;
+    padding: 10px;
+    border-radius: 10px;
     justify-items: center;
     box-sizing: border-box;
 }

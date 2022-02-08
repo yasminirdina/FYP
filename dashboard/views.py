@@ -2132,7 +2132,7 @@ def nonAdminReport(request, user_type, user_id):
         def get_filtered_student(filtered_form_parent ,filteredStudentID):
             # print("----------------DIV 2: parent-eng----------------") #Test
 
-            if filtered_form_parent.id != 1:
+            if filtered_form_parent is not None:
                 filtered_HTC = dashboard.models.HomeroomTeacherClass.objects.get(className=filtered_form_parent.name)
                 allStudents = dashboard.models.Student.objects.filter(studentClass_id=filtered_HTC).order_by('studentClass', 'name')
             else:
@@ -2397,7 +2397,11 @@ def nonAdminReport(request, user_type, user_id):
                     if request.GET.get('filteredStudentID') != None:
                         filteredStudentID = request.GET.get('filteredStudentID')
 
-                    filtered_form_parent = allForms.get(id=filteredFormID)
+                    if filteredFormID != 0:
+                        filtered_form_parent = allForms.get(id=filteredFormID)
+                    else:
+                        filtered_form_parent = None
+                        
                     has_filtered_form = True
                     has_filtered_student = True
                     filtered_student_record = None
@@ -2434,7 +2438,8 @@ def nonAdminReport(request, user_type, user_id):
                     return render(request, 'dashboard/nonAdminReportContentTeacher3.html', context)
             else:
                 filtered_form = allForms.get(id=1)
-                filtered_form_parent = allForms.get(id=1)
+                # filtered_form_parent = allForms.get(id=1)
+                filtered_form_parent = None
                 filteredStudentID = None
                 has_filtered_form = False
                 has_filtered_student = False

@@ -1,42 +1,19 @@
-.search-result-container{
+.rowAdmin {
+    display: grid;
+    grid-template-columns: auto 5% 5%;
+    margin-bottom: 25px;
+    grid-gap: 5px;
+}
+
+a{
+    width:fit-content;
+}
+
+i:hover{
     color: black;
 }
 
-.row1{
+.offerList{
     display: grid;
-    grid-template-columns: auto 20%;
-    grid-template-rows: auto auto;
-    /* border: solid 3px black;   */
-}
-
-.course-name{
-    grid-row-start: 1;
-    grid-row-end: 2;
-    /* border: solid 3px black;   */
-}
-
-.bookmark{
-    grid-column-start: 2;
-    grid-column-end: 3;
-    /* border: solid 3px black;  */
-}
-
-.rating{
-    grid-column-start: 2;
-    grid-column-end: 3;
-    /* border: solid 3px black;   */
-}
-
-.row2{
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-}
-
-.search-details{
-    font-weight: bold;
-}
-
-.row3{
-    display: grid;
-    grid-template-rows: auto auto;
+    grid-template-columns: auto 7%
 }

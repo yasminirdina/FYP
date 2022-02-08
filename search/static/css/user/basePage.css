@@ -77,4 +77,9 @@
     grid-column-start: 1;
     grid-column-end: 3;
 }
-  
+
+.about-desc{
+    white-space: pre-line;
+    text-align: left;
+    margin-top: 8%;
+}

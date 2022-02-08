@@ -17,7 +17,7 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
@@ -34,13 +34,15 @@
 }
 
 .clear-for-showField:hover, .main-for-showField:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgba(250, 127, 56, 0.658);
 }
 
 /* hyperlink path and button 1 */
-.a-main1-for-showField {color: rgb(250, 127, 56);}
+.a-main1-for-showField {color: black;}
+
+.a-main1-for-showField:hover{color:rgb(207, 61, 61);}
 
 .a-for-showField{
     text-decoration: none;
@@ -66,7 +68,7 @@
   
 .btn2:hover{
     color: gray;
-    background-color: #eee;
+    background-color: white;
 }
 
 .status {
@@ -103,7 +105,8 @@
 #search_box {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    border-radius: 25px;
+    border-radius: 5px;
+    /* border: transparent; */
     border: 1px solid lightgray;
     padding: 10px;
     box-sizing: border-box;
@@ -139,8 +142,8 @@ input:focus::placeholder {color: transparent}
     font-size: 16px;
     text-align: center;
     padding: 1vw;
-    border: 2px solid lightgray;
-    background-color: #eee;
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 5px;
     width: 90%;
     box-sizing: border-box;

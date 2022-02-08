@@ -14,7 +14,7 @@
     <div class="main-div">
         <h1 class="uni-header">{{currentUni.uni}}</h1>
         <div class="count uni-rating">
-            <p>Rating</p>
+            <p>{{currentUni.rating}}</p>
         </div>
         <div class="count uni-bookmark">
             <p>Bookmark</p>
@@ -28,7 +28,8 @@
         <div class="info-container">
             <!-- Tab links -->
             <div class="info-tab">
-                <button class="tablinks" onclick="openTab(event, 'Overview')" id="defaultOpenInfo">Ringkasan</button>
+                <button class="tablinks" onclick="openTab(event, 'Overview')" id="defaultOpenInfo">Profil</button>
+                <button class="tablinks" onclick="openTab(event, 'Courses')">Kursus</button>
                 <button class="tablinks" onclick="openTab(event, 'Statistics')">Analisis</button>
             </div>
             
@@ -36,34 +37,50 @@
             <div id="Overview" class="tabcontent">
                 <div class="uni-container about">
                     <h3 class="about-title">Pengenalan Universiti</h3>
-                    <p class="about-desc"></p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio exercitationem, non saepe architecto autem at, consequuntur voluptates ea voluptate quaerat illo modi iusto nobis delectus vel aliquam, earum illum corrupti.</p>
+                    <p class="about-desc">{{currentUni.description}}</p>
                 </div>
                 <div class="uni-container detail">
-                    <h3 class="detail-title">Butiran Kursus</h3>
-                    <p class="detail1">Peringkat pengajian:</p>
-                    <p class="input">test</p>
+                    <h3 class="detail-title">Butiran Universiti</h3>
+                    <p class="detail1">Lokasi:</p>
+                    <p class="input">{{currentUni.location}}</p>
 
-                    <p class="detail2">Anggaran tempoh kursus:</p>
-                    <p class="input">test</p>
+                    <p class="detail2">Jenis Institusi:</p>
+                    <p class="input">{{currentUni.uniType}}</p>
 
-                    <p class="detail3">Anggaran bayaran kursus:</p>
-                    <p class="input">test</p>
+                    <p class="detail3">Yuran Purata:</p>
+                    <p class="input">{{currentUni.fee}}</p>
+
+                    <p class="detail3">Purata Populasi Pelajar:</p>
+                    <p class="input">{{currentUni.population}}</p>
+
+                    <p class="detail3">Penerimaan Pelajar Antarabangsa:</p>
+                    <p class="input">{{currentUni.intStudent}}</p>
                 </div>
+                <div class="uni-container detail">
+                    <h3 class="detail-title">Maklumat Lanjut</h3>
+                    <p class="contact1">Maklumat Perhubungan:</p>
+                    <p class="input">{{currentUni.contactInfo}}</p>
+
+                    <p class="contact2">Laman Web Universiti:</p>
+                    <p class="input"><a class="uniPage" href="{{currentUni.linkPage}}">{{currentUni.linkPage}}</a></p>
+                </div>
+            </div>
+            
+            <div id="Courses" class="tabcontent">
                 <div class="uni-container courseList">
                     <h3 class="courseList-title">Kursus yang ditawarkan</h3>
                     {% for currUni in bridge %}
                         {% for c in course %}
                             {% if c.id == currUni.course_id %}
                                 <div class="courseList-container">
-                                    <p><a class="courseOffer" href="">{{c.course}}</a></p>
+                                    <p><a class="courseOffer" href="{% url 'search:course-page' user_type user_id c.id %}">{{c.course}}</a></p>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     {% endfor %} 
                 </div>
             </div>
-            
+
             <div id="Statistics" class="tabcontent">
                 <h3>Paris</h3>
                 <p>Paris is the capital of France.</p>

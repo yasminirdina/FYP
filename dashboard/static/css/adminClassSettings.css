@@ -16,7 +16,6 @@
 
 /* On mouse-over */
 .btn:hover{
-    /* background: #eee; */
     background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
@@ -24,12 +23,15 @@
     transform: scale(1.03);
 }
 
+.plus-2 {
+    display: none;
+}
+
 .delete{
     background-color: rgb(207, 61, 61);
 }
 
 .delete:hover{
-    background-color: #eee;
     color: rgb(207, 61, 61);
     box-shadow: 0 0.4rem 1.4rem 0 rgba(207, 61, 61, 0.699);
 }
@@ -39,7 +41,6 @@
 }
 
 .cancel-delete:hover {
-    background-color: #eee;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -215,4 +216,132 @@ input:focus::placeholder {color: transparent}
 .span-error{
     font-style: italic;
     color: rgb(207, 61, 61);
+}
+
+/* For minimized screen width (desktop) and/or tablet */
+@media screen and (max-width: 1010px) {
+    .div-content-outer{
+        max-height: 65vh;
+    }
+
+    /* For tablet */
+    @media screen and (min-height: 900px) and (max-height: 1280px) {
+        .div-content-outer{
+            max-height: 76vh;
+        }
+
+        .div-table{
+            max-height: 65vh;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .div-content-outer{
+        max-height: 69vh;
+    }
+}
+
+/* For mobile */
+@media screen and (max-width: 480px), (max-height: 480px) {
+    .btn, .div-modal-content-1, .div-modal-content-2, .div-modal-header-1, .div-modal-header-2, table, label, .classname{
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+    }
+
+    .div-section-header{
+        margin: 0 0 -5px;
+    }
+
+    .div-content-outer{
+        max-height: fit-content;
+    }
+
+    .div-table{
+        max-height: 65vh;
+    }
+
+    th {
+        padding: 10px;
+    }
+
+    td {
+        padding: 5px;
+    }
+
+    /* vertical mobile */
+    @media screen and (max-height: 650px) {
+        .div-table{
+            max-height: 60vh;
+        }
+    }
+
+    @media screen and (max-height: 500px) {
+        .div-table{
+            max-height: 50vh;
+        }
+
+        .plus-1, .plus-3{
+            display: none;
+        }
+
+        .plus-2 {
+            display: block;
+        }
+
+        /* horizontal mobile */
+        @media screen and (max-width: 900px) {
+            .div-table{
+                max-height: 30vh;
+            }
+        }
+
+        @media screen and (max-width: 800px) {
+            .div-table{
+                max-height: 25vh;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            .div-content-outer{
+                max-height: 45vh;
+            }
+
+            .div-table{
+                max-height: 30vh;
+            }
+
+            /* ip5 & ip5s vertical */
+            @media screen and (max-width: 400px) {
+                .div-content-outer{
+                    max-height: fit-content;
+                }
+    
+                .div-table{
+                    max-height: 50vh;
+                }
+
+                form{
+                    grid-auto-flow: row;
+                }
+            }
+
+            form{
+                grid-auto-flow: column;
+            }
+        }
+    }
+
+    .div-notif-ind{
+        font-size: 12px;
+        gap: 10px;
+    }
+
+    .div-text{
+        line-height: 16px;
+    }
 }

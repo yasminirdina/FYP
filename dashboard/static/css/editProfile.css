@@ -119,3 +119,84 @@ input:focus::placeholder {color: transparent}
     font-style: italic;
     color: rgb(207, 61, 61);
 }
+
+/* For minimized screen width (desktop) and/or tablet */
+@media screen and (max-width: 1010px) {
+    .div-content-outer{
+        max-height: 65vh;
+    }
+
+    /* For tablet */
+    @media screen and (min-height: 900px) and (max-height: 1280px) {
+        .div-content-outer{
+            max-height: 76vh;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .div-content-outer{
+        max-height: 69vh;
+    }
+}
+
+/* For mobile */
+@media screen and (max-width: 480px), (max-height: 480px) {
+    .btn, .name, .year, .studentclass, .interest, .parentid, .salutation, .age, .job, .relation, .role, .homeroomclass, .div-form-content-ind {
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .btn{
+        padding: 5px 10px;
+    }
+
+    .div-section-header{
+        margin: 0 0 -5px;
+    }
+
+    .div-content-outer{
+        /* background-color: lightblue; */
+        max-height: 75vh;
+    }
+
+    .ul-password{
+        padding: 5px;
+    }
+
+    .div-form-content-ind{
+        grid-template-columns: none;
+        grid-auto-flow: row;
+    }
+
+    /* vertical mobile */
+    @media screen and (max-height: 600px) {
+        .div-content-outer{
+            /* background-color: pink; */
+            max-height: 65vh;
+        }
+    }
+
+    /* horizontal mobile */
+    @media screen and (max-width: 920px) and (max-height: 480px) {
+        .div-content-outer{
+            /* background-color: lightgreen; */
+            max-height: 57vh;
+        }
+
+        /* Vertical ip5 & ip5s */
+        @media screen and (max-width: 320px) and (max-height: 600px) {
+            .div-content-outer{
+                /* background-color: violet; */
+                max-height: 65vh;
+            }
+        }
+
+        @media screen and (max-height: 350px) {
+            .div-content-outer{
+                /* background-color: lightseagreen; */
+                max-height: 48vh;
+            }
+        }
+    }
+}

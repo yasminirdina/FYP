@@ -1,0 +1,46 @@
+.newRecord-main-container{
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+a{
+    color: white;
+    padding: 10px 40px 1px 40px;
+    font-weight: normal;
+    font-size: 16px;
+}
+
+.form-create {
+    border: 2px solid rgba(110, 21, 21, 0.473);
+    border-radius: 5px;
+    background-color: rgba(224, 129, 94, 0.795);
+    padding: 10px 40px 40px 40px;
+    margin: 30px;
+    /* box-shadow: 3px 3px rgba(110, 21, 21, 0.473); */
+}
+
+form{
+    text-align: left;
+}
+
+label{
+    font-size: 18px;
+}
+
+.formInput{
+    display: block;
+    width: 97%;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-family: 'Varela Round', sans-serif;
+    background-color: rgb(241, 241, 241);
+}
+
+.submit-success{
+    font-size: 30px;
+    padding: 0;
+    margin-top: 40px;
+}

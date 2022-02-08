@@ -19,7 +19,7 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;

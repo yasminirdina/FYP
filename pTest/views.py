@@ -464,9 +464,11 @@ def testResult (request, user_type, user_id):
 
     #personality name
     codeName = []
+    codeDesc = []
     for x in range(1,7):
         allPersonality = pTest.models.Personality.objects.get(id=x)
         codeName.append(allPersonality.personality)
+        codeDesc.append(allPersonality.description)
     # print(codeName)
 
     #personality score
@@ -498,6 +500,32 @@ def testResult (request, user_type, user_id):
     }
     # print(hollCode)
 
+    #desc all code
+    # codeName = []
+    # codeDesc = []
+    # for x in range(1,7):
+    #     allPersonality = pTest.models.Personality.objects.get(id=x)
+    #     codeName.append(allPersonality.personality)
+    #     codeDesc.append(allPersonality.description)
+
+    # # questionText = nextQuestionRecord.questionText #codeName
+    # indices = []
+    # questionTextOpt = []
+    # questionTextOnly = ""
+
+    # for desc in codeDesc:
+    #     for len(desc):
+    #         if '.' in x:
+    #             indices.append(x.find('.'))
+            
+    #             questionTextOnly = questionText[:indices[0]]
+
+    #             for i in range(len(indices)):
+    #                 if i != len(indices)-1:
+    #                     questionTextOpt.append(questionText[indices[i]:indices[i+1]])
+    #                 else:
+    #                     questionTextOpt.append(questionText[indices[i]:])
+
     context = {
         'dashboardNav': userid(user_id), 
         'user_id': user_id,
@@ -510,6 +538,7 @@ def testResult (request, user_type, user_id):
         'dashboard':urlDashboard, 
         'logout': urlLogout,
         'codeName':codeName,
+        'codeDesc':codeDesc,
         'latestResult' : latestResult,
         'allCodeResult' : allCodeResult,
         'topCode' : topCode,

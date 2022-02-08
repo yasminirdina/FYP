@@ -109,14 +109,16 @@
 }
 
 .div-side-navbar{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 10px;
     padding: 1vw;
     justify-content: center;
 }
 
 .div-facebook-2{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 10px;
     padding: 1vw;
     display: none;
@@ -234,7 +236,8 @@ input:focus::placeholder {color: transparent}
 }
 
 .div-popular, .div-latest{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     position: relative;
     width: 100%;
     height: fit-content;

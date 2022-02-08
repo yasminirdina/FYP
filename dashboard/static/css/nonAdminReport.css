@@ -133,7 +133,7 @@ input:focus::placeholder {color: transparent}
 
 /* Student, Parent */
 .div-career-student, .div-career-parent, .div-game-perf, .div-parent-eng{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
     width: 100%;
     min-width: fit-content;
     height: fit-content;

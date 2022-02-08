@@ -1,37 +1,48 @@
 {% extends "search/adminbase.html" %}
+{% load static %}
 
 {% block title %}
     <title>FutureCruise: Carian Maklumat</title>
 {% endblock %}
 
-{% block content %}
-    <center>
-        <div class="container-search-main">
-            <div class="container-search">
-                <button class="btn">
-                    <span><a class="a-search-main" href="{% url 'search:uni-admin' user_id %}">Cari Mengikut Universiti</a></span>
-                </button>
-            </div>
-            <div class="container-search">
-                <button class="btn">
-                    <span><a class="a-search-main" href="{% url 'search:course-admin' user_id %}">Cari Mengikut Kursus</a></span>
-                </button>
-            </div>
-            <div class="container-search">
-                <button class="btn">
-                    <span><a class="a-search-main" href="{% url 'search:jobs-admin' user_id %}">Cari Mengikut Bidang Kerjaya</a></span>
-                </button>
-            </div>
-            <div class="container-search">
-                <button class="btn">
-                    <span><a class="a-search-main" href="{% url 'search:all-admin' user_id %}">Cari Semua Rekod</a></span>
-                </button>
-            </div>
-        </div>
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/searchMainAdmin.css' %}">
+{% endblock %}
 
-        <div class="container-create">
-            <button type="submit" class="btn">
-                <a class="btn btn-a-create" href="{% url 'search:createData-admin' user_id %}">Cipta Rekod Baru</a>
-            </button>
+{% block content %}
+<div class="container-search-main">
+    <h1 class="search-main-title">Carian Maklumat</h1>
+
+    <div class="container-search-section">
+        <div class="container-section">
+            <a class="search-section" href="{% url 'search:uni-admin' user_id %}">
+                <i class="section-content fas fa-university" alt="Carian Mengikut Universiti"></i>
+                <span class="section-content title">Cari Mengikut Universiti</span>
+            </a>
         </div>
+        <div class="container-section">
+            <a class="search-section" href="{% url 'search:course-admin' user_id %}">
+                <i class="section-content fas fa-book-reader" alt="Carian Mengikut Kursus"></i>
+                <span class="section-content title">Cari Mengikut Kursus</span>
+            </a>
+        </div>
+        <div class="container-section">
+            <a class="search-section" href="{% url 'search:jobs-admin' user_id %}">
+                <i class="section-content fas fa-briefcase" alt="Carian Mengikut Kerjaya"></i>
+                <span class="section-content title">Cari Mengikut Bidang Kerjaya</span>
+            </a>
+        </div>
+        <div class="container-section">
+            <a class="search-section" href="{% url 'search:all-admin' user_id %}">
+                <i class="section-content fas fa-search" alt="Cari Semua Rekod"></i>
+                <span class="section-content title">Cari Semua Rekod</span>
+            </a>
+        </div>
+        <div class="container-create">
+            <a class="search-section" href="{% url 'search:createData-admin' user_id %}">
+                <i class="section-content fas fa-folder-plus" alt="Cipta Rekod Baru"></i>
+                <span class="section-content title">Cipta Rekod Baru</span>
+            </a>
+        </div>
+    </div>
 {% endblock %}

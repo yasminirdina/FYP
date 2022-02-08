@@ -23,8 +23,17 @@ body {
   font-size: 16px;
   color: white;
   position: relative;
-  margin: 0;
-  background: rgba(255, 191, 132, 0.527);
+  margin:0;
+  /* bg color reference from studentresult.css */
+  background: rgba(253, 174, 110, 0.658) 20%;
+}
+
+a {
+  text-decoration: none;
+}
+
+hr {
+  width: 97%;
 }
 
 .div-navbar {
@@ -103,35 +112,114 @@ body {
     background-color: rgb(207, 61, 61);
 }
 
-p {
-    font-size: 16px;
+/* general search form n input*/
+.container-form-search {
+  border: 2px solid rgba(110, 21, 21, 0.473);
+  border-radius: 10px;
+  background-color: rgba(238, 152, 121, 0.781);
+  padding: 10px 40px 40px 40px;
+  margin: 30px 100px 40px 100px;
+  /* box-shadow: 3px 3px rgba(110, 21, 21, 0.473); */
 }
 
-.container-search-main{
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-gap: 50px 50px;
-  padding-left: 10px;
-  padding: 30px;
-}
-
-.container-search{
-  display: inline-grid;
+.search-header{
   text-align: center;
+  font-size: 30px;
+  color: black;
 }
 
-.a-search-main {
+label{
+  font-size: 20px;
+  color: black;
+}
+
+input[type=search], select, textarea{
+  width: 100%; /* Full width */
+  border: 1px;
+  padding: 12px; 
+  border-radius: 4px; 
+  box-sizing: border-box; 
+  margin-top: 7px;
+  margin-bottom: 20px; 
+  resize: vertical;
+}
+
+.search-result-container{
+  background-color: rgb(245, 245, 245);
+  border-radius: 10px;
+  box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
+  padding: 30px;
+  margin: 20px 40px 20px 40px;
+  color: black;
+}
+
+.search-result-container a{
+  color: black;
+}
+
+.search-result-container a:hover {
+  color:rgb(207, 61, 61);
+}
+
+.row1{
+  display: grid;
+  grid-template-columns: auto 20%;
+  grid-template-rows: auto auto;
+  margin-bottom: 25px;
+}
+
+.result-title{
+  grid-row-start: 1;
+  grid-row-end: 3;
+  font-size: 23px;
+  color: black;
+  /* border: solid 3px black;   */
+}
+
+.row2{
+  display: grid;
+  grid-template-columns: 16% auto 16% auto;
+  margin-bottom: 30px;
+}
+
+.search-details{
+  font-weight: bold;
+}
+
+.row3{
+  display: grid;
+  grid-template-rows: auto auto;
+}
+
+.accordion{
   font-family: 'Varela Round', sans-serif;
-  text-decoration: none;
-  color: rgb(255, 255, 255);
+  font-size: 15px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.accordion:hover{
+  background-color: rgba(0, 0, 0, 0.103);
+}
+
+.listActive{
+  background-color: rgba(0, 0, 0, 0.103);
+}
+
+.panel{
+  background-color: rgba(0, 0, 0, 0.103);
+  border-radius: 5px;
+}
+
+li{
+  list-style-type: none;
 }
 
 .btn{
   border: none;
-  background-color: rgb(250, 127, 56);
-  padding: 30px 30px;
-  font-size: 18px;
-  font-family: "DM Sans";
+  background-color: coral;
+  font-family: 'Varela Round', sans-serif;
   font-weight: bold;
   cursor: pointer;
   display: inline-block;
@@ -139,21 +227,18 @@ p {
 }
 
 .btn:hover{
-background: rgb(121, 85, 118);
+  background: rgb(121, 85, 118);
 }
 
 .btn-search {
-  background-color: coral;
+  background-color: rgb(253, 97, 40);
   color: white;
+  font-size: 15px;
   padding: 12px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   position: center;
-}
-
-.btn-search:hover {
-  background-color: rgb(255, 103, 47);
 }
 
 /* admin-btn */
@@ -167,10 +252,6 @@ background: rgb(121, 85, 118);
   position: center;
 }
 
-.btn-a-create {
-  color: white;
-}
-
 .btn-update{
   background-color: coral;
   padding: 10px;
@@ -178,10 +259,6 @@ background: rgb(121, 85, 118);
   border-radius: 10px;
   cursor: pointer;
   position: center;
-}
-
-.btn-a-update{
-  color:white;
 }
 
 .btn-delete{
@@ -200,32 +277,6 @@ background: rgb(121, 85, 118);
 .btn-delete-cancel{
   color: crimson;
   padding-right: 10px;
-}
-
-/* general search form n input*/
-.container-form-search {
-  border-radius: 10px;
-  background-color: rgba(238, 152, 121, 0.781);
-  padding: 20px 40px 20px 40px;
-  margin: 10px 200px 50px 200px;
-}
-
-input[type=search], select, textarea {
-  width: 100%; /* Full width */
-  padding: 12px; /* Some padding */ 
-  border: 1px; /* Gray border */
-  border-radius: 4px; /* Rounded borders */
-  box-sizing: border-box; /* Make sure that padding and width stays in place */
-  margin-top: 6px; /* Add a top margin */
-  margin-bottom: 16px; /* Bottom margin */
-  resize: vertical /* Allow the user to vertically resize the textarea (not horizontally) */
-}
-
-.search-result-container{
-  background-color: rgb(245, 245, 245);
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px 40px 20px 40px;
 }
 
 @media screen and (max-width: 1010px) {

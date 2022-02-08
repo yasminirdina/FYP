@@ -1,0 +1,31 @@
+{% extends "search/adminbase.html" %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise: Cipta Rekod Baru</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/createForm.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="newRecord-main-container">
+        <h1 class="newRecord-header">Cipta Rekod Baru</h1>
+        <h2 class="newRecord-section">Cipta Bahagian</h2>
+        <div class="info-tab">
+            <button class="btn createlinks"><a href="{% url 'search:createUniData-admin' user_id  %}">
+                <i class="section-content fas fa-university" alt="Cipta Rekod Universiti"></i>
+                <span>Universiti</span>
+            </a></button>
+            <button class="btn createlinks"><a href="{% url 'search:createCourseData-admin' user_id  %}">
+                <i class="section-content fas fa-book-reader" alt="Cipta Rekod Kursus"></i>
+                <span>Kursus</span>
+            </a></button>
+            <button class="btn createlinks"><a href="{% url 'search:createJobData-admin' user_id  %}">
+                <i class="section-content fas fa-briefcase" alt="Cipta Rekod Kerjaya"></i>
+                <span>Kerjaya</span>
+            </a></button>
+        </div>
+    </div>
+{% endblock %}

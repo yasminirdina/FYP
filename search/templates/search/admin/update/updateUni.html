@@ -1,0 +1,23 @@
+{% extends "search/adminbase.html" %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise: Kemaskini Rekod {{uni.uni}}</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/searchAdmin.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="updateRecord-main-container">
+    <h1 class="updateRecord-header">Kemaskini Rekod {{uni.uni}}</h1>
+    <div class="container-form-search">
+        <form actions="{% url 'search:updateUniData-admin' user_id uni.id %}" method="POST" >
+            {% csrf_token %}
+            {{uniForm.as_p}}
+            <input type="submit" class="btn btn-search" value="Kemaskini">
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -11,7 +11,7 @@
 
 {% block content %}
     <div class="container-form-search">
-        <h1 class="course-header">Carian Mengikut Kerjaya</h1>
+        <h1 class="search-header">Carian Mengikut Kerjaya</h1>
         <form method="GET" action="{% url 'search:jobs-admin' user_id %}">
             <!-- job search -->
             <label for="inputJob">Kerjaya</label><br>
@@ -32,16 +32,16 @@
 
     {% for job in allJobs %}
     <div class="search-result-container">
-        <div class="row1">
-            <h3 class="job-name"><a href="{% url 'search:job-AdminPage' user_id job.id %}">{{ job.job }}</a></h3>
-            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateJobData-admin' user_id job.id %}">Kemas Kini</a></p>
-            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteJobData-admin' user_id job.id %}">Padam</a></p>
+        <div class="rowAdmin">
+            <h3 class="result-title job-name"><a href="{% url 'search:job-AdminPage' user_id job.id %}">{{ job.job }}</a></h3>
+            <a title="Kemsakini" href="{% url 'search:updateJobData-admin' user_id job.id %}"><i class="btn-update fas fa-edit"></i></a>
+            <a title="Padam" href="{% url 'search:deleteJobData-admin' user_id job.id %}"><i class="btn-delete fas fa-trash"></i></a>
         </div>
         <div class="row2">
-            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
-            <p class="input"></p>
-            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
-            <p class="input"></p>
+            <p class="search-details job-skills">Kemahiran:</p>
+            <p class="input">{{ job.skills }}</p>
+            <p class="search-details course-langguage">Gaji Purata:</p>
+            <p class="input">{{ job.avgSalary }}</p>
         </div>
         <div class="row3">
             <button class="accordion search-detailsjob-courseOffer">Kursus Berkaitan</button>
@@ -51,8 +51,12 @@
                         {% for course in allCourse %}
                             {% if course.id == coursejob.course.id %}
                                 <ul>
-                                    <li class="li-courseOffer"><a class="li-p-courseOffer" href="">{{course.course}}</a ></li>
+                                    <li class="offerList">
+                                        <a class="li-p-courseOffer" href="{% url 'search:course-AdminPage' user_id course.id %}">{{course.course}}</a>
+                                        <a title="Padam" href="{% url 'search:deleteCourseData-admin' user_id course.id %}"><i class="btn-delete fas fa-trash"></i></a>
+                                    </li>
                                 </ul>
+                                <hr>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -77,7 +81,7 @@
         acc[i].addEventListener("click", function() {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
-            this.classList.toggle("active");
+            this.classList.toggle("listActive");
 
             /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;

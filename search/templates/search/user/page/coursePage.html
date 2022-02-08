@@ -14,7 +14,7 @@
     <div class="main-div">
         <h1 class="course-header">{{currentCourse.course}}</h1>
         <div class="count course-rating">
-            <p>Rating</p>
+            <p>{{currentCourse.rating}}</p>
         </div>
         <div class="count course-bookmark">
             <p>Bookmark</p>
@@ -22,13 +22,13 @@
         <div class="count views-count">
             <p>Jumlah bookmark</p>
         </div>
-        <!-- <div class="count bookmark-count">
-            <p>Kiraan kursus ditambah pada penanda halaman</p>
-        </div> -->
+
         <div class="info-container">
             <!-- Tab links -->
             <div class="info-tab">
                 <button class="tablinks" onclick="openTab(event, 'Overview')" id="defaultOpenInfo">Ringkasan</button>
+                <button class="tablinks" onclick="openTab(event, 'University')">Universiti</button>
+                <button class="tablinks" onclick="openTab(event, 'Job')">Kerjaya</button>
                 <button class="tablinks" onclick="openTab(event, 'Statistics')">Analisis</button>
             </div>
             
@@ -37,31 +37,42 @@
                 <div class="course-container about">
                     <h3 class="about-title">Pengenalan Kursus</h3>
                     <p class="about-desc">{{currentCourse.description}}</p>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio exercitationem, non saepe architecto autem at, consequuntur voluptates ea voluptate quaerat illo modi iusto nobis delectus vel aliquam, earum illum corrupti.</p>
                 </div>
                 <div class="course-container detail">
                     <h3 class="detail-title">Butiran Kursus</h3>
                     <p class="detail1">Peringkat pengajian:</p>
-                    <p class="input">test</p>
+                    <p class="input">{{currentCourse.studyLevel}}</p>
 
-                    <p class="detail2">Anggaran tempoh kursus:</p>
-                    <p class="input">test</p>
+                    <p class="detail2">Bahasa Utama Kursus:</p>
+                    <p class="input">{{currentCourse.langguage}}</p>
 
-                    <p class="detail3">Anggaran bayaran kursus:</p>
-                    <p class="input">test</p>
+                    <p class="detail3">Purata Tempoh Kursus:</p>
+                    <p class="input">{{currentCourse.avgDuration}}</p>
+
+                    <p class="detail4">Bayaran Purata Kursus:</p>
+                    <p class="input">{{currentCourse.avgFee}}</p>
+
+                    <p class="detail5">Keperluan Am Kemasukan:</p>
+                    <p class="input">{{currentCourse.requirement}}</p>
                 </div>
+            </div>
+            
+            <div id="University" class="tabcontent">
                 <div class="course-container uniList">
                     <h3 class="uniList-title">Pilihan Universiti</h3>
                     {% for currUni in uniCourseBridge %}
                         {% for u in uni %}
                             {% if u.id == currUni.university_id %}
                                 <div class="uniList-container">
-                                    <p><a class="uniOffer" href="">{{u.uni}}</a></p>
+                                    <p><a class="uniOffer" href="{{currUni.linkUni}}">{{u.uni}}</a></p>
                                 </div>
                             {% endif %}
                         {% endfor %}
                     {% endfor %} 
                 </div>
+            </div>
+
+            <div id="Job" class="tabcontent">
                 <div class="course-container jobList">
                     <h3 class="jobList-title">Kerjaya Berkaitan</h3>
                     {% for currJob in jobCourseBridge %}
@@ -75,7 +86,7 @@
                     {% endfor %} 
                 </div>
             </div>
-            
+
             <div id="Statistics" class="tabcontent">
                 <h3>Paris</h3>
                 <p>Paris is the capital of France.</p>

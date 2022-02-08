@@ -17,7 +17,7 @@
   
 /*On mouse-over*/
 .btn:hover, .nums.active:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
@@ -54,7 +54,7 @@
 }
 
 .write:hover, .clear-for-blogPostList:hover, .nums:hover, .next:hover, .prev:hover, .last:hover, .pg-first:hover, .draft:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -131,14 +131,16 @@
 }
 
 .div-side-navbar{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 10px;
     padding: 1vw;
     justify-content: center;
 }
 
 .div-facebook-2{
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 10px;
     padding: 1vw;
     display: none;
@@ -161,7 +163,7 @@
 }
 
 .form-post-filter, .form-post-filter-2{
-    background-color: antiquewhite;
+    /* background-color: antiquewhite; */
     position: relative;
     width: 100%;
     height: 100%;
@@ -270,7 +272,8 @@ input:focus::placeholder {color: transparent}
 
 .div-result-inner{
     /* background-color: white; */
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     position: relative;
     width: 100%;
     height: fit-content;

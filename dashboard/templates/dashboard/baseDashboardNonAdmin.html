@@ -74,7 +74,7 @@
                         Menu:
                     </h2>
 
-                    <div class="div-sidebar-menulist">
+                    <div class="div-sidebar-menulist full">
                         <!-- if got UNREAD notification for blog/chat/suggestion, put circle icon on notification and chat/suggestion (where applicable) -->
                         <p class="p-sidebar notification"><a class="p-a-sidebar" id ="notification" href="{% url dashboard user_type user_id %}">Notifikasi</a></p>
                         <p class="p-sidebar profile-settings"><a class="p-a-sidebar" href="{% url settings user_type user_id %}">Tetapan Akaun</a></p>
@@ -82,6 +82,29 @@
                         <p class="p-sidebar report"><a class="p-a-sidebar" href="{% url report user_type user_id %}">Laporan Visual</a></p>
                         <p class="p-sidebar chat"><a class="p-a-sidebar" href="{% url chat user_type user_id %}">Ruang Bual Kaunseling</a></p>
                         <p class="p-sidebar suggestion"><a class="p-a-sidebar" href="{% url suggestions user_type user_id %}">Cadangan Penambahbaikan</a></p>
+                    </div>
+
+                    <!-- minimized -->
+                    <div class="div-sidebar-menulist minimized">
+                        <!-- if got UNREAD notification for blog/chat/suggestion, put circle icon on notification and chat/suggestion (where applicable) -->
+                        <p class="p-sidebar notification"><a class="p-a-sidebar" id ="notification2" href="{% url dashboard user_type user_id %}">
+                            <i class="fas fa-bell"></i>
+                        </a></p>
+                        <p class="p-sidebar profile-settings"><a class="p-a-sidebar" href="{% url settings user_type user_id %}">
+                            <i class="fas fa-user-cog"></i>
+                        </a></p>
+                        <p class="p-sidebar bookmark"><a class="p-a-sidebar" href="{% url bookmark user_type user_id %}">
+                            <i class="fas fa-bookmark"></i>
+                        </a></p>
+                        <p class="p-sidebar report"><a class="p-a-sidebar" href="{% url report user_type user_id %}">
+                            <i class="fas fa-chart-bar"></i>
+                        </a></p>
+                        <p class="p-sidebar chat"><a class="p-a-sidebar" href="{% url chat user_type user_id %}">
+                            <i class="fas fa-comment-dots"></i>
+                        </a></p>
+                        <p class="p-sidebar suggestion"><a class="p-a-sidebar" href="{% url suggestions user_type user_id %}">
+                            <i class="fas fa-lightbulb"></i>
+                        </a></p>
                     </div>
                 </div>
 
@@ -101,7 +124,11 @@
                     <div class="div-parent-student-content">
                         <ol class="ol-parent-student">
                             {% for student in studentDetail %}
-                                <li>{{ student.name }}</li>
+                                {% if student.name != 'NA' %}
+                                    <li>{{ student.name }}</li>
+                                {% else %}
+                                    <li>{{ student.ID.username }}</li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </div>
@@ -192,6 +219,8 @@
                     if(unreadNotifCnt > 0){
                         $('#notification').empty();
                         $('#notification').append('<i class="fas fa-circle" id="circle-notif"></i> Notifikasi');
+                        $('#notification2').empty();
+                        $('#notification2').append('<i class="fas fa-bell"></i> ('+unreadNotifCnt + ')');
                     }
                     else{
                         $('#circle-notif').remove();

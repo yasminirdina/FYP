@@ -74,7 +74,10 @@ class Parent(models.Model):
     imageURL = models.URLField(max_length=200, default="NA")
 
     def __str__(self):
-        return self.name
+        if self.name == 'Tidak Dikemaskini':
+            return "Tidak dikemaskini (Nama pengguna: " + self.ID.username + ")"
+        else:
+            return self.name
 
 class ClassList(models.Model):
     #default id

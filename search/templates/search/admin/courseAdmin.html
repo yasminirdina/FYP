@@ -11,14 +11,14 @@
 
 {% block content %}
     <div class="container-form-search">
-        <h1 class="course-header">Carian Mengikut Kursus</h1>
+        <h1 class="search-header">Carian Mengikut Kursus</h1>
         <form method="GET" action="{% url 'search:course-admin' user_id %}">               
             <!-- course search -->
-            <label for="inputCourse">Kursus</label>
+            <label for="inputCourse">Kursus :</label>
             <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
 
             <!-- uni search -->
-            <label for="inputUni">Universiti</label>
+            <label for="inputUni">Universiti :</label>
             <input class="form-uni" type="search" name="uni_contains" placeholder="Nama Universiti" />
                     
             <button type="submit" class="btn btn-search">Cari</button>
@@ -27,10 +27,10 @@
 
     {% for course in allCourse %}
     <div class="search-result-container">
-        <div class="row1">
-            <h3 class="course-name"><a href="{% url 'search:course-AdminPage' user_id course.id %}">{{ course.course }}</a></h3>
-            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateCourseData-admin' user_id course.id %}">Kemas Kini</a></p>
-            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteCourseData-admin' user_id course.id %}">Padam</a></p>
+        <div class="rowAdmin">
+            <h3 class="result-title course-name"><a href="{% url 'search:course-AdminPage' user_id course.id %}">{{ course.course }}</a></h3>
+            <a title="Kemsakini" href="{% url 'search:updateCourseData-admin' user_id course.id %}"><i class="btn-update fas fa-edit"></i></a>
+            <a title="Padam" href="{% url 'search:deleteCourseData-admin' user_id course.id %}"><i class="btn-delete fas fa-trash"></i></a>
         </div>
         <div class="row2">
             <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
@@ -48,9 +48,12 @@
                         {% for uni in allUni %}
                             {% if uni.id == courseuni.university.id %}
                                 <ul>
-                                    <li class="li-uniOffer"><a class="li-p-uniOffer" href="">{{uni.uni}}</a ></li>
-                                    <!-- <li class="li-data">Kerjaya : {{ jobs.job }}</li> -->
+                                    <li class="offerList">
+                                        <a class="li-p-uniOffer" href="{% url 'search:uni-AdminPage' user_id uni.id %}">{{uni.uni}}</a >
+                                        <a title="Padam"  href="{% url 'search:deleteUniData-admin' user_id uni.id %}"><i class="btn-delete fas fa-trash"></i></a>
+                                    </li>
                                 </ul>
+                                <hr>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -70,7 +73,7 @@
         acc[i].addEventListener("click", function() {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
-            this.classList.toggle("active");
+            this.classList.toggle("listActive");
 
             /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;

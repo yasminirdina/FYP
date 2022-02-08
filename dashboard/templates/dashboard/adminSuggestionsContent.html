@@ -1,4 +1,4 @@
-<table>
+<table class="table-1">
     <thead>
         <tr>
             <th>No.</th>
@@ -36,7 +36,7 @@
                 {% endif %}
             </td>
             <td>
-                <select name="status" id="{{ suggestion.id }}" class="select-status">
+                <select name="status" id="{{ suggestion.id }}" class="select-status-1">
                     {% for status in statusList %}
                         {% if suggestion.status == status %}
                             {% if status == 'Dihantar' %}
@@ -55,6 +55,91 @@
                 </select>
             </td>
         </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<table class="table-2">
+    <thead>
+        <tr>
+            <th>Cadangan</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for suggestion in allSuggestions %}
+            <tr>
+                <p class="p-suggestionTitle" id="title-{{ suggestion.id }}" style="display: none;">{{ suggestion.title }}</p>
+                <p class="p-suggestionContent" id="content-{{ suggestion.id }}" style="display: none;">{{ suggestion.subjectContent }}</p>
+
+                <td>
+                    <a class="a-for-adminSuggestions" id="a-{{ suggestion.id }}">
+                        {{ suggestion.title }}
+                    </a>
+                    <ul class="ul-details">
+                        <li>
+                            <span>
+                                <span style="font-weight: bold;">
+                                    Kategori: 
+                                </span>
+                                {{ suggestion.typeID.name }}
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <span style="font-weight: bold;">
+                                    Tarikh dikemukakan: 
+                                </span>
+                                {{ suggestion.dateIssued|date:"d/m/Y" }}, {{ suggestion.timeIssued|date:"h:i A" }}
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <span style="font-weight: bold;">
+                                    Pengemuka: 
+                                </span>
+                                <span>
+                                    {{ suggestion.creatorID.username }}
+
+                                    {% if 'S' in suggestion.creatorID.ID %}
+                                        <button class="btn student">Pelajar</button>
+                                    {% elif 'P' in suggestion.creatorID.ID %}
+                                        <button class="btn parents">Penjaga</button>
+                                    {% elif 'T' in suggestion.creatorID.ID %}
+                                        <button class="btn teacher">Guru</button>
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <span style="font-weight: bold;">
+                                    Tarikh dikemaskini: 
+                                </span>
+                                {{ suggestion.dateIssued|date:"d/m/Y" }}, {{ suggestion.timeIssued|date:"h:i A" }}
+                            </span>
+                        </li>
+                    </ul>
+                    <label for="status-2" style="font-weight: bold;">Status:</label>
+                    <select name="status-2" id="{{ suggestion.id }}-2" class="select-status-2">
+                        {% for status in statusList %}
+                            {% if suggestion.status == status %}
+                                {% if status == 'Dihantar' %}
+                                    <option value="{{ status }}" selected="selected">Belum Dibaca</option>
+                                {% else %}
+                                    <option value="{{ status }}" selected="selected">{{ status }}</option>
+                                {% endif %}
+                            {% else %}
+                                {% if status == 'Dihantar' %}
+                                    <option value="{{ status }}">Belum Dibaca</option>
+                                {% else %}
+                                    <option value="{{ status }}">{{ status }}</option>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
         {% endfor %}
     </tbody>
 </table>

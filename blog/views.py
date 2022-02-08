@@ -267,6 +267,7 @@ def blogPostList(request, user_type, user_id):
                     'cat_selected': cat_selected,
                     'yearSelectedList': yearSelectedList,
                     'postIDswithImageList': postIDswithImageList,
+                    'blogPostImages': blogPostImages,
                     'allBlogPosts': allBlogPosts,
                     'allBlogPostsCount': allBlogPosts.count()
                 }

@@ -22,6 +22,7 @@
 }
   
 body {
+    background: rgba(253, 174, 110, 0.658) 20%;
     font-family: 'Varela Round', sans-serif;
     font-size: 16px;
     line-height: 30px;
@@ -51,11 +52,6 @@ h3 {
     width: 100%;
     height: auto;
     font-family: 'Varela Round', sans-serif;
-}
-  
-.div-navbar.admin{
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
 }
 
 .div-navbar-left{

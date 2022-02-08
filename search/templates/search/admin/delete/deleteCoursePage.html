@@ -1,0 +1,37 @@
+{% extends "search/adminbase.html" %}
+
+{% block title %}
+    <title>FutureCruise: Padam Kursus {{}}</title>
+{% endblock %}
+
+{% block content %}
+    <center>
+        <div class="container-search-main">
+            <div class="container-search">
+                <button class="btn">
+                    <span><a class="a-search-main" href="{% url 'search:uni-admin' user_id %}">Cari Mengikut Universiti</a></span>
+                </button>
+            </div>
+            <div class="container-search">
+                <button class="btn">
+                    <span><a class="a-search-main" href="{% url 'search:course-admin' user_id %}">Cari Mengikut Kursus</a></span>
+                </button>
+            </div>
+            <div class="container-search">
+                <button class="btn">
+                    <span><a class="a-search-main" href="{% url 'search:jobs-admin' user_id %}">Cari Mengikut Bidang Kerjaya</a></span>
+                </button>
+            </div>
+            <div class="container-search">
+                <button class="btn">
+                    <span><a class="a-search-main" href="{% url 'search:all-admin' user_id %}">Cari Semua Rekod</a></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="container-create">
+            <button type="submit" class="btn">
+                <a class="btn btn-a-create" href="{% url 'search:createData-admin' user_id %}">Cipta Rekod Baru</a>
+            </button>
+        </div>
+{% endblock %}

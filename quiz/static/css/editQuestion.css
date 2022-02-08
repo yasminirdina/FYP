@@ -29,7 +29,7 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
@@ -41,7 +41,7 @@
 }
 
 .cancel-for-editQuestion:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -53,7 +53,9 @@
 }
 
 /* hyperlink path and button 1 */
-.a-nav-editQuestion {color: rgb(250, 127, 56);}
+.a-nav-editQuestion {color: black;}
+
+.a-nav-editQuestion:hover {color:rgb(207, 61, 61);}
 
 .a-for-editQuestion{
     text-decoration: none;
@@ -64,7 +66,7 @@
 .difficulty, .isCorrect, .value {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px solid lightgray;
     padding: 5px 10px;
     width: fit-content;
@@ -74,7 +76,7 @@
 .questionText, .answerText, .hintText {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    border-radius: 10px;
+    border-radius: 5px;
     border: 1px solid lightgray;
     padding: 5px 10px;
     width: 100%;
@@ -136,7 +138,7 @@
 #id_questionImageName, #id_hintImageName0, #id_hintImageName1, #id_hintImageName2 {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    border-radius: 25px;
+    border-radius: 5px;
     border: 1px solid lightgray;
     padding: 5px 10px;
     margin: 0 auto;
@@ -182,15 +184,17 @@
     font-size: 16px;
     text-align: left;
     padding: 0 1vw;
-    border: 2px solid lightgray;
-    background-color: #eee;
+    border: 2px solid transparent;
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 5px;
     width: 90%;
     box-sizing: border-box;
 }
 
 .div-form-header {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(238, 152, 121, 0.781);
+    box-shadow: 5px 5px rgb(110 21 21 / 47%);
     border-radius: 5px;
     width: 90%;
     margin: 1vw auto;
@@ -235,7 +239,6 @@
 
 /* table */
 table {
-    border: 1px solid whitesmoke;
     border-collapse: separate !important;
     border-spacing: 0;
     font-size: 16px;

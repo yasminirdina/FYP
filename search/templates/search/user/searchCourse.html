@@ -6,19 +6,19 @@
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'css/user/searchCourse.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user/searchUser.css' %}">
 {% endblock %}
 
 {% block content %}
     <div class="container-form-search">
-        <h1 class="course-header">Carian Mengikut Kursus</h1>
+        <h1 class="search-header">Carian Mengikut Kursus</h1>
         <form method="GET" action="{% url 'search:course-nonadmin' user_type user_id %}">               
             <!-- course search -->
-            <label for="inputCourse">Kursus</label>
+            <label for="inputCourse">Kursus :</label>
             <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
 
             <!-- uni search -->
-            <label for="inputUni">Universiti</label>
+            <label for="inputUni">Universiti :</label>
             <input class="form-uni" type="search" name="uni_contains" placeholder="Nama Universiti" />
 
             <!-- form group -->        
@@ -38,9 +38,9 @@
     {% for course in allCourse %}
     <div class="search-result-container">
         <div class="row1">
-            <h3 class="course-name"><a href="{% url 'search:course-page' user_type user_id course.id %}">{{ course.course }}</a></h3>
+            <h3 class="result-title course-name"><a href="{% url 'search:course-page' user_type user_id course.id %}">{{ course.course }}</a></h3>
             <p class="bookmark">Bookmark</p>
-            <p class="rating">Rating</p>
+            <p class="rating">{{ course.rating }}</p>
         </div>
         <div class="row2">
             <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
@@ -50,7 +50,7 @@
         </div>
         <div class="row3">
             <!-- <button><p class="search-detailscourse-uniOffer" onclick="openUniList()">Pilihan Universiti</p></button> -->
-            <button class="accordion search-detailscourse-uniOffer">Pilihan Universiti</button>
+            <button class="accordion search-detailsCourse-uniOffer">Pilihan Universiti</button>
             <div class="panel" style="display: none;">
             <!-- <div class="uni-list" style="display: none;"> -->
                 {% for courseuni in allBridge %}
@@ -58,9 +58,10 @@
                         {% for uni in allUni %}
                             {% if uni.id == courseuni.university.id %}
                                 <ul>
-                                    <li class="li-uniOffer"><a class="li-p-uniOffer" href="{% url 'search:uni-page' user_type user_id uni.id %}">{{uni.uni}}</a ></li>
+                                    <li class="offerList"><a class="li-p-uniOffer" href="{% url 'search:uni-page' user_type user_id uni.id %}">{{uni.uni}}</a ></li>
                                     <!-- <li class="li-data">Kerjaya : {{ jobs.job }}</li> -->
                                 </ul>
+                                <hr>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -80,7 +81,7 @@
         acc[i].addEventListener("click", function() {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
-            this.classList.toggle("active");
+            this.classList.toggle("listActive");
 
             /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;

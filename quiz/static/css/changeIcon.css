@@ -17,7 +17,7 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
+    background-color: rgb(245, 245, 245);
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
@@ -29,7 +29,7 @@
 }
 
 .cancel-for-changeIcon:hover{
-    background-color: #eee;
+    background-color: rgb(245, 245, 245);
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -40,7 +40,9 @@
     color: inherit;
 }
 
-.a-main-for-changeIcon, .a-back-for-changeIcon {color: rgb(250, 127, 56);}
+.a-main-for-changeIcon, .a-back-for-changeIcon {color: black;}
+
+.a-main-for-changeIcon:hover, .a-back-for-changeIcon:hover {color: rgb(207, 61, 61);}
 
 /* form */
 .ChangeIconForm{

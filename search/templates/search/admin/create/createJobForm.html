@@ -1,0 +1,62 @@
+{% extends "search/adminbase.html" %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise: Cipta Rekod Kerjaya</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/createForm.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/createFormPage.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="newRecord-main-container">
+    <h1 class="newRecord-header">Cipta Rekod Kerjaya</h1>
+    <div class="back-btn-container">
+        <button class="btn btn-back"><a class="btn-a-back" href="{% url 'search:createData-admin' user_id  %}">Kembali</a></button>
+    </div>
+
+    {% if submitted %}
+        <p class="submit-success">Rekod Kerjaya Berjaya Dicipta!</p>
+    {% else %}
+        <div class="form-create">
+            <form actions="{% url 'search:createJobData-admin' user_id  %}" method="POST" >
+                {% csrf_token %}
+                {{formJob.as_p}}
+                {{formJobCourse.as_p}}
+                <input type="submit" class="btn btn-search" value="Cipta">
+            </form>
+        </div>
+    {% endif %}
+</div>    
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+
+    // document.getElementById("defaultOpenInfo").click();
+
+    function openTab(evt, infoTab) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+    
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        }
+    
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+    
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(infoTab).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+
+</script>
+{% endblock %}

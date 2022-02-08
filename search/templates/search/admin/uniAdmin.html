@@ -11,14 +11,14 @@
 
 {% block content %}
     <div class="container-form-search">
-        <h1 class="university-header">Carian Mengikut Universiti</h1>
+        <h1 class="search-header">Carian Mengikut Universiti</h1>
         <form method="GET" action="{% url 'search:uni-admin' user_id %}">               
             <!-- course search -->
-            <label for="inputCourse">Universiti</label>
+            <label for="inputCourse">Universiti :</label>
             <input class="form-uni" type="search" name="uni_contains" placeholder="Nama Universiti" />
 
             <!-- uni search -->
-            <label for="inputUni">Kursus</label>
+            <label for="inputUni">Kursus :</label>
             <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
 
             <!-- form group -->        
@@ -37,20 +37,20 @@
 
     {% for uni in allUni %}
     <div class="search-result-container">
-        <div class="row1">
-            <h3 class="uni-name"><a href="{% url 'search:uni-AdminPage' user_id uni.id %}">{{ uni.uni }}</a></h3>
-            <p class="btn-update"><a class="btn-a-update" href="{% url 'search:updateUniData-admin' user_id uni.id %}">Kemas Kini</a></p>
-            <p class="btn-delete"><a class="btn-a-delete" href="{% url 'search:deleteUniData-admin' user_id uni.id %}">Padam</a></p>
+        <div class="rowAdmin">
+            <h3 class="result-title uni-name"><a href="{% url 'search:uni-AdminPage' user_id uni.id %}">{{ uni.uni }}</a></h3>
+            <a title="Kemsakini" href="{% url 'search:updateUniData-admin' user_id uni.id %}"><i class="btn-update fas fa-edit"></i></a>
+            <a title="Padam" href="{% url 'search:deleteUniData-admin' user_id uni.id %}"><i class="btn-delete fas fa-trash"></i></a>
         </div>
         <div class="row2">
-            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
-            <!-- <p class="input">{{ course.studyLevel }}</p> -->
-            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
-            <!-- <p class="input">{{ course.langguage }}</p> -->
+            <p class="search-details uni-location">Lokasi:</p>
+            <p class="input">{{ uni.location }}</p>
+            <p class="search-details uni-typee">Jenis Institusi:</p>
+            <p class="input">{{ uni.uniType }}</p>
         </div>
         <div class="row3">
             <!-- <button><p class="search-detailscourse-uniOffer" onclick="openUniList()">Pilihan Universiti</p></button> -->
-            <button class="accordion search-detailsUni-courseOffer">Kursus yand ditawarkan</button>
+            <button class="accordion search-detailsUni-courseOffer">Kursus yang ditawarkan</button>
             <div class="panel" style="display: none;">
             <!-- <div class="uni-list" style="display: none;"> -->
                 {% for courseuni in allBridge %}
@@ -58,9 +58,12 @@
                         {% for course in allCourse %}
                             {% if course.id == courseuni.course_id %}
                                 <ul>
-                                    <li class="li-uniOffer"><a class="li-p-uniOffer" href="">{{course.course}}</a ></li>
-                                    <!-- <li class="li-data">Kerjaya : {{ jobs.job }}</li> -->
+                                    <li class="offerList">
+                                        <a class="li-p-courseOffer" href="{% url 'search:course-AdminPage' user_id course.id %}">{{course.course}}</a>
+                                        <a title="Padam" href="{% url 'search:deleteCourseData-admin' user_id course.id %}"><i class="btn-delete fas fa-trash"></i></a>
+                                    </li>
                                 </ul>
+                                <hr>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -80,7 +83,7 @@
         acc[i].addEventListener("click", function() {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
-            this.classList.toggle("active");
+            this.classList.toggle("listActive");
 
             /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;

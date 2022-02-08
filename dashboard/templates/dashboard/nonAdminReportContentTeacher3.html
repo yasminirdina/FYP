@@ -6,28 +6,28 @@
     <form type="get" action="." class="form-parent-eng">
         Pilih tingkatan:
         <select name="tingkatan" id="student-form-parent">
-            {% if filtered_form_parent.name != 'NA' %}
-                <option value="1">Semua</option>
+            {% if filtered_form_parent %}
+                <option value="0" selected="selected">Semua</option>
                 {% for form in allForms %}
-                    {% if form.id == filtered_form_parent.id %}
+                    {% if filtered_form_parent.id == form.id %}
                         {% if form.name == 'NA' %}
-                            <option value="{{ form.id }}" selected="selected" disabled>Tidak dikemaskini</option>
+                            <option value="{{ form.id }}" selected="selected">Tidak dikemaskini</option>
                         {% else %}
                             <option value="{{ form.id }}" selected="selected">{{ form.name }}</option>
-                        {% endif %}                    
+                        {% endif %}
                     {% else %}
                         {% if form.name == 'NA' %}
-                            <option value="{{ form.id }}" disabled>Tidak dikemaskini</option>
+                            <option value="{{ form.id }}">Tidak dikemaskini</option>
                         {% else %}
                             <option value="{{ form.id }}">{{ form.name }}</option>
                         {% endif %}
                     {% endif %}
                 {% endfor %}
             {% else %}
-                <option value="1" selected="selected">Semua</option>
+                <option value="0" selected="selected">Semua</option>
                 {% for form in allForms %}
                     {% if form.name == 'NA' %}
-                        <option value="{{ form.id }}" disabled>Tidak dikemaskini</option>
+                        <option value="{{ form.id }}">Tidak dikemaskini</option>
                     {% else %}
                         <option value="{{ form.id }}">{{ form.name }}</option>
                     {% endif %}
@@ -41,9 +41,17 @@
                 <option value="1">Semua</option>
                 {% for student in allStudents %}
                     {% if student.ID.ID == filtered_student_record.ID.ID %}
-                        <option value="{{ student.ID.ID }}" selected="selected">{{ student.name }}</option>
+                        {% if student.name != 'NA' %}
+                            <option value="{{ student.ID.ID }}" selected="selected">{{ student.name }}</option>
+                        {% else %}
+                            <option value="{{ student.ID.ID }}" selected="selected">{{ student.ID.username }}</option>
+                        {% endif %}
                     {% else %}
-                        <option value="{{ student.ID.ID }}">{{ student.name }}</option>
+                        {% if student.name != 'NA' %}
+                            <option value="{{ student.ID.ID }}">{{ student.name }}</option>
+                        {% else %}
+                            <option value="{{ student.ID.ID }}">{{ student.ID.username }}</option>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% else %}
@@ -51,9 +59,17 @@
                     <option value="1" selected="selected">Semua</option>
                     {% for student in allStudents %}
                         {% if has_filtered_form == False %}
-                            <option value="{{ student.ID.ID }}" disabled>{{ student.name }}</option>
+                            {% if student.name != 'NA' %}
+                                <option value="{{ student.ID.ID }}" disabled>{{ student.name }}</option>
+                            {% else %}
+                                <option value="{{ student.ID.ID }}" disabled>{{ student.ID.username }}</option>
+                            {% endif %}
                         {% else %}
-                            <option value="{{ student.ID.ID }}">{{ student.name }}</option>
+                            {% if student.name != 'NA' %}
+                                <option value="{{ student.ID.ID }}">{{ student.name }}</option>
+                            {% else %}
+                                <option value="{{ student.ID.ID }}">{{ student.ID.username }}</option>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                 {% else %}
@@ -71,10 +87,12 @@
                 Nama penjaga: 
             </span>
             <span class="span-parent-no-bold">
-                {% if filtered_student_record.parentID.name != 'NA' %}
-                    {{ filtered_student_record.parentID.name }}
-                {% else %}
+                {% if filtered_student_record.parentID.name == 'Tidak Dikemaskini' %}
                     <span style="color: rgb(207, 61, 61); font-style: italic;">Tidak dikemaskini</span>
+                {% elif filtered_student_record.parentID.name == 'Tidak didaftar'  %}
+                    <span style="color: rgb(207, 61, 61); font-style: italic;">Maklumat penjaga pelajar ini tidak didaftar di dalam sistem</span>
+                {% else %}
+                    {{ filtered_student_record.parentID.name }}
                 {% endif %}
             </span>
         </div>
@@ -101,13 +119,21 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if student.parentID.name != 'NA' %}
-                                    {{ student.parentID.name }}
-                                {% else %}
+                                {% if student.parentID.name == 'Tidak Dikemaskini' %}
                                     <span style="color: rgb(207, 61, 61); font-style: italic;">Tidak dikemaskini</span>
+                                {% elif student.parentID.name == 'Tidak didaftar' %}
+                                    <span style="color: rgb(207, 61, 61); font-style: italic;">Tidak didaftar</span>
+                                {% else %}
+                                    {{ student.parentID.name }}
                                 {% endif %}
                             </td>
-                            <td>{{ student.name }}</td>
+                            <td>
+                                {% if student.name != 'NA' %}
+                                    {{ student.name }}
+                                {% else %}
+                                    {{ student.ID.username }}
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -115,6 +141,8 @@
         </div>
     {% endif %}
 {% endif %}
+
+<span style="font-style: italic;">Statistik di bawah hanya memaparkan data untuk penjaga berdaftar dan yang namanya tidak dikemaskini sahaja.</span>
 
 {% if allStudentsCnt > 0 %}
     <div class="div-grid-eng">

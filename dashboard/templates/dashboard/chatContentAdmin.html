@@ -49,7 +49,7 @@
                                                 {% for parent in allParents %}
                                                     {% if parent.ID.ID == chat.recipientID.ID %}
                                                         <span class="span-username-thumb">
-                                                            {% if parent.name != 'NA' %}
+                                                            {% if parent.name != 'Tidak Dikemaskini' %}
                                                                 {{ parent.name }}
                                                             {% else %}
                                                                 {{ chat.recipientID.username }}
@@ -111,7 +111,7 @@
                                                 {% for parent in allParents %}
                                                     {% if parent.ID.ID == chat.creatorID.ID %}
                                                         <span class="span-username-thumb">
-                                                            {% if parent.name != 'NA' %}
+                                                            {% if parent.name != 'Tidak Dikemaskini' %}
                                                                 {{ parent.name }}
                                                             {% else %}
                                                                 {{ chat.creatorID.username }}
@@ -173,7 +173,7 @@
                                                 {% for parent in allParents %}
                                                     {% if parent.ID.ID == chat.recipientID.ID %}
                                                         <span class="span-username-thumb">
-                                                            {% if parent.name != 'NA' %}
+                                                            {% if parent.name != 'Tidak Dikemaskini' %}
                                                                 {{ parent.name }}
                                                             {% else %}
                                                                 {{ chat.recipientID.username }}
@@ -235,7 +235,7 @@
                                                 {% for parent in allParents %}
                                                     {% if parent.ID.ID == chat.creatorID.ID %}
                                                         <span class="span-username-thumb">
-                                                            {% if parent.name != 'NA' %}
+                                                            {% if parent.name != 'Tidak Dikemaskini' %}
                                                                 {{ parent.name }}
                                                             {% else %}
                                                                 {{ chat.creatorID.username }}
@@ -298,7 +298,7 @@
                                             {% for parent in allParents %}
                                                 {% if parent.ID.ID == chat.recipientID.ID %}
                                                     <span class="span-username-thumb">
-                                                        {% if parent.name != 'NA' %}
+                                                        {% if parent.name != 'Tidak Dikemaskini' %}
                                                             {{ parent.name }}
                                                         {% else %}
                                                             {{ chat.recipientID.username }}
@@ -360,7 +360,7 @@
                                             {% for parent in allParents %}
                                                 {% if parent.ID.ID == chat.creatorID.ID %}
                                                     <span class="span-username-thumb">
-                                                        {% if parent.name != 'NA' %}
+                                                        {% if parent.name != 'Tidak Dikemaskini' %}
                                                             {{ parent.name }}
                                                         {% else %}
                                                             {{ chat.creatorID.username }}
@@ -428,7 +428,7 @@
                                     {% for parent in allParents %}
                                         {% if parent.ID.ID == user.ID %}
                                             <span class="span-username-thumb">
-                                                {% if parent.name != 'NA' %}
+                                                {% if parent.name != 'Tidak Dikemaskini' %}
                                                     {{ parent.name }}
                                                 {% else %}
                                                     {{ user.username }}
@@ -480,7 +480,7 @@
                                     {% for parent in allParents %}
                                         {% if parent.ID.ID == user.ID %}
                                             <span class="span-username-thumb">
-                                                {% if parent.name != 'NA' %}
+                                                {% if parent.name != 'Tidak Dikemaskini' %}
                                                     {{ parent.name }}
                                                 {% else %}
                                                     {{ user.username }}
@@ -533,7 +533,7 @@
                                 {% for parent in allParents %}
                                     {% if parent.ID.ID == user.ID %}
                                         <span class="span-username-thumb">
-                                            {% if parent.name != 'NA' %}
+                                            {% if parent.name != 'Tidak Dikemaskini' %}
                                                 {{ parent.name }}
                                             {% else %}
                                                 {{ user.username }}
@@ -589,7 +589,7 @@
                     {% for parent in allParents %}
                         {% if parent.ID.ID == chosenRecipient.ID %}
                             <span class="span-username-thumb title">
-                                {% if parent.name != 'NA' %}
+                                {% if parent.name != 'Tidak Dikemaskini' %}
                                     {{ parent.name }}
                                 {% else %}
                                     {{ chosenRecipient.username }}
@@ -624,6 +624,11 @@
                                 {{ message.bodyText |linebreaksbr }}
                                 <span class="span-datetime">
                                     {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                    {% if message.isRead == False %}
+                                        <i class="fas fa-check"></i>
+                                    {% else %}
+                                        <i class="fas fa-check-double"></i>
+                                    {% endif %}
                                 </span>
                             </div>
                         {% else %}
@@ -640,6 +645,11 @@
                                 {{ message.bodyText |linebreaksbr }}
                                 <span class="span-datetime">
                                     {{ message.dateTimeSent|date:"d/m/Y, h:i A" }}
+                                    {% if message.isRead == False %}
+                                        <i class="fas fa-check"></i>
+                                    {% else %}
+                                        <i class="fas fa-check-double"></i>
+                                    {% endif %}
                                 </span>
                             </div>
                         {% else %}

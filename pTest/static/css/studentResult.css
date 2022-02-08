@@ -41,11 +41,12 @@ body {
 
 .main-header{
     font-size: 2.5rem;
-    margin-bottom: 50px;
+    margin-top: 25px;
+    margin-bottom: 25px;
 }
 
 .main-result-container{
-    background-color: rgba(255, 255, 255, 0.295);
+    /* background-color: rgba(255, 255, 255, 0.295); */
     display: grid;
     grid-template-columns: 50% auto;
     grid-column-gap: 2%;
@@ -84,54 +85,42 @@ body {
     grid-row-gap: 3%;
 }
 
-.col{
+.hRow{
     border-radius: 10px;
     background-color: rgba(226, 121, 195, 0.363);
+    padding-left: 20px;
 }
 
-#allCode-container{
-    border-radius: 10px;
-    background-color: rgba(226, 121, 195, 0.363);
-    margin: 40px;
-    padding: 10px 30px 30px 30px;
-}
-
-.allCode-name{
-    font-size: 1.5rem;
-    text-align: center;
-}
-
-.allCode-chart{
-    /* background-color: rgb(168, 56, 56); */
-    margin: auto;
-    padding: 30px;
-    height:400px
+.row-title{
+    font-size: 20px;
 }
 
 #career-main-container{
     border-radius: 10px;
     background-color: rgba(226, 121, 195, 0.363);
     margin: 40px;
-    padding: 10px 30px 30px 30px;
+    padding: 30px;
 }
 
 .career-title{
-    font-size: 1.5rem;
+    font-size: 25px;
     text-align: center;
+    margin: 0;
+    margin-bottom: 30px;
 }
 
 /* Style the tab */
 .hollcode-main-tab {
     overflow: hidden;
-    border: 1px solid rgb(250, 127, 56);
+    border: 1px solid rgb(236, 123, 78);
     border-radius: 10px 10px 0 0;
-    background-color: rgb(250, 127, 56);
+    background-color: rgb(236, 123, 78);
 }
 
 .hollcode-sub-tab {
     overflow: hidden;
     /* border: 1px solid rgb(207, 119, 119); */
-    background-color: rgb(250, 188, 54);
+    background-color: rgba(250, 172, 54, 0.733);
 }
 
 /* Style the buttons that are used to open the tab content */
@@ -157,7 +146,7 @@ body {
 
 /* Change background color of buttons on hover */
 .hollcode-main-tab button:hover{
-    background-color: rgb(250, 151, 37);
+    background-color: rgba(250, 188, 54, 0.479);
     /* border-radius: 10px; */
 }
 
@@ -167,18 +156,18 @@ body {
 
 /* Create an active/current tablink class */
 .hollcode-main-tab button.active{
-    background-color: rgb(250, 188, 54);
+    background-color: rgba(250, 188, 54, 0.479);
     border-radius: 10px 10px 0 0;
 }
 
 .hollcode-sub-tab button.active {
-    background-color: rgba(250, 127, 56, 0.692);
+    background-color: rgba(236, 123, 78, 0.774);
     border-radius: 10px 10px 0 0;
 }
 
 /* Style the tab content */
 .career-content{
-    background: rgba(250, 127, 56, 0.692);
+    background: rgba(236, 123, 78, 0.829);
 }
 
 .tabcontent {
@@ -192,5 +181,64 @@ table, th, td{
     font-size: 1rem;
     /* border-collapse: collapse; */
     /* font-weight: bold; */
+    padding: 10px;
+}
+
+#allCode-container{
+    border-radius: 10px;
+    background-color: rgba(226, 121, 195, 0.363);
+    margin: 40px;
+    padding: 10px 30px 30px 30px;
+}
+
+.allCode-name{
+    font-size: 25px;
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.allCode-chart{
+    padding-top: 40px;
+    padding-bottom: 40px;
+    height:350px;
+}
+
+.allCode-desc-container{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-rows: auto auto;
+    grid-row-gap: 2%;
+    grid-column-gap: 1%;
+    margin: 5px;
+    /* padding: 10px 30px 30px 30px; */
+}
+
+.allCell{
+    border-radius: 5px;
+    background-color: rgba(255, 87, 87, 0.384);
+    text-align: center;
+    padding: 5px 30px 20px 30px;
+}
+
+.cell-title{
+    font-size: 20px;
+    margin-bottom: 5%;
+}
+
+.cell-desc{
+    white-space: pre-line;
+    text-align: left;
+    margin-top: 8%;
+}
+
+.div-retake-btn{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.retake-btn{
+    font-size: 20px;
     padding: 10px;
 }

@@ -12,7 +12,7 @@
 {% block content %}
     <div class="div-section-header">
         <h1>
-            Senarai Cadangan Penambahbaikan
+            Cadangan Penambahbaikan
         </h1>
     </div>
 
@@ -55,7 +55,7 @@
             })
         });
         
-        $('.div-table').on('change', '.select-status', function(){
+        $('.div-table').on('change', '.select-status-1', function(){
             // alert('hi select-status click/change'); // Test
 
             var suggestionID = $(this).attr("id");
@@ -83,6 +83,38 @@
             })
         });
 
+        // mobile change status
+        $('.div-table').on('change', '.select-status-2', function(){
+            alert('hi select-status click/change'); // Test
+
+            var suggestionID = $(this).attr("id");
+            var newStatus = $('#'+suggestionID).val();
+
+            alert('suggestionID: ' + suggestionID); // Test
+            alert('newStatus: ' + newStatus); // Test
+
+            suggestionID = suggestionID.replace("-2", "");
+            alert('suggestionID: ' + suggestionID); // Test
+
+            $.ajax({
+                headers: { "X-CSRFToken": '{{csrf_token}}' }, 
+                url: "{% url 'dashboard:suggestions-admin' user_id %}",
+                data: {
+                    'suggestionID': suggestionID,
+                    'newStatus': newStatus,
+                    'requestType': 'updateStatus'
+                },
+                type: 'POST',
+                dataType: 'json',
+                success: function(result){
+                    alert("updateStatus: success");
+                },
+                error: function(result){
+                    alert("updateStatus: failure");
+                }
+            })
+        });
+        
         $('.div-table').on('click', '.a-for-adminSuggestions', function(){
             var clickedSuggestionID_full = $(this).attr("id");
             var clickedSuggestionID = clickedSuggestionID_full.replace("a-","");

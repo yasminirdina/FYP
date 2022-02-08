@@ -52,7 +52,7 @@ class EditProfileStudentForm(forms.ModelForm):
         self.fields['interest'].widget.attrs.update({'class' : 'interest'})
         self.fields['parentID'].widget.attrs.update({'class' : 'parentid'})
         self.fields['studentClass'].queryset = self.fields['studentClass'].queryset.order_by('className')
-        self.fields['parentID'].queryset = self.fields['parentID'].queryset.exclude(name="Tidak Dikemaskini")
+        # self.fields['parentID'].queryset = self.fields['parentID'].queryset.exclude(name="Tidak Dikemaskini")
 
     class Meta:
         model = models.Student
@@ -68,6 +68,18 @@ class EditProfileStudentForm(forms.ModelForm):
             'interest': _('Sila masukkan bidang kerjaya yang anda minati sekarang'),
             'parentID': _('Sila pilih nama penuh ibu bapa/penjaga anda'),
         }
+
+    # def __init__(self, *args, **kwargs):
+    #     super(EditProfileStudentForm, self).__init__(*args, **kwargs)
+    #     if self.instance.parentID_id == 'NA':
+    #         self.instance.parentID_id = 'Tidak dikemaskini'
+    #     kwargs['instance'] = self.instance
+    #     super(EditProfileStudentForm, self).__init__(*args, **kwargs)
+
+    # def clean_progress(self):
+    #     if self.cleaned_data.parentID_id == 'Tidak dikemaskini':
+    #         self.cleaned_data.parentID_id = 'NA'
+    #     return self.cleaned_data.get('parentID')
 
 class EditProfileParentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

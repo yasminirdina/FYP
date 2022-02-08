@@ -177,7 +177,7 @@ h2 {
 .btn:hover{
   cursor: pointer;
   transform: scale(1.1);
-  background: rgb(190, 0, 190);
+  background: rgb(121, 85, 118);
 }
 
 /* .btn[disabled]:hover{
@@ -191,7 +191,7 @@ h2 {
 }
 
 #result-btn:hover{
-  background: rgba(207, 1, 207, 0.63);
+  background: rgb(121, 85, 118);
 }
 
 @keyframes fadeicon1 {

@@ -29,7 +29,7 @@
   
 /*On mouse-over*/
 .btn:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 188, 54);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 188, 54);
     transition: transform 150ms;
@@ -41,7 +41,7 @@
 }
 
 .cancel-for-addField:hover{
-    background-color: #eee;
+    background-color: white;
     color: rgb(250, 127, 56);
     box-shadow: 0 0.4rem 1.4rem 0 rgb(250, 127, 56, 0.658);
 }
@@ -52,13 +52,15 @@
     color: inherit;
 }
 
-.a-main-for-addField, .a-back-for-addField {color: rgb(250, 127, 56);}
+.a-main-for-addField, .a-back-for-addField {color: black;}
+
+.a-main-for-addField:hover, .a-back-for-addField:hover {color: rgb(207, 61, 61);}
 
 /* form fields */
 .name {
     font-size: 16px;
     font-family: 'Varela Round', sans-serif;
-    border-radius: 25px;
+    border-radius: 5px;
     border: 1px solid lightgray;
     padding: 10px;
     box-sizing: border-box;
@@ -88,8 +90,9 @@
     padding: 0 1vw;
     /* top | right | bottom | left */
     margin: 1vw auto 1vw 5%;
-    border: 2px solid lightgray;
-    background-color: #eee;
+    border: 2px solid transparent;
+    background-color: rgb(245, 245, 245);
+    box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
     border-radius: 5px;
     width: 90%;
     box-sizing: border-box;
@@ -122,9 +125,6 @@
     width: 90%;
     /* top | horizontal | bottom */
     margin: 0 auto 1vw;
-    border: 1px solid lightgray;
-    /* top | horizontal | bottom */
-    border-width: 1px 0 0;
 }
 
 .div-outer{

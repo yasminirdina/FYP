@@ -6,19 +6,19 @@
 {% endblock %}
 
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'css/user/searchCourse.css' %}">
+    <link rel="stylesheet" href="{% static 'css/user/searchUser.css' %}">
 {% endblock %}
 
 {% block content %}
     <div class="container-form-search">
-        <h1 class="course-header">Carian Mengikut Kerjaya</h1>
+        <h1 class="search-header">Carian Mengikut Kerjaya</h1>
         <form method="GET" action="{% url 'search:jobs-nonadmin' user_type user_id %}">
             <!-- job search -->
-            <label for="inputJob">Kerjaya</label><br>
+            <label for="inputJob">Kerjaya :</label><br>
             <input class="form-job" type="search" name="job_contains" placeholder="Nama Kerjaya" />
 
             <!-- course search -->
-            <label for="inputCourse">Kursus</label><br>
+            <label for="inputCourse">Kursus :</label><br>
             <input class="form-course" type="search" name="course_contains" placeholder="Nama Kursus" />
 
             <button type="submit" class="btn btn-search" onclick="backBtn()">Cari</button>
@@ -33,26 +33,27 @@
     {% for job in allJobs %}
     <div class="search-result-container">
         <div class="row1">
-            <h3 class="job-name"><a href="{% url 'search:job-page' user_type user_id job.id %}">{{ job.job }}</a></h3>
+            <h3 class="result-title job-name"><a href="{% url 'search:job-page' user_type user_id job.id %}">{{ job.job }}</a></h3>
             <p class="bookmark">Bookmark</p>
-            <p class="rating">Rating</p>
+            <p class="rating job-personality">Personaliti: {{job.personality}}</p>
         </div>
         <div class="row2">
-            <p class="search-details course-lvlStudy">Peringkat Pengajian:</p>
-            <p class="input"></p>
-            <p class="search-details course-langguage">Bahasa Utama Kursus:</p>
-            <p class="input"></p>
+            <p class="search-details job-skills">Kemahiran:</p>
+            <p class="input">{{ job.skills }}</p>
+            <p class="search-details course-langguage">Gaji Purata:</p>
+            <p class="input">{{ job.avgSalary }}</p>
         </div>
         <div class="row3">
-            <button class="accordion search-detailsjob-courseOffer">Kursus Berkaitan</button>
+            <button class="accordion search-detailsJob-courseOffer">Kursus Berkaitan</button>
             <div class="panel" style="display: none;">
                 {% for coursejob in allBridge %}
                     {% if job.id == coursejob.job.id %}
                         {% for course in allCourse %}
                             {% if course.id == coursejob.course.id %}
                                 <ul>
-                                    <li class="li-courseOffer"><a class="li-p-courseOffer" href="{% url 'search:course-page' user_type user_id course.id %}">{{course.course}}</a ></li>
+                                    <li class="offerList"><a class="li-p-courseOffer" href="{% url 'search:course-page' user_type user_id course.id %}">{{course.course}}</a ></li>
                                 </ul>
+                                <hr>
                             {% endif %}
                         {% endfor %}
                     {% endif %}
@@ -77,7 +78,7 @@
         acc[i].addEventListener("click", function() {
             /* Toggle between adding and removing the "active" class,
             to highlight the button that controls the panel */
-            this.classList.toggle("active");
+            this.classList.toggle("listActive");
 
             /* Toggle between hiding and showing the active panel */
             var panel = this.nextElementSibling;

@@ -1,33 +1,43 @@
 {% extends "search/userbase.html" %}
+{% load static %}
 
 {% block title %}
     <title>FutureCruise: Carian Maklumat</title>
 {% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/user/searchMain.css' %}">
+{% endblock %}
+
 {% block content %}
-    <center>
     <div class="container-search-main">
-        <div class="container-search">
-            <button class="btn">
-                <!-- <img src="https://cdn.icon-icons.com/icons2/1192/PNG/512/1490820801-12_82409.png"> -->
-                <span><a class="a-search-main" href="{% url 'search:uni-nonadmin' user_type user_id %}">Cari Mengikut Universiti</a></span>
-            </button>
-        </div>
-        <div class="container-search">
-            <button class="btn">
-                <a class="a-search-main" href="{% url 'search:course-nonadmin' user_type user_id %}">Cari Mengikut Kursus</a>
-            </button>
-        </div>
-        <div class="container-search">
-            <button class="btn">
-                <a class="a-search-main" href="{% url 'search:jobs-nonadmin' user_type user_id %}">Cari Mengikut Bidang Kerjaya</a>
-            </button>
-        </div>
-        <div class="container-search">
-            <button class="btn">
-                <a class="a-search-main" href="{% url 'search:all-nonadmin' user_type user_id %}">Cari Semua Rekod</a>
-            </button>
+        <h1 class="search-main-title">Carian Maklumat</h1>
+
+        <div class="container-search-section">
+            <div class="container-section">
+                <a class="search-section" href="{% url 'search:uni-nonadmin' user_type user_id %}">
+                    <i class="section-content fas fa-university" alt="Carian Mengikut Universiti"></i>
+                    <span class="section-content title">Cari Mengikut Universiti</span>
+                </a>
+            </div>
+            <div class="container-section">
+                <a class="search-section" href="{% url 'search:course-nonadmin' user_type user_id %}">
+                    <i class="section-content fas fa-book-reader" alt="Carian Mengikut Kursus"></i>
+                    <span class="section-content title">Cari Mengikut Kursus</span>
+                </a>
+            </div>
+            <div class="container-section">
+                <a class="search-section" href="{% url 'search:jobs-nonadmin' user_type user_id %}">
+                    <i class="section-content fas fa-briefcase" alt="Carian Mengikut Kerjaya"></i>
+                    <span class="section-content title">Cari Mengikut Bidang Kerjaya</span>
+                </a>
+            </div>
+            <div class="container-section">
+                <a class="search-section" href="{% url 'search:all-nonadmin' user_type user_id %}">
+                    <i class="section-content fas fa-search" alt="Carian Mengikut Kerjaya"></i>
+                    <span class="section-content title">Cari Semua Rekod</span>
+                </a>
+            </div>
         </div>
     </div>
-</center>
 {% endblock %}

@@ -7,16 +7,20 @@
             {% if filtered_form.name != 'NA' %}
                 <option value="1">Semua</option>
                 {% for form in allForms %}
-                    {% if form.id == filtered_form.id %}
-                        <option value="{{ form.id }}" selected="selected">{{ form.name }}</option>
-                    {% else %}
-                        <option value="{{ form.id }}">{{ form.name }}</option>
+                    {% if form.name != 'NA' %}
+                        {% if form.id == filtered_form.id %}
+                            <option value="{{ form.id }}" selected="selected">{{ form.name }}</option>
+                        {% else %}
+                            <option value="{{ form.id }}">{{ form.name }}</option>
+                        {% endif %}
                     {% endif %}
                 {% endfor %}
             {% else %}
                 <option value="1" selected="selected">Semua</option>
                 {% for form in allForms %}
-                    <option value="{{ form.id }}">{{ form.name }}</option>
+                    {% if form.name != 'NA' %}
+                        <option value="{{ form.id }}">{{ form.name }}</option>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </select>
