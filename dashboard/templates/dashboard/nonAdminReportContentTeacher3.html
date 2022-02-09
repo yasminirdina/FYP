@@ -4,7 +4,7 @@
 
 <div class="div-filter-eng">
     <form type="get" action="." class="form-parent-eng">
-        Pilih tingkatan:
+        <label for="student-form-parent">Pilih tingkatan:</label>
         <select name="tingkatan" id="student-form-parent">
             {% if filtered_form_parent %}
                 <option value="0" selected="selected">Semua</option>
@@ -35,7 +35,7 @@
             {% endif %}
         </select>
 
-        Pilih pelajar:
+        <label for="student-name">Pilih pelajar:</label>
         <select name="nama-pelajar" id="student-name">
             {% if has_filtered_student == True %}
                 <option value="1">Semua</option>
@@ -142,7 +142,7 @@
     {% endif %}
 {% endif %}
 
-<span style="font-style: italic;">Statistik di bawah hanya memaparkan data untuk penjaga berdaftar dan yang namanya tidak dikemaskini sahaja.</span>
+<span class="span-note" style="font-style: italic;">Statistik di bawah hanya memaparkan data untuk penjaga berdaftar dan yang namanya tidak dikemaskini sahaja.</span>
 
 {% if allStudentsCnt > 0 %}
     <div class="div-grid-eng">

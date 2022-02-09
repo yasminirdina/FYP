@@ -77,7 +77,7 @@
     justify-items: flex-end;
     gap: 10px;
     font-size: 16px;
-    text-align: right;
+    text-align: left;
     margin-left: auto;
     margin-right: 0;
     box-sizing: border-box;
@@ -639,4 +639,376 @@ tr:hover {
 
 .span-parent-no-bold{
     font-weight: normal;
+}
+
+/* For minimized screen width (desktop) and/or tablet */
+@media screen and (max-width: 1010px) {
+    .div-content-outer{
+        max-height: 65vh;
+    }
+
+    /* For tablet */
+    @media screen and (min-height: 900px) and (max-height: 1280px) {
+        .div-content-outer{
+            max-height: 76vh;
+        }
+
+        /* Teacher */
+        .div-game-perf .div-grid-game {
+            grid-template-columns: repeat(4, 23.8%);
+        }
+
+        .div-parent-eng .div-grid-eng {
+            grid-template-columns: repeat(3, 29.5%);
+        }
+
+        .form-parent-eng{
+            /* background-color: pink; */
+            grid-auto-flow: row;
+            width: 100%;
+            justify-content: stretch;
+        }
+    
+        .form-parent-eng label{
+            width: 100%;
+            text-align: left;
+        }
+    
+        #student-name, #student-form-parent{
+            /* background-color: orange; */
+            width: 100%;
+            box-sizing: border-box;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .div-content-outer{
+        max-height: none;
+        height: 100%;
+    }
+
+    .div-modal-content-5 {
+        width: 80%;
+    }
+
+    /* Parent */
+    .div-career-parent > .div-filter{
+        /* background-color: green; */
+        justify-items: center;
+        justify-content: stretch;
+    }
+
+    .form-career-parent{
+        /* background-color: pink; */
+        grid-auto-flow: row;
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .form-career-parent label{
+        width: 100%;
+        text-align: left;
+    }
+
+    #student-name, #student-form-parent{
+        /* background-color: orange; */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Teacher */
+    .form-parent-eng{
+        /* background-color: pink; */
+        grid-auto-flow: row;
+        width: 100%;
+        justify-content: stretch;
+        padding: 0 5px;
+    }
+
+    .form-parent-eng label{
+        width: 100%;
+        text-align: left;
+    }
+
+    #student-name, #student-form-parent{
+        /* background-color: orange; */
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .div-game-perf .div-grid-game, .div-parent-eng .div-grid-eng {
+        grid-template-columns: repeat(4, 23.4%);
+    }
+
+    #AvgSessionTimeTaken, #LastPlayedTime{
+        height: 300px;
+    }
+
+    #AvgSessionTimeTaken .div-data-value{
+        padding-top: 65px;
+    }
+
+    .div-game-perf .div-grid-game > article:nth-child(1),
+    .div-game-perf .div-grid-game > article:nth-child(3),
+    .div-parent-eng .div-grid-eng > article:nth-child(1),
+    .div-parent-eng .div-grid-eng > article:nth-child(3){
+        grid-column: 1 / 3;
+    }
+
+    .div-game-perf .div-grid-game > article:nth-child(2),
+    .div-game-perf .div-grid-game > article:nth-child(4),
+    .div-parent-eng .div-grid-eng > article:nth-child(2),
+    .div-parent-eng .div-grid-eng > article:nth-child(4){
+        grid-column: 3 / 5;
+    }
+
+    .div-game-perf .div-grid-game > div:nth-child(7),
+    .div-game-perf .div-grid-game > div:nth-child(8),
+    .div-game-perf .div-grid-game > div:nth-child(9),
+    .div-game-perf .div-grid-game > div:nth-child(10),
+    .div-parent-eng .div-grid-eng > article:nth-child(5){
+        grid-column: 1 / 5;
+    }
+
+    #TotalBookmarks{
+        height: 200px;
+    }
+}
+
+/* For mobile */
+@media screen and (max-width: 480px), (max-height: 480px) {
+    .btn, .btn2, #student-form, #student-form-parent, #student-name, label, table, .span-note, .div-no-career, .div-no-career-2, .div-no-student, .div-career-student, .div-career-parent, .div-modal-content-5, .div-modal-header-5, .div-step-container > div:first-child .div-tooltip-text{
+        font-size: 12px;
+        line-height: 16px;
+    }
+
+    .btn, .btn2{
+        padding: 5px 10px;
+    }
+
+    .btn2{
+        border-radius: 25px 25px 0 0;
+    }
+
+    .div-section-header{
+        margin: 0 0 -5px;
+    }
+
+    #student-form,  #student-form-parent, #student-name, td{
+        padding: 5px;
+    }
+
+    th{
+        padding: 10px;
+    }
+
+    .div-ind-step{
+        font-size: 2rem;
+        line-height: normal;
+    }
+
+    /* vertical mobile */
+    @media screen and (max-width: 480px) and (max-height: 980px) {
+        /* Student/Parent */
+        .div-career-student #podium-box, .div-career-parent #podium-box{
+            /* background-color: aqua; */
+            height: 230px;
+        }
+
+        #first-step {
+            height: 50%;
+        }
+        
+        #second-step {
+            height: 35%;
+        }
+        
+        #third-step {
+            height: 30%;
+        }
+
+        /* Teacher */
+        .div-game-perf .div-grid-game, .div-parent-eng .div-grid-eng {
+            /* background-color: aqua; */
+            grid-template-columns: repeat(4, 22.5%);
+        }
+    
+        #AvgSessionTimeTaken, #LastPlayedTime{
+            height: 200px;
+        }
+    
+        #AvgSessionTimeTaken .div-data-value{
+            padding-top: 30px;
+        }
+    
+        #AvgSessionHintsUsed .div-data-value{
+            padding-top: 20px;
+        }
+    
+        .div-game-perf .div-grid-game > article:nth-child(1),
+        .div-game-perf .div-grid-game > article:nth-child(2),
+        .div-game-perf .div-grid-game > article:nth-child(3),
+        .div-game-perf .div-grid-game > article:nth-child(4),
+        .div-game-perf .div-grid-game > article:nth-child(5),
+        .div-game-perf .div-grid-game > article:nth-child(6),
+        .div-parent-eng .div-grid-eng > article:nth-child(1),
+        .div-parent-eng .div-grid-eng > article:nth-child(2),
+        .div-parent-eng .div-grid-eng > article:nth-child(3),
+        .div-parent-eng .div-grid-eng > article:nth-child(4){
+            grid-column: 1 / 5;
+        }
+
+        #TotalBookmarks .div-data-value{
+            padding-top: 30px;
+        }
+
+        #TotalBookmarks, #TotalSuggestions{
+            height: 180px;
+        }
+
+        #TotalBookmarks .div-data-subtitle{
+            height: 40%;
+        }
+
+        @media screen and (max-height: 900px) {
+            .div-game-perf .div-grid-game {
+                /* background-color: brown; */
+                grid-template-columns: repeat(4, 22%);
+            }
+
+            #LastPlayedTime, #LastChatTime{
+                height: 270px;
+            }
+
+            #TotalSuggestions .div-data-value{
+                padding-top: 20px;
+            }
+    
+            #TotalSuggestions .div-data-subtitle{
+                height: 40%;
+            }
+
+            @media screen and (max-height: 900px) {
+                /* Student */
+                #first-step {
+                    height: 40%;
+                }
+                
+                #second-step {
+                    height: 25%;
+                }
+                
+                #third-step {
+                    height: 20%;
+                }
+
+                #LastPlayedTime, #LastChatTime{
+                    height: 300px;
+                }
+            }
+        }
+    }
+
+    /* horizontal mobile */
+    @media screen and (max-width: 920px) and (max-height: 480px) {
+        .div-content-outer{
+            /* background-color: lightgreen; */
+            max-height: none;
+            height: 100%;
+        }
+
+        /* Student/Parent */
+        .div-career-student #podium-box, .div-career-parent #podium-box{
+            /* background-color: aqua; */
+            height: 230px;
+        }
+
+        #first-step {
+            height: 50%;
+        }
+        
+        #second-step {
+            height: 35%;
+        }
+        
+        #third-step {
+            height: 30%;
+        }
+
+        /* Teacher */
+        .form-parent-eng{
+            /* background-color: pink; */
+            grid-auto-flow: row;
+            width: 100%;
+            justify-content: stretch;
+        }
+    
+        .form-parent-eng label{
+            width: 100%;
+            text-align: left;
+        }
+    
+        #student-name, #student-form-parent{
+            /* background-color: orange; */
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .div-game-perf .div-grid-game {
+            /* background-color: lightseagreen; */
+            grid-template-columns: repeat(4, 23.8%);
+        }
+
+        .div-game-perf .div-grid-game > article:nth-child(1),
+        .div-game-perf .div-grid-game > article:nth-child(3),
+        .div-game-perf .div-grid-game > article:nth-child(5){
+            grid-column: 1 / 3;
+        }
+
+        .div-game-perf .div-grid-game > article:nth-child(2),
+        .div-game-perf .div-grid-game > article:nth-child(4),
+        .div-game-perf .div-grid-game > article:nth-child(6){
+            grid-column: 3 / 5;
+        }
+
+        #AvgSessionTimeTaken, #LastPlayedTime{
+            height: 300px;
+        }
+    
+        #AvgSessionTimeTaken .div-data-value{
+            padding-top: 65px;
+        }
+
+        #LastPlayedTime .div-data-value{
+            padding-top: 20px;
+        }
+
+        #AvgSessionHintsUsed .div-data-value{
+            padding-top: 20px;
+        }
+
+        @media screen and (max-height: 320px) {
+            /* .div-content-outer{
+                background-color: greenyellow;
+            } */
+
+            /* Teacher */
+            .div-game-perf .div-grid-game {
+                /* background-color: goldenrod; */
+                grid-template-columns: repeat(4, 23.4%);
+            }
+
+            @media screen and (max-width: 600px) {
+                /* Teacher */
+                #AvgSessionTimeTaken, #LastPlayedTime{
+                    height: 350px;
+                }
+        
+                #AvgSessionHintsUsed .div-data-value{
+                    padding-top: 10px;
+                }
+            }
+        }
+    }
 }

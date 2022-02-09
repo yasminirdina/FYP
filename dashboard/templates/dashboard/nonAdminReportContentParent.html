@@ -14,7 +14,7 @@
         {% endif %}
 
         <form type="get" action="." class="form-career-parent">
-            Pilih pelajar:
+            <label for="student-name">Pilih pelajar:</label>
             <select name="nama-pelajar" id="student-name">
                 {% if filtered_student %}
                     {% for student in parentStudents %}

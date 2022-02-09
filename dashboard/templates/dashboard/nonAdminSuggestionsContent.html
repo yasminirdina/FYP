@@ -1,5 +1,5 @@
 {% if allSuggestions %}
-    <table>
+    <table class="table-1">
         <thead>
             <tr>
                 <th>No.</th>
@@ -32,6 +32,61 @@
                     {% elif suggestion.status == 'Ditutup' %}
                         <button class="btn closed">{{ suggestion.status }}</button>
                     {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <table class="table-2">
+        <thead>
+            <tr>
+                <th>Cadangan</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for suggestion in allSuggestions %}
+            <tr>
+                <p class="p-suggestionTitle" id="title-{{ suggestion.id }}" style="display: none;">{{ suggestion.title }}</p>
+                <p class="p-suggestionContent" id="content-{{ suggestion.id }}" style="display: none;">{{ suggestion.subjectContent }}</p>
+
+                <td>
+                    <a class="a-with-underline" id="a-{{ suggestion.id }}">
+                        {{ suggestion.title }}
+                    </a>
+                    <ul class="ul-details">
+                        <li>
+                            <span>
+                                <span style="font-weight: bold;">
+                                    Kategori: 
+                                </span>
+                                {{ suggestion.typeID.name }}
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <span style="font-weight: bold;">
+                                    Tarikh dikemukakan: 
+                                </span>
+                                {{ suggestion.dateIssued|date:"d/m/Y" }}, {{ suggestion.timeIssued|date:"h:i A" }}
+                            </span>
+                        </li>
+                    </ul>
+                    <span>
+                        <span style="font-weight: bold;">
+                            Status: 
+                        </span>
+                        <span>
+                            {% if suggestion.status == 'Dihantar' %}
+                                <button class="btn sent">{{ suggestion.status }}</button>
+                            {% elif suggestion.status == 'Sedang Diproses' %}
+                                <button class="btn processing">{{ suggestion.status }}</button>
+                            {% elif suggestion.status == 'Ditutup' %}
+                                <button class="btn closed">{{ suggestion.status }}</button>
+                            {% endif %}
+                        </span>
+                    </span>
                 </td>
             </tr>
             {% endfor %}

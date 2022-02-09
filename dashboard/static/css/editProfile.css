@@ -169,6 +169,10 @@ input:focus::placeholder {color: transparent}
         grid-auto-flow: row;
     }
 
+    .name, .year, .studentclass, .interest, .parentid, .salutation, .age, .job, .relation, .role, .homeroomclass{
+        padding: 5px;
+    }
+
     /* vertical mobile */
     @media screen and (max-height: 600px) {
         .div-content-outer{
@@ -195,7 +199,7 @@ input:focus::placeholder {color: transparent}
         @media screen and (max-height: 350px) {
             .div-content-outer{
                 /* background-color: lightseagreen; */
-                max-height: 48vh;
+                max-height: 45vh;
             }
         }
     }
