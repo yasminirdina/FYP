@@ -659,7 +659,8 @@ tr:hover {
         }
 
         .div-parent-eng .div-grid-eng {
-            grid-template-columns: repeat(3, 29.5%);
+            background-color: violet;
+            grid-template-columns: repeat(3, 32.5%);
         }
 
         .form-parent-eng{

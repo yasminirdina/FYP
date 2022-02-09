@@ -110,7 +110,8 @@ h3 {
 
 .div-sidebar-outer, .div-main-outer{
     border-radius: 10px;
-    padding: 0 10px 10px;
+    /* padding: 0 10px 10px; */
+    padding: 10px;
     gap: 0;
     box-shadow: 5px 5px rgba(0, 0, 0, 0.253);
 }
@@ -252,9 +253,9 @@ p {
         box-shadow: none;
     }
 
-    .div-sidebar-outer > h2{
+    /* .div-sidebar-outer > h2{
         display: none;
-    }
+    } */
 
     .div-sidebar-menulist{
         grid-auto-flow: column;

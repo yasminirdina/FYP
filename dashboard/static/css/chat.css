@@ -108,7 +108,7 @@ textarea:focus::placeholder {color: transparent}
 }
 
 .div-section-header{
-    margin: -10px 0 -15px;
+    margin: -15px 0 -15px;
 }
 
 .div-content-outer{
@@ -241,10 +241,6 @@ textarea:focus::placeholder {color: transparent}
     height: fit-content;
     box-sizing: border-box;
 }
-
-/* .div-chat-name-type{
-    background-color: lightsalmon;
-} */
 
 .div-chat-lastmessage{
     font-weight: normal;
@@ -451,6 +447,12 @@ textarea:focus::placeholder {color: transparent}
         max-height: 65vh;
     }
 
+    .div-chat-content{
+        background-color: green;
+        height: unset;
+        max-height: 55vh;
+    }
+
     .for-NA{
         /* background-color: gold; */
         max-height: 75vh;
@@ -475,6 +477,7 @@ textarea:focus::placeholder {color: transparent}
         }
 
         .div-chat-content{
+            /* background-color: firebrick; */
             height: unset;
             max-height: 65vh;
         }
@@ -492,7 +495,13 @@ textarea:focus::placeholder {color: transparent}
 
 @media screen and (max-width: 600px) {
     .div-left, .div-right{
-        max-height: 69vh;
+        height: 69vh;
+        max-height: none;
+    }
+
+    .div-chat-content{
+        background-color: aquamarine;
+        max-height: 59vh;
     }
 }
 
