@@ -1,0 +1,20 @@
+{% extends "search/userbase.html" %}
+{% load static %}
+
+{% block title %}
+    <title>FutureCruise: Carian Maklumat</title>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'css/user/searchMain.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container-search-main">
+        {% if bookmarked %}
+            <h1 class="search-main-title bookmark">{{job.job}} <br> Sudah Wujud Dalam Bookmark Anda!</h1>
+        {% else %}
+            <h1 class="search-main-title bookmark">{{job.job}} <br> Telah Ditambah Dalam Bookmark Anda!</h1>
+        {% endif %}
+    </div>
+{% endblock %}

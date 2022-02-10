@@ -1,0 +1,31 @@
+{% extends "search/adminbase.html" %}
+{% load static %}
+
+{% block title %} 
+    <title>Future Cruise: Tambah Kursus</title> 
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/admin/createForm.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin/createFormPage.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="newRecord-main-container">
+    <h1 class="newRecord-header">Tambah Kursus di {{uni.uni}}</h1>
+    <div class="back-btn-container">
+        <button class="btn btn-back"><a class="btn-a-back" href="{% url 'search:uni-admin' user_id  %}">Kembali</a></button>
+    </div>
+
+    {% if submitted %}
+        <p class="submit-success">Rekod Kursus Berjaya Dicipta!</p>
+    {% else %}
+        <div class="form-create">
+            <form method="POST" >
+                {% csrf_token %}
+                {{formAddCourse.as_p}}
+                <input type="submit" class="btn btn-search" value="Cipta">
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}
